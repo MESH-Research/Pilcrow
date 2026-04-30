@@ -37,6 +37,11 @@ const items = [
     icon: "o_settings",
     label: t(`settings.page_title`),
     url: "/account/settings"
+  },
+  {
+    icon: "science",
+    label: t(`lab_features.page_title`),
+    url: "/account/lab-features"
   }
 ]
 

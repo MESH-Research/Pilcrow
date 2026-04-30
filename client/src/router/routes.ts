@@ -56,6 +56,10 @@ const routes: RouteRecordRaw[] = [
           {
             path: "settings",
             component: () => import("src/pages/Account/SettingsPage.vue")
+          },
+          {
+            path: "lab-features",
+            component: () => import("src/pages/Account/LabFeaturesPage.vue")
           }
         ]
       },

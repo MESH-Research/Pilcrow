@@ -14,6 +14,12 @@ type User {
     highest_privileged_role: UserRoles @method(name: "getHighestPrivilegedRole")
     permissions: [Permission!] @belongsToMany
     profile_metadata: ProfileMetadata
+    "UI preferences (theme, color-blind patterns)."
+    preferences: UserPreferences
+    "Keys of UI elements (callouts, banners) the user has dismissed."
+    dismissed_ui: [String!]! @method(name: "getDismissedUiKeys")
+    "Feature-flag keys the user has explicitly opted into."
+    feature_opt_ins: [String!]! @method(name: "getActiveFeatureOptIns")
     raw_submissions: [Submission!]
         @belongsToMany(relation: "submissions")
         @deprecated(reason: "Use `submissions` (SubmissionAssignment) instead")

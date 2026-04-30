@@ -37,6 +37,7 @@ declare module 'vue-router/auto-routes' {
       | 'admin:user:id'
       | 'admin:users'
       | 'user_details'
+      | 'user_details:settings'
       | 'user_details:submissions'
     >,
     'admin:dashboard': RouteRecordInfo<
@@ -59,11 +60,19 @@ declare module 'vue-router/auto-routes' {
       { id: ParamValue<true> },
       { id: ParamValue<false> },
       | 'user_details'
+      | 'user_details:settings'
       | 'user_details:submissions'
     >,
     'user_details': RouteRecordInfo<
       'user_details',
       '/admin/user/:id',
+      { id: ParamValue<true> },
+      { id: ParamValue<false> },
+      | never
+    >,
+    'user_details:settings': RouteRecordInfo<
+      'user_details:settings',
+      '/admin/user/:id/settings',
       { id: ParamValue<true> },
       { id: ParamValue<false> },
       | never
@@ -225,6 +234,7 @@ declare module 'vue-router/auto-routes' {
         | 'admin:user:id'
         | 'admin:users'
         | 'user_details'
+        | 'user_details:settings'
         | 'user_details:submissions'
       views:
         | 'default'
@@ -245,6 +255,7 @@ declare module 'vue-router/auto-routes' {
       routes:
         | 'admin:user:id'
         | 'user_details'
+        | 'user_details:settings'
         | 'user_details:submissions'
       views:
         | 'default'
@@ -252,6 +263,12 @@ declare module 'vue-router/auto-routes' {
     'src/routes/admin/user/[id]/index.vue': {
       routes:
         | 'user_details'
+      views:
+        | never
+    }
+    'src/routes/admin/user/[id]/settings.vue': {
+      routes:
+        | 'user_details:settings'
       views:
         | never
     }

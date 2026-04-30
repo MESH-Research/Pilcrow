@@ -172,7 +172,37 @@
     "page_title": "Profile"
   },
   "settings": {
-    "page_title": "Settings"
+    "page_title": "Settings",
+    "preferences": {
+      "heading": "Display Preferences",
+      "theme": "Theme",
+      "theme_auto": "Auto",
+      "theme_light": "Light",
+      "theme_dark": "Dark",
+      "color_blind_patterns": "Use color-blind safe patterns alongside status colors",
+      "error": "Could not save your preferences. Please try again."
+    },
+    "dismissed": {
+      "heading": "Dismissed Help &amp; Banners",
+      "summary": "no callouts have been dismissed | one callout has been dismissed | {n} callouts have been dismissed",
+      "help": "Resetting will make every dismissable explainer appear again on your next visit.",
+      "reset": "Reset dismissable elements",
+      "confirm_title": "Reset dismissable elements?",
+      "confirm_body": "Every callout you have dismissed will start appearing again on your next visit. This cannot be undone.",
+      "success": "Dismissable elements have been reset.",
+      "error": "Could not reset dismissed elements. Please try again."
+    }
+  },
+  "lab_features": {
+    "page_title": "Lab Features",
+    "intro": "Try out upcoming features ahead of their general release. You can deactivate them again at any time.",
+    "activate": "Activate",
+    "deactivate": "Deactivate",
+    "manage_ui_v2": {
+      "label": "New publication management UI",
+      "description": "A redesigned dashboard, submission detail page, and review-team picker."
+    },
+    "error": "Could not save your feature preference. Please try again."
   },
   "account": {
     "failures": {
@@ -1572,6 +1602,28 @@
         },
         "no_publications": "This user is not assigned to any publications.",
         "no_submissions": "This user is not attached to any submissions.",
+        "settings": {
+          "not_found": "User not found.",
+          "preferences": {
+            "heading": "Preferences",
+            "theme": "Theme",
+            "theme_auto": "Auto (follows system)",
+            "theme_light": "Light",
+            "theme_dark": "Dark",
+            "color_blind_patterns": "Color-Blind Patterns",
+            "enabled": "Enabled",
+            "disabled": "Disabled",
+            "not_set": "Not set"
+          },
+          "dismissed": {
+            "heading": "Dismissed UI Elements",
+            "none": "This user has not dismissed any UI elements."
+          },
+          "feature_opt_ins": {
+            "heading": "Feature Opt-Ins",
+            "none": "This user has not opted into any features."
+          }
+        },
         "publications": {
           "headers": {
             "name": "Name",

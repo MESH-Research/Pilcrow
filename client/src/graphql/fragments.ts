@@ -33,6 +33,12 @@ export const _CURRENT_USER_FIELDS = gql`
       name
     }
     highest_privileged_role
+    preferences {
+      theme
+      color_blind_patterns
+    }
+    dismissed_ui
+    feature_opt_ins
   }
 `
 

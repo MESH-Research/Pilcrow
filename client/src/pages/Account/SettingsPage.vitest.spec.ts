@@ -3,6 +3,11 @@ import { mount, flushPromises } from "@vue/test-utils"
 import { installApolloClient } from "app/test/vitest/utils"
 import { UPDATE_USER } from "src/graphql/mutations"
 import { CURRENT_USER } from "src/graphql/queries"
+import {
+  ResetDismissedUiDocument,
+  UpdateUserPreferencesDocument,
+  UserThemePreference
+} from "src/graphql/generated/graphql"
 import type {
   CurrentUserQuery,
   UpdateUserMutation
@@ -28,12 +33,17 @@ vi.mock("src/use/forms", async (importOriginal) => {
   }
 })
 
+// Captured by `vi.mock` factory below; tests reach in to assert
+// dialog options or trigger the onOk callback for reset confirmation.
+const dialogMock = vi.fn()
+
 vi.mock("quasar", async (importOriginal) => {
   const quasar = await importOriginal<typeof import("quasar")>()
   return {
     ...quasar,
     useQuasar: () => ({
-      notify: vi.fn()
+      notify: vi.fn(),
+      dialog: dialogMock
     })
   }
 })
@@ -58,7 +68,10 @@ describe("Settings page", () => {
           name: "TestDoe",
           email: "test@example.com",
           email_verified_at: null,
-          roles: []
+          roles: [],
+          preferences: null,
+          dismissed_ui: [],
+          feature_opt_ins: []
         }
       }
     }
@@ -67,8 +80,15 @@ describe("Settings page", () => {
 
   const mutateHandler = vi.fn()
   const requestHandler = vi.fn()
+  const updatePreferencesHandler = vi.fn()
+  const resetDismissedHandler = vi.fn()
   mockClient.setRequestHandler(UPDATE_USER, mutateHandler)
   mockClient.setRequestHandler(CURRENT_USER, requestHandler)
+  mockClient.setRequestHandler(
+    UpdateUserPreferencesDocument,
+    updatePreferencesHandler
+  )
+  mockClient.setRequestHandler(ResetDismissedUiDocument, resetDismissedHandler)
 
   const accountData = () => ({
     id: "1",
@@ -116,5 +136,163 @@ describe("Settings page", () => {
     await flushPromises()
 
     expect((wrapper.vm as any).formState.errorMessage.value).not.toBe("")
+  })
+
+  describe("preferences", () => {
+    function preferenceMutationResponse(
+      theme: UserThemePreference | null,
+      colorBlind: boolean | null
+    ) {
+      return {
+        data: {
+          updateUserPreferences: {
+            __typename: "User",
+            id: "1",
+            preferences: {
+              __typename: "UserPreferences",
+              theme,
+              color_blind_patterns: colorBlind
+            }
+          }
+        }
+      }
+    }
+
+    test("clicking the DARK theme radio fires updatePreferences with that theme", async () => {
+      updatePreferencesHandler.mockResolvedValue(
+        preferenceMutationResponse(UserThemePreference.DARK, null)
+      )
+
+      const wrapper = await makeWrapper()
+      // Three theme radios render with the same data-cy; the third
+      // entry is DARK per the themeOptions array order in the page.
+      const radios = wrapper.findAll("[data-cy=theme_option]")
+      expect(radios.length).toBe(3)
+      await radios[2].trigger("click")
+      await flushPromises()
+
+      expect(updatePreferencesHandler).toHaveBeenCalledTimes(1)
+      expect(updatePreferencesHandler).toHaveBeenCalledWith({
+        input: { theme: UserThemePreference.DARK }
+      })
+    })
+
+    test("toggling color-blind patterns fires updatePreferences with the new boolean", async () => {
+      updatePreferencesHandler.mockResolvedValue(
+        preferenceMutationResponse(null, true)
+      )
+
+      const wrapper = await makeWrapper()
+      const toggle = wrapper.find("[data-cy=color_blind_toggle]")
+      expect(toggle.exists()).toBe(true)
+      await toggle.trigger("click")
+      await flushPromises()
+
+      expect(updatePreferencesHandler).toHaveBeenCalledTimes(1)
+      expect(updatePreferencesHandler).toHaveBeenCalledWith({
+        input: { color_blind_patterns: true }
+      })
+    })
+  })
+
+  describe("reset dismissed elements", () => {
+    test("button is disabled when there is nothing to reset", async () => {
+      // Default mock has dismissed_ui: [] so the button should be disabled.
+      const wrapper = await makeWrapper()
+      const btn = wrapper.find("[data-cy=reset_dismissed_btn]")
+      expect(btn.exists()).toBe(true)
+      // Quasar disables buttons via aria-disabled rather than the
+      // native disabled attribute.
+      expect(btn.attributes("aria-disabled")).toBe("true")
+      expect(dialogMock).not.toHaveBeenCalled()
+    })
+
+    test("button enables and opens a confirm dialog when keys are present", async () => {
+      requestHandler.mockResolvedValue({
+        data: {
+          currentUser: {
+            __typename: "User",
+            id: "1",
+            username: "test",
+            name: "TestDoe",
+            display_label: "TestDoe",
+            email: "test@example.com",
+            email_verified_at: null,
+            highest_privileged_role: null,
+            roles: [],
+            preferences: null,
+            dismissed_ui: ["manage_ui.opt_in_callout"],
+            feature_opt_ins: []
+          }
+        }
+      })
+      const onOk = vi.fn().mockReturnThis()
+      dialogMock.mockReturnValue({
+        onOk,
+        onCancel: vi.fn().mockReturnThis(),
+        onDismiss: vi.fn().mockReturnThis()
+      })
+
+      const wrapper = await makeWrapper()
+      await flushPromises()
+      const btn = wrapper.find("[data-cy=reset_dismissed_btn]")
+      expect(btn.attributes("aria-disabled")).not.toBe("true")
+      await btn.trigger("click")
+
+      expect(dialogMock).toHaveBeenCalledTimes(1)
+      expect(onOk).toHaveBeenCalledTimes(1)
+    })
+
+    test("confirming the dialog fires the resetDismissedUi mutation", async () => {
+      requestHandler.mockResolvedValue({
+        data: {
+          currentUser: {
+            __typename: "User",
+            id: "1",
+            username: "test",
+            name: "TestDoe",
+            email: "test@example.com",
+            email_verified_at: null,
+            highest_privileged_role: null,
+            display_label: "TestDoe",
+            roles: [],
+            preferences: null,
+            dismissed_ui: ["x"],
+            feature_opt_ins: []
+          }
+        }
+      })
+
+      // Capture the onOk callback so we can invoke it after the
+      // wrapper is mounted, simulating the user confirming.
+      let okCallback: (() => unknown) | null = null
+      dialogMock.mockReturnValue({
+        onOk: (cb: () => unknown) => {
+          okCallback = cb
+          return {
+            onCancel: vi.fn().mockReturnThis(),
+            onDismiss: vi.fn().mockReturnThis()
+          }
+        }
+      })
+      resetDismissedHandler.mockResolvedValue({
+        data: {
+          resetDismissedUi: {
+            __typename: "User",
+            id: "1",
+            dismissed_ui: []
+          }
+        }
+      })
+
+      const wrapper = await makeWrapper()
+      await wrapper.find("[data-cy=reset_dismissed_btn]").trigger("click")
+      expect(okCallback).toBeTypeOf("function")
+
+      await okCallback!()
+      await flushPromises()
+
+      expect(resetDismissedHandler).toHaveBeenCalledTimes(1)
+    })
   })
 })

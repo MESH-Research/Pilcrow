@@ -233,6 +233,13 @@ type Mutation {
   deleteOverallComment(input: DeleteCommentInput!): Submission!
 
   """
+  Mark a UI element (info callout, banner, etc.) as dismissed for
+  the authenticated user. Idempotent — re-dismissing refreshes the
+  timestamp the server stores against the key.
+  """
+  dismissUiElement(key: String!): User!
+
+  """
   Create a staged user, assign them as a review coordinator of a submisison,
   and send them an email notification inviting them to accept the assignment
   """
@@ -280,6 +287,14 @@ type Mutation {
   """
   resetDatabase: String!
 
+  """
+  Clear every dismissed UI key for the authenticated user, so the
+  dismissable callouts they previously closed will show again on
+  their next visit. Used by the "Reset dismissable elements"
+  control on the user settings page.
+  """
+  resetDismissedUi: User!
+
   "Update a password from a password reset request"
   resetPassword(input: ResetPasswordInput): User
 
@@ -290,6 +305,13 @@ type Mutation {
     "User to resend verification for. If not supplied, defaults to the current user."
     id: ID
   ): User!
+
+  """
+  Toggle the authenticated user's opt-in state for a feature flag.
+  Setting `enabled: false` records an explicit opt-out (vs. the
+  "never decided" default of an absent key).
+  """
+  setFeatureOptIn(enabled: Boolean!, feature: String!): User!
 
   updatePublication(publication: UpdatePublicationInput!): Publication
 
@@ -304,6 +326,12 @@ type Mutation {
 
   "Update user information"
   updateUser(user: UpdateUserInput!): User!
+
+  """
+  Update the authenticated user's UI preferences. Only supplied
+  fields are written; others retain their stored values.
+  """
+  updateUserPreferences(input: UpdateUserPreferencesInput!): User!
 
   "Verify the currently logged in user's email address"
   verifyEmail(
@@ -1158,6 +1186,15 @@ input UpdateUserInput {
   username: String
 }
 
+"""
+Patch a subset of the current user's UI preferences. Omitted
+fields are left untouched on the stored object.
+"""
+input UpdateUserPreferencesInput {
+  color_blind_patterns: Boolean
+  theme: UserThemePreference
+}
+
 "Can be used as an argument to upload files using https://github.com/jaydenseric/graphql-multipart-request-spec"
 scalar Upload
 
@@ -1200,9 +1237,17 @@ type User {
   as_submitter_count: Int
 
   created_at: DateTimeUtc!
+
+  "Keys of UI elements (callouts, banners) the user has dismissed."
+  dismissed_ui: [String!]!
+
   display_label: String
   email: String!
   email_verified_at: DateTimeUtc
+
+  "Feature-flag keys the user has explicitly opted into."
+  feature_opt_ins: [String!]!
+
   highest_privileged_role: UserRoles
   id: ID!
   name: String
@@ -1217,6 +1262,10 @@ type User {
     unread: Boolean
   ): NotificationPaginator!
   permissions: [Permission!]
+
+  "UI preferences (theme, color-blind patterns)."
+  preferences: UserPreferences
+
   profile_metadata: ProfileMetadata
   publications(
     "Limits number of fetched items."
@@ -1261,6 +1310,16 @@ type UserPaginator implements Paginator {
   paginatorInfo: PaginatorInfo!
 }
 
+"""
+Per-user UI preferences with a known shape. Stored as a JSON
+column on `users.preferences`; Lighthouse resolves each field by
+key from the underlying array cast.
+"""
+type UserPreferences {
+  color_blind_patterns: Boolean
+  theme: UserThemePreference
+}
+
 enum UserRoles {
   application_admin
   editor
@@ -1268,6 +1327,13 @@ enum UserRoles {
   review_coordinator
   reviewer
   submitter
+}
+
+"Theme preference. AUTO follows the OS / browser preference."
+enum UserThemePreference {
+  AUTO
+  DARK
+  LIGHT
 }
 
 "Validate the availability of username and email via the validateNewUser query"

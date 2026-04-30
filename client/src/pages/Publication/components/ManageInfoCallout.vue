@@ -1,6 +1,6 @@
 <template>
   <q-card
-    v-if="!dismissed"
+    v-if="!isHidden"
     flat
     bordered
     class="manage-info-callout q-mb-md"
@@ -21,21 +21,43 @@
         icon="check"
         class="callout-dismiss"
         :label="$t('guiElements.dismiss')"
-        @click="dismiss"
+        :loading="dismissing"
+        @click="onDismiss"
       />
     </q-card-actions>
   </q-card>
 </template>
 
+<script lang="ts">
+import { graphql } from "src/graphql/generated"
+
+// Co-located with the only component that fires it. Apollo's
+// normalized cache picks up the new dismissed_ui array on the User
+// entity, so any consumer reading `currentUser.dismissed_ui` (e.g.
+// useUserPreferences().isDismissed) reactively re-evaluates without
+// a separate cache write.
+graphql(`
+  mutation DismissUiElement($key: String!) {
+    dismissUiElement(key: $key) {
+      id
+      dismissed_ui
+    }
+  }
+`)
+</script>
+
 <script setup lang="ts">
-import { ref } from "vue"
+import { computed, ref } from "vue"
+import { useMutation } from "@vue/apollo-composable"
+import { DismissUiElementDocument } from "src/graphql/generated/graphql"
+import { useUserPreferences } from "src/use/userPreferences"
 
 // Reusable explainer callout for the manage UI. Two-zone layout:
 // a colored header strip with an icon + title, then the body in a
 // separate card section so longer copy doesn't compete with the
-// title for visual weight. Optionally persists a "dismissed" flag
-// in localStorage when `dismissKey` is provided so an admin who's
-// already read the explainer once doesn't keep seeing it.
+// title for visual weight. When `dismissKey` is supplied the
+// dismissal is persisted server-side against the authenticated
+// user — no localStorage, so it follows the user across devices.
 
 interface Props {
   title: string
@@ -49,21 +71,35 @@ const props = withDefaults(defineProps<Props>(), {
   dismissKey: ""
 })
 
-const dismissed = ref(
-  props.dismissKey && typeof localStorage !== "undefined"
-    ? localStorage.getItem(props.dismissKey) === "1"
-    : false
+const { isDismissed } = useUserPreferences()
+
+// Local optimistic flag layered over the server-backed `isDismissed`
+// computed. Setting it true on click hides the callout immediately
+// without waiting for the round-trip; once the mutation resolves
+// and the cache catches up, the server-side flag takes over and
+// the local one becomes redundant.
+const optimisticallyDismissed = ref(false)
+
+const serverDismissed = computed(() =>
+  props.dismissKey ? isDismissed(props.dismissKey).value : false
 )
 
-function dismiss() {
-  dismissed.value = true
-  if (props.dismissKey) {
-    try {
-      localStorage.setItem(props.dismissKey, "1")
-    } catch {
-      // localStorage unavailable in some contexts (private mode,
-      // restricted iframes); in-session dismissal still applies.
-    }
+const isHidden = computed(
+  () => optimisticallyDismissed.value || serverDismissed.value
+)
+
+const { mutate: dismissMutation, loading: dismissing } = useMutation(
+  DismissUiElementDocument
+)
+
+async function onDismiss() {
+  if (!props.dismissKey) return
+  optimisticallyDismissed.value = true
+  try {
+    await dismissMutation({ key: props.dismissKey })
+  } catch {
+    // Roll back the optimistic hide so the user can try again.
+    optimisticallyDismissed.value = false
   }
 }
 </script>
