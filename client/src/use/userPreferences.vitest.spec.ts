@@ -55,7 +55,7 @@ describe("useUserPreferences composable", () => {
     await flushPromises()
 
     expect(result.theme.value).toBeNull()
-    expect(result.colorBlindPatterns.value).toBe(false)
+    expect(result.a11yColorPatterns.value).toBe(false)
     expect(result.dismissedKeys.value).toEqual([])
     expect(result.optedInFeatures.value).toEqual([])
   })
@@ -66,7 +66,7 @@ describe("useUserPreferences composable", () => {
         preferences: {
           __typename: "UserPreferences",
           theme: UserThemePreference.DARK,
-          color_blind_patterns: true
+          a11y_color_patterns: true
         },
         dismissed_ui: ["manage_ui.opt_in_callout", "team.flag_help"],
         feature_opt_ins: ["manage_ui_v2"]
@@ -75,7 +75,7 @@ describe("useUserPreferences composable", () => {
     await flushPromises()
 
     expect(result.theme.value).toBe(UserThemePreference.DARK)
-    expect(result.colorBlindPatterns.value).toBe(true)
+    expect(result.a11yColorPatterns.value).toBe(true)
     expect(result.dismissedKeys.value).toEqual([
       "manage_ui.opt_in_callout",
       "team.flag_help"
@@ -83,13 +83,13 @@ describe("useUserPreferences composable", () => {
     expect(result.optedInFeatures.value).toEqual(["manage_ui_v2"])
   })
 
-  test("colorBlindPatterns falls back to false when preferences are null", async () => {
+  test("a11yColorPatterns falls back to false when preferences are null", async () => {
     const result = mountComposable({
       data: buildUser({ preferences: null })
     })
     await flushPromises()
 
-    expect(result.colorBlindPatterns.value).toBe(false)
+    expect(result.a11yColorPatterns.value).toBe(false)
   })
 
   test("isDismissed reports membership in dismissed_ui", async () => {

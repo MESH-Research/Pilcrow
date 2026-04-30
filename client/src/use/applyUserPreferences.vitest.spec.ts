@@ -10,12 +10,12 @@ const darkSet = vi.fn()
 // query: this test only cares about the projection from preference
 // values to body class / Quasar dark mode, not the data layer.
 const themeRef = ref<UserThemePreference | null>(null)
-const colorBlindRef = ref(false)
+const a11yRef = ref(false)
 
 vi.mock("./userPreferences", () => ({
   useUserPreferences: () => ({
     theme: themeRef,
-    colorBlindPatterns: colorBlindRef
+    a11yColorPatterns: a11yRef
   })
 }))
 
@@ -29,12 +29,12 @@ describe("useApplyUserPreferences composable", () => {
   beforeEach(() => {
     darkSet.mockReset()
     themeRef.value = null
-    colorBlindRef.value = false
-    document.body.classList.remove("body--color-blind")
+    a11yRef.value = false
+    document.body.classList.remove("body--a11y-patterns")
   })
 
   afterEach(() => {
-    document.body.classList.remove("body--color-blind")
+    document.body.classList.remove("body--a11y-patterns")
   })
 
   test("sets dark mode to auto when no theme is stored", () => {
@@ -73,16 +73,16 @@ describe("useApplyUserPreferences composable", () => {
     expect(darkSet).toHaveBeenLastCalledWith(false)
   })
 
-  test("toggles body--color-blind class to mirror the preference", async () => {
+  test("toggles body--a11y-patterns class to mirror the preference", async () => {
     mount(() => useApplyUserPreferences())
-    expect(document.body.classList.contains("body--color-blind")).toBe(false)
+    expect(document.body.classList.contains("body--a11y-patterns")).toBe(false)
 
-    colorBlindRef.value = true
+    a11yRef.value = true
     await nextTick()
-    expect(document.body.classList.contains("body--color-blind")).toBe(true)
+    expect(document.body.classList.contains("body--a11y-patterns")).toBe(true)
 
-    colorBlindRef.value = false
+    a11yRef.value = false
     await nextTick()
-    expect(document.body.classList.contains("body--color-blind")).toBe(false)
+    expect(document.body.classList.contains("body--a11y-patterns")).toBe(false)
   })
 })

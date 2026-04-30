@@ -1191,7 +1191,7 @@ Patch a subset of the current user's UI preferences. Omitted
 fields are left untouched on the stored object.
 """
 input UpdateUserPreferencesInput {
-  color_blind_patterns: Boolean
+  a11y_color_patterns: Boolean
   theme: UserThemePreference
 }
 
@@ -1263,7 +1263,7 @@ type User {
   ): NotificationPaginator!
   permissions: [Permission!]
 
-  "UI preferences (theme, color-blind patterns)."
+  "UI preferences (theme, accessible color patterns)."
   preferences: UserPreferences
 
   profile_metadata: ProfileMetadata
@@ -1316,7 +1316,7 @@ column on `users.preferences`; Lighthouse resolves each field by
 key from the underlying array cast.
 """
 type UserPreferences {
-  color_blind_patterns: Boolean
+  a11y_color_patterns: Boolean
   theme: UserThemePreference
 }
 

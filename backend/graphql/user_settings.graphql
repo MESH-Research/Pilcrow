@@ -5,7 +5,7 @@ key from the underlying array cast.
 """
 type UserPreferences {
     theme: UserThemePreference
-    color_blind_patterns: Boolean
+    a11y_color_patterns: Boolean
 }
 
 """
@@ -23,7 +23,7 @@ fields are left untouched on the stored object.
 """
 input UpdateUserPreferencesInput {
     theme: UserThemePreference
-    color_blind_patterns: Boolean
+    a11y_color_patterns: Boolean
 }
 
 extend type Mutation @guard {

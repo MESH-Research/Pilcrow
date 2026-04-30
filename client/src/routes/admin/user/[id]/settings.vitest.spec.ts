@@ -77,7 +77,7 @@ describe("UserDetails settings tab", () => {
       mockResponse({
         preferences: {
           theme: UserThemePreference.DARK,
-          color_blind_patterns: true
+          a11y_color_patterns: true
         },
         dismissed_ui: ["manage_ui.opt_in_callout", "team.flag_help"],
         feature_opt_ins: ["manage_ui_v2"]

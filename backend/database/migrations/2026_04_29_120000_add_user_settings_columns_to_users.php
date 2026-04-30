@@ -9,8 +9,8 @@ return new class extends Migration {
     /**
      * Add three JSON columns for user-scoped settings:
      *
-     * - `preferences`: known-shape UI prefs (theme, color-blind
-     *   patterns). Read every render, written rarely.
+     * - `preferences`: known-shape UI prefs (theme, accessible
+     *   color patterns). Read every render, written rarely.
      * - `dismissed_ui`: open-ended map of `{key: dismissed_at}` so
      *   "show again after 30 days" can be added later without a
      *   migration.

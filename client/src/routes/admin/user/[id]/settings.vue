@@ -22,9 +22,9 @@
           class="col-sm-6 col-xs-12"
           icon="accessibility_new"
           :label="
-            $t('admin.users.details.settings.preferences.color_blind_patterns')
+            $t('admin.users.details.settings.preferences.a11y_color_patterns')
           "
-          :value="colorBlindLabel"
+          :value="a11yColorPatternsLabel"
         />
       </q-card-section>
     </q-card>
@@ -99,7 +99,7 @@ graphql(`
       id
       preferences {
         theme
-        color_blind_patterns
+        a11y_color_patterns
       }
       dismissed_ui
       feature_opt_ins
@@ -145,8 +145,8 @@ const themeLabel = computed(() => {
   )
 })
 
-const colorBlindLabel = computed(() => {
-  const value = user.value?.preferences?.color_blind_patterns
+const a11yColorPatternsLabel = computed(() => {
+  const value = user.value?.preferences?.a11y_color_patterns
   if (value === null || value === undefined) {
     return t("admin.users.details.settings.preferences.not_set")
   }

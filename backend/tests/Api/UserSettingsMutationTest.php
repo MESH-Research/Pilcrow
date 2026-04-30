@@ -47,11 +47,11 @@ class UserSettingsMutationTest extends ApiTestCase
         $response = $this->graphQL(
             'mutation {
                 updateUserPreferences(
-                    input: { theme: DARK, color_blind_patterns: true }
+                    input: { theme: DARK, a11y_color_patterns: true }
                 ) {
                     preferences {
                         theme
-                        color_blind_patterns
+                        a11y_color_patterns
                     }
                 }
             }'
@@ -59,11 +59,11 @@ class UserSettingsMutationTest extends ApiTestCase
 
         $response->assertJsonPath('data.updateUserPreferences.preferences.theme', 'DARK');
         $response->assertJsonPath(
-            'data.updateUserPreferences.preferences.color_blind_patterns',
+            'data.updateUserPreferences.preferences.a11y_color_patterns',
             true
         );
         $this->assertSame(
-            ['theme' => 'dark', 'color_blind_patterns' => true],
+            ['theme' => 'dark', 'a11y_color_patterns' => true],
             $user->fresh()->preferences
         );
     }
@@ -72,7 +72,7 @@ class UserSettingsMutationTest extends ApiTestCase
     {
         /** @var User $user */
         $user = User::factory()->create([
-            'preferences' => ['theme' => 'light', 'color_blind_patterns' => true],
+            'preferences' => ['theme' => 'light', 'a11y_color_patterns' => true],
         ]);
         $this->actingAs($user);
 
@@ -81,18 +81,18 @@ class UserSettingsMutationTest extends ApiTestCase
                 updateUserPreferences(input: { theme: DARK }) {
                     preferences {
                         theme
-                        color_blind_patterns
+                        a11y_color_patterns
                     }
                 }
             }'
         );
 
-        // Theme updated, but the previously-stored color_blind_patterns
+        // Theme updated, but the previously-stored a11y_color_patterns
         // value is untouched — partial patches must not clobber other
         // keys.
         $response->assertJsonPath('data.updateUserPreferences.preferences.theme', 'DARK');
         $response->assertJsonPath(
-            'data.updateUserPreferences.preferences.color_blind_patterns',
+            'data.updateUserPreferences.preferences.a11y_color_patterns',
             true
         );
     }

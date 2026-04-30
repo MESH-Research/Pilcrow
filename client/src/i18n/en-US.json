@@ -179,11 +179,11 @@
       "theme_auto": "Auto",
       "theme_light": "Light",
       "theme_dark": "Dark",
-      "color_blind_patterns": "Use color-blind safe patterns alongside status colors",
+      "a11y_color_patterns": "Use accessible patterns alongside status colors",
       "error": "Could not save your preferences. Please try again."
     },
     "dismissed": {
-      "heading": "Dismissed Help &amp; Banners",
+      "heading": "Dismissed help messages",
       "summary": "no callouts have been dismissed | one callout has been dismissed | {n} callouts have been dismissed",
       "help": "Resetting will make every dismissable explainer appear again on your next visit.",
       "reset": "Reset dismissable elements",
@@ -1610,7 +1610,7 @@
             "theme_auto": "Auto (follows system)",
             "theme_light": "Light",
             "theme_dark": "Dark",
-            "color_blind_patterns": "Color-Blind Patterns",
+            "a11y_color_patterns": "Accessible Color Patterns",
             "enabled": "Enabled",
             "disabled": "Disabled",
             "not_set": "Not set"

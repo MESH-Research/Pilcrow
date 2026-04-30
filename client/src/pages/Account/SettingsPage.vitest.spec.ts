@@ -141,7 +141,7 @@ describe("Settings page", () => {
   describe("preferences", () => {
     function preferenceMutationResponse(
       theme: UserThemePreference | null,
-      colorBlind: boolean | null
+      a11yColorPatterns: boolean | null
     ) {
       return {
         data: {
@@ -151,7 +151,7 @@ describe("Settings page", () => {
             preferences: {
               __typename: "UserPreferences",
               theme,
-              color_blind_patterns: colorBlind
+              a11y_color_patterns: a11yColorPatterns
             }
           }
         }
@@ -177,20 +177,20 @@ describe("Settings page", () => {
       })
     })
 
-    test("toggling color-blind patterns fires updatePreferences with the new boolean", async () => {
+    test("toggling accessible color patterns fires updatePreferences with the new boolean", async () => {
       updatePreferencesHandler.mockResolvedValue(
         preferenceMutationResponse(null, true)
       )
 
       const wrapper = await makeWrapper()
-      const toggle = wrapper.find("[data-cy=color_blind_toggle]")
+      const toggle = wrapper.find("[data-cy=a11y_color_patterns_toggle]")
       expect(toggle.exists()).toBe(true)
       await toggle.trigger("click")
       await flushPromises()
 
       expect(updatePreferencesHandler).toHaveBeenCalledTimes(1)
       expect(updatePreferencesHandler).toHaveBeenCalledWith({
-        input: { color_blind_patterns: true }
+        input: { a11y_color_patterns: true }
       })
     })
   })

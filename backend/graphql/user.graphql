@@ -14,7 +14,7 @@ type User {
     highest_privileged_role: UserRoles @method(name: "getHighestPrivilegedRole")
     permissions: [Permission!] @belongsToMany
     profile_metadata: ProfileMetadata
-    "UI preferences (theme, color-blind patterns)."
+    "UI preferences (theme, accessible color patterns)."
     preferences: UserPreferences
     "Keys of UI elements (callouts, banners) the user has dismissed."
     dismissed_ui: [String!]! @method(name: "getDismissedUiKeys")

@@ -4,7 +4,7 @@ import type { UserThemePreference } from "src/graphql/generated/graphql"
 
 /**
  * Read-only reactive accessors for the current user's stored
- * settings: UI preferences (theme / color-blind patterns), one-shot
+ * settings: UI preferences (theme / accessible color patterns), one-shot
  * UI dismissals, and feature-flag opt-ins.
  *
  * Mutations are intentionally *not* exposed here — they live with
@@ -24,8 +24,8 @@ export function useUserPreferences() {
     () => currentUser.value?.preferences?.theme ?? null
   )
 
-  const colorBlindPatterns = computed<boolean>(
-    () => currentUser.value?.preferences?.color_blind_patterns ?? false
+  const a11yColorPatterns = computed<boolean>(
+    () => currentUser.value?.preferences?.a11y_color_patterns ?? false
   )
 
   const dismissedKeys = computed<readonly string[]>(
@@ -49,7 +49,7 @@ export function useUserPreferences() {
 
   return {
     theme,
-    colorBlindPatterns,
+    a11yColorPatterns,
     dismissedKeys,
     optedInFeatures,
     isDismissed,

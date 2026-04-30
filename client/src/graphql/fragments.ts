@@ -35,7 +35,7 @@ export const _CURRENT_USER_FIELDS = gql`
     highest_privileged_role
     preferences {
       theme
-      color_blind_patterns
+      a11y_color_patterns
     }
     dismissed_ui
     feature_opt_ins

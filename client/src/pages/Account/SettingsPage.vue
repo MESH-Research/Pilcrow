@@ -38,11 +38,11 @@
           </div>
         </div>
         <q-toggle
-          :model-value="colorBlindPatterns"
-          :label="$t('settings.preferences.color_blind_patterns')"
+          :model-value="a11yColorPatterns"
+          :label="$t('settings.preferences.a11y_color_patterns')"
           :disable="savingPreferences"
-          data-cy="color_blind_toggle"
-          @update:model-value="onColorBlindChange"
+          data-cy="a11y_color_patterns_toggle"
+          @update:model-value="onA11yColorPatternsChange"
         />
       </q-card-section>
     </q-card>
@@ -88,7 +88,7 @@ graphql(`
       id
       preferences {
         theme
-        color_blind_patterns
+        a11y_color_patterns
       }
     }
   }
@@ -129,7 +129,7 @@ import { computed, provide } from "vue"
 const { currentUserQuery, currentUser } = useCurrentUser()
 const {
   theme: currentTheme,
-  colorBlindPatterns,
+  a11yColorPatterns,
   dismissedKeys
 } = useUserPreferences()
 
@@ -203,10 +203,10 @@ async function onThemeChange(value: UserThemePreference) {
   }
 }
 
-async function onColorBlindChange(value: boolean) {
+async function onA11yColorPatternsChange(value: boolean) {
   try {
     await updatePreferencesMutation({
-      input: { color_blind_patterns: value }
+      input: { a11y_color_patterns: value }
     })
   } catch {
     newStatusMessage("failure", t("settings.preferences.error"))

@@ -5,7 +5,7 @@ import { UserThemePreference } from "src/graphql/generated/graphql"
 
 /**
  * Apply the authenticated user's stored preferences to the running
- * app: dark/light mode via Quasar, and a `body--color-blind` class
+ * app: dark/light mode via Quasar, and a `body--a11y-patterns` class
  * for any CSS that wants to swap colored cues for high-contrast
  * patterns.
  *
@@ -19,7 +19,7 @@ import { UserThemePreference } from "src/graphql/generated/graphql"
  */
 export function useApplyUserPreferences() {
   const $q = useQuasar()
-  const { theme, colorBlindPatterns } = useUserPreferences()
+  const { theme, a11yColorPatterns } = useUserPreferences()
 
   watchEffect(() => {
     // Quasar accepts `true | false | "auto"`. AUTO mirrors the OS
@@ -37,8 +37,8 @@ export function useApplyUserPreferences() {
   watchEffect(() => {
     if (typeof document === "undefined") return
     document.body.classList.toggle(
-      "body--color-blind",
-      colorBlindPatterns.value
+      "body--a11y-patterns",
+      a11yColorPatterns.value
     )
   })
 }
