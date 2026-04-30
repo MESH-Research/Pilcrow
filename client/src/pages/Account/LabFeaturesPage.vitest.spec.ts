@@ -12,7 +12,7 @@ vi.mock("quasar", async (importOriginal) => {
   const quasar = await importOriginal<typeof import("quasar")>()
   return {
     ...quasar,
-    useQuasar: () => ({ notify: vi.fn() })
+    useQuasar: () => ({ notify: vi.fn(), dark: { isActive: false } })
   }
 })
 
