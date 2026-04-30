@@ -199,7 +199,24 @@
     "deactivate": "Deactivate",
     "manage_ui_v2": {
       "label": "New publication management UI",
-      "description": "A redesigned dashboard, submission detail page, and review-team picker."
+      "description": "A redesigned dashboard, submission detail page, and review-team picker.",
+      "previews": {
+        "heading": "Preview",
+        "expand_aria": "Open larger preview of {caption}",
+        "close": "Close",
+        "manage_overview": {
+          "title": "Manage dashboard",
+          "caption": "All your publications in one table, with stage-grouped Needs Action / In Progress / Closed counts and click-through filtering."
+        },
+        "publication_dashboard": {
+          "title": "Publication dashboard",
+          "caption": "Workflow-stage overview with at-a-glance Needs Action callout and a status-aware submissions table."
+        },
+        "submission_detail": {
+          "title": "Submission detail",
+          "caption": "Tabbed submission view — Details, Review Team, and Activity — with status and quick actions surfaced in the header."
+        }
+      }
     },
     "error": "Could not save your feature preference. Please try again."
   },
