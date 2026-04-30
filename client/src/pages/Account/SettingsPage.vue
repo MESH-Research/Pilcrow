@@ -56,9 +56,6 @@
       <q-separator />
       <q-card-section class="row items-center q-gutter-md">
         <div class="col">
-          <div class="text-body2">
-            {{ $t("settings.dismissed.summary", { n: dismissedKeys.length }) }}
-          </div>
           <div class="text-caption text-grey-7">
             {{ $t("settings.dismissed.help") }}
           </div>
