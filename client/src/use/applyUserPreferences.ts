@@ -5,9 +5,9 @@ import { UserThemePreference } from "src/graphql/generated/graphql"
 
 /**
  * Apply the authenticated user's stored preferences to the running
- * app: dark/light mode via Quasar, and a `body--a11y-patterns` class
- * for any CSS that wants to swap colored cues for high-contrast
- * patterns.
+ * app: dark/light mode via Quasar, and an `a11y-patterns` class on
+ * the body so the pattern rules in `app.sass` (which already gate on
+ * `.a11y-patterns`) activate without further wiring.
  *
  * Called once from the root component (App.vue) so it runs as soon
  * as the current-user query resolves and re-applies whenever the
@@ -36,9 +36,6 @@ export function useApplyUserPreferences() {
 
   watchEffect(() => {
     if (typeof document === "undefined") return
-    document.body.classList.toggle(
-      "body--a11y-patterns",
-      a11yColorPatterns.value
-    )
+    document.body.classList.toggle("a11y-patterns", a11yColorPatterns.value)
   })
 }

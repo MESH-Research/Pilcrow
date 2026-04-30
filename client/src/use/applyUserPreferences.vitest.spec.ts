@@ -30,11 +30,11 @@ describe("useApplyUserPreferences composable", () => {
     darkSet.mockReset()
     themeRef.value = null
     a11yRef.value = false
-    document.body.classList.remove("body--a11y-patterns")
+    document.body.classList.remove("a11y-patterns")
   })
 
   afterEach(() => {
-    document.body.classList.remove("body--a11y-patterns")
+    document.body.classList.remove("a11y-patterns")
   })
 
   test("sets dark mode to auto when no theme is stored", () => {
@@ -73,16 +73,16 @@ describe("useApplyUserPreferences composable", () => {
     expect(darkSet).toHaveBeenLastCalledWith(false)
   })
 
-  test("toggles body--a11y-patterns class to mirror the preference", async () => {
+  test("toggles a11y-patterns class to mirror the preference", async () => {
     mount(() => useApplyUserPreferences())
-    expect(document.body.classList.contains("body--a11y-patterns")).toBe(false)
+    expect(document.body.classList.contains("a11y-patterns")).toBe(false)
 
     a11yRef.value = true
     await nextTick()
-    expect(document.body.classList.contains("body--a11y-patterns")).toBe(true)
+    expect(document.body.classList.contains("a11y-patterns")).toBe(true)
 
     a11yRef.value = false
     await nextTick()
-    expect(document.body.classList.contains("body--a11y-patterns")).toBe(false)
+    expect(document.body.classList.contains("a11y-patterns")).toBe(false)
   })
 })
