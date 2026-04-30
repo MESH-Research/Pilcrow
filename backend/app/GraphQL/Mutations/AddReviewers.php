@@ -25,8 +25,8 @@ use Illuminate\Support\Facades\DB;
 final class AddReviewers
 {
     /**
-     * @param  null  $_
-     * @param  array{
+     * @param null  $_
+     * @param array{
      *   submission_id: int|string,
      *   connect?: array<int,int|string>,
      *   invite_emails?: array<int,string>,

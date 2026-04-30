@@ -92,5 +92,4 @@ class PublicationBuilder extends Builder
                 });
         });
     }
-
 }

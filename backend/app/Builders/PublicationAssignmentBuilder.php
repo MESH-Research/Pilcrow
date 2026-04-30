@@ -44,7 +44,7 @@ class PublicationAssignmentBuilder extends Builder
 
         return $this->whereHas(
             'publication',
-            fn (Builder $query) => $query->search($term)
+            fn(Builder $query) => $query->search($term)
         );
     }
 

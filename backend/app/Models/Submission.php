@@ -282,8 +282,8 @@ class Submission extends Model implements Auditable
     {
         $transition = $this->audits->first(function ($audit) {
             return $audit->event === 'updated'
-                && (int) data_get($audit->old_values, 'status') === self::DRAFT
-                && (int) data_get($audit->new_values, 'status') === self::INITIALLY_SUBMITTED;
+                && (int)data_get($audit->old_values, 'status') === self::DRAFT
+                && (int)data_get($audit->new_values, 'status') === self::INITIALLY_SUBMITTED;
         });
 
         return $transition?->created_at;

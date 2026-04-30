@@ -34,9 +34,7 @@
                   role="button"
                   :aria-label="
                     $t(`${feature.previewsKey}.expand_aria`, {
-                      caption: $t(
-                        `${feature.previewsKey}.${preview.key}.title`
-                      )
+                      caption: $t(`${feature.previewsKey}.${preview.key}.title`)
                     })
                   "
                   :data-cy="`lab_preview_${preview.key}`"
@@ -64,14 +62,10 @@
                   </q-img>
                   <q-card-section class="q-pa-sm col">
                     <div class="text-body2 text-weight-medium">
-                      {{
-                        $t(`${feature.previewsKey}.${preview.key}.title`)
-                      }}
+                      {{ $t(`${feature.previewsKey}.${preview.key}.title`) }}
                     </div>
                     <div class="text-caption text-grey-7 q-mt-xs">
-                      {{
-                        $t(`${feature.previewsKey}.${preview.key}.caption`)
-                      }}
+                      {{ $t(`${feature.previewsKey}.${preview.key}.caption`) }}
                     </div>
                   </q-card-section>
                 </q-card>

@@ -540,7 +540,8 @@ class DashboardDemoSeeder extends Seeder
 
             // Websites — 0..2 extras per profile.
             $websites = [];
-            for ($i = 0; $i < mt_rand(0, 2); $i++) {
+            $websiteNum = mt_rand(0, 2);
+            for ($i = 0; $i < $websiteNum; $i++) {
                 $websites[] = $faker->url();
             }
 

@@ -100,6 +100,7 @@ class PublicationPolicy
         if ($user->hasPublicationRole(Role::EDITOR_ROLE_ID, $publication->id)) {
             return true;
         }
+
         return false;
     }
 }

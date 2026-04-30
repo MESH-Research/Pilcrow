@@ -74,7 +74,7 @@ class UserSettings
         $user = Auth::user();
 
         $optIns = $user->feature_opt_ins ?? [];
-        $optIns[$args['feature']] = (bool) $args['enabled'];
+        $optIns[$args['feature']] = (bool)$args['enabled'];
 
         $user->feature_opt_ins = $optIns;
         $user->save();
@@ -88,10 +88,10 @@ class UserSettings
      * on their next visit.
      *
      * @param mixed $_
-     * @param array<string, mixed> $args
+     * @param array<string, mixed> $__
      * @return \App\Models\User
      */
-    public function resetDismissedUi($_, array $args): User
+    public function resetDismissedUi($_, array $__): User
     {
         /** @var \App\Models\User $user */
         $user = Auth::user();
