@@ -384,7 +384,7 @@
     "guide_call_to_action": "Learn more in our {link}.",
     "manage_banner": {
       "message": "Try the new publication management experience.",
-      "cta": "Open Manage",
+      "cta": "Labs",
       "dismiss": "Hide for a week"
     },
     "needs_action": {

@@ -14,8 +14,8 @@
       <template #action>
         <q-btn
           flat
-          icon="arrow_forward"
-          to="/manage"
+          icon="science"
+          to="/account/lab-features"
           :label="$t('dashboard.manage_banner.cta')"
           data-cy="manage_banner_cta"
         />
@@ -97,12 +97,12 @@
       </div>
     </section>
     <section class="row q-mb-md">
-      <div class="col-xs-12 col-md-6">
-        <NeedsActionPublicationsTable :limit="3" />
+      <div v-if="hasManageV2" class="col-12">
+        <NeedsActionPublicationsTable :limit="5" />
       </div>
     </section>
     <section class="row wrap q-gutter-y-md">
-      <div v-if="all_submissions.length > 0" class="col-12">
+      <div v-if="all_submissions.length > 0 && !hasManageV2" class="col-12">
         <submission-table
           :table-data="all_submissions"
           table-type="submissions"
@@ -166,6 +166,7 @@ graphql(`
 import AvatarImage from "src/components/atoms/AvatarImage.vue"
 import NeedsActionPublicationsTable from "src/components/molecules/NeedsActionPublicationsTable.vue"
 import { useCurrentUser } from "src/use/user"
+import { useUserPreferences } from "src/use/userPreferences"
 import { useQuery } from "@vue/apollo-composable"
 import { CURRENT_USER_SUBMISSIONS, GET_SUBMISSIONS } from "src/graphql/queries"
 import { DashboardManagedPublicationsProbeDocument } from "src/graphql/generated/graphql"
@@ -177,12 +178,15 @@ import { useQuasar } from "quasar"
 const $q = useQuasar()
 
 const { currentUser, isAppAdmin } = useCurrentUser()
+const { hasOptedIn } = useUserPreferences()
+const hasManageV2 = hasOptedIn("manage_ui_v2")
 
-// Skip the probe for app admins — they always see the banner.
+// Skip the probe when we already know the answer — app admins always
+// see the banner, and opted-in users hide it regardless.
 const { result: managedProbe } = useQuery(
   DashboardManagedPublicationsProbeDocument,
   {},
-  () => ({ enabled: !isAppAdmin.value })
+  () => ({ enabled: !isAppAdmin.value && !hasManageV2.value })
 )
 const hasManagedPublication = computed(
   () =>
@@ -208,6 +212,7 @@ function dismissManageBanner() {
 const showManageBanner = computed(
   () =>
     !manageBannerDismissed.value &&
+    !hasManageV2.value &&
     (isAppAdmin.value || hasManagedPublication.value)
 )
 const { result: all_submissions_result } = useQuery(GET_SUBMISSIONS, {
