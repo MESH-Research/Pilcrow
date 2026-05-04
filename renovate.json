@@ -3,7 +3,44 @@
     "extends": [
         "config:recommended"
     ],
+    /**
+     * Recreate PR (close+reopen) when target version bumps so PR age reflects
+     * the latest version, not the original branch creation date.
+     **/
+    "recreateWhen": "always",
+    /**
+     * Only rebase when base branch moves, not every Renovate run. Reduces churn.
+     **/
+    "rebaseWhen": "behind-base-branch",
+    /**
+     * Split multi-major updates into separate PRs so each version jump is reviewed
+     * independently.
+     **/
+    "separateMultipleMajor": true,
+    /**
+     * Apply minimumReleaseAge before opening PR (not after).
+     **/
+    "internalChecksFilter": "strict",
     "packageRules": [
+        /**
+         * Stability windows by update type — wait for releases to settle before
+         * opening a PR. Patch updates land quickly, majors wait longest.
+         **/
+        {
+            "description": "Stability window: patch",
+            "matchUpdateTypes": ["patch"],
+            "minimumReleaseAge": "3 days"
+        },
+        {
+            "description": "Stability window: minor",
+            "matchUpdateTypes": ["minor"],
+            "minimumReleaseAge": "7 days"
+        },
+        {
+            "description": "Stability window: major",
+            "matchUpdateTypes": ["major"],
+            "minimumReleaseAge": "30 days"
+        },
         /**
          * These deps aren't well covered by automated testing and are held back
          * until they get approved in the dependency dashboard.
