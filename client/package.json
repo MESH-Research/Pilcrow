@@ -81,7 +81,7 @@
     "mock-apollo-client": "^1.2.1",
     "postcss": "^8.4.14",
     "prettier": "3",
-    "typescript": "~5.9.0",
+    "typescript": "~6.0.0",
     "typescript-eslint": "^8.54.0",
     "vite-plugin-checker": "^0.13.0",
     "vite-plugin-eslint2": "^5.1.0",
