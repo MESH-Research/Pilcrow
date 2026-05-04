@@ -21,6 +21,17 @@
      * Apply minimumReleaseAge before opening PR (not after).
      **/
     "internalChecksFilter": "strict",
+    /**
+     * Open Renovate PRs as drafts so they sit out of the default PR list view
+     * and don't visually compete with feature work. Mark ready manually when
+     * picking one up for review.
+     **/
+    "draftPR": true,
+    /**
+     * Tag every Renovate PR for filterable views
+     * (e.g. `is:pr is:open -label:renovate` to hide deps from the list).
+     **/
+    "labels": ["renovate", "dependencies"],
     "packageRules": [
         /**
          * Stability windows by update type — wait for releases to settle before
