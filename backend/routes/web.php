@@ -19,9 +19,9 @@ Route::get('/', function () {
 });
 // This route is unreachable in the deployed application (the front hands off the request to GraphQL).
 // This route is added to provide the the reverse routing to generate the URL in password reset emails.
-Route::get('/reset-password/{token}', function (string $token) {
-    return view('auth.reset-password', ['token' => $token]);
-})->middleware('guest')->name('password.reset');
+Route::get('/reset-password/{token}', function () {
+    return view('index');
+})->name('password.reset');
 
 // Catch-all route for SPA deep linking. All unmatched routes serve the index
 // view so that Vue Router can handle client-side routing. This must remain the
