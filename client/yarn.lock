@@ -5437,10 +5437,10 @@ mlly@^1.7.4, mlly@^1.8.0, mlly@^1.8.2:
     pkg-types "^1.3.1"
     ufo "^1.6.3"
 
-mock-apollo-client@^1.2.1:
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/mock-apollo-client/-/mock-apollo-client-1.4.0.tgz#ba029c35c64d3976fcc0c6518a7352154a36bb1d"
-  integrity sha512-uUz7p5Oa+Tqgtl4UaeLQ3QkfZb6fl4MBs/R99fKj4u/+Vmzh1vf74z8JQVgvarXZg0RM/oAFGFdqNuRigJFzTA==
+mock-apollo-client@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/mock-apollo-client/-/mock-apollo-client-2.0.0.tgz#48b618906a43e61f2072cf38b279966065695bd8"
+  integrity sha512-29fqBd15f8WUvHK4ajJ/lLIc31VtBStuVgEhuPX0OTCSg6sqcFo/DXMyyBDoRmEFyT8cHtVj6b4xbd+CWvxNLw==
 
 mrmime@^2.0.0:
   version "2.0.1"
