@@ -3,7 +3,56 @@
     "extends": [
         "config:recommended"
     ],
+    /**
+     * Recreate PR (close+reopen) when target version bumps so PR age reflects
+     * the latest version, not the original branch creation date.
+     **/
+    "recreateWhen": "always",
+    /**
+     * Only rebase when base branch moves, not every Renovate run. Reduces churn.
+     **/
+    "rebaseWhen": "behind-base-branch",
+    /**
+     * Apply minimumReleaseAge before opening PR (not after).
+     **/
+    "internalChecksFilter": "strict",
+    /**
+     * Open Renovate PRs as drafts so they sit out of the default PR list view
+     * and don't visually compete with feature work. Mark ready manually when
+     * picking one up for review.
+     **/
+    "draftPR": true,
+    /**
+     * Tag every Renovate PR for filterable views
+     * (e.g. `is:pr is:open -label:renovate` to hide deps from the list).
+     **/
+    "labels": ["renovate", "dependencies"],
     "packageRules": [
+        /**
+         * Stability windows by update type — wait for releases to settle before
+         * opening a PR. Patch updates land quickly, majors wait longest.
+         **/
+        {
+            "description": "Stability window: patch",
+            "matchUpdateTypes": ["patch"],
+            "minimumReleaseAge": "3 days"
+        },
+        {
+            "description": "Stability window: minor",
+            "matchUpdateTypes": ["minor"],
+            "minimumReleaseAge": "7 days"
+        },
+        /**
+         * Major bumps stay off the PR list entirely until approved on the
+         * dependency dashboard issue. Avoids cluttering the open PR view with
+         * speculative migrations.
+         **/
+        {
+            "description": "Major bumps require dependency dashboard approval",
+            "matchUpdateTypes": ["major"],
+            "minimumReleaseAge": "30 days",
+            "dependencyDashboardApproval": true
+        },
         /**
          * These deps aren't well covered by automated testing and are held back
          * until they get approved in the dependency dashboard.
