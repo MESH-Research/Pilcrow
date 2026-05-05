@@ -13,11 +13,6 @@
      **/
     "rebaseWhen": "behind-base-branch",
     /**
-     * Split multi-major updates into separate PRs so each version jump is reviewed
-     * independently.
-     **/
-    "separateMultipleMajor": true,
-    /**
      * Apply minimumReleaseAge before opening PR (not after).
      **/
     "internalChecksFilter": "strict",
@@ -47,10 +42,16 @@
             "matchUpdateTypes": ["minor"],
             "minimumReleaseAge": "7 days"
         },
+        /**
+         * Major bumps stay off the PR list entirely until approved on the
+         * dependency dashboard issue. Avoids cluttering the open PR view with
+         * speculative migrations.
+         **/
         {
-            "description": "Stability window: major",
+            "description": "Major bumps require dependency dashboard approval",
             "matchUpdateTypes": ["major"],
-            "minimumReleaseAge": "30 days"
+            "minimumReleaseAge": "30 days",
+            "dependencyDashboardApproval": true
         },
         /**
          * These deps aren't well covered by automated testing and are held back
