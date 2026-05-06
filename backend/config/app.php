@@ -17,6 +17,10 @@ return [
 
     'name' => env('APP_NAME', 'Pilcrow'),
 
+    'banner_text' => env('APP_BANNER_TEXT'),
+    'banner_class' => env('APP_BANNER_CLASS'),
+    'banner_link' => env('APP_BANNER_LINK'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Environment

@@ -8,7 +8,7 @@
   >
     <div>
       {{ banner }}
-      <a v-if="banner_link" :href="banner_link">{{
+      <a v-if="banner_link" :href="banner_link" class="text-primary">{{
         $t("generic.more_info")
       }}</a>
     </div>
@@ -33,9 +33,20 @@ const { localStorage } = useQuasar()
 const sKey = "hideBannerUntil"
 const hideBanner = ref(false)
 
-const banner = process.env.APP_BANNER ?? null
-const banner_class = process.env.APP_BANNER_CLASS ?? "bg-yellow-2 text-black"
-const banner_link = process.env.APP_BANNER_LINK ?? null
+interface AppBannerConfig {
+  text?: string | null
+  class?: string | null
+  link?: string | null
+}
+declare global {
+  interface Window {
+    __APP_BANNER?: AppBannerConfig
+  }
+}
+const cfg: AppBannerConfig = window.__APP_BANNER ?? {}
+const banner = cfg.text || null
+const banner_class = cfg.class || "bg-yellow-2 text-black"
+const banner_link = cfg.link || null
 
 if (localStorage.has(sKey)) {
   const until = localStorage.getItem(sKey) as number
