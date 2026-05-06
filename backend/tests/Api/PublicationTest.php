@@ -445,7 +445,7 @@ class PublicationTest extends ApiTestCase
         $this->assertCount(2, $json);
     }
 
-    public function testVisibleScopeHidesNonPublicFromRegularUser()
+    public function testUnassignedUserCannotSeeHiddenPublication()
     {
         /** @var User $user */
         $user = User::factory()->create();
