@@ -43,7 +43,7 @@
 <script setup lang="ts">
 const appRoot = process.env.LANDO_APP_ROOT as string | undefined
 const dirName = appRoot?.split("/").pop() ?? null
-const showBanner = appRoot !== undefined && dirName !== 'pilcrow'
+const showBanner = !!appRoot && dirName !== 'pilcrow'
 </script>
 
 <style scoped lang="sass">
