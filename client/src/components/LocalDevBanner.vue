@@ -1,5 +1,5 @@
 <template>
-  <div v-if="dirName != 'pilcrow'" class="local-dev-banner">
+  <div v-if="showBanner"  class="local-dev-banner">
     <span>📂 {{ dirName }}</span>
     <a
       href="/graphiql"
@@ -43,6 +43,7 @@
 <script setup lang="ts">
 const appRoot = process.env.LANDO_APP_ROOT as string | undefined
 const dirName = appRoot?.split("/").pop() ?? null
+const showBanner = appRoot !== undefined && dirName !== 'pilcrow'
 </script>
 
 <style scoped lang="sass">
