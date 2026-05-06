@@ -18,12 +18,18 @@ RUN yarn graphql:codegen-local
 FROM base AS build-stage
 
 ARG BUILDSTAMP
+ARG VERSION
+ARG VERSION_URL
+ARG VERSION_DATE
+ENV VERSION=$VERSION \
+    VERSION_URL=$VERSION_URL \
+    VERSION_DATE=$VERSION_DATE
 RUN --mount=type=cache,target=/usr/local/share/.cache/yarn/v6 \
     yarn quasar build
 
-RUN sed -i 's#"version": ""#"version": "${VERSION}"#g' /app/dist/spa/version.json && \
-    sed -i 's#"versionUrl": ""#"versionUrl": "${VERSION_URL}"#g' /app/dist/spa/version.json && \
-    sed -i 's#"versionDate": ""#"versionDate": "${VERSION_DATE}"#g' /app/dist/spa/version.json
+RUN sed -i "s#\"version\": \"\"#\"version\": \"${VERSION}\"#g" /app/dist/spa/version.json && \
+    sed -i "s#\"versionUrl\": \"\"#\"versionUrl\": \"${VERSION_URL}\"#g" /app/dist/spa/version.json && \
+    sed -i "s#\"versionDate\": \"\"#\"versionDate\": \"${VERSION_DATE}\"#g" /app/dist/spa/version.json
 
 FROM scratch AS bundle
 COPY --from=build-stage /app/dist/spa/ /dist/spa/
