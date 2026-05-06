@@ -10,7 +10,7 @@ class AppBannerInjectionTest extends TestCase
     public function testBannerInjectedWhenConfigSet(): void
     {
         config([
-            'app.banner' => 'Heads up',
+            'app.banner_text' => 'Heads up',
             'app.banner_class' => 'bg-red-2 text-black',
             'app.banner_link' => 'https://example.com/notice',
         ]);
@@ -29,7 +29,7 @@ class AppBannerInjectionTest extends TestCase
     public function testBannerNullWhenConfigUnset(): void
     {
         config([
-            'app.banner' => null,
+            'app.banner_text' => null,
             'app.banner_class' => null,
             'app.banner_link' => null,
         ]);

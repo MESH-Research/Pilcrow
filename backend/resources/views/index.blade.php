@@ -24,7 +24,7 @@
         return '/' + filename;
       }
     @endif
-    @php($appBanner = ['text' => config('app.banner'), 'class' => config('app.banner_class'), 'link' => config('app.banner_link')])
+    @php($appBanner = ['text' => config('app.banner_text'), 'class' => config('app.banner_class'), 'link' => config('app.banner_link')])
     window.__APP_BANNER = @json($appBanner);
   </script>
   @env('local', 'development', 'dev')
