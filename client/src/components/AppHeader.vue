@@ -2,7 +2,7 @@
   <input id="locale-switch" v-model="locale" type="hidden" />
   <q-header class="header" @keypress="toggleLocale">
     <app-banner />
-    <local-dev-banner />
+    <component :is="LocalDevBanner" v-if="LocalDevBanner" />
     <q-toolbar class="header-toolbar">
       <router-link
         to="/"
@@ -152,11 +152,14 @@
 import { useMagicKeys } from "@vueuse/core"
 import NotificationPopup from "src/components/molecules/NotificationPopup.vue"
 import { useCurrentUser } from "src/use/user"
-import { watchEffect } from "vue"
+import { defineAsyncComponent, watchEffect } from "vue"
 import { useQuasar } from "quasar"
 import { useI18n } from "vue-i18n"
 import AppBanner from "./AppBanner.vue"
-import LocalDevBanner from "./LocalDevBanner.vue"
+
+const LocalDevBanner = process.env.LANDO_DEV
+  ? defineAsyncComponent(() => import("./LocalDevBanner.vue"))
+  : null
 
 const $q = useQuasar()
 
