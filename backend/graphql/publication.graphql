@@ -7,12 +7,19 @@ extend type Query {
         search: String @scope
         public: Boolean @scope(name: "public")
         accepting_submissions: Boolean @scope(name: "acceptingSubmissions")
-        my_role: PublicationRole @scope(name: "myRole")
         orderBy: _ @orderBy(columns: ["name", "created_at"])
     ): [Publication!]!
         @paginate(defaultCount: 10, scopes: ["visible"])
         @orderBy(column: "name", direction: ASC)
         @guard
+}
+
+"""
+A count of submissions with a given status
+"""
+type SubmissionStatusCount {
+    status: SubmissionStatus!
+    count: Int!
 }
 
 """
@@ -25,7 +32,40 @@ type Publication {
     new_submission_content: String
     created_at: DateTimeUtc
     updated_at: DateTimeUtc
-    submissions: [Submission]! @hasMany
+    "Paginated submissions for this publication, with status counts."
+    submissions(
+        search: String
+        status: [SubmissionStatus!]
+        orderBy: [QuerySubmissionsOrderByOrderByClause!]
+    ): [Submission!]!
+        @paginate(
+            resolver: "App\\GraphQL\\Queries\\PaginatePublicationSubmissions"
+            defaultCount: 25
+        )
+    """
+    Paginated users associated with this publication's submissions,
+    filtered by role. Each row is a PublicationUser scoped to this
+    publication, carrying per-role submission counts and a nested
+    paginated submissions field.
+    """
+    users(
+        roles: [SubmissionUserRoles!]!
+        staged: Boolean
+        search: String
+        orderBy: [QueryPublicationUsersOrderByOrderByClause!]
+    ): [PublicationUser!]!
+        @paginate(
+            resolver: "App\\GraphQL\\Queries\\PaginatePublicationUsers"
+            defaultCount: 25
+        )
+    """
+    A single user scoped to this publication. Returns null when the
+    user has no submission-level involvement here. Carries the same
+    per-role counts as `users`, plus a `submissions` field that lists
+    the submissions this user is attached to within this publication.
+    """
+    user(id: ID!): PublicationUser
+        @field(resolver: "App\\GraphQL\\Queries\\PublicationUser")
     publication_admins: [User!]! @belongsToMany(relation: "publicationAdmins")
     editors: [User!]! @belongsToMany(relation: "editors")
     is_publicly_visible: Boolean
@@ -33,6 +73,8 @@ type Publication {
     style_criterias: [StyleCriteria!]! @hasMany(relation: "styleCriterias")
     my_role: PublicationRole @method(name: "getMyRole")
     effective_role: PublicationRole @method(name: "getEffectiveRole")
+    submission_status_counts: [SubmissionStatusCount!]!
+        @method(name: "getSubmissionStatusCounts")
 }
 
 type PublicationAssignment {
@@ -42,6 +84,69 @@ type PublicationAssignment {
     publication: Publication! @belongsTo
     created_at: DateTimeUtc!
     updated_at: DateTimeUtc
+}
+
+"""
+A user in the context of a specific publication. Carries per-role
+submission counts plus a filtered submissions listing so detail
+views can show just the submissions this user is involved in.
+"""
+type PublicationUser {
+    "ID of the underlying user."
+    id: ID!
+    "The user themselves (name, email, username, avatar, etc.)."
+    user: User!
+    as_submitter_count: Int!
+    as_reviewer_active_count: Int!
+    as_reviewer_completed_count: Int!
+    as_coordinator_active_count: Int!
+    as_coordinator_completed_count: Int!
+    """
+    Timestamp of this user's most recent submission assignment in
+    this publication, scoped to the role(s) the parent `users` query
+    was filtered by. Null when the user has no matching assignments.
+    Used by the assignment picker to surface "currently engaged"
+    team members at the top of the list.
+    """
+    last_assigned_at: DateTimeUtc
+    """
+    Counts of this user's submissions in this publication grouped
+    by status. Mirrors Publication.submission_status_counts but
+    scoped to the one user. Optionally filter by the roles the
+    user holds on each submission (so the team-member view can
+    limit counts to reviewer/coordinator work and the submitter
+    view to [submitter]). Drafts are excluded.
+    """
+    submission_status_counts(
+        roles: [SubmissionUserRoles!]
+    ): [SubmissionStatusCount!]!
+        @method(name: "getSubmissionStatusCounts")
+    """
+    Paginated submissions in this publication that this user is
+    attached to. Optionally filter by the roles they hold on each
+    submission and by phase (active / completed). Drafts are always
+    excluded. Defaults to a small page so list-view renderers can
+    inspect paginatorInfo.total to decide whether to show per-
+    submission icons or fall back to a numeric count.
+    """
+    submissions(
+        roles: [SubmissionUserRoles!]
+        phase: SubmissionPhase
+        status: [SubmissionStatus!]
+        orderBy: [QuerySubmissionsOrderByOrderByClause!]
+    ): [Submission!]!
+        @paginate(
+            resolver: "App\\GraphQL\\Queries\\PublicationUserSubmissions"
+            defaultCount: 5
+        )
+}
+
+"High-level status grouping used by the dashboard and user details."
+enum SubmissionPhase {
+    "Submissions still in the review pipeline (excludes drafts)."
+    active @enum(value: "active")
+    "Terminal submissions: accepted, rejected, archived, or deleted."
+    completed @enum(value: "completed")
 }
 
 type StyleCriteria {
@@ -123,4 +228,36 @@ input UpdateStyleCriteriaInput {
 enum PublicationRole {
     publication_admin @enum(value: 2)
     editor @enum(value: 3)
+}
+
+"Sortable columns for the User.publications query."
+enum PublicationAssignmentOrderByColumn {
+    NAME
+    CREATED_AT
+    UPDATED_AT
+}
+
+"Order by clause for publication assignments."
+input PublicationAssignmentOrderBy {
+    column: PublicationAssignmentOrderByColumn!
+    order: SortOrder!
+}
+
+"Sortable columns for the Publication.users query."
+enum QueryPublicationUsersOrderByColumn {
+    NAME
+    USERNAME
+    EMAIL
+    AS_SUBMITTER_COUNT
+    AS_REVIEWER_ACTIVE_COUNT
+    AS_REVIEWER_COMPLETED_COUNT
+    AS_COORDINATOR_ACTIVE_COUNT
+    AS_COORDINATOR_COMPLETED_COUNT
+    LAST_ASSIGNED_AT
+}
+
+"Order by clause for the Publication.users query."
+input QueryPublicationUsersOrderByOrderByClause {
+    column: QueryPublicationUsersOrderByColumn!
+    order: SortOrder!
 }

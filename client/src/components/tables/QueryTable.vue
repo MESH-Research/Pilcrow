@@ -118,10 +118,31 @@ export interface QueryTableColumn extends QTableColumn {
    */
   linkTo?: (row: Record<string, unknown>) => RouteLocationRaw
   /**
+   * For TextCell: optional small caption rendered above the main
+   * value. Useful for adding an ID prefix or short contextual
+   * label without a dedicated column.
+   */
+  captionAbove?: (row: Record<string, unknown>) => string | null
+  /**
    * For NameAvatarCell: suppress the username caption below the
    * display name (e.g. when a dedicated username column is present).
    */
   hideUsername?: boolean
+  /**
+   * For SubmissionCountCell: render at most this many icons before
+   * falling back to a numeric count. Defaults to 5.
+   */
+  iconThreshold?: number
+  /**
+   * For SubmissionCountCell: icon name to render per count.
+   * Defaults to "description".
+   */
+  icon?: string
+  /**
+   * For SubmissionCountCell: icon color (Quasar palette name).
+   * Defaults to "grey-7".
+   */
+  iconColor?: string
 }
 
 export interface QTableBodyCellScope {
@@ -252,6 +273,22 @@ const { pt } = useI18nPrefix(computed(() => props.tPrefix))
 const slots = useSlots()
 const searchHintId = `search-hint-${useId()}`
 
+// Rewrite any column `field` that's a dot-path string into a function
+// so callers can declare nested accessors like `"publication.name"`.
+// Quasar's q-table does a plain `row[col.field]` lookup otherwise, so
+// nested lookups fall through.
+function resolveField(field: unknown) {
+  if (typeof field !== "string" || !field.includes(".")) {
+    return field
+  }
+  const parts = field.split(".")
+  return (row: Record<string, unknown>) =>
+    parts.reduce<unknown>(
+      (o, k) => (o as Record<string, unknown> | undefined)?.[k],
+      row
+    )
+}
+
 const tColumns = computed(() => {
   if (props.columns === undefined) {
     return undefined
@@ -259,7 +296,7 @@ const tColumns = computed(() => {
   if (!props.columns?.length) {
     return []
   }
-  return props.columns
+  return props.columns.map((c) => ({ ...c, field: resolveField(c.field) }))
 })
 
 const compColumns = computed(() => {

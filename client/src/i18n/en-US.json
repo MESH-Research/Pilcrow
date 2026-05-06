@@ -1,5 +1,13 @@
 {
   "needs_attention": "Needs attention",
+  "review_team": {
+    "no_coordinator": "No coordinator"
+  },
+  "tables": {
+    "name_avatar_list": {
+      "users_assigned": "No users assigned | 1 user assigned: {names} | {n} users assigned: {names}"
+    }
+  },
   "user": {
     "self": "No users | User | Users",
     "email": "Email",
@@ -164,7 +172,53 @@
     "page_title": "Profile"
   },
   "settings": {
-    "page_title": "Settings"
+    "page_title": "Settings",
+    "preferences": {
+      "heading": "Display Preferences",
+      "theme": "Theme",
+      "theme_auto": "Auto",
+      "theme_light": "Light",
+      "theme_dark": "Dark",
+      "a11y_color_patterns": "Use accessible patterns alongside status colors",
+      "error": "Could not save your preferences. Please try again."
+    },
+    "dismissed": {
+      "heading": "Dismissed help messages",
+      "help": "Resetting will make every dismissable explainer appear again on your next visit.",
+      "reset": "Reset dismissable elements",
+      "confirm_title": "Reset dismissable elements?",
+      "confirm_body": "Every callout you have dismissed will start appearing again on your next visit. This cannot be undone.",
+      "success": "Dismissable elements have been reset.",
+      "error": "Could not reset dismissed elements. Please try again."
+    }
+  },
+  "lab_features": {
+    "page_title": "Lab Features",
+    "intro": "Try out upcoming features ahead of their general release. You can deactivate them again at any time.",
+    "activate": "Activate",
+    "deactivate": "Deactivate",
+    "manage_ui_v2": {
+      "label": "New publication management UI",
+      "description": "A redesigned dashboard, submission detail page, and review-team picker.",
+      "previews": {
+        "heading": "Preview",
+        "expand_aria": "Open larger preview of {caption}",
+        "close": "Close",
+        "manage_overview": {
+          "title": "Manage dashboard",
+          "caption": "All your publications in one table, with stage-grouped Needs Action / In Progress / Closed counts and click-through filtering."
+        },
+        "publication_dashboard": {
+          "title": "Publication dashboard",
+          "caption": "Workflow-stage overview with at-a-glance Needs Action callout and a status-aware submissions table."
+        },
+        "submission_detail": {
+          "title": "Submission detail",
+          "caption": "Tabbed submission view — Details, Review Team, and Activity — with status and quick actions surfaced in the header."
+        }
+      }
+    },
+    "error": "Could not save your feature preference. Please try again."
   },
   "account": {
     "failures": {
@@ -344,7 +398,21 @@
     "welcome_message": "Welcome, {label}",
     "guide": "guide",
     "guide_question": "New to Pilcrow?",
-    "guide_call_to_action": "Learn more in our {link}."
+    "guide_call_to_action": "Learn more in our {link}.",
+    "manage_banner": {
+      "message": "Try the new publication management experience.",
+      "cta": "Labs",
+      "dismiss": "Hide for a week"
+    },
+    "needs_action": {
+      "heading": "Needs your attention",
+      "more": "more publication needs your attention. | more publications need your attention.",
+      "view_all": "Manage my publications",
+      "all_clear": {
+        "heading": "All caught up!",
+        "message": "No publications need your attention right now."
+      }
+    }
   },
   "reviews": {
     "page_title": "Reviews"
@@ -478,6 +546,206 @@
   "publication": {
     "entity": "Publication | Publications",
     "configure": "Configure Publication",
+    "dashboard": {
+      "heading": "Dashboard",
+      "breadcrumb": "Dashboard",
+      "submissions_heading": "Submissions",
+      "categories": {
+        "needs_action": "Needs Action",
+        "in_progress": "In Progress",
+        "completed": "Closed"
+      },
+      "lanes": {
+        "active": "Active pipeline",
+        "with_author": "With author",
+        "closed": "Closed",
+        "closed_total": "All closed",
+        "closed_expand": "Show each closed status",
+        "closed_collapse": "Collapse to one total",
+        "loops_back": "returns to the pipeline"
+      },
+      "stages": {
+        "screening": "Screening",
+        "reviewing": "Reviewing",
+        "decision": "Decision"
+      },
+      "combined": {
+        "submitted": "Submitted"
+      },
+      "headers": {
+        "title": "Title",
+        "status": "Status",
+        "created_by": "Submitter",
+        "review_coordinators": "Review Coordinator",
+        "reviewers": "Reviewers",
+        "review_team": "Review Team",
+        "created_at": "Created",
+        "updated_at": "Updated",
+        "submitted_at": "Submitted"
+      },
+      "filters": {
+        "status": "Status",
+        "label": "Filters:",
+        "short_label": "Filter",
+        "all": "All",
+        "none": "None",
+        "invert": "Invert",
+        "selected": "{n} of {total} statuses"
+      },
+      "tabs": {
+        "submissions": "Submissions",
+        "submitters": "Submitters"
+      },
+      "show_only": "Show only these",
+      "search_hint": "Enter at least 3 characters. Searches title and assigned users. Use id:, title:, submitter:, reviewer:, coordinator:, team:, or user: to narrow the search.",
+      "no_submissions": "No submissions match the current filters.",
+      "submission_count": "no submissions | {n} submission | {n} submissions"
+    },
+    "manage": {
+      "dashboard": {
+        "heading": "Manage",
+        "admin_hint": "Looking for a publication you're not a member of? {link}.",
+        "admin_hint_label": "Hint",
+        "admin_hint_link": "Administer publications",
+        "admin_hint_reason": "Shown to site administrators who can manage any publication.",
+        "search_hint": "Enter at least 3 characters. Searches publication name.",
+        "empty_hint": "You'll see publications here once you're added as an admin or editor.",
+        "empty_filter_hint": "No publications matched \"{term}\". Try a different search or clear it.",
+        "empty_stage_filter_hint": "No publications currently have activity in the {stage} stage.",
+        "stage_filter_chip": "Showing publications with {stage} activity",
+        "stage_filter_generic": "any",
+        "open": "Open dashboard",
+        "total_submissions": "no submissions | {n} total submission | {n} total submissions",
+        "role": {
+          "publication_admin": "Admin",
+          "editor": "Editor"
+        },
+        "headers": {
+          "name": "Publication",
+          "role": "Role",
+          "screening": "Screening",
+          "reviewing": "Reviewing",
+          "decision": "Decision",
+          "closed": "Closed",
+          "total": "Total"
+        },
+        "stages": {
+          "screening": "Screening",
+          "reviewing": "Reviewing",
+          "decision": "Decision",
+          "closed": "Closed"
+        }
+      },
+      "review_team": {
+        "heading": "Review Team",
+        "intro_title": "How do I add review team members?",
+        "intro_body": "Open any submission and assign the person as a reviewer or review coordinator from its Review Team tab — they'll appear on this list automatically. To bring in someone who isn't on the platform yet, type their email in the same dialog and they'll receive an invitation.",
+        "invited_intro_title": "How do I invite new users?",
+        "invited_intro_body": "These are people you've invited to a submission as a reviewer or coordinator who haven't signed in for the first time yet. To invite someone new, open a submission and use Add reviewers (or Assign coordinator) — type a fresh email address and the invitation goes out from there. They'll move from this Invited list onto the main Review Team once they accept the invitation and sign in.",
+        "tabs": {
+          "team": "Review Team",
+          "invited": "Invited",
+          "invited_count": "{n} pending invitation | {n} pending invitations"
+        }
+      },
+      "assign_team": {
+        "title_coordinator": "Assign Review Coordinator",
+        "title_reviewers": "Add Reviewers",
+        "search_placeholder": "Search team members or type an email to invite",
+        "selected_aria": "Currently selected",
+        "selected_heading": "Selected ({n})",
+        "selected_empty": "Pick from the list to add reviewers, or type an email to invite someone new.",
+        "invite_label": "Invite {email}",
+        "invite_hint": "They'll receive an email invitation to this submission.",
+        "count_coordinator": "no active | {n} active coordinating | {n} active coordinating",
+        "count_reviewer": "no active | {n} active reviewing | {n} active reviewing",
+        "last_assigned": "Last assigned {relative}",
+        "empty": "No matches.",
+        "message_label_one": "Invitation message (sent only if you invite by email)",
+        "message_label_many": "Invitation message (sent to everyone you invite)",
+        "message_placeholder": "Optional message…",
+        "assign_coordinator": "Assign",
+        "assign_reviewers": "Add | Add 1 reviewer | Add {n} reviewers",
+        "open_assign_coordinator": "Assign coordinator",
+        "open_remove_coordinator": "Remove coordinator",
+        "open_add_reviewers": "Add reviewers",
+        "remove_coordinator_confirm_title": "Remove review coordinator?",
+        "remove_coordinator_confirm_body": "{name} will no longer be able to coordinate this submission.",
+        "remove_coordinator_confirm_ok": "Remove",
+        "remove_coordinator_success": "Removed {name}.",
+        "remove_coordinator_error": "Could not remove the coordinator.",
+        "success": "Added {n} | Added {n} reviewer | Added {n} reviewers",
+        "error": "Could not save one or more entries."
+      },
+      "users": {
+        "tabs": {
+          "submitters": "Submitters",
+          "team": "Review Team",
+          "invited": "Invited",
+          "invited_count": "{n} pending invitation | {n} pending invitations"
+        },
+        "headers": {
+          "name": "Name",
+          "email": "Email",
+          "as_submitter_count": "Submissions",
+          "as_reviewer_active_count": "Reviewing",
+          "as_reviewer_completed_count": "Reviewing",
+          "as_coordinator_active_count": "Coordinating",
+          "as_coordinator_completed_count": "Coordinating"
+        },
+        "groups": {
+          "active": "Active",
+          "completed": "Closed"
+        },
+        "submission_icon_list": "no submissions | {n} submission | {n} submissions",
+        "submission_icon_overflow": "{n} more submission | {n} more submissions"
+      },
+      "user_detail": {
+        "not_found": "This user has no activity in this publication.",
+        "invited_badge": "Invited",
+        "invited_aria": "Invitation not yet accepted",
+        "invited_first_login_tooltip": "Invited — this user hasn't signed in for the first time yet.",
+        "invited_banner_title": "This user hasn't signed in yet",
+        "invited_banner_body": "{name} was invited by email and hasn't completed sign-up. Their account stays in a pending state until they accept the invitation and sign in for the first time.",
+        "submissions": "no submissions | {n} submission | {n} submissions",
+        "submissions_heading": "Submissions",
+        "no_submissions": "No submissions to show.",
+        "status_breakdown": "Status breakdown",
+        "submissions_by_status": "Submissions by status",
+        "active": "Active",
+        "closed": "Closed",
+        "clear_filter": "Clear status filter",
+        "filtered_by": "Filtered: {status}",
+        "profile": "Profile",
+        "bio_expand": "Read more",
+        "bio_collapse": "Show less",
+        "profile_fields": {
+          "position_title": "Position title",
+          "affiliation": "Affiliation",
+          "specialization": "Specialization",
+          "biography": "Biography",
+          "academic": "Academic profiles",
+          "social": "Social media",
+          "websites": "Websites",
+          "orcid": "ORCID",
+          "humanities_commons": "Humanities Commons",
+          "twitter": "Twitter / X",
+          "linkedin": "LinkedIn",
+          "facebook": "Facebook",
+          "instagram": "Instagram",
+          "google": "Google Scholar"
+        },
+        "role": {
+          "submitter": "Submitter",
+          "reviewer": "Reviewer",
+          "coordinator": "Coordinator"
+        },
+        "phase": {
+          "active": "Active",
+          "completed": "Closed"
+        }
+      }
+    },
     "setup_pages": {
       "breadcrumb_heading": "Setup",
       "basic": "Basic Settings",
@@ -663,9 +931,33 @@
       "title": "Activity",
       "no_activity": "No Activity"
     },
+    "overview": {
+      "heading": "Overview",
+      "submitted": "Submitted",
+      "not_submitted": "Not yet submitted",
+      "last_updated": "Last updated",
+      "created_by": "Created by"
+    },
+    "tabs": {
+      "details": "Details",
+      "team": "Review Team",
+      "history": "Activity"
+    },
+    "actions_menu": "Actions",
+    "team_alert": {
+      "no_team": "No coordinator or reviewers assigned.",
+      "no_coordinator": "No review coordinator assigned.",
+      "no_reviewers": "No reviewers assigned."
+    },
+    "assignee_list": {
+      "assigned_relative": "Assigned {relative}",
+      "missing_badge": "Missing"
+    },
     "activity_record": {
       "description": "{object} {event} by {user} {datetime} ",
       "description_no_user": "{object} {event} {datetime} ",
+      "description_no_time": "{object} {event} by {user}",
+      "description_no_user_no_time": "{object} {event}",
       "title_change": "from \"{previous_title}\" to {current_title}",
       "status_change": "from {previous_status} to {current_status}",
       "comment_title": "Comment",
@@ -1147,6 +1439,7 @@
       "submit": "Submit",
       "cancel": "Cancel"
     },
+    "dismiss": "Got it",
     "button": {
       "bold": {
         "ariaLabel": "Toggle bold on selected text",
@@ -1327,6 +1620,28 @@
         },
         "no_publications": "This user is not assigned to any publications.",
         "no_submissions": "This user is not attached to any submissions.",
+        "settings": {
+          "not_found": "User not found.",
+          "preferences": {
+            "heading": "Preferences",
+            "theme": "Theme",
+            "theme_auto": "Auto (follows system)",
+            "theme_light": "Light",
+            "theme_dark": "Dark",
+            "a11y_color_patterns": "Accessible Color Patterns",
+            "enabled": "Enabled",
+            "disabled": "Disabled",
+            "not_set": "Not set"
+          },
+          "dismissed": {
+            "heading": "Dismissed UI Elements",
+            "none": "This user has not dismissed any UI elements."
+          },
+          "feature_opt_ins": {
+            "heading": "Feature Opt-Ins",
+            "none": "This user has not opted into any features."
+          }
+        },
         "publications": {
           "headers": {
             "name": "Name",

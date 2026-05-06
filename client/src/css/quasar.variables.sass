@@ -30,7 +30,10 @@ $warning           : #F2C037
 $dark-warning      : #D39E0D
 
 $dark              : #0A111F
-$dark-primary      : #537FCA
+// Lighter than the light-mode $primary (#2F5496) so link color clears
+// WCAG AA contrast against $dark. The previous #537FCA sat around
+// 4.2:1 which drops below AA for normal-weight body text.
+$dark-primary      : #8AB4F8
 $dark-secondary    : #02173B
 $accent-dark       : #873EF4
 $dark-accent-text  : #BC8DFF

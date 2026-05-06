@@ -68,4 +68,39 @@ class PublicationPolicy
 
         return false;
     }
+
+    /**
+     * Determine whether the user can access a publication's
+     * admin-facing data (submission lists, user rosters, per-user
+     * detail, aggregated status counts). `view` is intentionally
+     * permissive for public publications, but those admin-y nested
+     * fields leak reviewer identities and operational metrics and
+     * must stay scoped to the publication's admin/editor team.
+     *
+     * @param \App\Models\User $user
+     * @param \App\Models\Publication $publication
+     * @return bool
+     */
+    public function manage(?User $user, Publication $publication): bool
+    {
+        if ($user === null) {
+            return false;
+        }
+        if ($user->hasRole(Role::APPLICATION_ADMINISTRATOR)) {
+            return true;
+        }
+        if (
+            $user->hasPublicationRole(
+                Role::PUBLICATION_ADMINISTRATOR_ROLE_ID,
+                $publication->id
+            )
+        ) {
+            return true;
+        }
+        if ($user->hasPublicationRole(Role::EDITOR_ROLE_ID, $publication->id)) {
+            return true;
+        }
+
+        return false;
+    }
 }

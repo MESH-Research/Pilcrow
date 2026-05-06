@@ -1,0 +1,61 @@
+"""
+Per-user UI preferences with a known shape. Stored as a JSON
+column on `users.preferences`; Lighthouse resolves each field by
+key from the underlying array cast.
+"""
+type UserPreferences {
+    theme: UserThemePreference
+    a11y_color_patterns: Boolean
+}
+
+"""
+Theme preference. AUTO follows the OS / browser preference.
+"""
+enum UserThemePreference {
+    AUTO @enum(value: "auto")
+    LIGHT @enum(value: "light")
+    DARK @enum(value: "dark")
+}
+
+"""
+Patch a subset of the current user's UI preferences. Omitted
+fields are left untouched on the stored object.
+"""
+input UpdateUserPreferencesInput {
+    theme: UserThemePreference
+    a11y_color_patterns: Boolean
+}
+
+extend type Mutation @guard {
+    """
+    Update the authenticated user's UI preferences. Only supplied
+    fields are written; others retain their stored values.
+    """
+    updateUserPreferences(input: UpdateUserPreferencesInput!): User!
+        @field(resolver: "App\\GraphQL\\Mutations\\UserSettings@updatePreferences")
+
+    """
+    Mark a UI element (info callout, banner, etc.) as dismissed for
+    the authenticated user. Idempotent — re-dismissing refreshes the
+    timestamp the server stores against the key.
+    """
+    dismissUiElement(key: String!): User!
+        @field(resolver: "App\\GraphQL\\Mutations\\UserSettings@dismissUiElement")
+
+    """
+    Toggle the authenticated user's opt-in state for a feature flag.
+    Setting `enabled: false` records an explicit opt-out (vs. the
+    "never decided" default of an absent key).
+    """
+    setFeatureOptIn(feature: String!, enabled: Boolean!): User!
+        @field(resolver: "App\\GraphQL\\Mutations\\UserSettings@setFeatureOptIn")
+
+    """
+    Clear every dismissed UI key for the authenticated user, so the
+    dismissable callouts they previously closed will show again on
+    their next visit. Used by the "Reset dismissable elements"
+    control on the user settings page.
+    """
+    resetDismissedUi: User!
+        @field(resolver: "App\\GraphQL\\Mutations\\UserSettings@resetDismissedUi")
+}

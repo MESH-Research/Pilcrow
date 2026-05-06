@@ -37,6 +37,9 @@ class User extends Authenticatable implements MustVerifyEmail
         'email',
         'password',
         'profile_metadata',
+        'preferences',
+        'dismissed_ui',
+        'feature_opt_ins',
         'staged',
     ];
 
@@ -58,6 +61,9 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $casts = [
         'email_verified_at' => 'datetime',
         'profile_metadata' => 'array',
+        'preferences' => 'array',
+        'dismissed_ui' => 'array',
+        'feature_opt_ins' => 'array',
     ];
 
     /**
@@ -148,6 +154,33 @@ class User extends Authenticatable implements MustVerifyEmail
             'username' => $this->username,
             'email' => $this->email,
         ];
+    }
+
+    /**
+     * Keys the user has dismissed (callout banners, etc.). Stored
+     * internally as `{key: dismissed_at_iso}` so we can layer
+     * cooldown semantics on later without a migration; the GraphQL
+     * surface is just the list of dismissed keys.
+     *
+     * @return array<int, string>
+     */
+    public function getDismissedUiKeys(): array
+    {
+        return array_keys($this->dismissed_ui ?? []);
+    }
+
+    /**
+     * Feature-flag keys the user has explicitly opted into. An
+     * absent key is "never decided"; an explicit `false` is an
+     * opt-out and is omitted from this list.
+     *
+     * @return array<int, string>
+     */
+    public function getActiveFeatureOptIns(): array
+    {
+        $optIns = $this->feature_opt_ins ?? [];
+
+        return array_keys(array_filter($optIns, fn($v) => $v === true));
     }
 
     /**

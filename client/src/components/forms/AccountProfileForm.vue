@@ -1,7 +1,7 @@
 <template>
   <q-form data-cy="vueAccount" @submit="onSubmit">
     <v-q-wrap t-prefix="account.account.fields" @vqupdate="updateVQ">
-      <form-section first-section>
+      <form-section>
         <template #header>{{ $t(`account.profile.update_email`) }}</template>
         <v-q-input ref="emailInput" :v="v$.email" data-cy="update_user_email" />
       </form-section>

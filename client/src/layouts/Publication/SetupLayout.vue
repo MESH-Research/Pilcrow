@@ -36,7 +36,7 @@ import CollapseMenu from "src/components/molecules/CollapseMenu.vue"
 import { useQuery } from "@vue/apollo-composable"
 import { GET_PUBLICATION } from "src/graphql/queries"
 import { computed, watchEffect } from "vue"
-import { useRoute, useRouter } from "vue-router"
+import { useRoute, useRouter, type RouteLocationRaw } from "vue-router"
 import { useI18n } from "vue-i18n"
 interface Props {
   id: string
@@ -61,7 +61,7 @@ const items = computed(() => [
     url: {
       name: "publication:setup:basic" as const,
       params
-    }
+    } as RouteLocationRaw
   },
   {
     icon: "people",
@@ -69,7 +69,7 @@ const items = computed(() => [
     url: {
       name: "publication:setup:users" as const,
       params
-    },
+    } as RouteLocationRaw,
     problem: publication.value?.publication_admins.length === 0,
     problemTooltip: t(labelKey("problems.no_admins"))
   },
@@ -79,7 +79,7 @@ const items = computed(() => [
     url: {
       name: "publication:setup:criteria" as const,
       params
-    },
+    } as RouteLocationRaw,
     problem: noStyleCriteria.value,
     problemTooltip: t(labelKey("problems.no_criteria"))
   },
@@ -89,7 +89,7 @@ const items = computed(() => [
     url: {
       name: "publication:setup:content" as const,
       params
-    }
+    } as RouteLocationRaw
   }
 ])
 watchEffect(() => {

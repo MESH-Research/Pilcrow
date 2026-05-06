@@ -56,6 +56,10 @@ const routes: RouteRecordRaw[] = [
           {
             path: "settings",
             component: () => import("src/pages/Account/SettingsPage.vue")
+          },
+          {
+            path: "lab-features",
+            component: () => import("src/pages/Account/LabFeaturesPage.vue")
           }
         ]
       },
@@ -118,6 +122,9 @@ const routes: RouteRecordRaw[] = [
         component: () => import("pages/Publication/PublicationHomePage.vue"),
         props: true
       },
+      // File-based routes under src/routes/ (see quasar.config.ts).
+      // Spread here so they inherit MainLayout + its requiresAuth meta.
+      ...autoRoutes,
       {
         path: "/reviews",
         component: () => import("src/pages/ReviewsPage.vue")

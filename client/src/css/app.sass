@@ -1,7 +1,30 @@
 // app global css in Sass form
+
+// Atkinson Hyperlegible — register every weight/style we ship.
+// Without the Bold and Italic faces declared, the browser was
+// synthesizing fake-bold/italic on `.text-weight-bold` etc., which
+// read as a different typeface and made headings look mismatched
+// with body text.
 @font-face
     font-family: "Atkinson"
+    font-weight: 400
+    font-style: normal
     src: url(./fonts/Atkinson_Hyperlegible/AtkinsonHyperlegible-Regular.ttf)
+@font-face
+    font-family: "Atkinson"
+    font-weight: 400
+    font-style: italic
+    src: url(./fonts/Atkinson_Hyperlegible/AtkinsonHyperlegible-Italic.ttf)
+@font-face
+    font-family: "Atkinson"
+    font-weight: 700
+    font-style: normal
+    src: url(./fonts/Atkinson_Hyperlegible/AtkinsonHyperlegible-Bold.ttf)
+@font-face
+    font-family: "Atkinson"
+    font-weight: 700
+    font-style: italic
+    src: url(./fonts/Atkinson_Hyperlegible/AtkinsonHyperlegible-BoldItalic.ttf)
 
 html
     font-family: "Atkinson"
@@ -97,6 +120,17 @@ th.text-left,
 th.text-right,
 .text-body2 // Font sizes less than 16px are not allowed
     font-size: $typography-font-size
+
+// Subsection heading inside a card or panel — the level below the
+// page title (h2) and above body copy. Quasar's `text-h6` reads small
+// and shipped with a 2rem line-height meant for app bars; standalone
+// inline sizes (1.1 / 1.125 / 1.15rem) had drifted across pages. One
+// class so they stay consistent and visibly heading-weighted.
+.section-heading
+    font-size: 1.25rem
+    font-weight: 600
+    line-height: 1.3
+    margin: 0
 
 .comment-header
     background-color: #c9e5f8
@@ -361,3 +395,74 @@ body.body--dark
     background: $dark-6 !important
 .bg-dark-warning
     background: $dark-warning !important
+.bg-dashboard-green
+    background: #3D5C2D !important
+.text-dashboard-green
+    color: #3D5C2D !important
+
+// Expose the custom category color as a CSS variable so callers can
+// reference it via `var(--q-dashboard-green)` the same way they do
+// Quasar's brand colors (`--q-warning`, `--q-info`, `--q-secondary`).
+:root
+    --q-dashboard-green: #3D5C2D
+
+// QueryTable grid-mode tint. Sets a distinct tone behind the white
+// cards so the grid reads as a tray rather than floating cards on a
+// white page. Previously duplicated in five components with varying
+// scoping tricks; consolidating here guarantees a single source of
+// truth and beats Quasar's (empty) default at equal specificity.
+// `!important` guards against any future per-component scoped rule
+// clobbering this accidentally.
+.q-table--grid .q-table__grid-content
+    background-color: #ebebeb !important
+
+body.body--dark .q-table--grid .q-table__grid-content
+    background-color: #262626 !important
+
+// Color-blind accessible patterns for status categories.
+// All pattern rules are gated behind .a11y-patterns so they can be toggled
+// via a user preference. Add .a11y-patterns to body or a wrapper to enable.
+// Also activates automatically when the user has prefers-contrast: more.
+=a11y-pattern-rules
+    [class*="pattern-"]
+        position: relative
+
+        > *
+            position: relative
+            z-index: 1
+
+        &::after
+            content: ""
+            position: absolute
+            inset: 0
+            pointer-events: none
+            z-index: 0
+
+    .pattern-text-mask
+        background: inherit
+        border-radius: 8px
+        padding: 2px 4px
+        margin: -2px -4px
+        position: relative
+        z-index: 1
+
+    .pattern-diagonal::after
+        background: repeating-linear-gradient( 45deg, transparent, transparent 5px, rgba(255,255,255,0.3) 5px, rgba(255,255,255,0.3) 8px )
+
+    .pattern-zigzag::after
+        background: linear-gradient( 135deg, rgba(255,255,255,0.3) 25%, transparent 25% ) -6px 0, linear-gradient( 225deg, rgba(255,255,255,0.3) 25%, transparent 25% ) -6px 0, linear-gradient( 315deg, rgba(255,255,255,0.3) 25%, transparent 25% ), linear-gradient( 45deg, rgba(255,255,255,0.3) 25%, transparent 25% )
+        background-size: 12px 12px
+
+    .pattern-dots::after
+        background: radial-gradient( circle, rgba(255,255,255,0.35) 2px, transparent 2px )
+        background-size: 10px 10px
+
+    .pattern-crosshatch::after
+        background: repeating-linear-gradient( 45deg, transparent, transparent 5px, rgba(255,255,255,0.22) 5px, rgba(255,255,255,0.22) 8px ), repeating-linear-gradient( -45deg, transparent, transparent 5px, rgba(255,255,255,0.22) 5px, rgba(255,255,255,0.22) 8px )
+
+.a11y-patterns
+    +a11y-pattern-rules
+
+@media (prefers-contrast: more)
+    body
+        +a11y-pattern-rules

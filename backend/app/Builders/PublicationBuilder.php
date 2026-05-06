@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Builders;
 
+use App\Models\Publication;
 use App\Models\Role;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
@@ -37,16 +38,41 @@ class PublicationBuilder extends Builder
     /**
      * Add a scope to filter publications by a search string.
      *
-     * @param string $search
+     * Short-circuits on empty / too-short terms so single-keystroke
+     * searches don't scan the table. Escapes LIKE wildcards so users
+     * can't (accidentally or otherwise) inject `%` / `_` / `\` into
+     * the pattern. Matches the hardening applied to the submissions
+     * search in commit cd1ea18d — the FULLTEXT index on `name` exists
+     * to support a future MATCH...AGAINST switch.
+     *
+     * @param mixed $search
      * @return self
      */
     public function search(mixed $search): self
     {
-        return $this->where('name', 'like', '%' . $search . '%');
+        if (!is_string($search)) {
+            return $this;
+        }
+        $term = trim($search);
+        if (mb_strlen($term) < Publication::MIN_SEARCH_LENGTH) {
+            return $this;
+        }
+
+        return $this->where(
+            'name',
+            'like',
+            '%' . addcslashes($term, '%_\\') . '%'
+        );
     }
 
     /**
      * Scope to publications visible to the current user.
+     *
+     * The public/assigned disjunction is wrapped in a grouped `where`
+     * so subsequent filters (search, my_role, etc.) AND against the
+     * whole expression rather than OR-ing around it — otherwise
+     * public publications leak through regardless of downstream
+     * filters.
      *
      * @return self
      */
@@ -58,24 +84,12 @@ class PublicationBuilder extends Builder
             return $this;
         }
 
-        return $this->public()->orWhereHas('users', function (Builder $query) use ($user) {
-            $query->where('user_id', $user->id);
-        });
-    }
-
-    /**
-     * Scope to filter publications by the user's role.
-     *
-     * @param array $roles
-     * @return self
-     */
-    public function myRole(array $roles): self
-    {
-        $user = Auth::user();
-
-        return $this->whereHas('users', function (Builder $query) use ($user, $roles) {
-            $query->where('user_id', $user->id)
-                ->whereIn('role', $roles);
+        return $this->where(function (Builder $query) use ($user) {
+            $query
+                ->where('is_publicly_visible', true)
+                ->orWhereHas('users', function (Builder $subQuery) use ($user) {
+                    $subQuery->where('user_id', $user->id);
+                });
         });
     }
 }

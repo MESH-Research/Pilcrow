@@ -6,13 +6,56 @@ extend type Query {
 
     "Return all submissions"
     submissions(
-        status: [SubmissionStatus!] @scope(name: statusFilter)
-        my_roles: [SubmissionUserRoles!] @scope(name: myRoleFilter)
-        publication: [ID!] @scope(name: publicationFilter)
+        status: [SubmissionStatus!]
+        my_roles: [SubmissionUserRoles!]
+        publication: [ID!]
+        orderBy: [QuerySubmissionsOrderByOrderByClause!]
     ): [Submission!]
-        @paginate(defaultCount: 100, scopes: ["visible"])
-        @orderBy(column: "created_at", direction: DESC)
+        @paginate(
+            defaultCount: 100
+            resolver: "App\\GraphQL\\Queries\\PaginateSubmissions"
+        )
         @guard
+}
+
+"Allowed column names for Query.submissions.orderBy."
+enum QuerySubmissionsOrderByColumn {
+    CREATED_AT
+    UPDATED_AT
+    TITLE
+    STATUS
+}
+
+"Order by clause for Query.submissions.orderBy."
+input QuerySubmissionsOrderByOrderByClause {
+    "The column that is used for ordering."
+    column: QuerySubmissionsOrderByColumn!
+
+    "The direction that is used for ordering."
+    order: SortOrder!
+}
+
+"""
+A paginated list of Submission items with aggregate status counts.
+"""
+type SubmissionPaginator {
+    "Pagination information about the list of items."
+    paginatorInfo: PaginatorInfo!
+        @field(
+            resolver: "Nuwave\\Lighthouse\\Pagination\\PaginatorField@paginatorInfoResolver"
+        )
+
+    "A list of Submission items."
+    data: [Submission!]!
+        @field(
+            resolver: "Nuwave\\Lighthouse\\Pagination\\PaginatorField@dataResolver"
+        )
+
+    "Submission counts grouped by status, reflecting all filters except status."
+    statusCounts: [SubmissionStatusCount!]!
+        @field(
+            resolver: "App\\GraphQL\\Resolvers\\SubmissionStatusCountsField"
+        )
 }
 
 extend type Mutation {
@@ -103,6 +146,17 @@ extend type Mutation {
         )
 
     """
+    Add reviewers to a submission in one round trip: connect existing
+    users by id and/or invite new users by email. The optional message
+    is shared across every invitation. The whole batch runs in a single
+    transaction so a partial failure doesn't leave the submission with
+    half its assignments saved.
+    """
+    addReviewers(input: addReviewersInput! @spread): Submission
+        @can(ability: "invite", find: "submission_id")
+        @field(resolver: "App\\GraphQL\\Mutations\\AddReviewers")
+
+    """
     Create a staged user, assign them as a review coordinator of a submisison,
     and send them an email notification inviting them to accept the assignment
     """
@@ -139,6 +193,18 @@ input inviteSubmissionUserInput
     @validator(class: "SubmissionInvitationValidator") {
     submission_id: ID!
     email: String!
+    message: String
+}
+
+"""
+Bulk-add reviewers to a submission. `connect` attaches existing users
+by id; `invite_emails` stages + emails new users (one invitation per
+address). At least one of the two must be non-empty.
+"""
+input addReviewersInput {
+    submission_id: ID!
+    connect: [ID!]
+    invite_emails: [String!]
     message: String
 }
 

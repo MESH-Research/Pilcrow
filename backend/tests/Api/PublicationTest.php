@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Tests\Api;
 
 use App\Models\Publication;
+use App\Models\Submission;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
@@ -492,6 +493,154 @@ class PublicationTest extends ApiTestCase
         $this->assertCount(1, $json);
     }
 
+    /**
+     * Pins the search behavior hardening:
+     * - Terms shorter than MIN_SEARCH_LENGTH are short-circuited (no
+     *   filtering, full list returned).
+     * - `%` / `_` in the user's term are treated as literals, not LIKE
+     *   wildcards (so the `_` in "a_" doesn't match "aa").
+     */
+    public function testPublicationSearchMinLengthAndWildcardEscape()
+    {
+        /** @var User $user */
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        Publication::factory()->create(['name' => 'Alpha Quarterly']);
+        Publication::factory()->create(['name' => 'Beta Review']);
+        Publication::factory()->create(['name' => 'A%Something']);
+
+        // Short term — not enforced, all three returned.
+        $short = $this->graphQL(
+            'query { publications(search: "Al") { data { name } } }'
+        );
+        $this->assertCount(3, $short->json('data.publications.data'));
+
+        // Long enough — narrows.
+        $long = $this->graphQL(
+            'query { publications(search: "Alpha") { data { name } } }'
+        );
+        $this->assertCount(1, $long->json('data.publications.data'));
+        $this->assertSame(
+            'Alpha Quarterly',
+            $long->json('data.publications.data.0.name')
+        );
+
+        // The user's `%` must be escaped — should match literally, not act
+        // as a wildcard. "A%S" matches only the "A%Something" row, not
+        // "Alpha Something"-like names that would match under an un-escaped
+        // `%`.
+        $wildcard = $this->graphQL(
+            'query { publications(search: "A%S") { data { name } } }'
+        );
+        $this->assertCount(1, $wildcard->json('data.publications.data'));
+        $this->assertSame(
+            'A%Something',
+            $wildcard->json('data.publications.data.0.name')
+        );
+    }
+
+    /**
+     * Pins the `with_statuses` filter on `User.publications`: only
+     * assignments whose publication currently has at least one
+     * submission in one of the given statuses come back. Drafts
+     * never count.
+     */
+    public function testUserPublicationsFilterByWithStatuses()
+    {
+        /** @var User $user */
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        // Three publications, all assigned to the user as editor.
+        $screening = Publication::factory()
+            ->hasAttached($user, [], 'editors')
+            ->create(['name' => 'Screening Pub']);
+        Submission::factory()->for($screening)->create([
+            'status' => Submission::INITIALLY_SUBMITTED,
+        ]);
+
+        $reviewing = Publication::factory()
+            ->hasAttached($user, [], 'editors')
+            ->create(['name' => 'Reviewing Pub']);
+        Submission::factory()->for($reviewing)->create([
+            'status' => Submission::UNDER_REVIEW,
+        ]);
+
+        // Has only a draft submission — must not match any status filter.
+        $draftsOnly = Publication::factory()
+            ->hasAttached($user, [], 'editors')
+            ->create(['name' => 'Drafts Only Pub']);
+        Submission::factory()->for($draftsOnly)->create([
+            'status' => Submission::DRAFT,
+        ]);
+
+        $response = $this->graphQL(
+            'query ($statuses: [SubmissionStatus!]) {
+                currentUser {
+                    publications(with_statuses: $statuses) {
+                        data {
+                            publication { id name }
+                        }
+                    }
+                }
+            }',
+            ['statuses' => ['INITIALLY_SUBMITTED']]
+        );
+
+        $rows = $response->json('data.currentUser.publications.data');
+        $this->assertCount(1, $rows);
+        $this->assertSame('Screening Pub', $rows[0]['publication']['name']);
+
+        // Null/empty filter returns every assignment (minus the draft-only check).
+        $allResponse = $this->graphQL(
+            'query {
+                currentUser {
+                    publications { data { publication { id } } }
+                }
+            }'
+        );
+        $this->assertCount(
+            3,
+            $allResponse->json('data.currentUser.publications.data')
+        );
+    }
+
+    /**
+     * Pins the fix for the OR-precedence bug in `visible()`: the
+     * public/assigned disjunction must be grouped so that downstream
+     * filters (search, my_role, etc.) narrow the result set instead
+     * of being short-circuited by the "publicly visible" branch.
+     */
+    public function testSearchFilterAppliesAcrossPublicAndAssigned()
+    {
+        /** @var User $user */
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        // Public, matches the search.
+        Publication::factory()->create(['name' => 'Digital Humanities Review']);
+        // Public, doesn't match.
+        Publication::factory()->create(['name' => 'Quarterly Review']);
+        // Hidden + assigned to the user, doesn't match — must not leak in.
+        Publication::factory()->hidden()
+            ->hasAttached($user, [], 'editors')
+            ->create(['name' => 'Private Journal']);
+
+        $response = $this->graphQL(
+            'query ($search: String) {
+                publications(search: $search) {
+                    data { id name }
+                }
+            }',
+            ['search' => 'Digital']
+        );
+        $json = $response->json('data.publications.data');
+
+        $this->assertCount(1, $json);
+        $this->assertSame('Digital Humanities Review', $json[0]['name']);
+    }
+
     protected function executePublicationRoleAssignment(string $role, Publication $publication, User $user)
     {
         return $this->graphQL(
@@ -889,6 +1038,162 @@ class PublicationTest extends ApiTestCase
         );
         $response->assertJson(fn(AssertableJson $json) => $json->has('errors', 1)
             ->etc());
+    }
+
+    private const DASHBOARD_QUERY = '
+        query ($id: ID!) {
+            publication(id: $id) {
+                submissions(first: 10) {
+                    paginatorInfo { total }
+                    data { id title status }
+                }
+                submission_status_counts { status count }
+            }
+        }
+    ';
+
+    public function testEditorCanQueryDashboardSubmissions(): void
+    {
+        /** @var User $editor */
+        $editor = User::factory()->create();
+        $this->actingAs($editor);
+
+        $publication = Publication::factory()
+            ->hasAttached($editor, [], 'editors')
+            ->create();
+
+        $submitter = User::factory()->create();
+        Submission::factory()
+            ->for($publication)
+            ->hasAttached($submitter, [], 'submitters')
+            ->create(['status' => Submission::INITIALLY_SUBMITTED]);
+
+        $response = $this->graphQL(self::DASHBOARD_QUERY, [
+            'id' => (string)$publication->id,
+        ]);
+
+        $response->assertJsonPath('data.publication.submissions.paginatorInfo.total', 1);
+        $this->assertNotEmpty($response->json('data.publication.submission_status_counts'));
+    }
+
+    public function testPublicationAdminCanQueryDashboardSubmissions(): void
+    {
+        /** @var User $admin */
+        $admin = User::factory()->create();
+        $this->actingAs($admin);
+
+        $publication = Publication::factory()
+            ->hasAttached($admin, [], 'publicationAdmins')
+            ->create();
+
+        $submitter = User::factory()->create();
+        Submission::factory()
+            ->for($publication)
+            ->hasAttached($submitter, [], 'submitters')
+            ->create(['status' => Submission::UNDER_REVIEW]);
+
+        $response = $this->graphQL(self::DASHBOARD_QUERY, [
+            'id' => (string)$publication->id,
+        ]);
+
+        $response->assertJsonPath('data.publication.submissions.paginatorInfo.total', 1);
+    }
+
+    public function testOutsiderCannotQueryHiddenPublicationDashboard(): void
+    {
+        $owner = User::factory()->create();
+        $publication = Publication::factory()
+            ->hidden()
+            ->hasAttached($owner, [], 'publicationAdmins')
+            ->create();
+
+        $submitter = User::factory()->create();
+        Submission::factory()
+            ->for($publication)
+            ->hasAttached($submitter, [], 'submitters')
+            ->create(['status' => Submission::INITIALLY_SUBMITTED]);
+
+        /** @var User $outsider */
+        $outsider = User::factory()->create();
+        $this->actingAs($outsider);
+
+        $response = $this->graphQL(self::DASHBOARD_QUERY, [
+            'id' => (string)$publication->id,
+        ]);
+
+        $response->assertJsonPath('data.publication', null);
+    }
+
+    public function testOutsiderCannotQueryPublicPublicationDashboard(): void
+    {
+        // The `view` policy is intentionally permissive for public
+        // publications — anyone can resolve `publication(id: ...)`
+        // to read basic metadata. The nested dashboard fields
+        // (submissions + submission_status_counts) must not piggyback
+        // on that permission; they expose in-flight submissions and
+        // aggregate operational metrics that shouldn't leak from
+        // public publications.
+        $owner = User::factory()->create();
+        $publication = Publication::factory()
+            ->hasAttached($owner, [], 'publicationAdmins')
+            ->create(['is_publicly_visible' => true]);
+
+        $submitter = User::factory()->create();
+        Submission::factory()
+            ->for($publication)
+            ->hasAttached($submitter, [], 'submitters')
+            ->create(['status' => Submission::INITIALLY_SUBMITTED]);
+
+        /** @var User $outsider */
+        $outsider = User::factory()->create();
+        $this->actingAs($outsider);
+
+        $response = $this->graphQL(self::DASHBOARD_QUERY, [
+            'id' => (string)$publication->id,
+        ]);
+
+        // Both nested fields are non-null in the schema, so when the
+        // guard throws the GraphQL error bubbles up to the nearest
+        // nullable parent — here that's `publication` itself. End
+        // result: outsiders see a null publication + an auth error,
+        // same as the hidden-publication case.
+        $response->assertJsonPath('data.publication', null);
+        $response->assertJsonStructure(['errors']);
+    }
+
+    public function testDashboardExcludesDraftSubmissions(): void
+    {
+        /** @var User $editor */
+        $editor = User::factory()->create();
+        $this->actingAs($editor);
+
+        $publication = Publication::factory()
+            ->hasAttached($editor, [], 'editors')
+            ->create();
+
+        $submitter = User::factory()->create();
+
+        Submission::factory()
+            ->for($publication)
+            ->hasAttached($submitter, [], 'submitters')
+            ->create(['status' => Submission::DRAFT]);
+
+        Submission::factory()
+            ->for($publication)
+            ->hasAttached($submitter, [], 'submitters')
+            ->create(['status' => Submission::INITIALLY_SUBMITTED]);
+
+        $response = $this->graphQL(self::DASHBOARD_QUERY, [
+            'id' => (string)$publication->id,
+        ]);
+
+        // Only the non-draft submission should appear.
+        $response->assertJsonPath('data.publication.submissions.paginatorInfo.total', 1);
+
+        // Status counts should also exclude DRAFT.
+        $counts = collect($response->json('data.publication.submission_status_counts'));
+        $this->assertNull($counts->firstWhere('status', 'DRAFT'));
+        $this->assertEquals(1, $counts->sum('count'));
     }
 
     public function testCanUpdateTooManyStyleCriteria()

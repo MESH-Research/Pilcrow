@@ -1,5 +1,35 @@
 <template>
   <article data-cy="vueDashboard" class="q-pa-lg">
+    <q-banner
+      v-if="showManageBanner"
+      inline-actions
+      dense
+      class="q-mb-md bg-primary text-white"
+      data-cy="manage_banner"
+    >
+      <template #avatar>
+        <q-icon name="dashboard" size="md" />
+      </template>
+      {{ $t("dashboard.manage_banner.message") }}
+      <template #action>
+        <q-btn
+          flat
+          icon="science"
+          to="/account/lab-features"
+          :label="$t('dashboard.manage_banner.cta')"
+          data-cy="manage_banner_cta"
+        />
+        <q-btn
+          flat
+          dense
+          icon="close"
+          :aria-label="$t('dashboard.manage_banner.dismiss')"
+          data-cy="manage_banner_dismiss"
+          @click="dismissManageBanner"
+        />
+        <q-tooltip>{{ $t("dashboard.manage_banner.dismiss") }}</q-tooltip>
+      </template>
+    </q-banner>
     <section
       class="row wrap justify-start q-col-gutter-md items-stretch content-start q-mb-md"
     >
@@ -66,8 +96,13 @@
         </q-card>
       </div>
     </section>
+    <section class="row q-mb-md">
+      <div v-if="hasManageV2" class="col-12">
+        <NeedsActionPublicationsTable :limit="5" />
+      </div>
+    </section>
     <section class="row wrap q-gutter-y-md">
-      <div v-if="all_submissions.length > 0" class="col-12">
+      <div v-if="all_submissions.length > 0 && !hasManageV2" class="col-12">
         <submission-table
           :table-data="all_submissions"
           table-type="submissions"
@@ -107,19 +142,79 @@
   </article>
 </template>
 
+<script lang="ts">
+import { graphql } from "src/graphql/generated"
+
+// Probe query: are there any publications where the current user is
+// publication_admin or editor? We only need the total count; `first: 1`
+// keeps the payload small.
+graphql(`
+  query DashboardManagedPublicationsProbe {
+    currentUser {
+      id
+      publications(roles: [publication_admin, editor], first: 1, page: 1) {
+        paginatorInfo {
+          total
+        }
+      }
+    }
+  }
+`)
+</script>
+
 <script setup lang="ts">
 import AvatarImage from "src/components/atoms/AvatarImage.vue"
+import NeedsActionPublicationsTable from "src/components/molecules/NeedsActionPublicationsTable.vue"
 import { useCurrentUser } from "src/use/user"
+import { useUserPreferences } from "src/use/userPreferences"
 import { useQuery } from "@vue/apollo-composable"
 import { CURRENT_USER_SUBMISSIONS, GET_SUBMISSIONS } from "src/graphql/queries"
+import { DashboardManagedPublicationsProbeDocument } from "src/graphql/generated/graphql"
 import SubmissionTable from "src/components/SubmissionTable.vue"
-import { computed } from "vue"
+import { computed, ref } from "vue"
 import { compareDatesDesc } from "src/utils/dateSort"
 import { useQuasar } from "quasar"
 
 const $q = useQuasar()
 
-const { currentUser } = useCurrentUser()
+const { currentUser, isAppAdmin } = useCurrentUser()
+const { hasOptedIn } = useUserPreferences()
+const hasManageV2 = hasOptedIn("manage_ui_v2")
+
+// Skip the probe when we already know the answer — app admins always
+// see the banner, and opted-in users hide it regardless.
+const { result: managedProbe } = useQuery(
+  DashboardManagedPublicationsProbeDocument,
+  {},
+  () => ({ enabled: !isAppAdmin.value && !hasManageV2.value })
+)
+const hasManagedPublication = computed(
+  () =>
+    (managedProbe.value?.currentUser?.publications?.paginatorInfo?.total ?? 0) >
+    0
+)
+
+const MANAGE_BANNER_KEY = "hideManageBannerUntil"
+const manageBannerDismissed = ref(false)
+if ($q.localStorage.has(MANAGE_BANNER_KEY)) {
+  const until = $q.localStorage.getItem(MANAGE_BANNER_KEY) as number
+  if (until < Date.now()) {
+    $q.localStorage.remove(MANAGE_BANNER_KEY)
+  } else {
+    manageBannerDismissed.value = true
+  }
+}
+function dismissManageBanner() {
+  manageBannerDismissed.value = true
+  const oneWeekMs = 1000 * 60 * 60 * 24 * 7
+  $q.localStorage.set(MANAGE_BANNER_KEY, Date.now() + oneWeekMs)
+}
+const showManageBanner = computed(
+  () =>
+    !manageBannerDismissed.value &&
+    !hasManageV2.value &&
+    (isAppAdmin.value || hasManagedPublication.value)
+)
 const { result: all_submissions_result } = useQuery(GET_SUBMISSIONS, {
   page: 1
 })

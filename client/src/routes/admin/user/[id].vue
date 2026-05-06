@@ -69,6 +69,10 @@
           :to="{ name: 'user_details:submissions', params: { id } }"
           label="Submissions"
         />
+        <q-route-tab
+          :to="{ name: 'user_details:settings', params: { id } }"
+          label="Settings"
+        />
       </q-tabs>
       <q-separator />
 

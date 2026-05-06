@@ -14,6 +14,12 @@ type User {
     highest_privileged_role: UserRoles @method(name: "getHighestPrivilegedRole")
     permissions: [Permission!] @belongsToMany
     profile_metadata: ProfileMetadata
+    "UI preferences (theme, accessible color patterns)."
+    preferences: UserPreferences
+    "Keys of UI elements (callouts, banners) the user has dismissed."
+    dismissed_ui: [String!]! @method(name: "getDismissedUiKeys")
+    "Feature-flag keys the user has explicitly opted into."
+    feature_opt_ins: [String!]! @method(name: "getActiveFeatureOptIns")
     raw_submissions: [Submission!]
         @belongsToMany(relation: "submissions")
         @deprecated(reason: "Use `submissions` (SubmissionAssignment) instead")
@@ -27,9 +33,44 @@ type User {
         @hasMany(relation: "submissionAssignments", type: "PAGINATOR", defaultCount: 10)
     publications(
         roles: [PublicationRole!] @scope(name: "roleFilter")
+        search: String @scope
+        with_statuses: [SubmissionStatus!] @scope(name: "withStatuses")
+        orderBy: [PublicationAssignmentOrderBy!]
+            @scope(name: "orderByPublication")
     ): [PublicationAssignment!]!
         @hasMany(relation: "publicationAssignments", type: "PAGINATOR", defaultCount: 10)
     staged: Boolean
+    """
+    Number of this publication's non-draft submissions on which the
+    user is a submitter. Only populated by the Publication.users
+    resolver; null otherwise.
+    """
+    as_submitter_count: Int
+    """
+    Count of active (in-progress) submissions in this publication
+    where the user is a reviewer. "Active" = not yet
+    rejected / accepted / archived / deleted. Only populated by the
+    Publication.users resolver; null otherwise.
+    """
+    as_reviewer_active_count: Int
+    """
+    Count of completed submissions (rejected / accepted / archived
+    / deleted) in this publication where the user is a reviewer.
+    Only populated by the Publication.users resolver; null otherwise.
+    """
+    as_reviewer_completed_count: Int
+    """
+    Count of active (in-progress) submissions where the user is a
+    review coordinator. Only populated by the Publication.users
+    resolver; null otherwise.
+    """
+    as_coordinator_active_count: Int
+    """
+    Count of completed submissions where the user is a review
+    coordinator. Only populated by the Publication.users resolver;
+    null otherwise.
+    """
+    as_coordinator_completed_count: Int
 }
 
 enum UserRoles {

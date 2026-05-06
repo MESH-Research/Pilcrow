@@ -37,6 +37,7 @@ declare module 'vue-router/auto-routes' {
       | 'admin:user:id'
       | 'admin:users'
       | 'user_details'
+      | 'user_details:settings'
       | 'user_details:submissions'
     >,
     'admin:dashboard': RouteRecordInfo<
@@ -59,11 +60,19 @@ declare module 'vue-router/auto-routes' {
       { id: ParamValue<true> },
       { id: ParamValue<false> },
       | 'user_details'
+      | 'user_details:settings'
       | 'user_details:submissions'
     >,
     'user_details': RouteRecordInfo<
       'user_details',
       '/admin/user/:id',
+      { id: ParamValue<true> },
+      { id: ParamValue<false> },
+      | never
+    >,
+    'user_details:settings': RouteRecordInfo<
+      'user_details:settings',
+      '/admin/user/:id/settings',
       { id: ParamValue<true> },
       { id: ParamValue<false> },
       | never
@@ -80,6 +89,128 @@ declare module 'vue-router/auto-routes' {
       '/admin/users',
       Record<never, never>,
       Record<never, never>,
+      | never
+    >,
+    'manage:index': RouteRecordInfo<
+      'manage:index',
+      '/manage',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/manage/publication': RouteRecordInfo<
+      '/manage/publication',
+      '/manage/publication',
+      Record<never, never>,
+      Record<never, never>,
+      | '/manage/publication/[id]/'
+      | '/manage/publication/[id]/(tabs)'
+      | '/manage/publication/[id]/dashboard/'
+      | 'manage:publication:dashboard'
+      | 'manage:publication:id'
+      | 'manage:publication:invited'
+      | 'manage:publication:submission'
+      | 'manage:publication:submissions'
+      | 'manage:publication:submitter'
+      | 'manage:publication:submitters'
+      | 'manage:publication:team'
+      | 'manage:publication:team_member'
+    >,
+    'manage:publication:id': RouteRecordInfo<
+      'manage:publication:id',
+      '/manage/publication/:id',
+      { id: ParamValue<true> },
+      { id: ParamValue<false> },
+      | '/manage/publication/[id]/'
+      | '/manage/publication/[id]/(tabs)'
+      | '/manage/publication/[id]/dashboard/'
+      | 'manage:publication:dashboard'
+      | 'manage:publication:invited'
+      | 'manage:publication:submission'
+      | 'manage:publication:submissions'
+      | 'manage:publication:submitter'
+      | 'manage:publication:submitters'
+      | 'manage:publication:team'
+      | 'manage:publication:team_member'
+    >,
+    '/manage/publication/[id]/(tabs)': RouteRecordInfo<
+      '/manage/publication/[id]/(tabs)',
+      '/manage/publication/:id',
+      { id: ParamValue<true> },
+      { id: ParamValue<false> },
+      | 'manage:publication:invited'
+      | 'manage:publication:team'
+    >,
+    'manage:publication:invited': RouteRecordInfo<
+      'manage:publication:invited',
+      '/manage/publication/:id/invited',
+      { id: ParamValue<true> },
+      { id: ParamValue<false> },
+      | never
+    >,
+    'manage:publication:team': RouteRecordInfo<
+      'manage:publication:team',
+      '/manage/publication/:id/team',
+      { id: ParamValue<true> },
+      { id: ParamValue<false> },
+      | never
+    >,
+    '/manage/publication/[id]/': RouteRecordInfo<
+      '/manage/publication/[id]/',
+      '/manage/publication/:id',
+      { id: ParamValue<true> },
+      { id: ParamValue<false> },
+      | never
+    >,
+    'manage:publication:dashboard': RouteRecordInfo<
+      'manage:publication:dashboard',
+      '/manage/publication/:id/dashboard',
+      { id: ParamValue<true> },
+      { id: ParamValue<false> },
+      | '/manage/publication/[id]/dashboard/'
+      | 'manage:publication:submissions'
+      | 'manage:publication:submitters'
+    >,
+    '/manage/publication/[id]/dashboard/': RouteRecordInfo<
+      '/manage/publication/[id]/dashboard/',
+      '/manage/publication/:id/dashboard',
+      { id: ParamValue<true> },
+      { id: ParamValue<false> },
+      | never
+    >,
+    'manage:publication:submissions': RouteRecordInfo<
+      'manage:publication:submissions',
+      '/manage/publication/:id/dashboard/submissions',
+      { id: ParamValue<true> },
+      { id: ParamValue<false> },
+      | never
+    >,
+    'manage:publication:submitters': RouteRecordInfo<
+      'manage:publication:submitters',
+      '/manage/publication/:id/dashboard/submitters',
+      { id: ParamValue<true> },
+      { id: ParamValue<false> },
+      | never
+    >,
+    'manage:publication:submission': RouteRecordInfo<
+      'manage:publication:submission',
+      '/manage/publication/:id/submissions/:submissionId',
+      { id: ParamValue<true>, submissionId: ParamValue<true> },
+      { id: ParamValue<false>, submissionId: ParamValue<false> },
+      | never
+    >,
+    'manage:publication:submitter': RouteRecordInfo<
+      'manage:publication:submitter',
+      '/manage/publication/:id/submitters/:userId',
+      { id: ParamValue<true>, userId: ParamValue<true> },
+      { id: ParamValue<false>, userId: ParamValue<false> },
+      | never
+    >,
+    'manage:publication:team_member': RouteRecordInfo<
+      'manage:publication:team_member',
+      '/manage/publication/:id/team/:userId',
+      { id: ParamValue<true>, userId: ParamValue<true> },
+      { id: ParamValue<false>, userId: ParamValue<false> },
       | never
     >,
   }
@@ -103,6 +234,7 @@ declare module 'vue-router/auto-routes' {
         | 'admin:user:id'
         | 'admin:users'
         | 'user_details'
+        | 'user_details:settings'
         | 'user_details:submissions'
       views:
         | 'default'
@@ -123,6 +255,7 @@ declare module 'vue-router/auto-routes' {
       routes:
         | 'admin:user:id'
         | 'user_details'
+        | 'user_details:settings'
         | 'user_details:submissions'
       views:
         | 'default'
@@ -130,6 +263,12 @@ declare module 'vue-router/auto-routes' {
     'src/routes/admin/user/[id]/index.vue': {
       routes:
         | 'user_details'
+      views:
+        | never
+    }
+    'src/routes/admin/user/[id]/settings.vue': {
+      routes:
+        | 'user_details:settings'
       views:
         | never
     }
@@ -142,6 +281,118 @@ declare module 'vue-router/auto-routes' {
     'src/routes/admin/users.vue': {
       routes:
         | 'admin:users'
+      views:
+        | never
+    }
+    'src/routes/manage/index.vue': {
+      routes:
+        | 'manage:index'
+      views:
+        | never
+    }
+    'src/routes/manage/publication.vue': {
+      routes:
+        | '/manage/publication'
+        | '/manage/publication/[id]/'
+        | '/manage/publication/[id]/(tabs)'
+        | '/manage/publication/[id]/dashboard/'
+        | 'manage:publication:dashboard'
+        | 'manage:publication:id'
+        | 'manage:publication:invited'
+        | 'manage:publication:submission'
+        | 'manage:publication:submissions'
+        | 'manage:publication:submitter'
+        | 'manage:publication:submitters'
+        | 'manage:publication:team'
+        | 'manage:publication:team_member'
+      views:
+        | 'default'
+    }
+    'src/routes/manage/publication/[id].vue': {
+      routes:
+        | '/manage/publication/[id]/'
+        | '/manage/publication/[id]/(tabs)'
+        | '/manage/publication/[id]/dashboard/'
+        | 'manage:publication:dashboard'
+        | 'manage:publication:id'
+        | 'manage:publication:invited'
+        | 'manage:publication:submission'
+        | 'manage:publication:submissions'
+        | 'manage:publication:submitter'
+        | 'manage:publication:submitters'
+        | 'manage:publication:team'
+        | 'manage:publication:team_member'
+      views:
+        | 'default'
+    }
+    'src/routes/manage/publication/[id]/(tabs).vue': {
+      routes:
+        | '/manage/publication/[id]/(tabs)'
+        | 'manage:publication:invited'
+        | 'manage:publication:team'
+      views:
+        | 'default'
+    }
+    'src/routes/manage/publication/[id]/(tabs)/invited.vue': {
+      routes:
+        | 'manage:publication:invited'
+      views:
+        | never
+    }
+    'src/routes/manage/publication/[id]/(tabs)/team.vue': {
+      routes:
+        | 'manage:publication:team'
+      views:
+        | never
+    }
+    'src/routes/manage/publication/[id]/index.vue': {
+      routes:
+        | '/manage/publication/[id]/'
+      views:
+        | never
+    }
+    'src/routes/manage/publication/[id]/dashboard.vue': {
+      routes:
+        | '/manage/publication/[id]/dashboard/'
+        | 'manage:publication:dashboard'
+        | 'manage:publication:submissions'
+        | 'manage:publication:submitters'
+      views:
+        | 'default'
+    }
+    'src/routes/manage/publication/[id]/dashboard/index.vue': {
+      routes:
+        | '/manage/publication/[id]/dashboard/'
+      views:
+        | never
+    }
+    'src/routes/manage/publication/[id]/dashboard/submissions.vue': {
+      routes:
+        | 'manage:publication:submissions'
+      views:
+        | never
+    }
+    'src/routes/manage/publication/[id]/dashboard/submitters.vue': {
+      routes:
+        | 'manage:publication:submitters'
+      views:
+        | never
+    }
+    'src/routes/manage/publication/[id]/submissions/[submissionId].vue': {
+      routes:
+        | 'manage:publication:submission'
+      views:
+        | never
+    }
+    'src/routes/manage/publication/[id]/submitters/[userId].vue': {
+      routes:
+        | 'manage:publication:submitter'
+      views:
+        | never
+    }
+    'src/routes/manage/publication/[id]/team/[userId].vue': {
+      routes:
+        | 'manage:publication:team_member'
       views:
         | never
     }

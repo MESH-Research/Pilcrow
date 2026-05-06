@@ -208,6 +208,15 @@ type Mutation {
   "Accept an invitation to a submission as the assigned role"
   acceptSubmissionInvite(expires: String!, token: String!, user: AcceptSubmissionInviteInput, uuid: String!): User
 
+  """
+  Add reviewers to a submission in one round trip: connect existing
+  users by id and/or invite new users by email. The optional message
+  is shared across every invitation. The whole batch runs in a single
+  transaction so a partial failure doesn't leave the submission with
+  half its assignments saved.
+  """
+  addReviewers(input: addReviewersInput!): Submission
+
   "Create a new publication"
   createPublication(publication: CreatePublicationInput!): Publication!
 
@@ -222,6 +231,13 @@ type Mutation {
 
   "Delete an overall comment of a submission"
   deleteOverallComment(input: DeleteCommentInput!): Submission!
+
+  """
+  Mark a UI element (info callout, banner, etc.) as dismissed for
+  the authenticated user. Idempotent — re-dismissing refreshes the
+  timestamp the server stores against the key.
+  """
+  dismissUiElement(key: String!): User!
 
   """
   Create a staged user, assign them as a review coordinator of a submisison,
@@ -271,6 +287,14 @@ type Mutation {
   """
   resetDatabase: String!
 
+  """
+  Clear every dismissed UI key for the authenticated user, so the
+  dismissable callouts they previously closed will show again on
+  their next visit. Used by the "Reset dismissable elements"
+  control on the user settings page.
+  """
+  resetDismissedUi: User!
+
   "Update a password from a password reset request"
   resetPassword(input: ResetPasswordInput): User
 
@@ -281,6 +305,13 @@ type Mutation {
     "User to resend verification for. If not supplied, defaults to the current user."
     id: ID
   ): User!
+
+  """
+  Toggle the authenticated user's opt-in state for a feature flag.
+  Setting `enabled: false` records an explicit opt-out (vs. the
+  "never decided" default of an absent key).
+  """
+  setFeatureOptIn(enabled: Boolean!, feature: String!): User!
 
   updatePublication(publication: UpdatePublicationInput!): Publication
 
@@ -295,6 +326,12 @@ type Mutation {
 
   "Update user information"
   updateUser(user: UpdateUserInput!): User!
+
+  """
+  Update the authenticated user's UI preferences. Only supplied
+  fields are written; others retain their stored values.
+  """
+  updateUserPreferences(input: UpdateUserPreferencesInput!): User!
 
   "Verify the currently logged in user's email address"
   verifyEmail(
@@ -507,8 +544,51 @@ type Publication {
   new_submission_content: String
   publication_admins: [User!]!
   style_criterias: [StyleCriteria!]!
-  submissions: [Submission]!
+  submission_status_counts: [SubmissionStatusCount!]!
+
+  "Paginated submissions for this publication, with status counts."
+  submissions(
+    "Limits number of fetched items."
+    first: Int! = 25
+
+    orderBy: [QuerySubmissionsOrderByOrderByClause!]
+
+    "The offset from which items are returned."
+    page: Int
+
+    search: String
+    status: [SubmissionStatus!]
+  ): SubmissionPaginator!
+
   updated_at: DateTimeUtc
+
+  """
+  A single user scoped to this publication. Returns null when the
+  user has no submission-level involvement here. Carries the same
+  per-role counts as `users`, plus a `submissions` field that lists
+  the submissions this user is attached to within this publication.
+  """
+  user(id: ID!): PublicationUser
+
+  """
+  Paginated users associated with this publication's submissions,
+  filtered by role. Each row is a PublicationUser scoped to this
+  publication, carrying per-role submission counts and a nested
+  paginated submissions field.
+  """
+  users(
+    "Limits number of fetched items."
+    first: Int! = 25
+
+    orderBy: [QueryPublicationUsersOrderByOrderByClause!]
+
+    "The offset from which items are returned."
+    page: Int
+
+    roles: [SubmissionUserRoles!]!
+    search: String
+    staged: Boolean
+  ): PublicationUserPaginator!
 }
 
 type PublicationAssignment {
@@ -518,6 +598,19 @@ type PublicationAssignment {
   role: PublicationRole!
   updated_at: DateTimeUtc
   user: User!
+}
+
+"Order by clause for publication assignments."
+input PublicationAssignmentOrderBy {
+  column: PublicationAssignmentOrderByColumn!
+  order: SortOrder!
+}
+
+"Sortable columns for the User.publications query."
+enum PublicationAssignmentOrderByColumn {
+  CREATED_AT
+  NAME
+  UPDATED_AT
 }
 
 "A paginated list of PublicationAssignment items."
@@ -543,6 +636,75 @@ enum PublicationRole {
   publication_admin
 }
 
+"""
+A user in the context of a specific publication. Carries per-role
+submission counts plus a filtered submissions listing so detail
+views can show just the submissions this user is involved in.
+"""
+type PublicationUser {
+  as_coordinator_active_count: Int!
+  as_coordinator_completed_count: Int!
+  as_reviewer_active_count: Int!
+  as_reviewer_completed_count: Int!
+  as_submitter_count: Int!
+
+  "ID of the underlying user."
+  id: ID!
+
+  """
+  Timestamp of this user's most recent submission assignment in
+  this publication, scoped to the role(s) the parent `users` query
+  was filtered by. Null when the user has no matching assignments.
+  Used by the assignment picker to surface "currently engaged"
+  team members at the top of the list.
+  """
+  last_assigned_at: DateTimeUtc
+
+  """
+  Counts of this user's submissions in this publication grouped
+  by status. Mirrors Publication.submission_status_counts but
+  scoped to the one user. Optionally filter by the roles the
+  user holds on each submission (so the team-member view can
+  limit counts to reviewer/coordinator work and the submitter
+  view to [submitter]). Drafts are excluded.
+  """
+  submission_status_counts(roles: [SubmissionUserRoles!]): [SubmissionStatusCount!]!
+
+  """
+  Paginated submissions in this publication that this user is
+  attached to. Optionally filter by the roles they hold on each
+  submission and by phase (active / completed). Drafts are always
+  excluded. Defaults to a small page so list-view renderers can
+  inspect paginatorInfo.total to decide whether to show per-
+  submission icons or fall back to a numeric count.
+  """
+  submissions(
+    "Limits number of fetched items."
+    first: Int! = 5
+
+    orderBy: [QuerySubmissionsOrderByOrderByClause!]
+
+    "The offset from which items are returned."
+    page: Int
+
+    phase: SubmissionPhase
+    roles: [SubmissionUserRoles!]
+    status: [SubmissionStatus!]
+  ): SubmissionPaginator!
+
+  "The user themselves (name, email, username, avatar, etc.)."
+  user: User!
+}
+
+"A paginated list of PublicationUser items."
+type PublicationUserPaginator implements Paginator {
+  "A list of PublicationUser items."
+  data: [PublicationUser!]!
+
+  "Pagination information about the list of items."
+  paginatorInfo: PaginatorInfo!
+}
+
 type Query {
   "Return information about the currently logged in user"
   currentUser: User
@@ -563,7 +725,6 @@ type Query {
     "Limits number of fetched items."
     first: Int! = 10
 
-    my_role: PublicationRole
     orderBy: [QueryPublicationsOrderByOrderByClause!]
 
     "The offset from which items are returned."
@@ -585,6 +746,7 @@ type Query {
     first: Int! = 100
 
     my_roles: [SubmissionUserRoles!]
+    orderBy: [QuerySubmissionsOrderByOrderByClause!]
 
     "The offset from which items are returned."
     page: Int
@@ -625,6 +787,25 @@ type Query {
   versionInfo: VersionInfo
 }
 
+"Sortable columns for the Publication.users query."
+enum QueryPublicationUsersOrderByColumn {
+  AS_COORDINATOR_ACTIVE_COUNT
+  AS_COORDINATOR_COMPLETED_COUNT
+  AS_REVIEWER_ACTIVE_COUNT
+  AS_REVIEWER_COMPLETED_COUNT
+  AS_SUBMITTER_COUNT
+  EMAIL
+  LAST_ASSIGNED_AT
+  NAME
+  USERNAME
+}
+
+"Order by clause for the Publication.users query."
+input QueryPublicationUsersOrderByOrderByClause {
+  column: QueryPublicationUsersOrderByColumn!
+  order: SortOrder!
+}
+
 "Allowed column names for Query.publications.orderBy."
 enum QueryPublicationsOrderByColumn {
   CREATED_AT
@@ -635,6 +816,23 @@ enum QueryPublicationsOrderByColumn {
 input QueryPublicationsOrderByOrderByClause {
   "The column that is used for ordering."
   column: QueryPublicationsOrderByColumn!
+
+  "The direction that is used for ordering."
+  order: SortOrder!
+}
+
+"Allowed column names for Query.submissions.orderBy."
+enum QuerySubmissionsOrderByColumn {
+  CREATED_AT
+  STATUS
+  TITLE
+  UPDATED_AT
+}
+
+"Order by clause for Query.submissions.orderBy."
+input QuerySubmissionsOrderByOrderByClause {
+  "The column that is used for ordering."
+  column: QuerySubmissionsOrderByColumn!
 
   "The direction that is used for ordering."
   order: SortOrder!
@@ -809,13 +1007,25 @@ type SubmissionFile {
   submission_id: ID!
 }
 
-"A paginated list of Submission items."
+"A paginated list of Submission items with aggregate status counts."
 type SubmissionPaginator implements Paginator {
   "A list of Submission items."
   data: [Submission!]!
 
   "Pagination information about the list of items."
   paginatorInfo: PaginatorInfo!
+
+  "Submission counts grouped by status, reflecting all filters except status."
+  statusCounts: [SubmissionStatusCount!]!
+}
+
+"High-level status grouping used by the dashboard and user details."
+enum SubmissionPhase {
+  "Submissions still in the review pipeline (excludes drafts)."
+  active
+
+  "Terminal submissions: accepted, rejected, archived, or deleted."
+  completed
 }
 
 "The status of a submission"
@@ -833,6 +1043,12 @@ enum SubmissionStatus {
   RESUBMITTED
   REVISION_REQUESTED
   UNDER_REVIEW
+}
+
+"A count of submissions with a given status"
+type SubmissionStatusCount {
+  count: Int!
+  status: SubmissionStatus!
 }
 
 enum SubmissionUserRoles {
@@ -970,15 +1186,68 @@ input UpdateUserInput {
   username: String
 }
 
+"""
+Patch a subset of the current user's UI preferences. Omitted
+fields are left untouched on the stored object.
+"""
+input UpdateUserPreferencesInput {
+  a11y_color_patterns: Boolean
+  theme: UserThemePreference
+}
+
 "Can be used as an argument to upload files using https://github.com/jaydenseric/graphql-multipart-request-spec"
 scalar Upload
 
 "A user account"
 type User {
+  """
+  Count of active (in-progress) submissions where the user is a
+  review coordinator. Only populated by the Publication.users
+  resolver; null otherwise.
+  """
+  as_coordinator_active_count: Int
+
+  """
+  Count of completed submissions where the user is a review
+  coordinator. Only populated by the Publication.users resolver;
+  null otherwise.
+  """
+  as_coordinator_completed_count: Int
+
+  """
+  Count of active (in-progress) submissions in this publication
+  where the user is a reviewer. "Active" = not yet
+  rejected / accepted / archived / deleted. Only populated by the
+  Publication.users resolver; null otherwise.
+  """
+  as_reviewer_active_count: Int
+
+  """
+  Count of completed submissions (rejected / accepted / archived
+  / deleted) in this publication where the user is a reviewer.
+  Only populated by the Publication.users resolver; null otherwise.
+  """
+  as_reviewer_completed_count: Int
+
+  """
+  Number of this publication's non-draft submissions on which the
+  user is a submitter. Only populated by the Publication.users
+  resolver; null otherwise.
+  """
+  as_submitter_count: Int
+
   created_at: DateTimeUtc!
+
+  "Keys of UI elements (callouts, banners) the user has dismissed."
+  dismissed_ui: [String!]!
+
   display_label: String
   email: String!
   email_verified_at: DateTimeUtc
+
+  "Feature-flag keys the user has explicitly opted into."
+  feature_opt_ins: [String!]!
+
   highest_privileged_role: UserRoles
   id: ID!
   name: String
@@ -993,15 +1262,23 @@ type User {
     unread: Boolean
   ): NotificationPaginator!
   permissions: [Permission!]
+
+  "UI preferences (theme, accessible color patterns)."
+  preferences: UserPreferences
+
   profile_metadata: ProfileMetadata
   publications(
     "Limits number of fetched items."
     first: Int! = 10
 
+    orderBy: [PublicationAssignmentOrderBy!]
+
     "The offset from which items are returned."
     page: Int
 
     roles: [PublicationRole!]
+    search: String
+    with_statuses: [SubmissionStatus!]
   ): PublicationAssignmentPaginator!
   raw_submissions: [Submission!] @deprecated(reason: "Use `submissions` (SubmissionAssignment) instead")
   roles: [Role!]!
@@ -1033,6 +1310,16 @@ type UserPaginator implements Paginator {
   paginatorInfo: PaginatorInfo!
 }
 
+"""
+Per-user UI preferences with a known shape. Stored as a JSON
+column on `users.preferences`; Lighthouse resolves each field by
+key from the underlying array cast.
+"""
+type UserPreferences {
+  a11y_color_patterns: Boolean
+  theme: UserThemePreference
+}
+
 enum UserRoles {
   application_admin
   editor
@@ -1040,6 +1327,13 @@ enum UserRoles {
   review_coordinator
   reviewer
   submitter
+}
+
+"Theme preference. AUTO follows the OS / browser preference."
+enum UserThemePreference {
+  AUTO
+  DARK
+  LIGHT
 }
 
 "Validate the availability of username and email via the validateNewUser query"
@@ -1055,6 +1349,18 @@ type VersionInfo {
   version: String
   version_date: String
   version_url: String
+}
+
+"""
+Bulk-add reviewers to a submission. `connect` attaches existing users
+by id; `invite_emails` stages + emails new users (one invitation per
+address). At least one of the two must be non-empty.
+"""
+input addReviewersInput {
+  connect: [ID!]
+  invite_emails: [String!]
+  message: String
+  submission_id: ID!
 }
 
 input inviteSubmissionUserInput {

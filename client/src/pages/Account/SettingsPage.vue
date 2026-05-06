@@ -8,24 +8,135 @@
     :graphql-validation="validationErrors"
     @save="updateUser"
   />
+
+  <div class="q-py-md">
+    <form-section>
+      <template #header>{{ $t("settings.preferences.heading") }}</template>
+      <div>
+        <div class="text-caption text-weight-medium text-grey-7 q-mb-xs">
+          {{ $t("settings.preferences.theme") }}
+        </div>
+        <!-- Radio group instead of a select so the three options
+             are visible at a glance — there are only ever three. -->
+        <div class="row q-gutter-x-md theme-options">
+          <q-radio
+            v-for="option in themeOptions"
+            :key="option.value"
+            :model-value="themeValue"
+            :val="option.value"
+            :label="$t(option.label)"
+            :disable="savingPreferences"
+            data-cy="theme_option"
+            @update:model-value="onThemeChange"
+          />
+        </div>
+      </div>
+      <div class="row items-center q-gutter-x-md">
+        <q-toggle
+          :model-value="a11yColorPatterns"
+          :label="$t('settings.preferences.a11y_color_patterns')"
+          :disable="savingPreferences"
+          data-cy="a11y_color_patterns_toggle"
+          @update:model-value="onA11yColorPatternsChange"
+        />
+        <!-- Wrapped in `.a11y-patterns` so the swatches always show the
+             pattern overlay regardless of the user's saved preference —
+             they're a preview of what the toggle enables. -->
+        <div
+          class="row items-center q-gutter-x-xs a11y-patterns"
+          aria-hidden="true"
+          data-cy="a11y_color_patterns_swatches"
+        >
+          <div
+            v-for="swatch in patternSwatches"
+            :key="swatch.key"
+            class="a11y-swatch"
+            :class="[`bg-${swatch.color}`, swatch.pattern]"
+          >
+            <q-tooltip>{{ $t(swatch.label) }}</q-tooltip>
+          </div>
+        </div>
+      </div>
+    </form-section>
+
+    <form-section>
+      <template #header>{{ $t("settings.dismissed.heading") }}</template>
+      <div class="row items-center q-gutter-md">
+        <div class="col">
+          <div class="text-caption text-grey-7">
+            {{ $t("settings.dismissed.help") }}
+          </div>
+        </div>
+        <q-btn
+          color="primary"
+          no-caps
+          :disable="dismissedKeys.length === 0"
+          :loading="resettingDismissed"
+          :label="$t('settings.dismissed.reset')"
+          data-cy="reset_dismissed_btn"
+          @click="onResetDismissed"
+        />
+      </div>
+    </form-section>
+  </div>
 </template>
+
+<script lang="ts">
+import { graphql } from "src/graphql/generated"
+
+// Co-located mutations: this is the only place users can edit
+// their UI preferences, reset dismissals, or toggle beta features.
+graphql(`
+  mutation UpdateUserPreferences($input: UpdateUserPreferencesInput!) {
+    updateUserPreferences(input: $input) {
+      id
+      preferences {
+        theme
+        a11y_color_patterns
+      }
+    }
+  }
+`)
+
+graphql(`
+  mutation ResetDismissedUi {
+    resetDismissedUi {
+      id
+      dismissed_ui
+    }
+  }
+`)
+</script>
 
 <script setup lang="ts">
 import AccountProfileForm from "src/components/forms/AccountProfileForm.vue"
+import FormSection from "src/components/molecules/FormSection.vue"
 import { UPDATE_USER } from "src/graphql/mutations"
 import { useCurrentUser } from "src/use/user"
 import { useFeedbackMessages } from "src/use/guiElements"
+import { useUserPreferences } from "src/use/userPreferences"
 import { useMutation } from "@vue/apollo-composable"
 import { useI18n } from "vue-i18n"
+import { useQuasar } from "quasar"
+import {
+  ResetDismissedUiDocument,
+  UpdateUserPreferencesDocument,
+  UserThemePreference
+} from "src/graphql/generated/graphql"
 import {
   useFormState,
   formStateKey,
   useDirtyGuard,
   useGraphQLValidation
 } from "src/use/forms"
-import { provide } from "vue"
+import { computed, provide } from "vue"
 
 const { currentUserQuery, currentUser } = useCurrentUser()
+const {
+  theme: currentTheme,
+  a11yColorPatterns,
+  dismissedKeys
+} = useUserPreferences()
 
 const updateUserMutation = useMutation(UPDATE_USER)
 
@@ -40,6 +151,7 @@ useDirtyGuard(formState.dirty)
 const { saved, errorMessage } = formState
 
 const { t } = useI18n()
+const $q = useQuasar()
 const { newStatusMessage } = useFeedbackMessages({
   attrs: {
     "data-cy": "update_user_notify"
@@ -67,4 +179,111 @@ async function updateUser(newValues) {
     }
   }
 }
+
+// Theme picker: AUTO follows the OS preference; LIGHT and DARK
+// override. The radio is bound by-value rather than v-model so a
+// failed mutation can leave the previous selection intact.
+const themeOptions = [
+  { value: UserThemePreference.AUTO, label: "settings.preferences.theme_auto" },
+  {
+    value: UserThemePreference.LIGHT,
+    label: "settings.preferences.theme_light"
+  },
+  { value: UserThemePreference.DARK, label: "settings.preferences.theme_dark" }
+]
+
+// Default radio selection when the user has no stored theme yet.
+const themeValue = computed(
+  () => currentTheme.value ?? UserThemePreference.AUTO
+)
+
+// Pattern + color combos used across the publication dashboards. Kept
+// in sync visually with `statusCategories` / `workflowStages` rather
+// than imported, since these swatches are previews and don't need
+// the status-string mapping baked into those defs.
+const patternSwatches = [
+  {
+    key: "needs_action",
+    color: "warning",
+    pattern: "pattern-diagonal",
+    label: "publication.dashboard.categories.needs_action"
+  },
+  {
+    key: "in_progress",
+    color: "info",
+    pattern: "pattern-zigzag",
+    label: "publication.dashboard.categories.in_progress"
+  },
+  {
+    key: "decision",
+    color: "accent",
+    pattern: "pattern-dots",
+    label: "publication.dashboard.stages.decision"
+  },
+  {
+    key: "completed",
+    color: "blue-grey-7",
+    pattern: "pattern-crosshatch",
+    label: "publication.dashboard.categories.completed"
+  }
+] as const
+
+const { mutate: updatePreferencesMutation, loading: savingPreferences } =
+  useMutation(UpdateUserPreferencesDocument)
+
+async function onThemeChange(value: UserThemePreference) {
+  try {
+    await updatePreferencesMutation({ input: { theme: value } })
+  } catch {
+    newStatusMessage("failure", t("settings.preferences.error"))
+  }
+}
+
+async function onA11yColorPatternsChange(value: boolean) {
+  try {
+    await updatePreferencesMutation({
+      input: { a11y_color_patterns: value }
+    })
+  } catch {
+    newStatusMessage("failure", t("settings.preferences.error"))
+  }
+}
+
+const { mutate: resetDismissedMutation, loading: resettingDismissed } =
+  useMutation(ResetDismissedUiDocument)
+
+function onResetDismissed() {
+  $q.dialog({
+    title: t("settings.dismissed.confirm_title"),
+    message: t("settings.dismissed.confirm_body"),
+    cancel: true,
+    persistent: true,
+    ok: {
+      label: t("settings.dismissed.reset"),
+      color: "primary"
+    }
+  }).onOk(async () => {
+    try {
+      await resetDismissedMutation()
+      newStatusMessage("success", t("settings.dismissed.success"))
+    } catch {
+      newStatusMessage("failure", t("settings.dismissed.error"))
+    }
+  })
+}
 </script>
+
+<style scoped>
+.theme-options {
+  flex-wrap: wrap;
+}
+.a11y-swatch {
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+}
+.body--dark .a11y-swatch {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+</style>

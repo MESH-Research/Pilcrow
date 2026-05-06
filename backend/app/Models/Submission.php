@@ -268,16 +268,25 @@ class Submission extends Model implements Auditable
     }
 
     /**
-     * Datetime the submission was submitted
+     * Datetime the submission was first submitted (DRAFT -> INITIALLY_SUBMITTED).
      *
-     * @return string|null
+     * Reads from the eager-loaded `audits` relation rather than a column.
+     * The audit's old/new value columns are JSON-cast to arrays, so we
+     * inspect them directly — a previous string-`LIKE` chain on the
+     * Collection silently never matched, since Collection::where has no
+     * `LIKE` operator and the values aren't strings.
+     *
+     * @return \Illuminate\Support\Carbon|null
      */
     public function getSubmittedAt()
     {
-        return $this->audits
-            ->where('event', 'updated')
-            ->where('old_values', 'like', '%"status":0%')
-            ->where('new_values', 'like', '%"status":1%')->first()->created_at ?? null;
+        $transition = $this->audits->first(function ($audit) {
+            return $audit->event === 'updated'
+                && (int)data_get($audit->old_values, 'status') === self::DRAFT
+                && (int)data_get($audit->new_values, 'status') === self::INITIALLY_SUBMITTED;
+        });
+
+        return $transition?->created_at;
     }
 
     /**

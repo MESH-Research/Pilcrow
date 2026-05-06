@@ -15,16 +15,29 @@
     <div class="row q-mb-md">
       <h2 class="col-sm-12" data-cy="publication_details_heading">
         {{ publication.name }}
-        <q-btn
-          v-if="isPublicationAdmin"
-          data-cy="configure_button"
-          icon="settings"
-          class="float-right"
-          color="primary"
-          :to="{ name: 'publication:setup:basic', param: { id: id } }"
-        >
-          {{ $t("publication.configure") }}
-        </q-btn>
+        <span class="float-right q-gutter-sm">
+          <q-btn
+            v-if="isPublicationAdminOrEditor"
+            data-cy="dashboard_button"
+            icon="dashboard"
+            color="primary"
+            :to="{
+              name: 'manage:publication:dashboard',
+              params: { id: id }
+            }"
+          >
+            {{ $t("publication.dashboard.heading") }}
+          </q-btn>
+          <q-btn
+            v-if="isPublicationAdmin"
+            data-cy="configure_button"
+            icon="settings"
+            color="primary"
+            :to="{ name: 'publication:setup:basic', param: { id: id } }"
+          >
+            {{ $t("publication.configure") }}
+          </q-btn>
+        </span>
       </h2>
       <!--  eslint-disable vue/no-v-html -->
       <div
@@ -61,5 +74,10 @@ const publication = computed(() => {
 
 const isPublicationAdmin = computed(() => {
   return publication.value?.effective_role === "publication_admin"
+})
+
+const isPublicationAdminOrEditor = computed(() => {
+  const role = publication.value?.effective_role
+  return role === "publication_admin" || role === "editor"
 })
 </script>
