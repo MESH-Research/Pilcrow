@@ -23,7 +23,7 @@ const generates: CodegenConfig["generates"] = {
 }
 
 // Only generate schema-ast when introspecting from a live server
-if (!process.env.GRAPHQL_SCHEMA) {
+if (!process.env.GRAPHQL_SCHEMA || /^https?:\/\//.test(schema)) {
   generates["src/graphql/schema.graphql"] = {
     plugins: ["schema-ast"],
   }

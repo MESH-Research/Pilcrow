@@ -10,9 +10,9 @@ extend type Query {
         my_roles: [SubmissionUserRoles!] @scope(name: myRoleFilter)
         publication: [ID!] @scope(name: publicationFilter)
     ): [Submission!]
-        @paginate(defaultCount: 100, scopes: ["visible"])
+        @can(ability: "viewAll", query: true)
+        @paginate(defaultCount: 100)
         @orderBy(column: "created_at", direction: DESC)
-        @guard
 }
 
 extend type Mutation {
