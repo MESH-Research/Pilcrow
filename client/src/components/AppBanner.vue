@@ -38,8 +38,12 @@ interface AppBannerConfig {
   class?: string | null
   link?: string | null
 }
-const cfg: AppBannerConfig =
-  (window as unknown as { __APP_BANNER?: AppBannerConfig }).__APP_BANNER ?? {}
+declare global {
+  interface Window {
+    __APP_BANNER?: AppBannerConfig
+  }
+}
+const cfg: AppBannerConfig = window.__APP_BANNER ?? {}
 const banner = cfg.text || null
 const banner_class = cfg.class || "bg-yellow-2 text-black"
 const banner_link = cfg.link || null
