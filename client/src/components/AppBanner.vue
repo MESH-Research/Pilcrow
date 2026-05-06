@@ -8,7 +8,7 @@
   >
     <div>
       {{ banner }}
-      <a v-if="banner_link" :href="banner_link">{{
+      <a v-if="banner_link" :href="banner_link" class="text-primary">{{
         $t("generic.more_info")
       }}</a>
     </div>
