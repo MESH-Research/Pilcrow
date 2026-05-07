@@ -68,5 +68,37 @@ class UserSeeder extends Seeder
             'password' => Hash::make('regularPassword!@#'),
             'profile_metadata' => $orcid('0000-0002-8765-4327'),
         ]);
+
+        User::factory()->create([
+            'username' => 'naomiOkafor',
+            'email' => 'naomi.okafor@meshresearch.net',
+            'name' => 'Naomi Okafor',
+            'password' => Hash::make('regularPassword!@#'),
+            'profile_metadata' => $orcid('0000-0001-7421-9038'),
+        ]);
+
+        User::factory()->create([
+            'username' => 'leaMarchetti',
+            'email' => 'lea.marchetti@meshresearch.net',
+            'name' => 'Léa Marchetti',
+            'password' => Hash::make('regularPassword!@#'),
+            'profile_metadata' => $orcid('0000-0003-2154-6781'),
+        ]);
+
+        User::factory()->create([
+            'username' => 'hiroshiTanaka',
+            'email' => 'hiroshi.tanaka@meshresearch.net',
+            'name' => 'Hiroshi Tanaka',
+            'password' => Hash::make('regularPassword!@#'),
+            'profile_metadata' => $orcid('0000-0002-4498-1126'),
+        ]);
+
+        User::factory()->create([
+            'username' => 'priyaRamanathan',
+            'email' => 'priya.ramanathan@meshresearch.net',
+            'name' => 'Priya Ramanathan',
+            'password' => Hash::make('regularPassword!@#'),
+            'profile_metadata' => $orcid('0000-0001-9032-7714'),
+        ]);
     }
 }
