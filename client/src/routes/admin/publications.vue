@@ -50,20 +50,27 @@
         </q-td>
       </template>
     </QueryTable>
-    <q-dialog v-model="showCreateDialog">
+    <q-dialog
+      v-model="showCreateDialog"
+      aria-labelledby="create-pub-dialog-title"
+    >
       <q-card style="min-width: 450px">
         <q-card-section class="bg-accent text-white">
-          <div class="text-subtitle1 text-weight-bold">
-            {{ $t("publication.create_button") }}
+          <div
+            id="create-pub-dialog-title"
+            class="text-subtitle1 text-weight-bold"
+          >
+            {{ $t("publication.create_dialog_title") }}
           </div>
         </q-card-section>
         <q-card-section class="q-pt-md">
           <CreateForm ref="createFormRef" @created="publicationCreated" />
         </q-card-section>
         <q-card-actions align="right" class="q-px-md q-pb-md">
-          <q-btn v-close-popup flat label="Cancel" color="grey-7" />
+          <q-btn v-close-popup flat label="Cancel" color="grey-9" />
           <q-btn
             color="accent"
+            text-color="white"
             icon="add"
             label="Create"
             @click="createFormRef?.submit()"

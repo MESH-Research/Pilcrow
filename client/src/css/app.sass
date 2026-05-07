@@ -305,6 +305,16 @@ body.body--dark
     .q-dialog__inner > .q-card
         border: 2px solid $active
 
+// Override Quasar's z-index: -1 on the dialog backdrop. The negative
+// z-index trips an axe-core color-contrast false-positive: descendants
+// of a stacking context with negative z-index get blended on top of
+// their siblings, so axe reports buttons inside the dialog as having
+// a #999999 background (the backdrop's rgba(0,0,0,0.4) over white).
+// Using z-index: 0 keeps the backdrop visually behind the dialog
+// content via DOM order (inner is rendered after backdrop).
+.q-dialog__backdrop
+    z-index: 0 !important
+
     .alert
         background: inherit
         .q-icon

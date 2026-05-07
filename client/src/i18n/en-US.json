@@ -28,7 +28,8 @@
     "saving": "Saving",
     "saved": "Saved",
     "discard_changes": "Discard Changes",
-    "delete": "Delete"
+    "delete": "Delete",
+    "refresh": "Refresh"
   },
   "lists": {
     "move_up": "Move {0} Up",
@@ -591,6 +592,7 @@
     },
     "admin_header": "Publication Administration",
     "create_button": "Create New Publication",
+    "create_dialog_title": "Create New Publication",
     "view_button_aria": "View Publication Page",
     "view_button": "View Publication"
   },
@@ -1331,7 +1333,7 @@
           "headers": {
             "name": "Name",
             "role": "Role",
-            "actions": ""
+            "actions": "Actions"
           },
           "actions": {
             "view": "View"

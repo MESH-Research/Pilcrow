@@ -1,20 +1,18 @@
 <template>
   <q-td :props="scope" :dense="scope.dense">
-    <q-item v-if="user" class="q-pa-none">
-      <q-item-section side>
-        <avatar-image :user="user" size="40px" rounded />
-      </q-item-section>
-
-      <q-item-section>
-        <q-item-label v-if="user.name">
-          {{ user.name }}
-        </q-item-label>
-        <q-item-label v-if="user.username && !hideUsername" caption>
+    <div v-if="user" class="row items-center no-wrap q-gutter-sm">
+      <avatar-image :user="user" size="40px" rounded />
+      <div class="column">
+        <div v-if="user.name">{{ user.name }}</div>
+        <div
+          v-if="user.username && !hideUsername"
+          class="text-caption text-grey-8"
+        >
           {{ user.username }}
-        </q-item-label>
-      </q-item-section>
-    </q-item>
-    <span v-else class="text-grey" aria-label="No user assigned">&mdash;</span>
+        </div>
+      </div>
+    </div>
+    <span v-else class="text-grey-8" aria-label="No user assigned">&mdash;</span>
   </q-td>
 </template>
 
@@ -51,11 +49,3 @@ const hideUsername = computed(
 )
 </script>
 
-<style scoped>
-:deep(.q-item__label + .q-item__label) {
-  margin-top: 0;
-}
-:deep(.q-item__label) {
-  line-height: 1.25;
-}
-</style>

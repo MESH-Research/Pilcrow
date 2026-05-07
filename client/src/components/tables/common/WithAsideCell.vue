@@ -1,19 +1,17 @@
 <template>
   <q-td :props="scope">
-    <q-item class="q-pa-none">
-      <q-item-section>
-        <q-item-label>
-          <slot name="value" v-bind="scope">
-            {{ scope.value }}
-          </slot>
-        </q-item-label>
-        <q-item-label caption>
-          <slot name="aside" v-bind="scope">
-            {{ asideLabel }}: {{ asideValue }}
-          </slot>
-        </q-item-label>
-      </q-item-section>
-    </q-item>
+    <div class="column">
+      <div>
+        <slot name="value" v-bind="scope">
+          {{ scope.value }}
+        </slot>
+      </div>
+      <div class="text-caption text-grey-8">
+        <slot name="aside" v-bind="scope">
+          {{ asideLabel }}: {{ asideValue }}
+        </slot>
+      </div>
+    </div>
   </q-td>
 </template>
 

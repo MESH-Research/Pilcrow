@@ -54,12 +54,7 @@
     </q-card>
 
     <div class="column">
-      <q-tabs
-        align="left"
-        class="q-mt-md"
-        active-color="primary"
-        indicator-color="primary"
-      >
+      <q-tabs align="left" class="q-mt-md" indicator-color="primary">
         <q-route-tab
           :to="{ name: 'user_details', params: { id } }"
           exact

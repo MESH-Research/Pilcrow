@@ -59,6 +59,7 @@
               flat
               dense
               icon="refresh"
+              :aria-label="$t('buttons.refresh')"
               @click="refetch()"
             />
             <q-separator v-if="slots['top-after']" vertical inset />
