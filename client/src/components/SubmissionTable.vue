@@ -86,7 +86,7 @@
               <div class="col">
                 <router-link
                   :to="{
-                    name: submissionLinkName(p.row, role),
+                    name: submissionLinkName(p.row),
                     params: { id: p.row.id }
                   }"
                   >{{ p.row.title }}
@@ -127,7 +127,7 @@
       <q-td :props="p" data-cy="submission_link_desktop">
         <router-link
           :to="{
-            name: submissionLinkName(p.row, role),
+            name: submissionLinkName(p.row),
             params: { id: p.row.id }
           }"
           >{{ p.row.title }}
@@ -179,7 +179,6 @@ import { ref, computed } from "vue"
 import { useQuasar } from "quasar"
 import { relativeTime } from "src/use/timeAgo"
 import { useDarkMode } from "src/use/guiElements"
-import { submissionLinkName } from "src/utils/submissionLinkName"
 
 const $q = useQuasar()
 
@@ -216,6 +215,16 @@ const byline = props.variation
 const tooltip = props.variation
   ? `submission_tables.${props.variation}.${props.role}.tooltip`
   : `submission_tables.${props.role}.tooltip`
+const submissionLinkName = (submission: Submission) => {
+  if (props.role !== "submitter" && submission.status === "DRAFT") {
+    return "submission:preview"
+  } else if (submission.status === "INITIALLY_SUBMITTED") {
+    return "submission:view"
+  } else if (submission.status === "DRAFT") {
+    return "submission:draft"
+  }
+  return "submission:review"
+}
 const cols: {
   name: string
   field: string
