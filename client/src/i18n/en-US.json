@@ -367,6 +367,41 @@
   "reviews": {
     "page_title": "Reviews"
   },
+  "record_of_review": {
+    "title": "Record of Review",
+    "title_record": "Record of Review for { title }",
+    "title_reviewers": "Reviewer Information",
+    "title_review": "Review Information",
+    "tooltip": "Only reviews that have completed will appear here",
+    "label_header_checkbox": "Review Selection",
+    "label_select_review_checkbox": "Select review number {id}, {title}",
+    "document_type": {
+      "heading": "Document Type",
+      "journal_article": "Journal Article"
+    },
+    "completed": {
+      "heading": "Review Completed",
+      "incomplete": "Incomplete",
+      "unknown": "Unknown"
+    },
+    "identifier": "Review Identifier",
+    "byline": "Select one or more reviews to get a record of review",
+    "no_data": "There are no reviews for you.",
+    "no_users": "No users assigned",
+    "download_all": {
+      "label": "Download All",
+      "byline": "Download a Record of Review for all selected reviews."
+    },
+    "download_one": "Download This Record",
+    "page_section": {
+      "call_to_action": "Get a {link} for a submission."
+    },
+    "info_reviewers": "Reviewer Information",
+    "info_review": "Review Information",
+    "disabled": {
+      "by_state": "A record of review will be available for this review when it is complete."
+    }
+  },
   "submission_tables": {
     "filter_label": "Filter by Status",
     "columns": {
@@ -495,6 +530,7 @@
   },
   "publication": {
     "entity": "Publication | Publications",
+    "editor": "Editor | Editors",
     "configure": "Configure Publication",
     "setup_pages": {
       "breadcrumb_heading": "Setup",
@@ -1039,7 +1075,6 @@
       "description": "The file contents will download directly to your device in this format."
     },
     "disabled": {
-      "by_role": "You do not have permission to export this submission.",
       "by_state": "Export will be available when review is completed."
     },
     "comments": {

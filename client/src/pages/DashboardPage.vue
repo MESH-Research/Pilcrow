@@ -104,18 +104,22 @@
         />
       </div>
     </section>
+    <section class="q-mt-lg">
+      <record-of-review-page-section />
+    </section>
   </article>
 </template>
 
 <script setup lang="ts">
 import AvatarImage from "src/components/atoms/AvatarImage.vue"
-import { useCurrentUser } from "src/use/user"
-import { useQuery } from "@vue/apollo-composable"
-import { CURRENT_USER_SUBMISSIONS, GET_SUBMISSIONS } from "src/graphql/queries"
+import RecordOfReviewPageSection from "src/components/atoms/RecordOfReviewPageSection.vue"
 import SubmissionTable from "src/components/SubmissionTable.vue"
-import { computed } from "vue"
+import { CURRENT_USER_SUBMISSIONS, GET_SUBMISSIONS } from "src/graphql/queries"
 import { compareDatesDesc } from "src/utils/dateSort"
+import { computed } from "vue"
+import { useCurrentUser } from "src/use/user"
 import { useQuasar } from "quasar"
+import { useQuery } from "@vue/apollo-composable"
 
 const $q = useQuasar()
 

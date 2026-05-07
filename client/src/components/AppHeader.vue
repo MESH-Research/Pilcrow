@@ -58,6 +58,14 @@
                 {{ $t("settings.page_title") }}
               </q-item-section>
             </q-item>
+            <q-item clickable to="/reviews/records">
+              <q-item-section avatar>
+                <q-icon name="description" />
+              </q-item-section>
+              <q-item-section>{{
+                $t("record_of_review.title")
+              }}</q-item-section>
+            </q-item>
             <div v-if="isAppAdmin">
               <q-separator />
               <q-item :to="{ name: 'admin:dashboard' }">

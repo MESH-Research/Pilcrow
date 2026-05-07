@@ -34,16 +34,20 @@
         />
       </div>
     </section>
+    <section class="q-pa-lg">
+      <record-of-review-page-section />
+    </section>
   </article>
 </template>
 
 <script setup lang="ts">
-import { useQuery } from "@vue/apollo-composable"
-import { useCurrentUser } from "src/use/user"
+import RecordOfReviewPageSection from "src/components/atoms/RecordOfReviewPageSection.vue"
 import SubmissionTable from "src/components/SubmissionTable.vue"
 import { CURRENT_USER_SUBMISSIONS, GET_SUBMISSIONS } from "src/graphql/queries"
-import { computed } from "vue"
 import { compareDatesDesc } from "src/utils/dateSort"
+import { computed } from "vue"
+import { useCurrentUser } from "src/use/user"
+import { useQuery } from "@vue/apollo-composable"
 
 const { currentUser } = useCurrentUser()
 const { result: all_submissions_result } = useQuery(GET_SUBMISSIONS, {

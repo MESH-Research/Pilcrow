@@ -123,6 +123,11 @@ const routes: RouteRecordRaw[] = [
         component: () => import("src/pages/ReviewsPage.vue")
       },
       {
+        path: "/reviews/records",
+        name: "record_of_review",
+        component: () => import("src/pages/Account/RecordOfReviewPage.vue")
+      },
+      {
         path: "/submissions",
         component: () => import("src/pages/SubmissionsPage.vue")
       },
