@@ -1,65 +1,50 @@
 <template>
-  <q-table
-    v-model:selected="selectedReviews"
-    :columns="cols"
+  <QueryTable
+    ref="queryTableRef"
+    v-model:selected="selected"
     class="record-of-review-table"
-    flat
-    :filter-method="filterStatuses"
-    :filter="status_filter"
-    :rows="tableData"
-    row-key="id"
+    :query="query"
+    field="currentUser.submissions"
+    :variables="variables"
+    :columns="cols"
+    :default-sort="{ sortBy: 'created_at', descending: true }"
+    :enabled="filtersEnabled"
+    sync-url
     selection="multiple"
+    row-key="id"
   >
-    <template #top>
-      <div class="row full-width justify-between q-pb-md">
-        <div class="column">
-          <h1 class="q-my-none text-h2">
-            {{ $t(`record_of_review.title`) }}
-            <q-icon name="info">
-              <q-tooltip>{{ $t(`record_of_review.tooltip`) }}</q-tooltip>
-            </q-icon>
-          </h1>
-
-          <i18n-t
-            keypath="record_of_review.byline"
-            class="q-mb-none"
-            tag="p"
-            scope="global"
-          ></i18n-t>
-
-          <q-select
-            v-if="tableData.length"
-            v-model="status_filter"
-            clearable
-            square
-            outlined
-            dense
-            multiple
-            hide-selected
-            :label="$t(`submission_tables.filter_label`)"
-            :options="unique_statuses"
-            style="width: 240px"
-            class="q-mt-md q-mr-xs"
-          >
-            <template #selected-item="scope">
-              {{ $t(`submission.status.${scope.opt}`) }}
-            </template>
-            <template #option="scope">
-              <q-item v-bind="scope.itemProps">
-                <q-item-section>
-                  <q-item-label>
-                    {{ $t(`submission.status.${scope.opt}`) }}
-                  </q-item-label>
-                </q-item-section>
-              </q-item>
-            </template>
-          </q-select>
-        </div>
-      </div>
+    <template #top-after>
+      <SubmissionsFilterPanel
+        v-model:status-filter="statusFilter"
+        v-model:role-filter="roleFilter"
+        v-model:publication-filter="publicationFilter"
+        :allowed-statuses="post_review_states"
+      />
+    </template>
+    <template #header-cell="scope">
+      <q-th :props="scope">
+        <span>{{ scope.col.label }}</span>
+      </q-th>
     </template>
     <template #no-data>
+      <q-banner
+        v-if="!filtersEnabled"
+        class="bg-warning text-dark full-width"
+        rounded
+      >
+        <template #avatar>
+          <q-icon name="warning" />
+        </template>
+        {{
+          statusFilter.length === 0 && roleFilter.length === 0
+            ? $t("record_of_review.no_filter.status_and_role")
+            : statusFilter.length === 0
+              ? $t("record_of_review.no_filter.status")
+              : $t("record_of_review.no_filter.role")
+        }}
+      </q-banner>
       <q-card
-        v-if="$q.screen.width < 770"
+        v-else-if="$q.screen.width < 770"
         flat
         bordered
         square
@@ -85,58 +70,186 @@
     <template #body-selection="p">
       <q-checkbox
         v-model="p.selected"
-        :aria-label="generateCheckboxLabel(p.row)"
-        :title="generateCheckboxLabel(p.row)"
+        :aria-label="generateCheckboxLabel(p.row.submission)"
+        :title="generateCheckboxLabel(p.row.submission)"
       />
     </template>
+    <template #body-cell-id="p">
+      <q-td :props="p">{{ p.row.submission.id }}</q-td>
+    </template>
     <template #body-cell-title="p">
-      <q-td :props="p" data-cy="submission_link_desktop">
-        <router-link
-          :to="{
-            name: submissionLinkName(p.row, p.row.effective_role),
-            params: { id: p.row.id }
-          }"
-          >{{ p.row.title }}
-        </router-link>
-      </q-td>
+      <WithAsideCell :scope="p" style="white-space: normal">
+        <template #value>
+          <router-link
+            data-cy="submission_link_desktop"
+            :to="{
+              name: 'submission:view',
+              params: { id: p.row.submission.id }
+            }"
+            >{{ p.row.submission.title }}
+          </router-link>
+        </template>
+        <template #aside>
+          Publication: {{ p.row.submission.publication.name }}
+        </template>
+      </WithAsideCell>
     </template>
     <template #body-cell-submitters="p">
-      <q-td :props="p"
-        ><span>{{ generateSubmitterList(p.row.submitters) }}</span></q-td
-      >
-    </template>
-    <template #body-cell-submitted="p">
-      <q-td :props="p"
-        ><span>{{ relativeTime(p.row.submitted_at).value }}</span></q-td
-      >
-    </template>
-    <template #body-cell-publication="p">
       <q-td :props="p">
-        {{ p.row.publication.name }}
+        <div class="column q-gutter-xs">
+          <div
+            v-for="submitter in p.row.submission.submitters"
+            :key="submitter.id"
+            class="row items-center no-wrap q-gutter-sm"
+          >
+            <AvatarImage :user="submitter" size="32px" rounded />
+            <div class="column">
+              <div v-if="submitter.name">{{ submitter.name }}</div>
+              <div v-if="submitter.username" class="text-caption text-grey-8">
+                {{ submitter.username }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </q-td>
+    </template>
+    <template #body-cell-role="p">
+      <q-td :props="p">
+        {{ $t(`admin.users.details.roles.${p.row.role}`) }}
       </q-td>
     </template>
     <template #body-cell-status="p">
       <q-td :props="p">
-        {{ $t(`submission.status.${p.row.status}`) }}
+        {{ $t(`submission.status.${p.row.submission.status}`) }}
       </q-td>
     </template>
-  </q-table>
+  </QueryTable>
 </template>
+<script lang="ts">
+import { graphql } from "src/graphql/generated"
+
+graphql(`
+  fragment recordOfReviewRow on SubmissionAssignment {
+    id
+    role
+    submission {
+      id
+      title
+      status
+      updated_at
+      submitters {
+        id
+        name
+        username
+        ...avatarImage
+      }
+      publication {
+        id
+        name
+      }
+    }
+  }
+`)
+</script>
+
 <script setup lang="ts">
-import type { Submission, User } from "src/graphql/generated/graphql"
+import type { DocumentNode } from "graphql"
+import type { Submission } from "src/graphql/generated/graphql"
 import { useI18n } from "vue-i18n"
-import { ref, computed } from "vue"
+import { ref, computed, watch } from "vue"
+import { useRoute, useRouter } from "vue-router"
 import { useQuasar } from "quasar"
-import { relativeTime } from "src/use/timeAgo"
-import { submissionLinkName } from "src/utils/submissionLinkName"
+import { post_review_states } from "src/utils/postReviewStates"
+import QueryTable, {
+  type QueryTableColumn
+} from "src/components/tables/QueryTable.vue"
+import WithAsideCell from "src/components/tables/common/WithAsideCell.vue"
+import DateTimeCell from "src/components/tables/common/DateTimeCell.vue"
+import AvatarImage from "src/components/atoms/AvatarImage.vue"
+import SubmissionsFilterPanel from "src/pages/Admin/components/SubmissionsFilterPanel.vue"
+import { defaultOptions as defaultRoleOptions } from "src/pages/Admin/components/SubmissionsFilterPanelRoles.vue"
 
 const $q = useQuasar()
-
 const { t } = useI18n()
 
 interface Props {
-  tableData?: Submission[]
+  query: DocumentNode
 }
+defineProps<Props>()
+
+const selected = defineModel<unknown[]>("selected", { default: () => [] })
+
+const route = useRoute()
+const router = useRouter()
+
+function parseList(value: string | string[] | undefined): string[] {
+  if (!value) return []
+  const str = Array.isArray(value) ? value[0] : value
+  if (!str) return []
+  const inner = str.startsWith("[") ? str.slice(1, -1) : str
+  return inner ? inner.split(",") : []
+}
+
+function formatList(values: string[]): string {
+  return `[${values.join(",")}]`
+}
+
+const statusFilter = ref<string[]>(
+  route.query.status
+    ? parseList(route.query.status as string)
+    : [...post_review_states]
+)
+const roleFilter = ref<string[]>(
+  route.query.roles
+    ? parseList(route.query.roles as string)
+    : [...defaultRoleOptions]
+)
+const publicationFilter = ref<string | null>(
+  (route.query.publication as string) || null
+)
+
+const filtersEnabled = computed(
+  () => statusFilter.value.length > 0 && roleFilter.value.length > 0
+)
+
+const variables = computed(() => ({
+  status: statusFilter.value.filter((s) => post_review_states.includes(s)),
+  roles: roleFilter.value.filter((r) => defaultRoleOptions.includes(r)),
+  publication: publicationFilter.value ? [publicationFilter.value] : undefined
+}))
+
+watch(
+  [statusFilter, roleFilter, publicationFilter],
+  ([status, roles, publication]) => {
+    if (queryTableRef.value) {
+      queryTableRef.value.page = 1
+    }
+
+    const query: Record<string, string> = { ...route.query } as Record<
+      string,
+      string
+    >
+
+    const isDefaultStatus =
+      status.length === post_review_states.length &&
+      status.every((s) => post_review_states.includes(s))
+    if (!isDefaultStatus) query.status = formatList(status)
+    else delete query.status
+
+    const isDefaultRoles =
+      roles.length === defaultRoleOptions.length &&
+      roles.every((r) => defaultRoleOptions.includes(r))
+    if (!isDefaultRoles) query.roles = formatList(roles)
+    else delete query.roles
+
+    if (publication) query.publication = publication
+    else delete query.publication
+
+    router.replace({ query })
+  }
+)
+
+const queryTableRef = ref<InstanceType<typeof QueryTable> | null>(null)
 
 function generateCheckboxLabel(row: Submission) {
   return t("record_of_review.label_select_review_checkbox", {
@@ -146,40 +259,18 @@ function generateCheckboxLabel(row: Submission) {
 }
 const label_header_checkbox = t("record_of_review.label_header_checkbox")
 
-const props = withDefaults(defineProps<Props>(), {
-  tableData: () => [],
-  selectedReviews: () => []
-})
-
-const selectedReviews = ref([])
-
-const status_filter = ref(null)
-const filterStatuses = (rows: Readonly<Submission[]>, terms: Array<string>) => {
-  return rows.filter((row) => terms.includes(row.status))
-}
-const unique = (items: Array<string>) => [...new Set(items)]
-const unique_statuses = computed(() => {
-  return unique(props.tableData.map((item) => item.status))
-})
-const cols: {
-  name: string
-  field: string
-  label: string
-  sortable: boolean
-  style?: string
-  align: "left" | "right" | "center"
-}[] = [
+const cols: QueryTableColumn[] = [
   {
     name: "id",
-    field: "id",
+    field: (row) => (row.submission as Submission).id,
     label: t(`submission_tables.columns.number`),
-    sortable: true,
+    sortable: false,
     style: "width: 85px",
     align: "right"
   },
   {
     name: "title",
-    field: "title",
+    field: (row) => (row.submission as Submission).title,
     label: t(`submission_tables.columns.title`),
     sortable: true,
     style: "width: 30%",
@@ -187,37 +278,45 @@ const cols: {
   },
   {
     name: "submitters",
-    field: "submitters",
+    field: (row) => (row.submission as Submission).submitters,
     label: t(`submission_tables.columns.submitted_by`),
-    sortable: true,
+    sortable: false,
     align: "left"
   },
   {
-    name: "submitted",
-    field: "submitted_at",
-    label: t(`submission_tables.columns.submitted_at`),
-    sortable: true,
+    name: "role",
+    field: (row) => row.role,
+    label: t(`submission_tables.columns.role`),
+    sortable: false,
     align: "left"
-  },
-  {
-    name: "publication",
-    field: "publication",
-    label: t(`submission_tables.columns.publication`),
-    sortable: true,
-    align: "left",
-    style: "width: 10%"
   },
   {
     name: "status",
-    field: "status",
+    field: (row) => (row.submission as Submission).status,
     label: t(`submission_tables.columns.status`),
     sortable: true,
     align: "center"
+  },
+  {
+    name: "updated",
+    field: (row) => (row.submission as Submission).updated_at,
+    label: t(`submission_tables.columns.updated_at`),
+    sortable: false,
+    align: "left",
+    component: DateTimeCell
   }
 ]
-function generateSubmitterList(submitters: Array<User>) {
-  return submitters.map((submitter) => submitter.display_label).join(", ")
-}
+
+const page = computed({
+  get: () => queryTableRef.value?.page ?? 1,
+  set: (value: number) => {
+    if (queryTableRef.value) {
+      queryTableRef.value.page = value
+    }
+  }
+})
+
+defineExpose({ page })
 </script>
 
 <style lang="sass">

@@ -1,15 +1,25 @@
 <template>
   <section data-cy="record_of_review" class="q-pa-lg">
-    <div v-if="subsLoading" class="q-pa-lg">
-      {{ $t("loading") }}
+    <div class="q-pb-md">
+      <h1 class="q-my-none text-h2">
+        {{ $t(`record_of_review.title`) }}
+        <q-icon name="info">
+          <q-tooltip>{{ $t(`record_of_review.tooltip`) }}</q-tooltip>
+        </q-icon>
+      </h1>
+      <i18n-t
+        keypath="record_of_review.byline"
+        class="q-mb-none"
+        tag="p"
+        scope="global"
+      ></i18n-t>
     </div>
-    <div v-else-if="all_reviews" class="col-12">
-      <record-of-review-table
-        v-model:selected="selected_reviews"
-        :table-data="reviews"
-        data-cy="record-of-review_table"
-      />
-    </div>
+    <record-of-review-table
+      ref="tableRef"
+      v-model:selected="selected_assignments"
+      :query="GetRecordsOfReviewDocument"
+      data-cy="record-of-review_table"
+    />
   </section>
   <section id="report" class="q-pa-lg">
     <div v-if="selected_reviews.length > 1" class="q-pa-lg">
@@ -27,44 +37,66 @@
     </div>
     <record-of-review
       v-for="review in selected_reviews"
-      :key="review['id']"
+      :key="review.id"
       :review="review"
     />
   </section>
 </template>
 
+<script lang="ts">
+import { graphql } from "src/graphql/generated"
+
+graphql(`
+  query GetRecordsOfReview(
+    $page: Int
+    $first: Int
+    $search: String
+    $status: [SubmissionStatus!]
+    $roles: [SubmissionUserRoles!]
+    $publication: [ID!]
+    $orderBy: [SubmissionAssignmentOrderBy!]
+  ) {
+    currentUser {
+      id
+      submissions(
+        page: $page
+        first: $first
+        search: $search
+        status: $status
+        roles: $roles
+        publication: $publication
+        orderBy: $orderBy
+      ) {
+        ...QueryTable
+        data {
+          ...recordOfReviewRow
+          submission {
+            ...recordOfReview
+          }
+        }
+      }
+    }
+  }
+`)
+</script>
+
 <script setup lang="ts">
-import { post_review_states } from "src/utils/postReviewStates"
-import { useQuery } from "@vue/apollo-composable"
 import { computed, ref } from "vue"
-import { compareDatesDesc } from "src/utils/dateSort"
-import { GET_RECORDS_OF_REVIEW } from "src/graphql/queries"
 import RecordOfReviewTable from "src/components/RecordOfReviewTable.vue"
 import RecordOfReview from "src/components/RecordOfReview.vue"
+import {
+  GetRecordsOfReviewDocument,
+  type GetRecordsOfReviewQuery
+} from "src/graphql/generated/graphql"
 
-import type { Submission } from "src/graphql/generated/graphql.ts"
+type AssignmentRow = NonNullable<
+  NonNullable<GetRecordsOfReviewQuery["currentUser"]>["submissions"]
+>["data"][number]
 
-const selected_reviews = ref<Submission[]>([])
-
-const { result: all_submissions_result, loading: subsLoading } = useQuery(
-  GET_RECORDS_OF_REVIEW,
-  {
-    page: 1
-  }
+const selected_assignments = ref<AssignmentRow[]>([])
+const selected_reviews = computed(() =>
+  selected_assignments.value.map((a) => a.submission)
 )
-const all_reviews = computed(() => {
-  const cs = all_submissions_result.value?.currentUser?.submissions ?? []
-  const as = all_submissions_result.value?.submissions?.data ?? []
-  const s = cs.concat(as)
-  const f = s.filter((submission: Submission) =>
-    post_review_states.includes(submission.status)
-  )
-  return f
-})
-const reviews = computed(() => {
-  const s = all_reviews.value
-  return [...s].sort((a, b) => compareDatesDesc(a.created_at, b.created_at))
-})
 
 function handleDownloadAll() {
   const downloadButtons = document.querySelectorAll(".record-download-button")

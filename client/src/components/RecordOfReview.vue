@@ -67,13 +67,51 @@
   </article>
 </template>
 
+<script lang="ts">
+import { graphql } from "src/graphql/generated"
+
+graphql(`
+  fragment recordOfReview on Submission {
+    id
+    title
+    audits {
+      id
+      created_at
+      event
+      old_values {
+        content_id
+        status
+        status_change_comment
+        title
+      }
+      new_values {
+        content_id
+        status
+        status_change_comment
+        title
+      }
+    }
+    reviewers {
+      ...recordOfReviewUser
+    }
+    review_coordinators {
+      ...recordOfReviewUser
+    }
+    publication {
+      id
+      name
+      editors {
+        ...relatedUserFields
+      }
+    }
+  }
+`)
+</script>
+
 <script setup lang="ts">
 import RecordOfReviewUser from "src/components/atoms/RecordOfReviewUser.vue"
 import { post_review_states } from "src/utils/postReviewStates"
-import type {
-  Submission,
-  SubmissionAudit
-} from "src/graphql/generated/graphql.ts"
+import type { recordOfReviewFragment } from "src/graphql/generated/graphql"
 import { DateTime } from "luxon"
 import { ref, watch } from "vue"
 import { useI18n } from "vue-i18n"
@@ -82,16 +120,14 @@ const { t } = useI18n()
 const blobUrl = ref("")
 const recordContainer = ref<HTMLElement | null>(null)
 
-function getCompletionDate(review: Submission) {
-  const audits = [...(review.audits as SubmissionAudit[])]
-  const filtered = audits.filter(function (audit: SubmissionAudit) {
+function getCompletionDate(review: recordOfReviewFragment) {
+  const audits = [...review.audits]
+  const filtered = audits.filter((audit) => {
     const status = audit.new_values?.status
     return typeof status === "string" && post_review_states.includes(status)
   })
   if (filtered.length > 0) {
-    filtered.sort((a, b) => {
-      return a.created_at - b.created_at
-    })
+    filtered.sort((a, b) => a.created_at - b.created_at)
     const last_audit = filtered.pop()
     if (last_audit) {
       return DateTime.fromISO(last_audit.created_at).toFormat("yyyy-MM-dd")
@@ -102,7 +138,7 @@ function getCompletionDate(review: Submission) {
 }
 
 interface Props {
-  review: Submission
+  review: recordOfReviewFragment
 }
 
 const props = defineProps<Props>()

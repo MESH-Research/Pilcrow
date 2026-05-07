@@ -370,6 +370,11 @@
     "identifier": "Review Identifier",
     "byline": "Select one or more reviews to get a record of review",
     "no_data": "There are no reviews for you.",
+    "no_filter": {
+      "status": "No status selected. Pick at least one status to see results.",
+      "role": "No role selected. Pick at least one role to see results.",
+      "status_and_role": "No status or role selected. Pick at least one of each to see results."
+    },
     "no_users": "No users assigned",
     "download_all": {
       "label": "Download All",
@@ -392,8 +397,10 @@
       "title": "Submission Title",
       "submitted_by": "Submitted By",
       "submitted_at": "Submitted",
+      "updated_at": "Last Updated",
       "publication": "Publication Name",
       "status": "Status",
+      "role": "My Role",
       "actions": "Actions"
     },
     "type": {
