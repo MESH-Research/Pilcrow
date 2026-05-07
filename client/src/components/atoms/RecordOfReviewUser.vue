@@ -28,10 +28,26 @@
   </q-card>
 </template>
 
+<script lang="ts">
+import { graphql } from "src/graphql/generated"
+
+graphql(`
+  fragment recordOfReviewUser on User {
+    id
+    display_label
+    profile_metadata {
+      academic_profiles {
+        orcid_id
+      }
+    }
+  }
+`)
+</script>
+
 <script setup lang="ts">
-import type { User } from "src/graphql/generated/graphql"
+import type { recordOfReviewUserFragment } from "src/graphql/generated/graphql"
 interface Props {
-  user: User
+  user: recordOfReviewUserFragment
   role: string
 }
 defineProps<Props>()

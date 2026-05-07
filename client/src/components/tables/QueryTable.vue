@@ -173,6 +173,7 @@ interface QueryTableProps {
   visibleColumns?: string[]
   grid?: boolean
   labels?: QueryTableLabelKeys
+  enabled?: boolean
 }
 
 const props = withDefaults(defineProps<QueryTableProps>(), {
@@ -189,7 +190,8 @@ const props = withDefaults(defineProps<QueryTableProps>(), {
   searchHint: "",
   visibleColumns: undefined,
   grid: false,
-  labels: () => ({})
+  labels: () => ({}),
+  enabled: true
 })
 
 interface Emits {
@@ -223,7 +225,8 @@ const tableProps = computed(() =>
     "tPrefix",
     "onNew",
     "searchable",
-    "timeRange"
+    "timeRange",
+    "enabled"
   ])
 )
 
@@ -242,7 +245,8 @@ const {
 } = usePaginatedQuery(props.query, {
   variables: computed(() => props.variables ?? {}),
   field: computed(() => props.field),
-  defaultSort: props.defaultSort
+  defaultSort: props.defaultSort,
+  enabled: computed(() => props.enabled)
 })
 
 if (props.syncUrl) {
