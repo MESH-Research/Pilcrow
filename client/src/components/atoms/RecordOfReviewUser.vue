@@ -1,28 +1,22 @@
 <template>
-  <q-card bordered style="width: 250px">
-    <q-card-section>
-      <h3 class="text-h4 text-bold" style="line-height: 1.25">
+  <q-card bordered class="rorr-user">
+    <q-card-section class="rorr-user__inner">
+      <h3 class="text-h4 text-bold rorr-user__name">
         {{ user.display_label }}
       </h3>
-      <dl>
-        <template v-if="user.profile_metadata?.academic_profiles">
-          <dt v-if="user.profile_metadata?.academic_profiles?.orcid_id">
-            <span>{{
-              $t("account.profile.fields.profile_metadata.academic_profiles.orcid_id.label")
-            }}</span>
-          </dt>
-          <dd v-if="user.profile_metadata?.academic_profiles?.orcid_id">
-            <span>
-              {{ user.profile_metadata?.academic_profiles.orcid_id }}
-            </span>
-          </dd>
-        </template>
+      <p class="rorr-user__role">{{ role }}</p>
+      <dl
+        v-if="user.profile_metadata?.academic_profiles?.orcid_id"
+        class="rorr-user__dl"
+      >
         <dt>
-          <span>{{ $t("role.self", 1) }}</span>
+          {{
+            $t(
+              "account.profile.fields.profile_metadata.academic_profiles.orcid_id.label"
+            )
+          }}
         </dt>
-        <dd>
-          <span>{{ role }}</span>
-        </dd>
+        <dd>{{ user.profile_metadata.academic_profiles.orcid_id }}</dd>
       </dl>
     </q-card-section>
   </q-card>
@@ -52,3 +46,46 @@ interface Props {
 }
 defineProps<Props>()
 </script>
+
+<style lang="sass" scoped>
+@import 'src/css/quasar.variables.sass'
+
+.rorr-user
+  width: 220px
+  background: #fff
+
+.rorr-user__inner
+  display: flex
+  flex-direction: column
+  align-items: center
+  text-align: center
+  padding: 1.25rem 1rem
+
+.rorr-user__name
+  font-size: 1rem
+  margin: 0 0 0.25rem
+  line-height: 1.25
+
+.rorr-user__role
+  font-size: 0.7rem
+  letter-spacing: 0.1em
+  text-transform: uppercase
+  color: $primary
+  font-weight: 600
+  margin: 0 0 0.75rem
+
+.rorr-user__dl
+  margin: 0
+  font-size: 0.8rem
+
+  dt
+    font-size: 0.65rem
+    text-transform: uppercase
+    letter-spacing: 0.08em
+    color: $dark-6
+    margin-top: 0.25rem
+
+  dd
+    margin: 0
+    color: $dark
+</style>
