@@ -1,28 +1,23 @@
 <template>
   <div v-if="isDisabledByState">
-    <q-btn
-      disabled
-      :label="$t(`export.call_to_action`)"
-      icon="exit_to_app"
-      data-cy="submission_export_btn"
-    >
-    </q-btn>
+    <q-btn disabled :label="$t('record_of_review.title')" icon="exit_to_app" />
     <q-icon name="info" size="sm" class="q-ml-sm">
       <q-tooltip v-if="isDisabledByState">{{
-        $t(`export.disabled.by_state`)
+        $t(`record_of_review.disabled.by_state`)
       }}</q-tooltip>
     </q-icon>
   </div>
-  <q-btn
-    v-else
-    :label="$t(`export.call_to_action`)"
-    color="accent"
-    icon="exit_to_app"
-    :to="{
-      name: 'submission:export',
-      params: { id: submission.id }
-    }"
-  />
+  <div v-else>
+    <q-btn
+      :label="$t('record_of_review.title')"
+      color="accent"
+      icon="exit_to_app"
+      :to="{
+        name: 'record_of_review',
+        params: { id: 100 }
+      }"
+    />
+  </div>
 </template>
 <script setup lang="ts">
 import { useSubmissionExport } from "src/use/guiElements"

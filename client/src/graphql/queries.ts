@@ -474,3 +474,107 @@ export const GET_IDENTITY_PROVIDERS = gql`
     }
   }
 `
+
+export const GET_RECORDS_OF_REVIEW = gql`
+  query GetRecordsOfReview($page: Int) {
+    currentUser {
+      id
+      submissions {
+        id
+        audits {
+          id
+          created_at
+          event
+          old_values {
+            content_id
+            status
+            status_change_comment
+            title
+          }
+          new_values {
+            content_id
+            status
+            status_change_comment
+            title
+          }
+        }
+        title
+        status
+        created_at
+        submitted_at
+        submitters {
+          ...relatedUserFields
+        }
+        reviewers {
+          ...relatedUserFields
+          ...profileMetadata
+        }
+        review_coordinators {
+          ...relatedUserFields
+        }
+        publication {
+          id
+          name
+          editors {
+            ...relatedUserFields
+          }
+          publication_admins {
+            ...relatedUserFields
+          }
+        }
+      }
+    }
+    submissions(page: $page) {
+      paginatorInfo {
+        ...paginationFields
+      }
+      data {
+        id
+        audits {
+          id
+          created_at
+          event
+          old_values {
+            content_id
+            status
+            status_change_comment
+            title
+          }
+          new_values {
+            content_id
+            status
+            status_change_comment
+            title
+          }
+        }
+        title
+        status
+        created_at
+        submitted_at
+        submitters {
+          ...relatedUserFields
+        }
+        reviewers {
+          ...relatedUserFields
+          ...profileMetadata
+        }
+        review_coordinators {
+          ...relatedUserFields
+        }
+        publication {
+          id
+          name
+          editors {
+            ...relatedUserFields
+          }
+          publication_admins {
+            ...relatedUserFields
+          }
+        }
+      }
+    }
+  }
+  ${_PAGINATION_FIELDS}
+  ${_RELATED_USER_FIELDS}
+  ${_PROFILE_METADATA_FIELDS}
+`

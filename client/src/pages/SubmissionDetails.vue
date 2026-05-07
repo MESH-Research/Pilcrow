@@ -80,7 +80,10 @@
           />
         </div>
       </div>
-      <submission-export-button class="q-mt-xl" :submission="submission" />
+      <div class="row q-gutter-x-lg">
+        <submission-export-button class="q-mt-xl" :submission="submission" />
+        <record-of-review-button class="q-mt-xl" :submission="submission" />
+      </div>
     </section>
     <section class="q-pa-lg" data-cy="activity_section">
       <h3>{{ $t("submission.activity_section.title") }}</h3>
@@ -101,6 +104,7 @@ import AssignedSubmissionUsers from "src/components/AssignedSubmissionUsers.vue"
 import SubmissionAudit from "../components/SubmissionAudit.vue"
 import SubmissionTitle from "src/components/SubmissionTitle.vue"
 import SubmissionExportButton from "src/components/atoms/SubmissionExportButton.vue"
+import RecordOfReviewButton from "src/components/atoms/RecordOfReviewButton.vue"
 import { GET_SUBMISSION } from "src/graphql/queries"
 import { computed, provide, watchEffect, ref } from "vue"
 import { submissionKey } from "src/use/submissionContext"
