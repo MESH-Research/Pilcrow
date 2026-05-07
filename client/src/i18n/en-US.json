@@ -355,6 +355,10 @@
     "title_record": "Record of Review for { title }",
     "title_reviewers": "Reviewer Information",
     "title_review": "Review Information",
+    "title_participation": "Your Participation",
+    "title_team": "Review Team",
+    "title_submission": "Submission Information",
+    "title_publication": "Publication Information",
     "tooltip": "Only reviews that have completed will appear here",
     "label_header_checkbox": "Review Selection",
     "label_select_review_checkbox": "Select review number {id}, {title}",
@@ -521,6 +525,7 @@
   "publication": {
     "entity": "Publication | Publications",
     "editor": "Editor | Editors",
+    "publication_admin": "Publication Administrator | Publication Administrators",
     "configure": "Configure Publication",
     "setup_pages": {
       "breadcrumb_heading": "Setup",

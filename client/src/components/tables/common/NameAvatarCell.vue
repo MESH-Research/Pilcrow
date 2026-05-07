@@ -12,7 +12,9 @@
         </div>
       </div>
     </div>
-    <span v-else class="text-grey-8" aria-label="No user assigned">&mdash;</span>
+    <span v-else class="text-grey-8" aria-label="No user assigned"
+      >&mdash;</span
+    >
   </q-td>
 </template>
 
@@ -48,4 +50,3 @@ const hideUsername = computed(
   () => (props.scope.col as QueryTableColumn).hideUsername === true
 )
 </script>
-
