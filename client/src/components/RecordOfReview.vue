@@ -8,7 +8,7 @@
           color="accent"
           :href="blobUrl"
           class="record-download-button"
-          :download="`record_of_review_${review.id}.html`"
+          :download="`record_of_review_${submission.id}.html`"
         />
       </div>
       <div ref="recordContainer">
@@ -16,50 +16,75 @@
           <h1 class="text-h2 q-mt-none" data-cy="page_heading">
             {{
               $t("record_of_review.title_record", {
-                title: review.title
+                title: submission.title
               })
             }}
           </h1>
-          <h2 class="text-h3">{{ $t("record_of_review.title_reviewers") }}</h2>
+
+          <h2 class="text-h3">
+            {{ $t("record_of_review.title_participation") }}
+          </h2>
+          <dl>
+            <dt>{{ $t("submission_tables.columns.role") }}</dt>
+            <dd>{{ $t(`admin.users.details.roles.${assignment.role}`) }}</dd>
+          </dl>
+
+          <h2 class="text-h3">{{ $t("record_of_review.title_team") }}</h2>
           <div
             v-if="
-              review.review_coordinators.length === 0 &&
-              review.reviewers.length === 0
+              submission.review_coordinators.length === 0 &&
+              submission.reviewers.length === 0
             "
           >
             <p>{{ $t("record_of_review.no_users") }}</p>
           </div>
           <div v-else class="row items-start q-gutter-md items-stretch">
             <record-of-review-user
-              v-for="coordinator in review.review_coordinators"
+              v-for="coordinator in submission.review_coordinators"
               :key="coordinator.id"
               :user="coordinator"
               role="Review Coordinator"
             />
             <record-of-review-user
-              v-for="reviewer in review.reviewers"
+              v-for="reviewer in submission.reviewers"
               :key="reviewer.id"
               :user="reviewer"
               role="Reviewer"
             />
           </div>
-          <h2 class="text-h3">{{ $t("record_of_review.title_review") }}</h2>
+
+          <h2 class="text-h3">
+            {{ $t("record_of_review.title_submission") }}
+          </h2>
+          <dl>
+            <dt>{{ $t("record_of_review.document_type.heading") }}</dt>
+            <dd>{{ $t("record_of_review.document_type.journal_article") }}</dd>
+            <dt>{{ $t("record_of_review.completed.heading") }}</dt>
+            <dd>{{ completionDate }}</dd>
+            <dt>{{ $t("record_of_review.identifier") }}</dt>
+            <dd>{{ submission.id }}</dd>
+          </dl>
+
+          <h2 class="text-h3">
+            {{ $t("record_of_review.title_publication") }}
+          </h2>
           <dl>
             <dt>{{ $t("publication.entity", 1) }}</dt>
-            <dd>{{ review.publication.name }}</dd>
+            <dd>{{ submission.publication.name }}</dd>
             <template
-              v-for="editor in review.publication.editors"
-              :key="editor.id"
+              v-for="editor in submission.publication.editors"
+              :key="`editor-${editor.id}`"
             >
               <dt>{{ $t("publication.editor", 1) }}</dt>
               <dd>{{ editor.display_label }}</dd>
             </template>
-            <dt>{{ $t("record_of_review.document_type.heading") }}</dt>
-            <dd>{{ $t("record_of_review.document_type.journal_article") }}</dd>
-            <dt>{{ $t("record_of_review.completed.heading") }}</dt>
-            <dd>{{ getCompletionDate(review) }}</dd>
-            <dt>{{ $t("record_of_review.identifier") }}</dt>
-            <dd>{{ review.id }}</dd>
+            <template
+              v-for="admin in submission.publication.publication_admins"
+              :key="`admin-${admin.id}`"
+            >
+              <dt>{{ $t("publication.publication_admin", 1) }}</dt>
+              <dd>{{ admin.display_label }}</dd>
+            </template>
           </dl>
         </q-card-section>
       </div>
@@ -71,37 +96,44 @@
 import { graphql } from "src/graphql/generated"
 
 graphql(`
-  fragment recordOfReview on Submission {
+  fragment recordOfReview on SubmissionAssignment {
     id
-    title
-    audits {
+    role
+    submission {
       id
-      created_at
-      event
-      old_values {
-        content_id
-        status
-        status_change_comment
-        title
+      title
+      audits {
+        id
+        created_at
+        event
+        old_values {
+          content_id
+          status
+          status_change_comment
+          title
+        }
+        new_values {
+          content_id
+          status
+          status_change_comment
+          title
+        }
       }
-      new_values {
-        content_id
-        status
-        status_change_comment
-        title
+      reviewers {
+        ...recordOfReviewUser
       }
-    }
-    reviewers {
-      ...recordOfReviewUser
-    }
-    review_coordinators {
-      ...recordOfReviewUser
-    }
-    publication {
-      id
-      name
-      editors {
-        ...relatedUserFields
+      review_coordinators {
+        ...recordOfReviewUser
+      }
+      publication {
+        id
+        name
+        editors {
+          ...relatedUserFields
+        }
+        publication_admins {
+          ...relatedUserFields
+        }
       }
     }
   }
@@ -113,42 +145,43 @@ import RecordOfReviewUser from "src/components/atoms/RecordOfReviewUser.vue"
 import { post_review_states } from "src/utils/postReviewStates"
 import type { recordOfReviewFragment } from "src/graphql/generated/graphql"
 import { DateTime } from "luxon"
-import { ref, watch } from "vue"
+import { computed, ref, watch } from "vue"
 import { useI18n } from "vue-i18n"
 
 const { t } = useI18n()
 const blobUrl = ref("")
 const recordContainer = ref<HTMLElement | null>(null)
 
-function getCompletionDate(review: recordOfReviewFragment) {
-  const audits = [...review.audits]
-  const filtered = audits.filter((audit) => {
-    const status = audit.new_values?.status
-    return typeof status === "string" && post_review_states.includes(status)
-  })
-  if (filtered.length > 0) {
-    filtered.sort((a, b) => a.created_at - b.created_at)
-    const last_audit = filtered.pop()
-    if (last_audit) {
-      return DateTime.fromISO(last_audit.created_at).toFormat("yyyy-MM-dd")
-    }
-    return t("record_of_review.completed.unknown")
-  }
-  return t("record_of_review.completed.incomplete")
-}
-
 interface Props {
-  review: recordOfReviewFragment
+  assignment: recordOfReviewFragment
 }
 
 const props = defineProps<Props>()
+
+const submission = computed(() => props.assignment.submission)
+
+const completionDate = computed(() => {
+  const audits = (submission.value.audits ?? []).filter(
+    (audit): audit is NonNullable<typeof audit> => {
+      const status = audit?.new_values?.status
+      return typeof status === "string" && post_review_states.includes(status)
+    }
+  )
+  if (audits.length === 0) {
+    return t("record_of_review.completed.incomplete")
+  }
+  const last_audit = audits.reduce((a, b) =>
+    a.created_at > b.created_at ? a : b
+  )
+  return DateTime.fromISO(last_audit.created_at).toFormat("yyyy-MM-dd")
+})
 
 function updateBlob() {
   const el = recordContainer.value
   if (!el) return
   const doc = new DOMParser().parseFromString(el.innerHTML, "text/html")
   doc.title = t("record_of_review.title_record", {
-    title: props.review.title
+    title: submission.value.title
   })
   const html = doc.documentElement.outerHTML
   blobUrl.value = URL.createObjectURL(new Blob([html], { type: "text/html" }))

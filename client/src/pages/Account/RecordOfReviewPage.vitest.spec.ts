@@ -120,6 +120,17 @@ describe("Record of Review page", () => {
                         __typename: "User"
                       }
                     ],
+                    publication_admins: [
+                      {
+                        id: "2",
+                        display_label: "Publication Administrator",
+                        username: "publicationAdministrator",
+                        name: "Publication Administrator",
+                        email: "publicationadministrator@meshresearch.net",
+                        staged: null,
+                        __typename: "User"
+                      }
+                    ],
                     __typename: "Publication"
                   },
                   __typename: "Submission"

@@ -22,7 +22,7 @@
     />
   </section>
   <section id="report" class="q-pa-lg">
-    <div v-if="selected_reviews.length > 1" class="q-pa-lg">
+    <div v-if="selected_assignments.length > 1" class="q-pa-lg">
       <q-btn
         :label="$t('record_of_review.download_all.label')"
         icon="download"
@@ -36,9 +36,9 @@
       </p>
     </div>
     <record-of-review
-      v-for="review in selected_reviews"
-      :key="review.id"
-      :review="review"
+      v-for="assignment in selected_assignments"
+      :key="assignment.id"
+      :assignment="assignment"
     />
   </section>
 </template>
@@ -70,9 +70,7 @@ graphql(`
         ...QueryTable
         data {
           ...recordOfReviewRow
-          submission {
-            ...recordOfReview
-          }
+          ...recordOfReview
         }
       }
     }
@@ -81,7 +79,7 @@ graphql(`
 </script>
 
 <script setup lang="ts">
-import { computed, ref } from "vue"
+import { ref } from "vue"
 import RecordOfReviewTable from "src/components/RecordOfReviewTable.vue"
 import RecordOfReview from "src/components/RecordOfReview.vue"
 import {
@@ -94,9 +92,6 @@ type AssignmentRow = NonNullable<
 >["data"][number]
 
 const selected_assignments = ref<AssignmentRow[]>([])
-const selected_reviews = computed(() =>
-  selected_assignments.value.map((a) => a.submission)
-)
 
 function handleDownloadAll() {
   const downloadButtons = document.querySelectorAll(".record-download-button")

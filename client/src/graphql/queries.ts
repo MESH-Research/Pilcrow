@@ -477,4 +477,3 @@ export const GET_IDENTITY_PROVIDERS = gql`
     }
   }
 `
-
