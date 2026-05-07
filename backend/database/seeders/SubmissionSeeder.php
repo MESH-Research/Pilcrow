@@ -25,6 +25,8 @@ class SubmissionSeeder extends Seeder
         $this->callOnce(PublicationSeeder::class);
         $this->callOnce(UserSeeder::class);
 
+        config(['audit.console' => true]);
+
         $this->createSubmission(100, 'Pilcrow Test Submission 1')
             ->update(['updated_by' => 1, 'status' => Submission::UNDER_REVIEW]);
 
