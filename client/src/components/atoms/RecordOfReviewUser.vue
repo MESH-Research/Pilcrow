@@ -8,7 +8,7 @@
         <template v-if="user.profile_metadata?.academic_profiles">
           <dt v-if="user.profile_metadata?.academic_profiles?.orcid_id">
             <span>{{
-              $t("account.profile.fields.profile_metadata.orcid_id.label")
+              $t("account.profile.fields.profile_metadata.academic_profiles.orcid_id.label")
             }}</span>
           </dt>
           <dd v-if="user.profile_metadata?.academic_profiles?.orcid_id">

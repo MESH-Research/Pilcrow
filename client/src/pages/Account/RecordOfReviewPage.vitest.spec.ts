@@ -54,6 +54,14 @@ describe("Record of Review page", () => {
               {
                 id: "1",
                 role: "submitter" as SubmissionUserRoles,
+                user: {
+                  id: "1",
+                  display_label: "Application Administrator",
+                  name: "Application Administrator",
+                  email: "applicationadministrator@meshresearch.net",
+                  profile_metadata: null,
+                  __typename: "User"
+                },
                 submission: {
                   id: "1",
                   audits: [

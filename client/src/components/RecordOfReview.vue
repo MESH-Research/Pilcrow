@@ -25,6 +25,20 @@
             {{ $t("record_of_review.title_participation") }}
           </h2>
           <dl>
+            <dt>{{ $t("user.name") }}</dt>
+            <dd>{{ assignment.user.name || assignment.user.display_label }}</dd>
+            <dt>{{ $t("user.email") }}</dt>
+            <dd>{{ assignment.user.email }}</dd>
+            <template v-if="orcidId">
+              <dt>
+                {{
+                  $t(
+                    "account.profile.fields.profile_metadata.academic_profiles.orcid_id.label"
+                  )
+                }}
+              </dt>
+              <dd>{{ orcidId }}</dd>
+            </template>
             <dt>{{ $t("submission_tables.columns.role") }}</dt>
             <dd>{{ $t(`admin.users.details.roles.${assignment.role}`) }}</dd>
           </dl>
@@ -99,6 +113,17 @@ graphql(`
   fragment recordOfReview on SubmissionAssignment {
     id
     role
+    user {
+      id
+      display_label
+      name
+      email
+      profile_metadata {
+        academic_profiles {
+          orcid_id
+        }
+      }
+    }
     submission {
       id
       title
@@ -159,6 +184,11 @@ interface Props {
 const props = defineProps<Props>()
 
 const submission = computed(() => props.assignment.submission)
+
+const orcidId = computed(
+  () =>
+    props.assignment.user.profile_metadata?.academic_profiles?.orcid_id ?? null
+)
 
 const completionDate = computed(() => {
   const audits = (submission.value.audits ?? []).filter(
