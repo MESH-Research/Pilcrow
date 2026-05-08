@@ -237,11 +237,14 @@ graphql(`
 <script setup lang="ts">
 import RecordOfReviewUser from "src/components/atoms/RecordOfReviewUser.vue"
 import { post_review_states } from "src/utils/postReviewStates"
+import {
+  buildRorExportBlob,
+  buildRorExportHtml
+} from "src/utils/recordOfReviewExport"
 import type { recordOfReviewFragment } from "src/graphql/generated/graphql"
 import { DateTime } from "luxon"
 import { computed, onBeforeUnmount, ref, watch } from "vue"
 import { useI18n } from "vue-i18n"
-import exportCss from "src/components/recordOfReview.export.css?raw"
 
 const { t } = useI18n()
 const blobUrl = ref("")
@@ -279,55 +282,6 @@ const completionDate = computed(() => {
   return DateTime.fromISO(last_audit.created_at).toFormat("yyyy-MM-dd")
 })
 
-const imageDataUriCache = new Map<string, Promise<string>>()
-
-function fetchAsDataUri(url: string): Promise<string> {
-  let cached = imageDataUriCache.get(url)
-  if (!cached) {
-    cached = fetch(url, { credentials: "same-origin" })
-      .then((r) => {
-        if (!r.ok) throw new Error(`fetch failed: ${url}`)
-        return r.blob()
-      })
-      .then(
-        (blob) =>
-          new Promise<string>((resolve, reject) => {
-            const reader = new FileReader()
-            reader.onload = () => resolve(reader.result as string)
-            reader.onerror = () => reject(reader.error)
-            reader.readAsDataURL(blob)
-          })
-      )
-    imageDataUriCache.set(url, cached)
-  }
-  return cached
-}
-
-async function inlineImages(root: ParentNode) {
-  const imgs = Array.from(root.querySelectorAll("img"))
-  await Promise.all(
-    imgs.map(async (img) => {
-      const src = img.getAttribute("src")
-      if (!src || src.startsWith("data:")) return
-      try {
-        const absolute = new URL(src, window.location.origin).toString()
-        img.setAttribute("src", await fetchAsDataUri(absolute))
-      } catch {
-        /* leave the original src; the export will degrade rather than fail */
-      }
-    })
-  )
-}
-
-function absolutizeLinks(root: ParentNode) {
-  root.querySelectorAll("a[href]").forEach((a) => {
-    const href = a.getAttribute("href")
-    if (!href) return
-    if (href.startsWith("http") || href.startsWith("mailto:")) return
-    a.setAttribute("href", new URL(href, window.location.origin).toString())
-  })
-}
-
 let pendingBlobUrl = ""
 function setBlobUrl(next: string) {
   if (pendingBlobUrl) URL.revokeObjectURL(pendingBlobUrl)
@@ -338,21 +292,11 @@ function setBlobUrl(next: string) {
 async function updateBlob() {
   const el = recordContainer.value
   if (!el) return
-  const doc = document.implementation.createHTMLDocument(
+  const html = await buildRorExportHtml(
+    [el],
     t("record_of_review.title_record", { title: submission.value.title })
   )
-  doc.documentElement.lang = document.documentElement.lang || "en"
-  const meta = doc.createElement("meta")
-  meta.setAttribute("charset", "utf-8")
-  doc.head.appendChild(meta)
-  const style = doc.createElement("style")
-  style.textContent = exportCss
-  doc.head.appendChild(style)
-  doc.body.innerHTML = el.outerHTML
-  await inlineImages(doc.body)
-  absolutizeLinks(doc.body)
-  const html = `<!DOCTYPE html>\n${doc.documentElement.outerHTML}`
-  setBlobUrl(URL.createObjectURL(new Blob([html], { type: "text/html" })))
+  setBlobUrl(URL.createObjectURL(buildRorExportBlob(html)))
 }
 
 watch(recordContainer, () => {
@@ -361,6 +305,11 @@ watch(recordContainer, () => {
 
 onBeforeUnmount(() => {
   if (pendingBlobUrl) URL.revokeObjectURL(pendingBlobUrl)
+})
+
+defineExpose({
+  getRecordElement: () => recordContainer.value,
+  submissionId: computed(() => submission.value.id)
 })
 </script>
 

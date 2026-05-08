@@ -370,6 +370,7 @@
   "record_of_review": {
     "title": "Record of Review",
     "title_record": "Record of Review for { title }",
+    "title_combined": "Records of Review",
     "title_reviewers": "Reviewer Information",
     "title_review": "Review Information",
     "title_participation": "Your Participation",

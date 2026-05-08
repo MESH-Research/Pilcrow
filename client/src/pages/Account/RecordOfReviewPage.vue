@@ -38,6 +38,7 @@
     <record-of-review
       v-for="assignment in selected_assignments"
       :key="assignment.id"
+      ref="recordRefs"
       :assignment="assignment"
     />
   </section>
@@ -80,8 +81,13 @@ graphql(`
 
 <script setup lang="ts">
 import { ref } from "vue"
+import { useI18n } from "vue-i18n"
 import RecordOfReviewTable from "src/components/RecordOfReviewTable.vue"
 import RecordOfReview from "src/components/RecordOfReview.vue"
+import {
+  buildRorExportBlob,
+  buildRorExportHtml
+} from "src/utils/recordOfReviewExport"
 import {
   GetRecordsOfReviewDocument,
   type GetRecordsOfReviewQuery
@@ -91,17 +97,33 @@ type AssignmentRow = NonNullable<
   NonNullable<GetRecordsOfReviewQuery["currentUser"]>["submissions"]
 >["data"][number]
 
-const selected_assignments = ref<AssignmentRow[]>([])
+type RecordOfReviewExposed = {
+  getRecordElement: () => HTMLElement | null
+}
 
-function handleDownloadAll() {
-  const downloadButtons = document.querySelectorAll(".record-download-button")
-  downloadButtons.forEach((button) => {
-    const clickEvent = new MouseEvent("click", {
-      view: window,
-      bubbles: true,
-      cancelable: false
-    })
-    button.dispatchEvent(clickEvent)
-  })
+const { t } = useI18n()
+const selected_assignments = ref<AssignmentRow[]>([])
+const recordRefs = ref<RecordOfReviewExposed[]>([])
+
+async function handleDownloadAll() {
+  const elements = recordRefs.value
+    .map((c) => c?.getRecordElement?.() ?? null)
+    .filter((el): el is HTMLElement => el !== null)
+  if (elements.length === 0) return
+
+  const html = await buildRorExportHtml(
+    elements,
+    t("record_of_review.title_combined")
+  )
+  const url = URL.createObjectURL(buildRorExportBlob(html))
+  const anchor = document.createElement("a")
+  anchor.href = url
+  anchor.download = "records_of_review.html"
+  document.body.appendChild(anchor)
+  anchor.click()
+  anchor.remove()
+  // Defer revoke so the browser has time to start the download — revoking
+  // immediately cancels the download in Safari and some Chromium versions.
+  setTimeout(() => URL.revokeObjectURL(url), 0)
 }
 </script>
