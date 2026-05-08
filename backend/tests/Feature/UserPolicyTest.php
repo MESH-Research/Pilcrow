@@ -158,7 +158,7 @@ class UserPolicyTest extends TestCase
         // Viewer's privileged-publication lookup hits the publication_user
         // pivot exactly once even though the policy was invoked 5 times.
         $viewerPubLookups = $queries->filter(
-            fn (string $sql) => str_contains($sql, 'publication_user')
+            fn(string $sql) => str_contains($sql, 'publication_user')
                 && str_contains($sql, 'role_id')
         );
         $this->assertCount(1, $viewerPubLookups);

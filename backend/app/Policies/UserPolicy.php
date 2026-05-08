@@ -18,6 +18,10 @@ class UserPolicy
      */
     public function view(User $viewer, User $target): bool
     {
+        // $target is required by the Gate signature but not consulted here —
+        // app admins can view any user. Unset to satisfy the unused-parameter sniff.
+        unset($target);
+
         return $viewer->hasRole(Role::APPLICATION_ADMINISTRATOR);
     }
 
@@ -83,9 +87,10 @@ class UserPolicy
             return false;
         }
 
-        if ($target->publications()
-            ->whereIn('publications.id', $viewerPublicationIds)
-            ->exists()
+        if (
+            $target->publications()
+                ->whereIn('publications.id', $viewerPublicationIds)
+                ->exists()
         ) {
             return true;
         }

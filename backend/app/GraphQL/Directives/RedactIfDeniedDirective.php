@@ -13,6 +13,9 @@ use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 
 class RedactIfDeniedDirective extends BaseDirective implements FieldMiddleware
 {
+    /**
+     * @param \Illuminate\Contracts\Auth\Access\Gate $gate Authorization gate used to evaluate the configured ability.
+     */
     public function __construct(
         protected Gate $gate
     ) {
@@ -50,6 +53,9 @@ class RedactIfDeniedDirective extends BaseDirective implements FieldMiddleware
         });
     }
 
+    /**
+     * SDL definition for the @redactIfDenied directive consumed by Lighthouse.
+     */
     public static function definition(): string
     {
         return <<<'GRAPHQL'
