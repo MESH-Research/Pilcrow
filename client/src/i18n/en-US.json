@@ -403,7 +403,15 @@
     "no_users": "No users assigned",
     "download_all": {
       "label": "Download All",
-      "byline": "Download a Record of Review for all selected reviews."
+      "byline": "Download a Record of Review for all selected reviews.",
+      "dialog": {
+        "title": "Download selected records",
+        "format_label": "Format",
+        "format_combined": "Single combined HTML file",
+        "format_zip": "ZIP archive (one HTML file per record)",
+        "confirm": "Download",
+        "cancel": "Cancel"
+      }
     },
     "download_one": "Download This Record",
     "page_section": {

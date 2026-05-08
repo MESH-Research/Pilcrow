@@ -28,8 +28,49 @@
         icon="download"
         color="accent"
         class="q-mb-sm"
-        @click="handleDownloadAll"
+        @click="downloadDialog = true"
       />
+      <q-dialog v-model="downloadDialog" data-cy="ror_download_dialog">
+        <q-card style="min-width: 320px">
+          <dialog-title icon="download">
+            {{ $t("record_of_review.download_all.dialog.title") }}
+          </dialog-title>
+          <q-card-section>
+            <q-option-group
+              v-model="downloadFormat"
+              type="radio"
+              :label="$t('record_of_review.download_all.dialog.format_label')"
+              :options="[
+                {
+                  label: $t(
+                    'record_of_review.download_all.dialog.format_combined'
+                  ),
+                  value: 'combined'
+                },
+                {
+                  label: $t('record_of_review.download_all.dialog.format_zip'),
+                  value: 'zip'
+                }
+              ]"
+            />
+          </q-card-section>
+          <q-card-actions align="right">
+            <q-btn
+              v-close-popup
+              flat
+              :label="$t('record_of_review.download_all.dialog.cancel')"
+            />
+            <q-btn
+              v-close-popup
+              color="accent"
+              :loading="downloading"
+              :label="$t('record_of_review.download_all.dialog.confirm')"
+              data-cy="ror_download_confirm"
+              @click="confirmDownload"
+            />
+          </q-card-actions>
+        </q-card>
+      </q-dialog>
       <p>
         <q-icon name="info" />
         {{ $t("record_of_review.download_all.byline") }}
@@ -84,9 +125,12 @@ import { ref } from "vue"
 import { useI18n } from "vue-i18n"
 import RecordOfReviewTable from "src/components/RecordOfReviewTable.vue"
 import RecordOfReview from "src/components/RecordOfReview.vue"
+import DialogTitle from "src/components/atoms/DialogTitle.vue"
 import {
   buildRorExportBlob,
-  buildRorExportHtml
+  buildRorExportHtml,
+  buildRorZipBlob,
+  type RorZipEntry
 } from "src/utils/recordOfReviewExport"
 import {
   GetRecordsOfReviewDocument,
@@ -115,26 +159,56 @@ type RecordOfReviewExposed = {
 const { t } = useI18n()
 const selected_assignments = ref<AssignmentRow[]>([])
 const recordRefs = ref<RecordOfReviewExposed[]>([])
+const downloadDialog = ref(false)
+const downloadFormat = ref<"combined" | "zip">("combined")
+const downloading = ref(false)
 
-async function handleDownloadAll() {
-  const elements = recordRefs.value
-    .map((c) => c?.getRecordElement?.() ?? null)
-    .filter((el): el is HTMLElement => el !== null)
-  if (elements.length === 0) return
-
-  const html = await buildRorExportHtml(
-    elements,
-    t("record_of_review.title_combined")
-  )
-  const url = URL.createObjectURL(buildRorExportBlob(html))
+function triggerDownload(blob: Blob, filename: string) {
+  const url = URL.createObjectURL(blob)
   const anchor = document.createElement("a")
   anchor.href = url
-  anchor.download = "records_of_review.html"
+  anchor.download = filename
   document.body.appendChild(anchor)
   anchor.click()
   anchor.remove()
   // Defer revoke so the browser has time to start the download — revoking
   // immediately cancels the download in Safari and some Chromium versions.
   setTimeout(() => URL.revokeObjectURL(url), 0)
+}
+
+async function confirmDownload() {
+  const pairs = recordRefs.value
+    .map((c, i) => ({
+      element: c?.getRecordElement?.() ?? null,
+      assignment: selected_assignments.value[i]
+    }))
+    .filter(
+      (p): p is { element: HTMLElement; assignment: AssignmentRow } =>
+        p.element !== null && p.assignment !== undefined
+    )
+  if (pairs.length === 0) return
+
+  downloading.value = true
+  try {
+    if (downloadFormat.value === "zip") {
+      const entries: RorZipEntry[] = pairs.map(({ element, assignment }) => ({
+        element,
+        filename: `record_of_review_${assignment.id}.html`,
+        title: t("record_of_review.title_record", {
+          title: assignment.submission.title
+        })
+      }))
+      const blob = await buildRorZipBlob(entries)
+      triggerDownload(blob, "records_of_review.zip")
+    } else {
+      const html = await buildRorExportHtml(
+        pairs.map((p) => p.element),
+        t("record_of_review.title_combined")
+      )
+      triggerDownload(buildRorExportBlob(html), "records_of_review.html")
+    }
+  } finally {
+    downloading.value = false
+  }
 }
 </script>

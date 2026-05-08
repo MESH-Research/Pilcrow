@@ -78,3 +78,19 @@ export async function buildRorExportHtml(
 export function buildRorExportBlob(html: string): Blob {
   return new Blob([html], { type: "text/html" })
 }
+
+export type RorZipEntry = {
+  filename: string
+  element: HTMLElement
+  title: string
+}
+
+export async function buildRorZipBlob(entries: RorZipEntry[]): Promise<Blob> {
+  const { default: JSZip } = await import("jszip")
+  const zip = new JSZip()
+  for (const entry of entries) {
+    const html = await buildRorExportHtml([entry.element], entry.title)
+    zip.file(entry.filename, html)
+  }
+  return zip.generateAsync({ type: "blob" })
+}
