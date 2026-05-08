@@ -10,7 +10,6 @@
 </template>
 
 <script setup lang="ts">
-//Import components
 import ProfileMetadataForm from "src/components/forms/ProfileMetadataForm.vue"
 import type { ProfileFormData } from "src/use/profileMetadata"
 import { computed, provide } from "vue"
@@ -18,6 +17,17 @@ import { useMutation, useQuery } from "@vue/apollo-composable"
 import { CURRENT_USER_METADATA } from "src/graphql/queries"
 import { UPDATE_PROFILE_METADATA } from "src/graphql/mutations"
 import { useFormState, formStateKey } from "src/use/forms"
+
+definePage({
+  name: "account:profile",
+  meta: {
+    navigation: {
+      icon: "account_circle",
+      label: "profile.page_title",
+      order: 10
+    }
+  }
+})
 
 const metadataQuery = useQuery(CURRENT_USER_METADATA)
 const metadataMutation = useMutation(UPDATE_PROFILE_METADATA)

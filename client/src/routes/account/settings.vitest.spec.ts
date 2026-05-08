@@ -8,7 +8,7 @@ import type {
   UpdateUserMutation
 } from "src/graphql/generated/graphql"
 import { ref as mockRef } from "vue"
-import SettingsPage from "./SettingsPage.vue"
+import SettingsPage from "./settings.vue"
 
 import { beforeEach, describe, expect, it, test, vi } from "vitest"
 

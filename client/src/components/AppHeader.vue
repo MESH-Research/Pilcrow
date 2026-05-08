@@ -42,7 +42,7 @@
             :aria-label="$t('header.account_dropdown_aria')"
             data-cy="headerUserMenu"
           >
-            <q-item clickable to="/account/profile">
+            <q-item clickable :to="{ name: 'account:profile' }">
               <q-item-section avatar>
                 <q-icon name="account_circle" />
               </q-item-section>
@@ -50,7 +50,11 @@
                 {{ $t("profile.page_title") }}
               </q-item-section>
             </q-item>
-            <q-item clickable data-cy="link_my_account" to="/account/settings">
+            <q-item
+              clickable
+              data-cy="link_my_account"
+              :to="{ name: 'account:settings' }"
+            >
               <q-item-section avatar>
                 <q-icon name="o_settings" />
               </q-item-section>
@@ -58,7 +62,7 @@
                 {{ $t("settings.page_title") }}
               </q-item-section>
             </q-item>
-            <q-item clickable to="/reviews/records">
+            <q-item clickable :to="{ name: 'account:record_of_review' }">
               <q-item-section avatar>
                 <q-icon name="description" />
               </q-item-section>

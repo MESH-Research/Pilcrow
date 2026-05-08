@@ -7,7 +7,7 @@ import {
   type SubmissionStatus,
   type SubmissionUserRoles
 } from "src/graphql/generated/graphql"
-import RecordOfReviewPage from "./RecordOfReviewPage.vue"
+import RecordOfReviewPage from "./record-of-review.vue"
 
 import { beforeEach, describe, expect, it, vi } from "vitest"
 

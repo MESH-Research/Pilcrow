@@ -46,20 +46,6 @@ const routes: RouteRecordRaw[] = [
         component: () => import("pages/DashboardPage.vue")
       },
       {
-        path: "account/",
-        component: () => import("src/layouts/Account/AccountLayout.vue"),
-        children: [
-          {
-            path: "profile",
-            component: () => import("src/pages/Account/ProfilePage.vue")
-          },
-          {
-            path: "settings",
-            component: () => import("src/pages/Account/SettingsPage.vue")
-          }
-        ]
-      },
-      {
         path: "publication/:id/setup/",
         component: () => import("src/layouts/Publication/SetupLayout.vue"),
         props: true,
@@ -121,11 +107,6 @@ const routes: RouteRecordRaw[] = [
       {
         path: "/reviews",
         component: () => import("src/pages/ReviewsPage.vue")
-      },
-      {
-        path: "/reviews/records",
-        name: "record_of_review",
-        component: () => import("src/pages/Account/RecordOfReviewPage.vue")
       },
       {
         path: "/submissions",

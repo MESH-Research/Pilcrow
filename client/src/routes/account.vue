@@ -21,24 +21,27 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from "vue"
+import { useI18n } from "vue-i18n"
 import AvatarBlock from "src/components/molecules/AvatarBlock.vue"
 import CollapseMenu from "src/components/molecules/CollapseMenu.vue"
 import { useCurrentUser } from "src/use/user"
-import { useI18n } from "vue-i18n"
+import { useNavigation } from "src/use/navigation"
+
+definePage({
+  name: "account"
+})
+
 const { t } = useI18n()
-
-const items = [
-  {
-    icon: "account_circle",
-    label: t(`profile.page_title`),
-    url: "/account/profile"
-  },
-  {
-    icon: "o_settings",
-    label: t(`settings.page_title`),
-    url: "/account/settings"
-  }
-]
-
 const { currentUser } = useCurrentUser()
+const { childrenOf } = useNavigation()
+
+const children = childrenOf({ name: "account" })
+const items = computed(() =>
+  children.value.map((c) => ({
+    icon: c.icon,
+    label: t(c.label),
+    url: c.url
+  }))
+)
 </script>

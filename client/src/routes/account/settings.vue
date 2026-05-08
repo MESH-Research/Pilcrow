@@ -25,6 +25,13 @@ import {
 } from "src/use/forms"
 import { provide } from "vue"
 
+definePage({
+  name: "account:settings",
+  meta: {
+    navigation: { icon: "o_settings", label: "settings.page_title", order: 20 }
+  }
+})
+
 const { currentUserQuery, currentUser } = useCurrentUser()
 
 const updateUserMutation = useMutation(UPDATE_USER)

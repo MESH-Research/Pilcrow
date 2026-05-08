@@ -13,7 +13,7 @@
       color="accent"
       icon="exit_to_app"
       :to="{
-        name: 'record_of_review',
+        name: 'account:record_of_review',
         params: { id: 100 }
       }"
     />

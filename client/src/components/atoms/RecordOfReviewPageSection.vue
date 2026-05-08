@@ -7,9 +7,12 @@
       scope="global"
     >
       <template #link>
-        <router-link clickable to="/reviews/records" class="text-primary">{{
-          $t(`record_of_review.title`)
-        }}</router-link>
+        <router-link
+          clickable
+          :to="{ name: 'account:record_of_review' }"
+          class="text-primary"
+          >{{ $t(`record_of_review.title`) }}</router-link
+        >
       </template>
     </i18n-t>
   </p>

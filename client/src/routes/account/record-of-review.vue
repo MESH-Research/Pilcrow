@@ -93,6 +93,17 @@ import {
   type GetRecordsOfReviewQuery
 } from "src/graphql/generated/graphql"
 
+definePage({
+  name: "account:record_of_review",
+  meta: {
+    navigation: {
+      icon: "history_edu",
+      label: "record_of_review.title",
+      order: 30
+    }
+  }
+})
+
 type AssignmentRow = NonNullable<
   NonNullable<GetRecordsOfReviewQuery["currentUser"]>["submissions"]
 >["data"][number]
