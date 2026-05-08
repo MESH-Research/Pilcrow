@@ -48,6 +48,17 @@
       "submissions": "Submissions"
     }
   },
+  "tables": {
+    "view": {
+      "table": "Table view",
+      "grid": "Grid view",
+      "switch_to_table": "Switch to table view",
+      "switch_to_grid": "Switch to grid view"
+    },
+    "sort": {
+      "label": "Sort"
+    }
+  },
   "lists": {
     "move_up": "Move {0} Up",
     "move_down": "Move {0} Down",

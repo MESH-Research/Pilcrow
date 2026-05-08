@@ -13,6 +13,15 @@
     selection="multiple"
     row-key="id"
   >
+    <template #item="gridProps">
+      <div class="q-pa-sm col-12 col-sm-6 col-lg-4 col-xl-3 column">
+        <RecordOfReviewCard
+          v-model:selected="gridProps.selected"
+          :assignment="gridProps.row"
+          class="col"
+        />
+      </div>
+    </template>
     <template #top-after>
       <SubmissionsFilterPanel
         v-model:status-filter="statusFilter"
@@ -166,6 +175,7 @@ import QueryTable, {
 import WithAsideCell from "src/components/tables/common/WithAsideCell.vue"
 import DateTimeCell from "src/components/tables/common/DateTimeCell.vue"
 import AvatarImage from "src/components/atoms/AvatarImage.vue"
+import RecordOfReviewCard from "src/components/RecordOfReviewCard.vue"
 import SubmissionsFilterPanel from "src/pages/Admin/components/SubmissionsFilterPanel.vue"
 import { defaultOptions as defaultRoleOptions } from "src/pages/Admin/components/SubmissionsFilterPanelRoles.vue"
 

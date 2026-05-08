@@ -1,7 +1,11 @@
 <template>
   <div class="row no-wrap items-center bg-accent text-white">
     <q-card-section v-if="icon">
-      <q-avatar :icon="icon" :color="avatarColor" :text-color="avatarTextColor" />
+      <q-avatar
+        :icon="icon"
+        :color="avatarColor"
+        :text-color="avatarTextColor"
+      />
     </q-card-section>
     <q-card-section class="col text-center">
       <p class="q-ma-none" style="font-size: 1.25rem; line-height: 1.2">
