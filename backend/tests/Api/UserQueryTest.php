@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Tests\Api;
 
+use App\Models\Publication;
+use App\Models\Submission;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -49,6 +51,7 @@ class UserQueryTest extends ApiTestCase
     #[DataProvider('profileMetadataProvider')]
     public function testThatUserDetailsCanBeQueried(array $profile_metadata): void
     {
+        $this->beAppAdmin();
         $user = User::factory()->create([
             'name' => 'Regular User',
             'email' => 'regularuser@meshresearch.net',
@@ -95,103 +98,116 @@ class UserQueryTest extends ApiTestCase
         ]);
     }
 
-    /**
-     * @return array
-     */
-    public static function searchUserTermsProvider(): array
+    public function testGuestCannotCallUserQuery(): void
     {
-        return [
-            [
-                'searchTerm' => 'Rotated Building Assembly',
-                'shouldFind' => 'freshoxygenlake@meshresearch.net',
-                'count' => 1,
-            ],
-            [
-                'searchTerm' => 'freshoxygenlake@meshresearch.net',
-                'shouldFind' => 'freshoxygenlake@meshresearch.net',
-                'count' => 1,
-            ],
-            [
-                'searchTerm' => 'ScrumptiousPlatePile',
-                'shouldFind' => 'freshoxygenlake@meshresearch.net',
-                'count' => 1,
-            ],
-            [
-                'searchTerm' => 'aaaaaaaaaaaaaa',
-                'shouldFind' => null,
-                'count' => 0,
-            ],
-            [
-                'searchTerm' => '<html>',
-                'shouldFind' => null,
-                'count' => 0,
-            ],
-            [
-                'searchTerm' => null,
-                'shouldFind' => null,
-                'count' => 10, // Search returns 10 results by default
-            ],
-            [
-                'searchTerm' => '12345',
-                'shouldFind' => null,
-                'count' => 0,
-            ],
-            [
-                'searchTerm' => 12345,
-                'shouldFind' => null,
-                'count' => 0,
-            ],
-            [
-                'searchTerm' => '',
-                'shouldFind' => null,
-                'count' => 10, // Search returns 10 results by default
-            ],
-        ];
-    }
-
-    /**
-     * @param mixed $searchTerm
-     * @param string|null $shouldFind
-     * @param int $count
-     * @return void
-     */
-    #[DataProvider('searchUserTermsProvider')]
-    public function testSearchingForUsers(mixed $searchTerm = null, ?string $shouldFind = null, int $count = 0): void
-    {
-        User::factory()->createManyQuietly(20);
-        User::factory()->create([
-            'name' => 'Rotated Building Assembly',
-            'email' => 'freshoxygenlake@meshresearch.net',
-            'username' => 'ScrumptiousPlatePile',
-        ]);
+        $target = User::factory()->create(['email' => 'leak@meshresearch.net']);
 
         $response = $this->graphQL(
-            'query SearchUsers ($search_term: String) {
-                userSearch (term: $search_term) {
-                    data {
-                        name
-                        email
-                        username
-                    }
+            'query getUser ($id: ID!) {
+                user (id: $id) { id username email }
+            }',
+            ['id' => $target->id]
+        );
+
+        $this->assertNull($response->json('data.user'));
+        $this->assertNotEmpty($response->json('errors'));
+    }
+
+    public function testNonAdminCannotCallUserQuery(): void
+    {
+        $viewer = User::factory()->create();
+        $this->actingAs($viewer);
+
+        $target = User::factory()->create(['email' => 'private@meshresearch.net']);
+
+        $response = $this->graphQL(
+            'query getUser ($id: ID!) {
+                user (id: $id) { id username email }
+            }',
+            ['id' => $target->id]
+        );
+
+        $this->assertNull($response->json('data.user'));
+        $this->assertNotEmpty($response->json('errors'));
+    }
+
+    public function testNonAdminCannotCallUserQueryEvenForSelf(): void
+    {
+        $self = User::factory()->create(['email' => 'self@meshresearch.net']);
+        $this->actingAs($self);
+
+        $response = $this->graphQL(
+            'query getUser ($id: ID!) {
+                user (id: $id) { id username email }
+            }',
+            ['id' => $self->id]
+        );
+
+        // user(id) is admin-only. Self should use currentUser instead.
+        $this->assertNull($response->json('data.user'));
+        $this->assertNotEmpty($response->json('errors'));
+    }
+
+    public function testSubmitterCannotReadReviewerEmailsThroughSubmission(): void
+    {
+        $publication = Publication::factory()->create();
+        $submitter = User::factory()->create(['email' => 'submitter@meshresearch.net']);
+        $reviewer = User::factory()->create(['email' => 'reviewer@meshresearch.net']);
+        $coordinator = User::factory()->create(['email' => 'coordinator@meshresearch.net']);
+        $editor = User::factory()->create(['email' => 'editor@meshresearch.net']);
+
+        $publication->editors()->save($editor);
+
+        $submission = Submission::factory()
+            ->for($publication)
+            ->hasAttached($submitter, [], 'submitters')
+            ->hasAttached($reviewer, [], 'reviewers')
+            ->hasAttached($coordinator, [], 'reviewCoordinators')
+            ->create();
+
+        $this->actingAs($submitter);
+
+        $response = $this->graphQL(
+            'query peekEmails ($id: ID!) {
+                submission (id: $id) {
+                    reviewers { id email }
+                    review_coordinators { id email }
+                    submitters { id email }
                 }
             }',
-            ['search_term' => (string)$searchTerm]
+            ['id' => $submission->id]
         );
 
-        $data = $response->json('data.userSearch.data');
-        $collection = collect($data);
+        $reviewers = collect($response->json('data.submission.reviewers'));
+        $coordinators = collect($response->json('data.submission.review_coordinators'));
+        $submitters = collect($response->json('data.submission.submitters'));
 
-        if ($shouldFind !== null) {
-            $results = $collection->implode('email', ', ') != '' ? $collection->implode('email', ', ') : 'nothing';
-            $this->assertTrue(
-                $collection->contains('email', $shouldFind),
-                "Search term '{$searchTerm}' should return user with email '{$shouldFind}', but returned " . $results
-            );
-        }
-        $this->assertCount(
-            $count,
-            $data,
-            "Search term '{$searchTerm}' should return {$count} results, but returned " . count($data)
+        // Reviewer / coordinator emails redacted to the submitter
+        $this->assertNull($reviewers->firstWhere('id', (string)$reviewer->id)['email']);
+        $this->assertNull($coordinators->firstWhere('id', (string)$coordinator->id)['email']);
+
+        // Submitter still sees their own email
+        $this->assertSame(
+            'submitter@meshresearch.net',
+            $submitters->firstWhere('id', (string)$submitter->id)['email']
         );
+    }
+
+    public function testEmailIsVisibleToSelfViaCurrentUser(): void
+    {
+        $user = User::factory()->create(['email' => 'self@meshresearch.net']);
+        $this->actingAs($user);
+
+        $response = $this->graphQL(
+            'query { currentUser { email } }'
+        );
+
+        $response->assertJson([
+            'data' => [
+                'currentUser' => [
+                    'email' => 'self@meshresearch.net',
+                ],
+            ],
+        ]);
     }
 }

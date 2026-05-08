@@ -60,61 +60,43 @@ class SubmissionStatusUpdatesTest extends ApiTestCase
         $notification_data = $this->getSampleNotificationData($user_1, 1009);
         $user_1->notify(new SubmissionStatusUpdated($notification_data));
         $user_2->notify(new SubmissionStatusUpdated($notification_data));
+        // currentUser only returns the authed user's own notifications via
+        // the @whereAuth scope. user_2's notifications must not be visible.
         $response = $this->graphQL(
-            'query GetUsers {
-                userSearch {
-                    data {
-                        id
-                        notifications (first: 10, page: 1) {
+            'query GetSelfNotifications {
+                currentUser {
+                    id
+                    notifications (first: 10, page: 1) {
+                        data {
                             data {
-                                data {
-                                    type
-                                    user {
-                                        id
-                                    }
-                                    submission {
-                                        id
-                                    }
-                                }
+                                type
+                                user { id }
+                                submission { id }
                             }
                         }
                     }
                 }
             }'
         );
-        $expected_data = [
+        $response->assertJson([
             'data' => [
-                'userSearch' => [
-                    'data' => [
-                        [
-                            'id' => (string)$user_1->id,
-                            'notifications' => [
+                'currentUser' => [
+                    'id' => (string)$user_1->id,
+                    'notifications' => [
+                        'data' => [
+                            [
                                 'data' => [
-                                    [
-                                        'data' => [
-                                            'type' => 'submission.initially_submitted',
-                                            'user' => [
-                                                'id' => (string)$user_1->id,
-                                            ],
-                                            'submission' => [
-                                                'id' => '1009',
-                                            ],
-                                        ],
-                                    ],
+                                    'type' => 'submission.initially_submitted',
+                                    'user' => ['id' => (string)$user_1->id],
+                                    'submission' => ['id' => '1009'],
                                 ],
-                            ],
-                        ],
-                        [
-                            'id' => (string)$user_2->id,
-                            'notifications' => [
-                                'data' => [],
                             ],
                         ],
                     ],
                 ],
             ],
-        ];
-        $response->assertJson($expected_data);
+        ]);
+        $this->assertCount(1, $response->json('data.currentUser.notifications.data'));
     }
 
     /**

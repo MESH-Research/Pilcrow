@@ -5,7 +5,7 @@ type User {
     id: ID!
     display_label: String
     name: String
-    email: String!
+    email: String @redactIfDenied(ability: "viewEmail")
     username: String!
     created_at: DateTime!
     updated_at: DateTime
