@@ -193,6 +193,119 @@ class UserQueryTest extends ApiTestCase
         );
     }
 
+    public function testGuestCannotReadEmailsViaUserSearch(): void
+    {
+        User::factory()->create(['email' => 'leak@meshresearch.net']);
+
+        $response = $this->graphQL(
+            'query { userSearch { data { id email } } }'
+        );
+
+        $emails = collect($response->json('data.userSearch.data'))->pluck('email');
+        $this->assertNotContains('leak@meshresearch.net', $emails->all());
+    }
+
+    /**
+     * @return array
+     */
+    public static function searchUserTermsProvider(): array
+    {
+        return [
+            [
+                'searchTerm' => 'Rotated Building Assembly',
+                'shouldFind' => 'freshoxygenlake@meshresearch.net',
+                'count' => 1,
+            ],
+            [
+                'searchTerm' => 'freshoxygenlake@meshresearch.net',
+                'shouldFind' => 'freshoxygenlake@meshresearch.net',
+                'count' => 1,
+            ],
+            [
+                'searchTerm' => 'ScrumptiousPlatePile',
+                'shouldFind' => 'freshoxygenlake@meshresearch.net',
+                'count' => 1,
+            ],
+            [
+                'searchTerm' => 'aaaaaaaaaaaaaa',
+                'shouldFind' => null,
+                'count' => 0,
+            ],
+            [
+                'searchTerm' => '<html>',
+                'shouldFind' => null,
+                'count' => 0,
+            ],
+            [
+                'searchTerm' => null,
+                'shouldFind' => null,
+                'count' => 10, // Search returns 10 results by default
+            ],
+            [
+                'searchTerm' => '12345',
+                'shouldFind' => null,
+                'count' => 0,
+            ],
+            [
+                'searchTerm' => 12345,
+                'shouldFind' => null,
+                'count' => 0,
+            ],
+            [
+                'searchTerm' => '',
+                'shouldFind' => null,
+                'count' => 10, // Search returns 10 results by default
+            ],
+        ];
+    }
+
+    /**
+     * @param mixed $searchTerm
+     * @param string|null $shouldFind
+     * @param int $count
+     * @return void
+     */
+    #[DataProvider('searchUserTermsProvider')]
+    public function testSearchingForUsers(mixed $searchTerm = null, ?string $shouldFind = null, int $count = 0): void
+    {
+        $this->beAppAdmin();
+        User::factory()->createManyQuietly(20);
+        User::factory()->create([
+            'name' => 'Rotated Building Assembly',
+            'email' => 'freshoxygenlake@meshresearch.net',
+            'username' => 'ScrumptiousPlatePile',
+        ]);
+
+        $response = $this->graphQL(
+            'query SearchUsers ($search_term: String) {
+                userSearch (term: $search_term) {
+                    data {
+                        name
+                        email
+                        username
+                    }
+                }
+            }',
+            ['search_term' => (string)$searchTerm]
+        );
+
+        $data = $response->json('data.userSearch.data');
+        $collection = collect($data);
+
+        if ($shouldFind !== null) {
+            $results = $collection->implode('email', ', ') != '' ? $collection->implode('email', ', ') : 'nothing';
+            $this->assertTrue(
+                $collection->contains('email', $shouldFind),
+                "Search term '{$searchTerm}' should return user with email '{$shouldFind}', but returned " . $results
+            );
+        }
+        $this->assertCount(
+            $count,
+            $data,
+            "Search term '{$searchTerm}' should return {$count} results, but returned " . count($data)
+        );
+    }
+
     public function testEmailIsVisibleToSelfViaCurrentUser(): void
     {
         $user = User::factory()->create(['email' => 'self@meshresearch.net']);

@@ -29,15 +29,6 @@ type Publication {
     style_criterias: [StyleCriteria!]! @hasMany(relation: "styleCriterias")
     my_role: PublicationRole @method(name: "getMyRole")
     effective_role: PublicationRole @method(name: "getEffectiveRole")
-
-    """
-    Search users related to this publication. Restricted to users with a
-    direct or submission-mediated role on the publication, or to application
-    administrators. Results are limited to users with one of those same
-    relations to the publication.
-    """
-    user_search(term: String): [User!]!
-        @field(resolver: "App\\GraphQL\\Queries\\PublicationUserSearch")
 }
 
 type StyleCriteria {

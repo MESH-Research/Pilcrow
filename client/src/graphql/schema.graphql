@@ -501,14 +501,6 @@ type Publication {
   style_criterias: [StyleCriteria!]!
   submissions: [Submission]!
   updated_at: DateTime
-
-  """
-  Search users related to this publication. Restricted to users with a
-  direct or submission-mediated role on the publication, or to application
-  administrators. Results are limited to users with one of those same
-  relations to the publication.
-  """
-  user_search(term: String): [User!]!
 }
 
 "A paginated list of Publication items."
@@ -567,6 +559,17 @@ type Query {
 
   "Return details about a specific user in the application"
   user(id: ID): User
+
+  "Return user accounts optionally based on a supplied search term"
+  userSearch(
+    "Limits number of fetched items."
+    first: Int! = 10
+
+    "The offset from which items are returned."
+    page: Int
+
+    term: String
+  ): UserPaginator!
 
   "Validate details of a new user.  Returns true if supplied user fields would be valid."
   validateNewUser(user: ValidateNewUserInput): Boolean
@@ -891,6 +894,15 @@ type User {
   submissions: [Submission]!
   updated_at: DateTime
   username: String!
+}
+
+"A paginated list of User items."
+type UserPaginator {
+  "A list of User items."
+  data: [User!]!
+
+  "Pagination information about the list of items."
+  paginatorInfo: PaginatorInfo!
 }
 
 enum UserRoles {

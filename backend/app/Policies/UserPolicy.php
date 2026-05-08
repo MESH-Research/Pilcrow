@@ -13,13 +13,6 @@ class UserPolicy
     use HandlesAuthorization;
 
     /**
-     * Determine whether the user can update the model.
-     *
-     * @param \App\Models\User  $user
-     * @param \App\Models\User  $model
-     * @return bool
-     */
-    /**
      * Determine whether the viewer can fetch another user's record via the
      * top-level user(id) query. Restricted to application administrators.
      */
@@ -28,6 +21,13 @@ class UserPolicy
         return $viewer->hasRole(Role::APPLICATION_ADMINISTRATOR);
     }
 
+    /**
+     * Determine whether the user can update the model.
+     *
+     * @param \App\Models\User  $user
+     * @param \App\Models\User  $model
+     * @return bool
+     */
     public function update(User $user, User $model)
     {
         //User is updating their own record.
