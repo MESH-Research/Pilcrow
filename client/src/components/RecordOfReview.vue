@@ -199,18 +199,8 @@ graphql(`
       audits {
         id
         created_at
-        event
-        old_values {
-          content_id
-          status
-          status_change_comment
-          title
-        }
         new_values {
-          content_id
           status
-          status_change_comment
-          title
         }
       }
       reviewers {

@@ -68,19 +68,8 @@ describe("Record of Review page", () => {
                     {
                       id: "35",
                       created_at: "2026-05-05T17:31:52.000000Z",
-                      event: "created",
-                      old_values: {
-                        content_id: null,
-                        status: null,
-                        status_change_comment: null,
-                        title: null,
-                        __typename: "SubmissionAuditValues"
-                      },
                       new_values: {
-                        content_id: null,
                         status: "ACCEPTED_AS_FINAL" as SubmissionStatus,
-                        status_change_comment: null,
-                        title: "Hello World",
                         __typename: "SubmissionAuditValues"
                       },
                       __typename: "SubmissionAudit"
