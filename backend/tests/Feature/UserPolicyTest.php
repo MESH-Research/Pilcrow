@@ -8,6 +8,7 @@ use App\Models\Role;
 use App\Models\Submission;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 class UserPolicyTest extends TestCase
@@ -131,5 +132,35 @@ class UserPolicyTest extends TestCase
         $target = User::factory()->create();
 
         $this->assertFalse($viewer->can('viewEmail', $target));
+    }
+
+    public function testViewEmailMemoizesViewerPublicationLookup(): void
+    {
+        $publication = Publication::factory()->create();
+        $editor = User::factory()->create();
+        $this->attachToPublication($editor, $publication, (int)Role::EDITOR_ROLE_ID);
+
+        $targets = User::factory()->count(5)->create();
+        foreach ($targets as $target) {
+            $this->attachToPublication($target, $publication, (int)Role::EDITOR_ROLE_ID);
+        }
+
+        // Prime Spatie role cache so role lookup doesn't pollute the count.
+        $editor->hasRole(Role::APPLICATION_ADMINISTRATOR);
+
+        DB::enableQueryLog();
+        foreach ($targets as $target) {
+            $this->assertTrue($editor->can('viewEmail', $target));
+        }
+        $queries = collect(DB::getQueryLog())->pluck('query');
+        DB::disableQueryLog();
+
+        // Viewer's privileged-publication lookup hits the publication_user
+        // pivot exactly once even though the policy was invoked 5 times.
+        $viewerPubLookups = $queries->filter(
+            fn (string $sql) => str_contains($sql, 'publication_user')
+                && str_contains($sql, 'role_id')
+        );
+        $this->assertCount(1, $viewerPubLookups);
     }
 }

@@ -63,14 +63,21 @@ class UserPolicy
             return true;
         }
 
-        $privilegedRoles = [
-            Role::PUBLICATION_ADMINISTRATOR_ROLE_ID,
-            Role::EDITOR_ROLE_ID,
-        ];
-
-        $viewerPublicationIds = $viewer->publications()
-            ->wherePivotIn('role_id', $privilegedRoles)
-            ->pluck('publications.id');
+        // Memoize the viewer's privileged publication IDs on the model
+        // instance so list resolvers (submission.reviewers, userSearch, ...)
+        // don't re-run the same query for every target user in the response.
+        if (!$viewer->relationLoaded('privilegedPublicationIds')) {
+            $viewer->setRelation(
+                'privilegedPublicationIds',
+                $viewer->publications()
+                    ->wherePivotIn('role_id', [
+                        Role::PUBLICATION_ADMINISTRATOR_ROLE_ID,
+                        Role::EDITOR_ROLE_ID,
+                    ])
+                    ->pluck('publications.id')
+            );
+        }
+        $viewerPublicationIds = $viewer->getRelation('privilegedPublicationIds');
 
         if ($viewerPublicationIds->isEmpty()) {
             return false;
