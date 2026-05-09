@@ -73,7 +73,7 @@ During development, types are regenerated automatically when:
 If the backend is not running when the dev server starts, `throwOnStart: false` allows the dev server to start anyway using previously generated types.
 
 ::: tip
-The compiled schema file (`client/src/graphql/schema.graphql`) is committed to the repository. During development, codegen introspects the live backend and writes both the types and an updated schema file automatically. During builds, types are generated from this committed schema file so the backend is not required. If you need to update the schema file manually (e.g., without the dev server running), use `lando yarn graphql:fetch-schema`.
+The compiled schema file (`client/src/graphql/schema.graphql`) is committed to the repository. During development, codegen introspects the live backend and writes both the types and an updated schema file automatically. During builds, types are generated from this committed schema file so the backend is not required. If you need to update the schema file manually, run `lando yarn graphql:codegen` (requires the backend running) so the snapshot is normalized through `schema-ast`.
 :::
 
 ### Manual Commands
@@ -84,11 +84,8 @@ Run these from the project root using `lando yarn`:
 # Run codegen using introspection (requires lando running)
 lando yarn graphql:codegen
 
-# Export schema then generate types from the file (offline/CI)
-lando yarn graphql:codegen-offline
-
-# Export compiled schema only
-lando yarn graphql:fetch-schema
+# Generate types from the committed schema file (offline/CI, no backend)
+lando yarn graphql:codegen-local
 ```
 
 You can override the schema source with an environment variable. This is useful for offline or CI workflows where introspection isn't available:
