@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
+use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 
 final class ResetPassword
 {
@@ -42,7 +43,7 @@ final class ResetPassword
      * @param array $args
      * @return mixed
      */
-    public function reset($_, array $args)
+    public function reset($_, array $args, GraphQLContext $context)
     {
         try {
             /** @var \App\Models\User $user **/
@@ -69,6 +70,10 @@ final class ResetPassword
         }
         $guard = Auth::guard('web');
         $guard->login($user);
+
+        // Sync the Lighthouse context so @redactIfDenied resolvers (e.g. on
+        // User.email) see the freshly authenticated viewer.
+        $context->setUser($user);
 
         return $user;
     }
