@@ -195,6 +195,7 @@ export const GET_USERS = gql`
         name
         username
         email
+        avatar_color
       }
     }
   }
@@ -204,9 +205,11 @@ export const GET_USERS = gql`
 export const GET_USER = gql`
   query getUser($id: ID) {
     user(id: $id) {
+      id
       username
       email
       name
+      avatar_color
       roles {
         name
       }
@@ -225,6 +228,7 @@ export const SEARCH_USERS = gql`
         username
         name
         email
+        avatar_color
       }
     }
   }
