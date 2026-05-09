@@ -334,4 +334,39 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->attributes['name'] ?: $this->attributes['username'];
     }
+
+    /**
+     * Deterministic avatar color name derived from the user's email (or id
+     * when no email is set). Mirrors the legacy client-side hash so existing
+     * avatars remain stable while emails are no longer exposed publicly.
+     *
+     * @return string
+     */
+    public function getAvatarColorAttribute(): string
+    {
+        $colors = [
+            'blue',
+            'cyan',
+            'green',
+            'magenta',
+            'orange',
+            'pine',
+            'purple',
+            'red',
+            'yellow',
+        ];
+
+        $seed = $this->attributes['email'] ?? (string)$this->attributes['id'];
+
+        $hash = 0;
+        $len = strlen($seed);
+        for ($i = 0; $i < $len; $i++) {
+            $hash = (($hash << 5) - $hash + ord($seed[$i])) & 0xFFFFFFFF;
+            if ($hash & 0x80000000) {
+                $hash -= 0x100000000;
+            }
+        }
+
+        return $colors[abs($hash) % count($colors)];
+    }
 }
