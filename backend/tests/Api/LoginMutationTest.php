@@ -34,7 +34,7 @@ class LoginMutationTest extends ApiTestCase
         $response->assertJson([
             'data' => [
                 'login' => [
-                    'id' => (string) $user->id,
+                    'id' => (string)$user->id,
                     'email' => 'login-visible@example.test',
                 ],
             ],
