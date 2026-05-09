@@ -51,6 +51,7 @@ describe("submissions details page mount", () => {
         name: "Jest Submitter 1",
         username: "jestSubmitter1",
         email: "jestsubmitter1@msu.edu",
+        avatar_color: "blue",
         staged: null
       },
       {
@@ -60,6 +61,7 @@ describe("submissions details page mount", () => {
         name: "Jest Submitter 2",
         username: "jestSubmitter2",
         email: "jestsubmitter2@msu.edu",
+        avatar_color: "green",
         staged: null
       }
     ],
@@ -71,6 +73,7 @@ describe("submissions details page mount", () => {
         name: "Jest Reviewer 1",
         username: "jestReviewer1",
         email: "jestreviewer1@msu.edu",
+        avatar_color: "purple",
         staged: null
       },
       {
@@ -80,6 +83,7 @@ describe("submissions details page mount", () => {
         display_label: "Jest Reviewer 2",
         username: "jestReviewer2",
         email: "jestReviewer2@msu.edu",
+        avatar_color: "red",
         staged: true
       }
     ],
@@ -91,6 +95,7 @@ describe("submissions details page mount", () => {
         name: "Review Coordinator 1",
         username: "jestReviewCoordinator1",
         email: "jestcoordinator1@msu.edu",
+        avatar_color: "orange",
         staged: null
       }
     ]
