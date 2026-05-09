@@ -9,7 +9,7 @@ import { graphql } from "src/graphql/generated"
 
 graphql(`
   fragment avatarImage on User {
-    email
+    avatar_color
   }
 `)
 </script>
@@ -24,35 +24,11 @@ interface Props {
 
 const props = defineProps<Props>()
 
-const stringToInt = (s: string): number => {
-  let hash = 0
-  if (s.length === 0) return hash
-  for (let i = 0; i < s.length; i++) {
-    const chr = s.charCodeAt(i)
-    hash = (hash << 5) - hash + chr
-    hash |= 0 // Convert to 32bit integer
-  }
-  return hash
-}
-
-const colors = [
-  "blue",
-  "cyan",
-  "green",
-  "magenta",
-  "orange",
-  "pine",
-  "purple",
-  "red",
-  "yellow"
-]
-
 const avatarSrc = computed(() => {
-  if (!props.user.email) {
+  if (!props.user.avatar_color) {
     return ""
   }
-  const number = Math.abs(stringToInt(props.user.email)) % colors.length
-  return `/avatar/avatar-${colors[number]}.png`
+  return `/avatar/avatar-${props.user.avatar_color}.png`
 })
 </script>
 
