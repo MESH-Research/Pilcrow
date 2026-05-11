@@ -87,7 +87,7 @@ import { useEditor, EditorContent } from "@tiptap/vue-3"
 import StarterKit from "@tiptap/starter-kit"
 import Placeholder from "@tiptap/extension-placeholder"
 import { useQuasar } from "quasar"
-import type { Submission } from "src/graphql/generated/graphql"
+import type { Submission, User } from "src/graphql/generated/graphql"
 
 const { dialog } = useQuasar()
 
@@ -259,9 +259,12 @@ async function assignUser(selectedUser: FoundUser) {
   }
 }
 
-async function reinviteUser({ user }: { user: FoundUser }) {
+async function reinviteUser({ user }: { user: User }) {
+  if (!user.email) {
+    return
+  }
   await new Promise((resolve) => {
-    dirtyDialog(user)
+    dirtyDialog(user.email as string)
       .onOk(function () {
         resolve(true)
       })
@@ -273,18 +276,18 @@ async function reinviteUser({ user }: { user: FoundUser }) {
     return
   }
 }
-function dirtyDialog(user: FoundUser) {
+function dirtyDialog(email: string) {
   return dialog({
     component: ReinviteUserDialog,
     componentProps: {
       roleGroup: props.roleGroup,
-      email: user.email,
+      email,
       submissionId: props.container.id
     }
   })
 }
 
-async function handleUserListClick({ user }: { user: FoundUser }) {
+async function handleUserListClick({ user }: { user: User }) {
   if (!props.mutable) return
   try {
     await mutate({ disconnect: [user.id] })

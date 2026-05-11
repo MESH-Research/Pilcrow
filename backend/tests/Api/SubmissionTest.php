@@ -214,6 +214,7 @@ class SubmissionTest extends ApiTestCase
      */
     public function testSubmissionsCanBeQueriedForAUser()
     {
+        $this->beAppAdmin();
         $publication = Publication::factory()->create([
             'name' => 'Test Publication #4',
         ]);

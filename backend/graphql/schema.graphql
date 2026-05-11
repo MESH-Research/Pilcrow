@@ -17,7 +17,7 @@ type Query {
     currentUser: User @auth
 
     "Return details about a specific user in the application"
-    user(id: ID @eq): User @find
+    user(id: ID @eq): User @find @can(ability: "view", find: "id")
 
     "Return user accounts optionally based on a supplied search term"
     userSearch(term: String @search): [User!]! @paginate(defaultCount: 10)

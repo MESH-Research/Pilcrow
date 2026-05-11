@@ -25,6 +25,7 @@ class UserPermissionsTest extends ApiTestCase
     public function testRoleForUserIsQueryableFromGraphqlEndpoint()
     {
         $test_role = Role::factory()->create(['name' => $this->test_user_role]);
+        $this->beAppAdmin();
         $user = User::factory()->create();
         $user->assignRole($this->test_user_role);
         $response = $this->graphQL(
@@ -54,6 +55,7 @@ class UserPermissionsTest extends ApiTestCase
      */
     public function testUserWithNoRoleReturnsAnEmptyArrayWhenRolesForUserAreQueriedFromGraphqlEndpoint()
     {
+        $this->beAppAdmin();
         $user = User::factory()->create();
         $response = $this->graphQL(
             'query getUser($id: ID) {
@@ -246,6 +248,7 @@ class UserPermissionsTest extends ApiTestCase
     #[DataProvider('permissionsByRoleProvider')]
     public function testPermissionsByRoleAreQueryableFromGraphqlEndpoint($role, $expected_array)
     {
+        $this->beAppAdmin();
         $user = User::factory()->create();
         $user->assignRole($role);
         $response = $this->graphQL(
