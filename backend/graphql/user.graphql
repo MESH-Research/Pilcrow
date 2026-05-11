@@ -6,6 +6,7 @@ type User {
     display_label: String
     name: String
     email: String!
+    avatar_color: String! @deprecated(reason: "Temporary placeholder for stable avatar colors; will be removed when user-uploaded avatars are introduced.")
     username: String!
     created_at: DateTime!
     updated_at: DateTime
