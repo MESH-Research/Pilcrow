@@ -28,7 +28,6 @@ export const _CURRENT_USER_FIELDS = gql`
     username
     name
     email
-    avatar_color
     email_verified_at
     roles {
       name
@@ -44,7 +43,6 @@ export const _RELATED_USER_FIELDS = gql`
     username
     name
     email
-    avatar_color
     staged
   }
 `

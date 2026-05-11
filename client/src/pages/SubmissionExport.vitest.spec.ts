@@ -35,7 +35,7 @@ const mockExportOptionsResponse: { data: GetExportOptionsQuery } = {
         {
           id: "100",
           display_label: "Test User",
-          avatar_color: "purple"
+          email: "test@example.com"
         }
       ]
     }

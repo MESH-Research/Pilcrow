@@ -31,15 +31,13 @@ describe("User Index page mount", () => {
               id: "1",
               name: "test1",
               email: "test1@msu.edu",
-              username: "test1",
-              avatar_color: "blue"
+              username: "test1"
             },
             {
               id: "2",
               name: "test2",
               email: "test2@msu.edu",
-              username: "test2",
-              avatar_color: "green"
+              username: "test2"
             }
           ],
           paginatorInfo: {

@@ -8,9 +8,9 @@ installQuasarPlugin()
 
 const mockSubmission: exportParticipantSelectorFragment = {
   commenters: [
-    { id: "1", display_label: "User One", avatar_color: "blue" },
-    { id: "2", display_label: "User Two", avatar_color: "green" },
-    { id: "3", display_label: "User Three", avatar_color: "red" }
+    { id: "1", display_label: "User One", email: "one@example.com" },
+    { id: "2", display_label: "User Two", email: "two@example.com" },
+    { id: "3", display_label: "User Three", email: "three@example.com" }
   ]
 }
 

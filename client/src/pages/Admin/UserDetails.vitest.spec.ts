@@ -51,11 +51,9 @@ describe("User Details page mount", () => {
   it("reflects the lack of roles for a user with no assigned roles", async () => {
     getUserHandler.mockResolvedValue(
       mockUserResponse({
-        id: "1",
         username: "Username",
         email: "email",
         name: "Regular User",
-        avatar_color: "blue",
         roles: []
       })
     )
@@ -67,11 +65,9 @@ describe("User Details page mount", () => {
   it("reflects the role of an application administrator", async () => {
     getUserHandler.mockResolvedValue(
       mockUserResponse({
-        id: "2",
         name: "Application Admin User",
         username: "Username",
         email: "email",
-        avatar_color: "blue",
         roles: [
           {
             name: "Application Administrator"
@@ -89,11 +85,9 @@ describe("User Details page mount", () => {
   it("reflects the lack of display name for a user with no name", async () => {
     getUserHandler.mockResolvedValue(
       mockUserResponse({
-        id: "3",
         name: null,
         email: "email",
         username: "userWithNoName",
-        avatar_color: "blue",
         roles: []
       })
     )

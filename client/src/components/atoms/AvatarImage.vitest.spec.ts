@@ -6,18 +6,18 @@ import { describe, expect, it } from "vitest"
 
 installQuasarPlugin()
 describe("AvatarImage Component", () => {
-  const factory = (avatar_color: string) => {
+  const factory = (email: string) => {
     return mount(AvatarImage, {
       props: {
         user: {
-          avatar_color
+          email
         }
       }
     })
   }
 
-  it("renders the color provided by the backend", () => {
-    const wrapper = factory("purple")
+  it("returns a deterministic value", () => {
+    const wrapper = factory("test@meshresearch.net")
     expect((wrapper.vm as any).avatarSrc).toBe("/avatar/avatar-purple.png")
   })
 })
