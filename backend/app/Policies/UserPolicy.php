@@ -16,12 +16,8 @@ class UserPolicy
      * Determine whether the viewer can fetch another user's record via the
      * top-level user(id) query. Restricted to application administrators.
      */
-    public function view(User $viewer, User $target): bool
+    public function view(User $viewer, User $_target): bool
     {
-        // $target is required by the Gate signature but not consulted here —
-        // app admins can view any user. Unset to satisfy the unused-parameter sniff.
-        unset($target);
-
         return $viewer->hasRole(Role::APPLICATION_ADMINISTRATOR);
     }
 
