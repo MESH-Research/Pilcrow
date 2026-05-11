@@ -46,6 +46,25 @@ MAIL_ENCRYPTION=true
 
 Laravel also [supports a number of  mail services](https://laravel.com/docs/10.x/mail#driver-prerequisites).  While we aren't able to provide support for each mailer service, feel free to open a ticket if you find a problem with non-smtp options.
 
+## Telemetry
+
+Error reporting is **disabled by default**. When enabled, the application sends
+runtime errors (server and browser) to a Sentry-compatible endpoint. No
+telemetry leaves the installation unless `TELEMETRY_ENABLED=true` *and*
+`TELEMETRY_DSN` is set. See [Telemetry](./telemetry.md) for the full data
+contract, scrubber rules, and self-host (GlitchTip) recipe.
+
+| Parameter                              | Example / Default                  | Required | Description                                                            |
+| -------------------------------------- | ---------------------------------- | -------- | ---------------------------------------------------------------------- |
+| TELEMETRY_ENABLED                      | `false`                            |          | Master switch. When false, the SDKs are not initialized.               |
+| TELEMETRY_DSN                          | `https://key@sentry.example.com/1` |          | Sentry DSN used by the Laravel backend. Required when enabled.         |
+| TELEMETRY_DSN_PUBLIC                   | `https://key@sentry.example.com/1` |          | DSN served to the browser. Defaults to `TELEMETRY_DSN`. Split only if backend and browser need different endpoints (e.g. container-internal vs proxy). |
+| TELEMETRY_ENVIRONMENT                  | `"production"`                     |          | Tags events with environment name. Defaults to `APP_ENV`.              |
+| TELEMETRY_RELEASE                      | `"pilcrow-backend@1.4.0"`          |          | Backend release tag. Defaults to `pilcrow-backend@$VERSION` when `VERSION` is set at build time. Frontend tags itself with `pilcrow-client@$VERSION` from its own bundled `VERSION` (this lets cached client / fresh backend show as distinct releases in the issue stream). |
+| TELEMETRY_TRACES_SAMPLE_RATE           | `0.0`                              |          | 0.0 disables performance tracing. 0.1 = sample 10%.                    |
+| TELEMETRY_REPLAYS_SESSION_SAMPLE_RATE  | `0.0`                              |          | Browser session replay (masked) sample rate. Off by default.           |
+| TELEMETRY_REPLAYS_ON_ERROR_SAMPLE_RATE | `0.0`                              |          | Replay capture on error. Off by default.                               |
+
 ## Redis
 
 Redis can improve application performance by functioning as an in-memory key-value store for cached data.  To configure a redis connection:
