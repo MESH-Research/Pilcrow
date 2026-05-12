@@ -3,6 +3,8 @@ server {
     server_name _;
     root /var/www/html;
 
+    set $expose_sourcemaps "${EXPOSE_SOURCEMAPS}";
+
     add_header X-Frame-Options "SAMEORIGIN";
     add_header X-XSS-Protection "1; mode=block";
     add_header X-Content-Type-Options "nosniff";
@@ -22,6 +24,32 @@ server {
     location /sanctum/csrf-cookie {
         log_not_found off;
         try_files /dev/null @backend;
+    }
+
+    location ~* \.js\.map$ {
+        if ($expose_sourcemaps != "true") {
+            return 404;
+        }
+        try_files $uri =404;
+    }
+
+    location ~* \.js$ {
+        # nginx wipes inherited add_header at any level that declares its own.
+        # The if-block is its own level, so we duplicate the security headers
+        # both at the location level (for the no-sourcemap branch) and inside
+        # the if (for the sourcemap-enabled branch).
+        add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+        add_header X-Content-Type-Options nosniff;
+        add_header X-Frame-Options SAMEORIGIN;
+        add_header X-XSS-Protection "1; mode=block";
+        if ($expose_sourcemaps = "true") {
+            add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+            add_header X-Content-Type-Options nosniff;
+            add_header X-Frame-Options SAMEORIGIN;
+            add_header X-XSS-Protection "1; mode=block";
+            add_header SourceMap "$uri.map" always;
+        }
+        try_files $uri @backend;
     }
 
     location / {
