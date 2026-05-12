@@ -5,7 +5,8 @@ type User {
     id: ID!
     display_label: String
     name: String
-    email: String!
+    email: String @redactIfDenied(ability: "viewEmail")
+    avatar_color: String! @deprecated(reason: "Temporary placeholder for stable avatar colors; will be removed when user-uploaded avatars are introduced.")
     username: String!
     created_at: DateTimeUtc!
     updated_at: DateTimeUtc

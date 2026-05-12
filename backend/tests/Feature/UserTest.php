@@ -155,4 +155,28 @@ class UserTest extends TestCase
         $this->assertNotEmpty($username2);
         $this->assertNotEquals($username1, $username2);
     }
+
+    /**
+     * @return void
+     */
+    public function testAvatarColorMatchesLegacyClientHash(): void
+    {
+        // Legacy client-side hash of "test@meshresearch.net" yields index 6
+        // (purple) within the colors list. Backend must produce the same value
+        // so existing avatars stay stable now that emails are not exposed.
+        $user = User::factory()->create(['email' => 'test@meshresearch.net']);
+        $this->assertSame('purple', $user->avatar_color);
+    }
+
+    /**
+     * @return void
+     */
+    public function testAvatarColorIsOneOfKnownColors(): void
+    {
+        $user = User::factory()->create(['email' => 'colors@example.test']);
+        $this->assertContains($user->avatar_color, [
+            'blue', 'cyan', 'green', 'magenta', 'orange',
+            'pine', 'purple', 'red', 'yellow',
+        ]);
+    }
 }

@@ -347,20 +347,37 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Scope to search users by name, username, or email.
+     * Deterministic avatar color name derived from the user's email (or id
+     * when no email is set). Mirrors the legacy client-side hash so existing
+     * avatars remain stable while emails are no longer exposed publicly.
      *
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param mixed $search
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return string
      */
-    public function scopeSearch(Builder $query, mixed $search): Builder
+    public function getAvatarColorAttribute(): string
     {
-        if (!empty($search)) {
-            $query->where('name', 'like', "%{$search}%")
-                ->orWhere('username', 'like', "%{$search}%")
-                ->orWhere('email', 'like', "%{$search}%");
+        $colors = [
+            'blue',
+            'cyan',
+            'green',
+            'magenta',
+            'orange',
+            'pine',
+            'purple',
+            'red',
+            'yellow',
+        ];
+
+        $seed = $this->attributes['email'] ?? (string)$this->attributes['id'];
+
+        $hash = 0;
+        $len = strlen($seed);
+        for ($i = 0; $i < $len; $i++) {
+            $hash = (($hash << 5) - $hash + ord($seed[$i])) & 0xFFFFFFFF;
+            if ($hash & 0x80000000) {
+                $hash -= 0x100000000;
+            }
         }
 
-        return $query;
+        return $colors[abs($hash) % count($colors)];
     }
 }

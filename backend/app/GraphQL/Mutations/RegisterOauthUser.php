@@ -8,6 +8,7 @@ use App\Models\User;
 use Exception;
 use GraphQL\Error\Error;
 use Illuminate\Support\Facades\Auth;
+use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 
 final readonly class RegisterOauthUser
 {
@@ -16,7 +17,7 @@ final readonly class RegisterOauthUser
      * @param array{} $args
      * @return array
      */
-    public function register(null $_, array $args)
+    public function register(null $_, array $args, GraphQLContext $context)
     {
         try {
             $user = User::create([
@@ -32,6 +33,10 @@ final readonly class RegisterOauthUser
             ]);
 
             Auth::guard('web')->login($user);
+
+            // Sync the Lighthouse context so @redactIfDenied resolvers (e.g.
+            // on User.email) see the freshly authenticated viewer.
+            $context->setUser($user);
 
             return $user;
         } catch (Exception $e) {

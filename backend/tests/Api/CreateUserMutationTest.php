@@ -127,7 +127,9 @@ class CreateUserMutationTest extends ApiTestCase
         if ($failure) {
             $this->assertMatchesRegularExpression($failure, $response->json('errors.0.message'));
         } else {
-            $response->assertJsonPath('data.createUser.email', $email);
+            // Email is redacted in the response for unauthenticated callers,
+            // so verify the record was persisted with the expected email instead.
+            $this->assertNotNull(User::where('email', $email)->first());
         }
     }
 
