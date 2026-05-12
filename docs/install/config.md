@@ -54,8 +54,8 @@ the JS, so production users never download maps. Maps can be exposed on a
 per-instance basis (e.g. to debug a hot-reproducing issue on a staging or
 canary node) by toggling a single env var on the client container.
 
-| Parameter         | Example / Default                  | Required | Description                                                            |
-| ----------------- | ---------------------------------- | -------- | ---------------------------------------------------------------------- |
+| Parameter         | Example / Default                  | Required | Description                                                                                                                                                                                                                    |
+|-------------------|------------------------------------|----------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | EXPOSE_SOURCEMAPS | `false`                            |          | When `true`, nginx serves `.js.map` files and adds a `SourceMap` response header on `.js` so browser devtools can fetch the matching map. Defaults to `true` when `APP_ENV` is `local`/`dev`/`development`, otherwise `false`. |
 
 ## Redis

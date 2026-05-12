@@ -5,6 +5,11 @@ server {
 
     set $expose_sourcemaps "${EXPOSE_SOURCEMAPS}";
 
+    # Merge add_header values from this level into any nested locations
+    # that declare their own (nginx 1.29.3+). Without this, a location
+    # adding any add_header would lose all of these. See `.js` block.
+    add_header_inherit merge;
+
     add_header X-Frame-Options "SAMEORIGIN";
     add_header X-XSS-Protection "1; mode=block";
     add_header X-Content-Type-Options "nosniff";
@@ -34,17 +39,10 @@ server {
     }
 
     location ~* \.js$ {
-        # Server-level add_header directives don't inherit into a location
-        # that declares its own, so re-declare the security headers here.
-        add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
-        add_header X-Content-Type-Options nosniff;
-        add_header X-Frame-Options SAMEORIGIN;
-        add_header X-XSS-Protection "1; mode=block";
-
-        # Conditional SourceMap header without nesting add_header inside `if`
-        # (which would create a sub-context that wipes the security headers
-        # above). Instead, set the value conditionally — nginx omits the
-        # header entirely when the value evaluates to an empty string.
+        # Conditional SourceMap header: nginx omits the header entirely
+        # when the value evaluates to an empty string, so we set the value
+        # via `if` rather than nesting add_header inside it. Server-level
+        # security headers are picked up via `add_header_inherit merge`.
         set $sourcemap_url "";
         if ($expose_sourcemaps = "true") {
             set $sourcemap_url "$uri.map";
