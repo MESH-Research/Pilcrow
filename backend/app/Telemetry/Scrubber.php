@@ -55,10 +55,10 @@ class Scrubber
      * @param mixed  $event  Sentry\Event instance (typed loosely so the class
      *                        can be referenced from config before the package is
      *                        installed).
-     * @param mixed  $hint
+     * @param mixed  $_hint
      * @return mixed
      */
-    public static function beforeSend($event, $hint = null)
+    public static function beforeSend($event, $_hint = null)
     {
         if (! is_object($event) || ! method_exists($event, 'getRequest')) {
             return $event;
@@ -84,12 +84,12 @@ class Scrubber
      * scrubber on transaction payloads (performance traces).
      *
      * @param mixed  $event  Sentry\Event instance (Transaction).
-     * @param mixed  $hint
+     * @param mixed  $_hint
      * @return mixed
      */
-    public static function beforeSendTransaction($event, $hint = null)
+    public static function beforeSendTransaction($event, $_hint = null)
     {
-        return self::beforeSend($event, $hint);
+        return self::beforeSend($event, $_hint);
     }
 
     /**

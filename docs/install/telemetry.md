@@ -85,7 +85,7 @@ self-hosted target. Production: deploy via the upstream Helm chart or
 
 For local Pilcrow development, stand up GlitchTip yourself via its upstream
 install (docker-compose or helm) and point `TELEMETRY_DSN` at it. See
-[`tools/glitchtip/README.md`](../../tools/glitchtip/README.md) for the
+[`tools/glitchtip/README.md`](https://github.com/MESH-Research/Pilcrow/blob/master/tools/glitchtip/README.md) for the
 local-dev workflow including the two-DSN split (`TELEMETRY_DSN` /
 `TELEMETRY_DSN_PUBLIC`) used when the Laravel container and the browser reach
 GlitchTip via different hostnames.
