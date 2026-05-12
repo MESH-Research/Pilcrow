@@ -2,13 +2,10 @@ import js from "@eslint/js"
 import globals from "globals"
 import pluginVue from "eslint-plugin-vue"
 import pluginQuasar from "@quasar/app-vite/eslint"
-import lodash from "lodash"
 import tseslint from "typescript-eslint"
 // the following is optional, if you want prettier too:
 import prettierSkipFormatting from "@vue/eslint-config-prettier"
-import pluginCypress from "eslint-plugin-cypress"
 import vueParser from "vue-eslint-parser"
-const { merge } = lodash
 const config = [
   {
     ignores: ["src/graphql/generated/"]
@@ -116,26 +113,6 @@ const config = [
       "@typescript-eslint/no-unused-vars": ["error", { caughtErrors: "none" }],
       "@typescript-eslint/no-explicit-any": "off"
     }
-  },
-  {
-    files: ["test/cypress/**/*.{js,mjs,cjs}"],
-    ...merge(pluginCypress.configs.recommended, {
-      ignores: ["test/cypress/support/**/*.{js,mjs,cjs}"],
-      languageOptions: {
-        sourceType: "commonjs",
-        globals: {
-          ...globals.node
-        }
-      }
-    })
-  },
-  {
-    files: ["test/cypress/support/**/*.{js,mjs,cjs}"],
-    ...merge(pluginCypress.configs.recommended, {
-      languageOptions: {
-        sourceType: "module"
-      }
-    })
   },
   {
     files: ["src-pwa/custom-service-worker.js"],

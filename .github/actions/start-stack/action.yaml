@@ -14,6 +14,7 @@ runs:
               cp docker-compose.ci.yaml docker-compose.override.yaml
               docker compose up -d --quiet-pull
               docker compose exec -T phpfpm composer install --quiet
+              docker compose exec -T -u root phpfpm bash -c "printf '[client]\nssl-verify-server-cert = false\n' > /etc/mysql/conf.d/no-ssl-verify.cnf"
               docker compose exec -T phpfpm bash -c "/wait && ./artisan migrate:fresh --seed"
           env:
             TAG: ${{ inputs.version }}
