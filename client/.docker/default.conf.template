@@ -34,21 +34,23 @@ server {
     }
 
     location ~* \.js$ {
-        # nginx wipes inherited add_header at any level that declares its own.
-        # The if-block is its own level, so we duplicate the security headers
-        # both at the location level (for the no-sourcemap branch) and inside
-        # the if (for the sourcemap-enabled branch).
+        # Server-level add_header directives don't inherit into a location
+        # that declares its own, so re-declare the security headers here.
         add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
         add_header X-Content-Type-Options nosniff;
         add_header X-Frame-Options SAMEORIGIN;
         add_header X-XSS-Protection "1; mode=block";
+
+        # Conditional SourceMap header without nesting add_header inside `if`
+        # (which would create a sub-context that wipes the security headers
+        # above). Instead, set the value conditionally — nginx omits the
+        # header entirely when the value evaluates to an empty string.
+        set $sourcemap_url "";
         if ($expose_sourcemaps = "true") {
-            add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
-            add_header X-Content-Type-Options nosniff;
-            add_header X-Frame-Options SAMEORIGIN;
-            add_header X-XSS-Protection "1; mode=block";
-            add_header SourceMap "$uri.map" always;
+            set $sourcemap_url "$uri.map";
         }
+        add_header SourceMap $sourcemap_url always;
+
         try_files $uri @backend;
     }
 
