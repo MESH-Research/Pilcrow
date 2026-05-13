@@ -27,6 +27,7 @@
     "@apollo/client": "^3.7.2",
     "@quasar/extras": "^1.15.8",
     "@quasar/quasar-ui-qiconpicker": "^2.0.6",
+    "@sentry/vue": "^8.55.0",
     "@tiptap/extension-highlight": "^2.0.3",
     "@tiptap/extension-link": "^2.0.3",
     "@tiptap/extension-placeholder": "^2.0.3",

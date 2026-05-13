@@ -10,7 +10,11 @@ import {
   beforeEachRequiresReviewAccess,
   beforeEachRequiresExportAccess
 } from "src/apollo/apollo-router-guards"
-import { withXsrfLink, expiredTokenLink } from "src/apollo/apollo-links"
+import {
+  withXsrfLink,
+  expiredTokenLink,
+  telemetryErrorLink
+} from "src/apollo/apollo-links"
 import { createApolloProvider } from "@vue/apollo-option"
 
 import { ApolloClients } from "@vue/apollo-composable"
@@ -28,7 +32,12 @@ const httpLink = ApolloLink.split(
 
 export default defineBoot(async ({ app, router }) => {
   const apolloClient = new ApolloClient({
-    link: ApolloLink.from([expiredTokenLink, withXsrfLink, httpLink]),
+    link: ApolloLink.from([
+      telemetryErrorLink,
+      expiredTokenLink,
+      withXsrfLink,
+      httpLink
+    ]),
     cache: new InMemoryCache({
       possibleTypes: {
         Comment: [

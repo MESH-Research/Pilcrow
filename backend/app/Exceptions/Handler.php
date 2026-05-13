@@ -33,6 +33,10 @@ class Handler extends ExceptionHandler
      */
     public function register()
     {
+        // The sentry/sentry-laravel package auto-registers a reportable
+        // handler via package discovery. It reads config/sentry.php and
+        // becomes a no-op when the DSN is unset (i.e. TELEMETRY_ENABLED=false
+        // or TELEMETRY_DSN empty). No explicit wiring needed here.
         $this->reportable(function (Throwable $e) {
             //
         });
