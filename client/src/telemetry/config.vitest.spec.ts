@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it } from "vitest"
-import { isSensitiveOperation, readTelemetryConfig, scrub } from "./config"
+import { readTelemetryConfig, scrub } from "./config"
 
 const setCfg = (cfg: unknown) => {
   ;(window as unknown as { __TELEMETRY_CONFIG?: unknown }).__TELEMETRY_CONFIG =
@@ -57,40 +57,38 @@ describe("readTelemetryConfig", () => {
 describe("scrub", () => {
   it("redacts sensitive keys at any depth, case-insensitively", () => {
     const out = scrub({
-      Email: "u@x.com",
-      headers: { Authorization: "Bearer x", "User-Agent": "pilcrow" },
-      nested: [{ password: "p", ok: 1 }]
+      Password: "p",
+      input: { content: "manuscript body", id: "1" },
+      nested: [{ token: "t", code: "c", ok: 1 }]
     }) as Record<string, unknown>
 
-    expect(out.Email).toBe("[Filtered]")
-    expect((out.headers as Record<string, string>).Authorization).toBe(
-      "[Filtered]"
-    )
-    expect((out.headers as Record<string, string>)["User-Agent"]).toBe(
-      "pilcrow"
-    )
-    expect((out.nested as Array<Record<string, unknown>>)[0]!.password).toBe(
-      "[Filtered]"
-    )
-    expect((out.nested as Array<Record<string, unknown>>)[0]!.ok).toBe(1)
+    expect(out.Password).toBe("[Filtered]")
+    const input = out.input as Record<string, unknown>
+    expect(input.content).toBe("[Filtered]")
+    expect(input.id).toBe("1")
+    const nested = (out.nested as Array<Record<string, unknown>>)[0]!
+    expect(nested.token).toBe("[Filtered]")
+    expect(nested.code).toBe("[Filtered]")
+    expect(nested.ok).toBe(1)
+  })
+
+  it("leaves non-sensitive keys untouched", () => {
+    const out = scrub({
+      email: "u@x.com",
+      submission_id: "42",
+      from: 0,
+      to: 10
+    }) as Record<string, unknown>
+
+    expect(out.email).toBe("u@x.com")
+    expect(out.submission_id).toBe("42")
+    expect(out.from).toBe(0)
+    expect(out.to).toBe(10)
   })
 
   it("returns primitives unchanged", () => {
     expect(scrub(42)).toBe(42)
     expect(scrub("hello")).toBe("hello")
     expect(scrub(null)).toBe(null)
-  })
-})
-
-describe("isSensitiveOperation", () => {
-  it("flags free-text content mutations", () => {
-    expect(isSensitiveOperation("UpdateSubmissionContent")).toBe(true)
-    expect(isSensitiveOperation("CreateInlineComment")).toBe(true)
-    expect(isSensitiveOperation("SubmitReview")).toBe(true)
-  })
-
-  it("does not flag benign reads", () => {
-    expect(isSensitiveOperation("CurrentUser")).toBe(false)
-    expect(isSensitiveOperation(undefined)).toBe(false)
   })
 })

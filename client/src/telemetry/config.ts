@@ -13,32 +13,14 @@ declare global {
   }
 }
 
-const SENSITIVE_OPERATIONS = new Set([
-  "UpdateSubmissionContent",
-  "CreateInlineComment",
-  "CreateOverallComment",
-  "UpdateInlineComment",
-  "UpdateOverallComment",
-  "SubmitReview",
-  "UpdateReview"
-])
-
+// Names of GraphQL variables that carry secrets or confidentiality-regime
+// content (manuscript text, review comments). Field-level redaction is
+// preferred over dropping entire mutation variables so non-sensitive context
+// like ids, ranges, and style criteria stays available for triage.
 const SENSITIVE_KEYS = new Set([
   "password",
-  "password_confirmation",
-  "current_password",
   "token",
-  "access_token",
-  "refresh_token",
-  "api_key",
-  "authorization",
-  "cookie",
-  "x-xsrf-token",
-  "email",
-  "phone",
-  "submission_content",
-  "manuscript",
-  "body",
+  "code",
   "content"
 ])
 
@@ -47,10 +29,6 @@ export function readTelemetryConfig(): TelemetryConfig | null {
   const cfg = window.__TELEMETRY_CONFIG
   if (!cfg || !cfg.enabled || !cfg.dsn) return null
   return cfg
-}
-
-export function isSensitiveOperation(name: unknown): boolean {
-  return typeof name === "string" && SENSITIVE_OPERATIONS.has(name)
 }
 
 export function scrub<T>(value: T): T {

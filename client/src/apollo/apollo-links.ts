@@ -2,7 +2,7 @@ import { onError } from "@apollo/client/link/error"
 import { Cookies } from "quasar"
 import { setContext } from "@apollo/client/link/context"
 import { Observable } from "@apollo/client/core"
-import { isSensitiveOperation, readTelemetryConfig } from "src/telemetry/config"
+import { readTelemetryConfig, scrub } from "src/telemetry/config"
 
 const cookieXsrfToken = () => Cookies.get("XSRF-TOKEN")
 
@@ -88,14 +88,11 @@ const telemetryErrorLink = onError(
 
     const opName = operation?.operationName
     const tags = { operation: opName ?? "unknown" }
-    const omitVariables = isSensitiveOperation(opName)
 
     void import("@sentry/vue").then((Sentry) => {
       Sentry.withScope((scope) => {
         scope.setTag("graphql.operation", tags.operation)
-        if (!omitVariables) {
-          scope.setExtra("graphql.variables", operation?.variables)
-        }
+        scope.setExtra("graphql.variables", scrub(operation?.variables))
         if (graphQLErrors?.length) {
           for (const err of graphQLErrors) {
             Sentry.captureException(err)
