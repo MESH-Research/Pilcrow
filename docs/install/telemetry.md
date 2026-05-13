@@ -79,9 +79,3 @@ and the browser reach the endpoint via different hostnames (e.g. a
 container-internal hostname vs. a host-side proxy). When unset, the browser
 uses `TELEMETRY_DSN` directly.
 
-## Disabling telemetry per environment
-
-Set `TELEMETRY_ENABLED=false` (or unset `TELEMETRY_DSN`). The next request
-will inject `enabled: false` and the browser SDK will not be imported at all
-(it is dynamically imported only when needed).
-
