@@ -69,7 +69,7 @@ import {
 import { computed, ref } from "vue"
 import type { DocumentNode } from "graphql"
 import { useI18nPrefix } from "src/use/i18nPrefix"
-import type { Publication } from "src/graphql/generated/graphql"
+import type { Publication, User } from "src/graphql/generated/graphql"
 
 interface Props {
   container: Publication
@@ -145,7 +145,7 @@ async function handleSubmit() {
   }
 }
 
-async function handleUserListClick({ user }: { user: FoundUser }) {
+async function handleUserListClick({ user }: { user: User }) {
   if (!props.mutable) return
   try {
     await mutate({ disconnect: [user.id] })

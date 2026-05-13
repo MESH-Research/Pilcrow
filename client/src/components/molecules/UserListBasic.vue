@@ -20,6 +20,7 @@ interface User extends avatarImageFragment {
   id?: string | null
   name?: string | null
   username?: string | null
+  email?: string | null
 }
 
 interface Props {

@@ -65,6 +65,18 @@ contract and scrubber rules.
 | TELEMETRY_REPLAYS_SESSION_SAMPLE_RATE  | `0.0`                              |          | Browser session replay (masked) sample rate. Off by default.                                                                                                                                                                                                                 |
 | TELEMETRY_REPLAYS_ON_ERROR_SAMPLE_RATE | `0.0`                              |          | Replay capture on error. Off by default.                                                                                                                                                                                                                                     |
 
+## Source Maps
+
+The client image is built with hidden source maps: `.map` files are emitted
+alongside the bundle but the `//# sourceMappingURL=` comment is stripped from
+the JS, so production users never download maps. Maps can be exposed on a
+per-instance basis (e.g. to debug a hot-reproducing issue on a staging or
+canary node) by toggling a single env var on the client container.
+
+| Parameter         | Example / Default                  | Required | Description                                                                                                                                                                                                                    |
+|-------------------|------------------------------------|----------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| EXPOSE_SOURCEMAPS | `false`                            |          | When `true`, nginx serves `.js.map` files and adds a `SourceMap` response header on `.js` so browser devtools can fetch the matching map. Defaults to `true` when `APP_ENV` is `local`/`dev`/`development`, otherwise `false`. |
+
 ## Redis
 
 Redis can improve application performance by functioning as an in-memory key-value store for cached data.  To configure a redis connection:

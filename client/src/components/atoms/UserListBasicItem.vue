@@ -29,6 +29,7 @@ import type { avatarImageFragment } from "src/graphql/generated/graphql"
 interface User extends avatarImageFragment {
   name?: string | null
   username?: string | null
+  email?: string | null
 }
 
 interface Props {

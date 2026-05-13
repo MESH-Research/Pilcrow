@@ -50,6 +50,7 @@ describe("useCurrentUser composable", () => {
           name: "Hello",
           email: "hello@example.com",
           username: "helloUser",
+          avatar_color: "blue",
           email_verified_at: "2021-08-14 02:26:32",
           highest_privileged_role: UserRoles.application_admin,
           roles: [{ name: "tester" }]

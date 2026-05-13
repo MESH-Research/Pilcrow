@@ -888,9 +888,10 @@ scalar Upload
 
 """A user account"""
 type User {
+  avatar_color: String! @deprecated(reason: "Temporary placeholder for stable avatar colors; will be removed when user-uploaded avatars are introduced.")
   created_at: DateTime!
   display_label: String
-  email: String!
+  email: String
   email_verified_at: DateTime
   highest_privileged_role: UserRoles
   id: ID!

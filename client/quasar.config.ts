@@ -50,6 +50,7 @@ export default defineConfig(function (/* ctx */) {
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#build
     build: {
+      sourcemap: "hidden",
       typescript: {
         strict: false,
         vueShim: true,
