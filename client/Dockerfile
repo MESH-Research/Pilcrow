@@ -1,4 +1,4 @@
-ARG NGINX_VERSION=1.29.0-bookworm
+ARG NGINX_VERSION=1.29.8-trixie
 ARG NODE_VERSION=22
 ARG VERSION
 ARG VERSION_URL
@@ -51,3 +51,5 @@ FROM nginx:${NGINX_VERSION} AS nginx
 
 COPY --from=build-stage /app/dist/spa /var/www/html
 COPY .docker/default.conf.template /etc/nginx/templates/default.conf.template
+COPY .docker/10-default-expose-sourcemaps.envsh /docker-entrypoint.d/10-default-expose-sourcemaps.envsh
+RUN chmod +x /docker-entrypoint.d/10-default-expose-sourcemaps.envsh
