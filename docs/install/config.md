@@ -52,7 +52,7 @@ Error reporting is **disabled by default**. When enabled, the application sends
 runtime errors (server and browser) to a Sentry-compatible endpoint. No
 telemetry leaves the installation unless `TELEMETRY_ENABLED=true` *and*
 `TELEMETRY_DSN` is set. See [Telemetry](./telemetry.md) for the full data
-contract, scrubber rules, and self-host (GlitchTip) recipe.
+contract and scrubber rules.
 
 | Parameter                              | Example / Default                  | Required | Description                                                                                                                                                                                                                                                                  |
 |----------------------------------------|------------------------------------|----------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|

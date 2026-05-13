@@ -5,9 +5,11 @@ frontend to any Sentry-compatible endpoint. Telemetry is **off by default**.
 The browser SDK is dynamically imported only when the master switch is on, so
 disabled installations never download it.
 
-This page covers what gets reported, what is scrubbed, and how to enable a
-self-hosted [GlitchTip](https://glitchtip.com) instance or a Sentry SaaS
-project.
+This page covers what gets reported, what is scrubbed, and how to point
+Pilcrow at a Sentry-compatible endpoint. Setting up that endpoint itself
+(self-hosted [GlitchTip](https://glitchtip.com), Sentry SaaS, or anything
+else speaking the Sentry ingest protocol) is out of scope for these docs —
+follow the upstream install for whichever target you pick.
 
 ## What is reported
 
@@ -17,29 +19,23 @@ When enabled:
   HTTP request path/method (headers and request body scrubbed).
 - **Unhandled errors and promise rejections** in the browser — stack trace,
   route, URL.
-- **GraphQL operation errors** — operation name, error message, and (for
-  operations that don't carry free-text content) the variables.
+- **GraphQL operation errors** — operation name, error message, and the
+  variables (with sensitive fields redacted; see below).
 - **Performance traces and browser session replays** only when explicitly
   sampled above zero. Both are off by default.
 
 ## What is *not* reported
 
-The scrubber filters the following before any payload leaves the application,
-case-insensitively at every nesting depth:
+The scrubber redacts the following keys before any payload leaves the
+application, case-insensitively at every nesting depth:
 
-- `password`, `password_confirmation`, `current_password`
-- `token`, `access_token`, `refresh_token`, `api_key`, `remember_token`
-- `authorization`, `cookie`, `set-cookie`, `x-xsrf-token`, `xsrf-token`
-- `email`, `email_address`, `phone`
-- `submission_content`, `manuscript`, `body`, `content`
+- `password` — login + password reset variables
+- `token` — email verify, password reset, and submission invite tokens
+- `code` — OAuth authorization codes
+- `content` — manuscript content and inline / overall comment text
 
-GraphQL variables for the following operations are dropped wholesale because
-they contain unpublished manuscript text or reviewer commentary:
-
-- `UpdateSubmissionContent`
-- `CreateInlineComment` / `UpdateInlineComment`
-- `CreateOverallComment` / `UpdateOverallComment`
-- `SubmitReview` / `UpdateReview`
+Other variables (ids, ranges, style criteria, etc.) are kept so triage has
+enough context to reproduce.
 
 Session replays mask all text, mask all inputs, and block all media by default.
 
@@ -76,24 +72,12 @@ docker compose exec backend php artisan config:cache
 The DSN value is injected into the SPA at runtime via `window.__TELEMETRY_CONFIG`,
 so no client rebuild is required when the DSN rotates.
 
-## Recipe: self-hosted GlitchTip
+## Two-DSN split
 
-GlitchTip implements the Sentry ingestion protocol and is the recommended
-self-hosted target. Production: deploy via the upstream Helm chart or
-[`docker-compose.yaml`](https://glitchtip.com/documentation/install), point
-`TELEMETRY_DSN` at the resulting endpoint, done.
-
-For local Pilcrow development, stand up GlitchTip yourself via its upstream
-install (docker-compose or helm) and point `TELEMETRY_DSN` at it. See
-[`tools/glitchtip/README.md`](https://github.com/MESH-Research/Pilcrow/blob/master/tools/glitchtip/README.md) for the
-local-dev workflow including the two-DSN split (`TELEMETRY_DSN` /
-`TELEMETRY_DSN_PUBLIC`) used when the Laravel container and the browser reach
-GlitchTip via different hostnames.
-
-## Recipe: Sentry SaaS
-
-Create a project in [sentry.io](https://sentry.io) of platform "Laravel"
-(server) — the same DSN is reused by the Vue SDK. No code changes needed.
+`TELEMETRY_DSN_PUBLIC` is optional and only needed when the Laravel container
+and the browser reach the endpoint via different hostnames (e.g. a
+container-internal hostname vs. a host-side proxy). When unset, the browser
+uses `TELEMETRY_DSN` directly.
 
 ## Disabling telemetry per environment
 
@@ -101,8 +85,3 @@ Set `TELEMETRY_ENABLED=false` (or unset `TELEMETRY_DSN`). The next request
 will inject `enabled: false` and the browser SDK will not be imported at all
 (it is dynamically imported only when needed).
 
-## Roadmap
-
-Behavioural analytics (page views, feature usage) is **not** in this PR. That
-work belongs in a separate change with explicit consent UX and an admin opt-in
-toggle — see the project README for the planned PR sequence.
