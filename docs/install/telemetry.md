@@ -39,9 +39,6 @@ enough context to reproduce.
 
 Session replays mask all text, mask all inputs, and block all media by default.
 
-User identity is reported as the **internal user ID and role tag only** —
-never email, name, or affiliation.
-
 ## Enabling it
 
 Set in your `.env`:
