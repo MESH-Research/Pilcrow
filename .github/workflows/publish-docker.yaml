@@ -50,18 +50,14 @@ jobs:
           SENTRY_URL: ${{ secrets.GLITCHTIP_URL }}
           SENTRY_ORG: ${{ secrets.GLITCHTIP_ORG }}
           SENTRY_PROJECT: ${{ secrets.GLITCHTIP_PROJECT }}
-          VERSION: ${{ steps.build-image.outputs.version }}
           BUNDLE: ${{ steps.build-image.outputs.frontend-bundle }}
         run: |
+          VERSION=$(git describe --tags --match 'v*')
+          echo "Resolved release version: $VERSION"
           mkdir -p /tmp/sourcemap-extract
           tar -xzf "$BUNDLE" -C /tmp/sourcemap-extract
-          SPA_DIR=$(find /tmp/sourcemap-extract -type d -name spa | head -n1)
-          if [ -z "$SPA_DIR" ]; then
-            echo "No spa directory found in bundle" >&2
-            exit 1
-          fi
-          MAP_COUNT=$(find "$SPA_DIR" -name '*.map' | wc -l)
-          echo "Found $MAP_COUNT sourcemap files under $SPA_DIR"
+          MAP_COUNT=$(find /tmp/sourcemap-extract -name '*.map' | wc -l)
+          echo "Found $MAP_COUNT sourcemap files in bundle"
           if [ "$MAP_COUNT" -eq 0 ]; then
             echo "No sourcemaps to upload; skipping."
             exit 0
@@ -69,4 +65,4 @@ jobs:
           npx --yes @sentry/cli@^2 sourcemaps upload \
             --release "pilcrow-client@${VERSION}" \
             --url-prefix '~/' \
-            "$SPA_DIR"
+            /tmp/sourcemap-extract
