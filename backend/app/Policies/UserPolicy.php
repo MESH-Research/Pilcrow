@@ -13,6 +13,15 @@ class UserPolicy
     use HandlesAuthorization;
 
     /**
+     * Determine whether the viewer can list user accounts via the top-level
+     * users query. Restricted to application administrators.
+     */
+    public function viewAny(User $viewer): bool
+    {
+        return $viewer->hasRole(Role::APPLICATION_ADMINISTRATOR);
+    }
+
+    /**
      * Determine whether the viewer can fetch another user's record via the
      * top-level user(id) query. Restricted to application administrators.
      */

@@ -22,7 +22,16 @@ export default defineBoot(async ({ app, router }) => {
     replaysOnErrorSampleRate: cfg.replaysOnErrorSampleRate,
     sendDefaultPii: false,
     integrations: [
-      Sentry.browserTracingIntegration({ router }),
+      // Sentry's browserTracingIntegration declares its own narrow VueRouter
+      // shape (params: Record<string, string | string[]>). With typed routes
+      // enabled via unplugin-vue-router, Quasar's Router exposes params as
+      // GenericParams (string | number), so the structural types diverge even
+      // though the runtime contract is satisfied.
+      Sentry.browserTracingIntegration({
+        router: router as unknown as Parameters<
+          typeof Sentry.browserTracingIntegration
+        >[0]["router"]
+      }),
       Sentry.replayIntegration({
         maskAllText: true,
         maskAllInputs: true,
