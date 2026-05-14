@@ -21,6 +21,17 @@ return [
     'banner_class' => env('APP_BANNER_CLASS'),
     'banner_link' => env('APP_BANNER_LINK'),
 
+    'telemetry' => [
+        'enabled' => (bool) env('TELEMETRY_ENABLED', false),
+        'dsn' => env('TELEMETRY_DSN'),
+        'public_dsn' => env('TELEMETRY_DSN_PUBLIC', env('TELEMETRY_DSN')),
+        'environment' => env('TELEMETRY_ENVIRONMENT', env('APP_ENV', 'production')),
+        'release' => env('TELEMETRY_RELEASE'),
+        'traces_sample_rate' => (float) env('TELEMETRY_TRACES_SAMPLE_RATE', 0.0),
+        'replays_session_sample_rate' => (float) env('TELEMETRY_REPLAYS_SESSION_SAMPLE_RATE', 0.0),
+        'replays_on_error_sample_rate' => (float) env('TELEMETRY_REPLAYS_ON_ERROR_SAMPLE_RATE', 0.0),
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Application Environment
@@ -136,6 +147,7 @@ return [
         App\Providers\FakerServiceProvider::class,
         App\Providers\InstallationServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        App\Providers\TelemetryServiceProvider::class,
         Laravel\Scout\ScoutServiceProvider::class,
         Nuwave\Lighthouse\Scout\ScoutServiceProvider::class,
         OwenIt\Auditing\AuditingServiceProvider::class,

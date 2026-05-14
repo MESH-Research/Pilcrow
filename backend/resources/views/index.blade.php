@@ -26,6 +26,15 @@
     @endif
     @php($appBanner = ['text' => config('app.banner_text'), 'class' => config('app.banner_class'), 'link' => config('app.banner_link')])
     window.__APP_BANNER = @json($appBanner);
+    @php($telemetry = [
+      'enabled' => (bool) config('app.telemetry.enabled') && filled(config('app.telemetry.public_dsn') ?? config('app.telemetry.dsn')),
+      'dsn' => config('app.telemetry.enabled') ? (config('app.telemetry.public_dsn') ?? config('app.telemetry.dsn')) : null,
+      'environment' => config('app.telemetry.environment'),
+      'tracesSampleRate' => (float) config('app.telemetry.traces_sample_rate'),
+      'replaysSessionSampleRate' => (float) config('app.telemetry.replays_session_sample_rate'),
+      'replaysOnErrorSampleRate' => (float) config('app.telemetry.replays_on_error_sample_rate'),
+    ])
+    window.__TELEMETRY_CONFIG = @json($telemetry);
   </script>
   @env('local', 'development', 'dev')
     @vite_dev_scripts

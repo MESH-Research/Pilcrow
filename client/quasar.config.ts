@@ -29,7 +29,7 @@ export default defineConfig(function (/* ctx */) {
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
     // https://v2.quasar.dev/quasar-cli/boot-files
-    boot: ["i18n", "vue-apollo"],
+    boot: ["telemetry", "i18n", "vue-apollo"],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css
     css: ["app.sass"],
@@ -51,6 +51,7 @@ export default defineConfig(function (/* ctx */) {
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#build
     build: {
+      sourcemap: "hidden",
       typescript: {
         strict: false,
         vueShim: true,

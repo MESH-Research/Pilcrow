@@ -43,3 +43,26 @@ jobs:
         run: |
           gh release upload ${{ github.ref_name }} \
             ${{ steps.build-image.outputs.frontend-bundle }}
+      - name: Upload sourcemaps to GlitchTip
+        if: steps.build-image.outputs.frontend-bundle != ''
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.GLITCHTIP_AUTH_TOKEN }}
+          SENTRY_URL: ${{ secrets.GLITCHTIP_URL }}
+          SENTRY_ORG: ${{ secrets.GLITCHTIP_ORG }}
+          SENTRY_PROJECT: ${{ secrets.GLITCHTIP_PROJECT }}
+          BUNDLE: ${{ steps.build-image.outputs.frontend-bundle }}
+        run: |
+          VERSION=$(git describe --tags --match 'v*')
+          echo "Resolved release version: $VERSION"
+          mkdir -p /tmp/sourcemap-extract
+          tar -xzf "$BUNDLE" -C /tmp/sourcemap-extract
+          MAP_COUNT=$(find /tmp/sourcemap-extract -name '*.map' | wc -l)
+          echo "Found $MAP_COUNT sourcemap files in bundle"
+          if [ "$MAP_COUNT" -eq 0 ]; then
+            echo "No sourcemaps to upload; skipping."
+            exit 0
+          fi
+          npx --yes @sentry/cli@^2 sourcemaps upload \
+            --release "pilcrow-client@${VERSION}" \
+            --url-prefix '~/' \
+            /tmp/sourcemap-extract
