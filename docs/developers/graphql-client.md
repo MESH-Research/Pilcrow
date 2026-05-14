@@ -59,7 +59,7 @@ will silently merge or overwrite their types.
 
 ### How It Works
 
-The codegen config is in `client/codegen.ts`. By default, it introspects the running backend at `http://pilcrow.lndo.site/graphql` to get the compiled schema, then generates types for all operations found in `client/src/graphql/**/*.ts`.
+The codegen config is in `client/codegen.ts`. By default, it introspects the running backend to get the compiled schema, then generates types for all operations found in `client/src/graphql/**/*.ts`. When running inside Lando the URL is derived from the container's `APP_URL` env var so it tracks renamed Lando apps; outside Lando it falls back to `http://pilcrow.lndo.site/graphql`. Set `GRAPHQL_SCHEMA` to override (URL or local file path).
 
 ### Automatic Regeneration (Dev Server)
 

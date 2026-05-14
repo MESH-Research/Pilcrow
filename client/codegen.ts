@@ -1,6 +1,11 @@
 import type { CodegenConfig } from "@graphql-codegen/cli"
 
-const schema = process.env.GRAPHQL_SCHEMA || "http://pilcrow.lndo.site/graphql"
+const landoUrl =
+  process.env.LANDO === "ON" && process.env.APP_URL
+    ? `${process.env.APP_URL}/graphql`
+    : undefined
+const schema =
+  process.env.GRAPHQL_SCHEMA || landoUrl || "http://pilcrow.lndo.site/graphql"
 
 const config: CodegenConfig = {
   schema,
