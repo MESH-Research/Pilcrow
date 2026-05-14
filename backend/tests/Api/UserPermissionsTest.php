@@ -26,6 +26,7 @@ class UserPermissionsTest extends ApiTestCase
     {
         $this->beAppAdmin();
         $test_role = Role::factory()->create(['name' => $this->test_user_role]);
+        $this->beAppAdmin();
         $user = User::factory()->create();
         $user->assignRole($this->test_user_role);
         $response = $this->graphQL(
