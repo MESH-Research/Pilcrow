@@ -18,17 +18,8 @@ export default defineBoot(async ({ app, router }) => {
     environment: cfg.environment ?? undefined,
     release,
     tracesSampleRate: cfg.tracesSampleRate,
-    replaysSessionSampleRate: cfg.replaysSessionSampleRate,
-    replaysOnErrorSampleRate: cfg.replaysOnErrorSampleRate,
     sendDefaultPii: false,
-    integrations: [
-      Sentry.browserTracingIntegration({ router }),
-      Sentry.replayIntegration({
-        maskAllText: true,
-        maskAllInputs: true,
-        blockAllMedia: true
-      })
-    ],
+    integrations: [Sentry.browserTracingIntegration({ router })],
     beforeSend(event) {
       if (event.request) event.request = scrub(event.request)
       if (event.extra) event.extra = scrub(event.extra)
