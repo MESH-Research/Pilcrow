@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace Tests\Feature;
@@ -14,7 +13,7 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
-use Sentry\Unit;
+use Tests\Support\FakeMetrics;
 use Tests\TestCase;
 
 class TelemetryMetricsEmissionTest extends TestCase
@@ -85,52 +84,5 @@ class TelemetryMetricsEmissionTest extends TestCase
         foreach ($this->metrics->calls as $call) {
             $this->assertSame([], $call['attributes'], "metric {$call['name']} leaked attributes");
         }
-    }
-}
-
-class FakeMetrics extends Metrics
-{
-    /** @var array<int, array{name: string, value: int|float, attributes: array<string,mixed>}> */
-    public array $calls = [];
-
-    public function __construct()
-    {
-        parent::__construct(true);
-    }
-
-    public function count(
-        string $name,
-        int|float $value = 1,
-        array $attributes = [],
-        ?Unit $unit = null
-    ): void {
-        $this->calls[] = ['name' => $name, 'value' => $value, 'attributes' => $attributes];
-    }
-
-    public function gauge(
-        string $name,
-        int|float $value,
-        array $attributes = [],
-        ?Unit $unit = null
-    ): void {
-        $this->calls[] = ['name' => $name, 'value' => $value, 'attributes' => $attributes];
-    }
-
-    public function distribution(
-        string $name,
-        int|float $value,
-        array $attributes = [],
-        ?Unit $unit = null
-    ): void {
-        $this->calls[] = ['name' => $name, 'value' => $value, 'attributes' => $attributes];
-    }
-
-    public function flush(): void
-    {
-    }
-
-    public function totalFor(string $name): int
-    {
-        return count(array_filter($this->calls, fn ($c) => $c['name'] === $name));
     }
 }

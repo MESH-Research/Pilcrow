@@ -1,10 +1,10 @@
 <?php
-
 declare(strict_types=1);
 
 namespace App\Telemetry;
 
 use Sentry\Unit;
+use function Sentry\traceMetrics;
 
 /**
  * Thin wrapper around the Sentry PHP SDK trace-metrics module. All methods are
@@ -12,10 +12,16 @@ use Sentry\Unit;
  */
 class Metrics
 {
+    /**
+     * @param bool $enabled when false, all emit methods short-circuit to no-ops
+     */
     public function __construct(private readonly bool $enabled)
     {
     }
 
+    /**
+     * @return bool true when telemetry is configured and metrics will be emitted
+     */
     public function isEnabled(): bool
     {
         return $this->enabled;
@@ -34,7 +40,7 @@ class Metrics
             return;
         }
 
-        \Sentry\traceMetrics()->count($name, $value, $attributes, $unit);
+        traceMetrics()->count($name, $value, $attributes, $unit);
     }
 
     /**
@@ -50,7 +56,7 @@ class Metrics
             return;
         }
 
-        \Sentry\traceMetrics()->gauge($name, $value, $attributes, $unit);
+        traceMetrics()->gauge($name, $value, $attributes, $unit);
     }
 
     /**
@@ -66,15 +72,18 @@ class Metrics
             return;
         }
 
-        \Sentry\traceMetrics()->distribution($name, $value, $attributes, $unit);
+        traceMetrics()->distribution($name, $value, $attributes, $unit);
     }
 
+    /**
+     * Flush any buffered metrics to the transport. Safe to call when disabled.
+     */
     public function flush(): void
     {
         if (! $this->enabled) {
             return;
         }
 
-        \Sentry\traceMetrics()->flush();
+        traceMetrics()->flush();
     }
 }
