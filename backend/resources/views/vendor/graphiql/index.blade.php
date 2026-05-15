@@ -78,12 +78,66 @@ use MLL\GraphiQL\GraphiQLAsset;
     });
     const explorer = GraphiQLPluginExplorer.explorerPlugin();
 
+    // Pre-seeded tab for local dev convenience: one Logout + one Login mutation
+    // per seeded role. GraphiQL's operation picker lets the user choose which
+    // to run from this single tab. Credentials match
+    // backend/database/seeders/UserSeeder.php for the standard dev seed.
+    // GraphiQL persists tab state in localStorage so this only applies on first
+    // visit; clear `graphiql:tabState` to reset.
+    const defaultTabs = [
+        {
+            query: `# Dev login mutations. Pick an operation from the play-button dropdown.
+
+mutation LoginAppAdmin {
+  login(email: "applicationAdministrator@meshresearch.net", password: "adminPassword!@#") {
+    id username email roles { name }
+  }
+}
+
+mutation LoginPubAdmin {
+  login(email: "publicationAdministrator@meshresearch.net", password: "publicationadminPassword!@#") {
+    id username email roles { name }
+  }
+}
+
+mutation LoginPubEditor {
+  login(email: "publicationEditor@meshresearch.net", password: "editorPassword!@#") {
+    id username email roles { name }
+  }
+}
+
+mutation LoginReviewCoord {
+  login(email: "reviewCoordinator@meshresearch.net", password: "coordinatorPassword!@#") {
+    id username email roles { name }
+  }
+}
+
+mutation LoginReviewer {
+  login(email: "reviewer@meshresearch.net", password: "reviewerPassword!@#") {
+    id username email roles { name }
+  }
+}
+
+mutation LoginRegularUser {
+  login(email: "regularuser@meshresearch.net", password: "regularPassword!@#") {
+    id username email roles { name }
+  }
+}
+
+mutation Logout {
+  logout { id username }
+}
+`,
+        },
+    ];
+
     function GraphiQLWithExplorer() {
         return React.createElement(GraphiQL, {
             fetcher,
             plugins: [
                 explorer,
             ],
+            defaultTabs,
         });
     }
 
