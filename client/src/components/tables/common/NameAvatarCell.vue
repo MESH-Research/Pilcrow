@@ -12,7 +12,10 @@
         </div>
       </div>
     </div>
-    <span v-else class="text-grey-8" aria-label="No user assigned"
+    <span
+      v-else
+      class="text-grey-8"
+      :aria-label="$t('admin.users.no_user_assigned')"
       >&mdash;</span
     >
   </q-td>

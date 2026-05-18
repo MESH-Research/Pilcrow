@@ -1,5 +1,10 @@
 {
   "needs_attention": "Needs attention",
+  "queryTable": {
+    "search": {
+      "placeholder": "Search"
+    }
+  },
   "user": {
     "self": "No users | User | Users",
     "email": "Email",
@@ -29,7 +34,18 @@
     "saved": "Saved",
     "discard_changes": "Discard Changes",
     "delete": "Delete",
-    "refresh": "Refresh"
+    "refresh": "Refresh",
+    "cancel": "Cancel",
+    "create": "Create"
+  },
+  "breadcrumbs": {
+    "admin": {
+      "administration": "Administration",
+      "users": "Users",
+      "user": "User",
+      "publications": "Publications",
+      "submissions": "Submissions"
+    }
   },
   "lists": {
     "move_up": "Move {0} Up",
@@ -778,6 +794,18 @@
     "term": "No Submissions | Submission | Submissions",
     "heading": "Submissions",
     "none": "No Submissions Created",
+    "filters": {
+      "aria": "Filter submissions",
+      "select_publication": "Select a publication",
+      "status_header": "Status",
+      "roles_header": "Roles",
+      "publication_header": "Publication",
+      "role_options": {
+        "submitter": "Submitter",
+        "reviewer": "Reviewer",
+        "review_coordinator": "Review Coordinator"
+      }
+    },
     "details_heading": "Submission Details",
     "latest_comments_heading": "Latest Comments",
     "draft_with_no_content": "This submission draft must have content before it can be reviewed.",
@@ -1263,6 +1291,13 @@
   "app_banner_dismiss_tip": "Dismiss for 1 week",
   "admin": {
     "search": "Search",
+    "filters": {
+      "label": "Filter",
+      "active": "Filter · {count} active",
+      "all": "All",
+      "none": "None",
+      "invert": "Invert"
+    },
     "dashboard": {
       "users_description": "Manage user accounts and permissions.",
       "publications_description": "Manage publications and their settings."
@@ -1277,10 +1312,31 @@
       },
       "btn": {
         "create": "Create"
+      },
+      "actions": {
+        "configure": "Configure"
+      },
+      "filters": {
+        "aria": "Filter publications",
+        "visibility": "Visibility",
+        "accepting_submissions": "Accepting Submissions",
+        "visibility_options": {
+          "public": "Public",
+          "hidden": "Hidden"
+        },
+        "accepting_options": {
+          "yes": "Yes",
+          "no": "No"
+        }
       }
     },
     "users": {
       "title": "User Administration",
+      "no_user_assigned": "No user assigned",
+      "email_status": {
+        "verified": "Verified",
+        "unverified": "Unverified"
+      },
       "headers": {
         "name": "Name",
         "username": "Username",
@@ -1288,6 +1344,10 @@
         "created_at": "Created"
       },
       "details": {
+        "tabs": {
+          "publications": "Publications",
+          "submissions": "Submissions"
+        },
         "title": "User Details",
         "username": "Username",
         "name": "Name",
@@ -1321,10 +1381,14 @@
           "actions": {
             "view": "View"
           },
-          "filters": {
-            "status": "Status",
-            "roles": "Roles",
+          "aside": {
             "publication": "Publication"
+          },
+          "no_data": {
+            "banner_warning": "Head's up: Your filters will not return any results.",
+            "no_status": "(no status selected)",
+            "no_role": "(no role selected)",
+            "reset": "Reset filters"
           }
         },
         "no_publications": "This user is not assigned to any publications.",

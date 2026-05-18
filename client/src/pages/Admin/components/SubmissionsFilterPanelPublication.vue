@@ -1,7 +1,7 @@
 <template>
   <q-card-section>
     <div class="text-weight-bold">
-      {{ $t("admin.users.details.submissions.filters.publication") }}
+      {{ $t("submissions.filters.publication_header") }}
     </div>
     <q-select
       v-model="publication"
@@ -10,7 +10,7 @@
       emit-value
       map-options
       :clearable="true"
-      label="Select a publication"
+      :label="$t('submissions.filters.select_publication')"
       @virtual-scroll="onScroll"
     />
   </q-card-section>

@@ -5,7 +5,7 @@
     flat
     binary-state-sort
     table-class="q-table--bordered"
-    table-header-class="bg-accent text-white"
+    table-header-class="bg-grey-2"
     :rows="rows"
     :columns="tColumns"
     :visible-columns="props.visibleColumns"
@@ -26,7 +26,7 @@
               class="col"
               :dense="props.dense"
               debounce="300"
-              :placeholder="$t(`admin.search`)"
+              :placeholder="t(searchKey)"
               clearable
               outlined
               :bottom-slots="false"
@@ -44,7 +44,7 @@
               :dense="props.dense"
               :to="newTo"
             >
-              {{ pt("btn.create") }}
+              {{ t(createKey) }}
             </q-btn>
             <q-btn
               v-else-if="props.onNew"
@@ -52,14 +52,14 @@
               color="primary"
               @click="$emit('new')"
             >
-              {{ pt("btn.create") }}
+              {{ t(createKey) }}
             </q-btn>
             <q-btn
               v-if="refreshBtn"
               flat
               dense
               icon="refresh"
-              :aria-label="$t('buttons.refresh')"
+              :aria-label="t(refreshKey)"
               @click="refetch()"
             />
             <q-separator v-if="slots['top-after']" vertical inset />
@@ -78,11 +78,6 @@
     <template #loading>
       <q-inner-loading showing color="primary" />
     </template>
-    <template #header-cell="scope">
-      <q-th :props="scope">
-        <span>{{ pt(`headers.${scope.col.name}`) }}</span>
-      </q-th>
-    </template>
     <template v-for="(_, slotName) in slots" #[slotName]="data">
       <slot :name="slotName" v-bind="data"></slot>
     </template>
@@ -92,7 +87,7 @@
       :key="`body-cell-${column.name}`"
     >
       <component
-        :is="getComponent(column.component)"
+        :is="column.component"
         v-if="column.component"
         :scope="scope"
         :dense="props.dense"
@@ -109,8 +104,12 @@ import type { RouteLocationRaw } from "vue-router"
 
 type QTableColumn = NonNullable<QTableProps["columns"]>[number]
 
-export interface QueryTableColumn extends QTableColumn {
-  component?: string | Component
+// QueryTable resolves header labels exclusively from
+// `${tPrefix}.headers.${column.name}`. Quasar's required `label`
+// field is omitted from the public column type — every column must
+// have a matching i18n entry.
+export interface QueryTableColumn extends Omit<QTableColumn, "label"> {
+  component?: Component
   aside?: string | ((row: Record<string, unknown>) => string)
   asideLabel?: string | ((row: Record<string, unknown>) => string)
   /**
@@ -147,17 +146,26 @@ graphql(`
 
 <script setup lang="ts">
 import { omit } from "lodash"
-import {
-  computed,
-  getCurrentInstance,
-  useId,
-  useSlots,
-  defineAsyncComponent
-} from "vue"
+import { computed, getCurrentInstance, useId, useSlots } from "vue"
 import type { DocumentNode } from "graphql"
 import { useI18nPrefix } from "src/use/i18nPrefix"
 import { usePaginatedQuery } from "./usePaginatedQuery"
 import { useUrlPaginationSync } from "./useUrlPaginationSync"
+
+// i18n keys QueryTable resolves for its built-in chrome (search
+// input, create button, refresh button). Callers can override any
+// of these by passing a different key via the `labels` prop.
+export interface QueryTableLabelKeys {
+  search?: string
+  create?: string
+  refresh?: string
+}
+
+const DEFAULT_LABELS: Required<QueryTableLabelKeys> = {
+  search: "queryTable.search.placeholder",
+  create: "buttons.create",
+  refresh: "buttons.refresh"
+}
 
 interface QueryTableProps {
   query: DocumentNode
@@ -174,6 +182,7 @@ interface QueryTableProps {
   searchHint?: string
   visibleColumns?: string[]
   grid?: boolean
+  labels?: QueryTableLabelKeys
 }
 
 const props = withDefaults(defineProps<QueryTableProps>(), {
@@ -189,7 +198,8 @@ const props = withDefaults(defineProps<QueryTableProps>(), {
   defaultSort: undefined,
   searchHint: "",
   visibleColumns: undefined,
-  grid: false
+  grid: false,
+  labels: () => ({})
 })
 
 interface Emits {
@@ -249,10 +259,22 @@ if (props.syncUrl) {
   useUrlPaginationSync({ page, filter, pagination })
 }
 
-const { pt } = useI18nPrefix(computed(() => props.tPrefix))
+const { pt, pte, t } = useI18nPrefix(computed(() => props.tPrefix))
+
+const searchKey = computed(() => props.labels.search ?? DEFAULT_LABELS.search)
+const createKey = computed(() => props.labels.create ?? DEFAULT_LABELS.create)
+const refreshKey = computed(
+  () => props.labels.refresh ?? DEFAULT_LABELS.refresh
+)
 const slots = useSlots()
 const searchHintId = `search-hint-${useId()}`
 
+// Resolve every column header from `${tPrefix}.headers.${column.name}`.
+// Missing keys fall back to the key string (vue-i18n default) and
+// emit a console warning in dev so the missing translation is loud.
+// Setting Quasar's native `label` here (instead of a `header-cell`
+// slot override) means grid mode, mobile body labels, and aria all
+// receive the translated string for free.
 const tColumns = computed(() => {
   if (props.columns === undefined) {
     return undefined
@@ -260,7 +282,15 @@ const tColumns = computed(() => {
   if (!props.columns?.length) {
     return []
   }
-  return props.columns
+  return props.columns.map((c) => {
+    if (import.meta.env.DEV && !pte(`headers.${c.name}`)) {
+      console.warn(
+        `[QueryTable] missing header translation: ` +
+          `${props.tPrefix}.headers.${c.name}`
+      )
+    }
+    return { ...c, label: pt(`headers.${c.name}`) }
+  })
 })
 
 const compColumns = computed(() => {
@@ -268,16 +298,9 @@ const compColumns = computed(() => {
     return []
   }
   return props.columns.filter(
-    (c): c is QueryTableColumn & { component: string | Component } =>
-      !!c.component
+    (c): c is QueryTableColumn & { component: Component } => !!c.component
   )
 })
-
-function getComponent(component: string | Component): Component {
-  return typeof component === "string"
-    ? defineAsyncComponent(() => import(`./rows/${component}Row.vue`))
-    : component
-}
 
 defineExpose({
   refetch,

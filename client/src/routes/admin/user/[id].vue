@@ -58,11 +58,11 @@
         <q-route-tab
           :to="{ name: 'user_details', params: { id } }"
           exact
-          label="Publications"
+          :label="$t('admin.users.details.tabs.publications')"
         />
         <q-route-tab
           :to="{ name: 'user_details:submissions', params: { id } }"
-          label="Submissions"
+          :label="$t('admin.users.details.tabs.submissions')"
         />
       </q-tabs>
       <q-separator />
@@ -113,7 +113,10 @@ definePage({
   // we don't need a separate routes/admin/user.vue layout just to
   // hold the "Users" link.
   meta: {
-    crumb: [{ label: "Users", to: { name: "admin:users" } }, { label: "User" }]
+    crumb: [
+      { label: "breadcrumbs.admin.users", to: { name: "admin:users" } },
+      { label: "breadcrumbs.admin.user" }
+    ]
   }
 })
 

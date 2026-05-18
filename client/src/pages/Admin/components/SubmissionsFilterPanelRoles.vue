@@ -2,7 +2,7 @@
   <q-card-section class="column justify-between q-pb-none">
     <div>
       <div class="text-weight-bold">
-        {{ $t("admin.users.details.submissions.filters.roles") }}
+        {{ $t("submissions.filters.roles_header") }}
       </div>
       <div>
         <q-option-group v-model="filter" :options="tOptions" type="checkbox" />
@@ -18,10 +18,10 @@ interface RoleOption {
 }
 
 const options: RoleOption[] = [
-  { label: "admin.users.details.roles.submitter", value: "submitter" },
-  { label: "admin.users.details.roles.reviewer", value: "reviewer" },
+  { label: "submissions.filters.role_options.submitter", value: "submitter" },
+  { label: "submissions.filters.role_options.reviewer", value: "reviewer" },
   {
-    label: "admin.users.details.roles.review_coordinator",
+    label: "submissions.filters.role_options.review_coordinator",
     value: "review_coordinator"
   }
 ]

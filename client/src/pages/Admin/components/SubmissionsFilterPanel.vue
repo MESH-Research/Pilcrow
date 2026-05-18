@@ -4,15 +4,34 @@
     dense
     no-caps
     icon="filter_list"
-    :label="activeCount > 0 ? `Filter · ${activeCount} active` : 'Filter'"
-    aria-label="Filter submissions"
+    :label="
+      activeCount > 0
+        ? $t('admin.filters.active', { count: activeCount })
+        : $t('admin.filters.label')
+    "
+    :aria-label="$t('submissions.filters.aria')"
   >
     <q-menu>
       <q-card-section class="q-pb-none">
         <q-btn-group flat stretch class="full-width">
-          <q-btn dense no-caps label="All" @click="selectAll" />
-          <q-btn dense no-caps label="None" @click="selectNone" />
-          <q-btn dense no-caps label="Invert" @click="invert" />
+          <q-btn
+            dense
+            no-caps
+            :label="$t('admin.filters.all')"
+            @click="selectAll"
+          />
+          <q-btn
+            dense
+            no-caps
+            :label="$t('admin.filters.none')"
+            @click="selectNone"
+          />
+          <q-btn
+            dense
+            no-caps
+            :label="$t('admin.filters.invert')"
+            @click="invert"
+          />
         </q-btn-group>
       </q-card-section>
       <q-separator class="q-mt-sm" />

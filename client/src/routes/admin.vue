@@ -10,7 +10,7 @@ definePage({
   meta: {
     requiresAppAdmin: true,
     crumb: {
-      label: "Administration",
+      label: "breadcrumbs.admin.administration",
       to: { name: "admin:dashboard" }
     }
   }

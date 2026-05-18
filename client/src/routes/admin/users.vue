@@ -21,7 +21,11 @@
           class="q-ml-xs"
         >
           <q-tooltip :delay="500">
-            {{ scope.row.email_verified_at ? "Verified" : "Unverified" }}
+            {{
+              scope.row.email_verified_at
+                ? $t("admin.users.email_status.verified")
+                : $t("admin.users.email_status.unverified")
+            }}
           </q-tooltip>
         </q-icon>
       </q-td>
@@ -69,7 +73,7 @@ import { useRouter } from "vue-router"
 definePage({
   name: "admin:users",
   meta: {
-    crumb: { label: "Users" }
+    crumb: { label: "breadcrumbs.admin.users" }
   }
 })
 
@@ -83,29 +87,25 @@ const columns: QueryTableColumn[] = [
     field: (row) => row,
     component: NameAvatarCell,
     hideUsername: true,
-    sortable: true,
-    label: "admin.users.headers.name"
+    sortable: true
   },
   {
     name: "username",
     align: "left",
     field: "username",
-    sortable: true,
-    label: "admin.users.headers.username"
+    sortable: true
   },
   {
     name: "email",
     align: "left",
     field: "email",
-    sortable: true,
-    label: "admin.users.headers.email"
+    sortable: true
   },
   {
     name: "created_at",
     align: "left",
     field: "created_at",
     sortable: true,
-    label: "admin.users.headers.created_at",
     component: DateTimeCell
   }
 ]

@@ -31,7 +31,8 @@
     <template #body-cell-title="scope">
       <WithAsideCell :scope="scope" style="white-space: normal">
         <template #aside>
-          Publication: {{ scope.row.submission.publication.name }}
+          {{ $t("admin.users.details.submissions.aside.publication") }}:
+          {{ scope.row.submission.publication.name }}
         </template>
       </WithAsideCell>
     </template>
@@ -102,7 +103,7 @@ import { defaultOptions as defaultRoleOptions } from "src/pages/Admin/components
 definePage({
   name: "user_details:submissions",
   meta: {
-    crumb: { label: "Submissions" }
+    crumb: { label: "breadcrumbs.admin.submissions" }
   }
 })
 
@@ -127,37 +128,32 @@ const columns: QueryTableColumn[] = [
     },
     asideLabel: "Publication",
     component: WithAsideCell,
-    style: "white-space: normal",
-    label: "Title"
+    style: "white-space: normal"
   },
   {
     name: "role",
     align: "left",
-    field: (row) => t(`admin.users.details.roles.${row.role}`),
-    label: "Role"
+    field: (row) => t(`admin.users.details.roles.${row.role}`)
   },
   {
     name: "status",
     align: "left",
     field: (row) => t(`submission.status.${row.submission.status}`),
-    sortable: true,
-    label: "Status"
+    sortable: true
   },
   {
     name: "created_at",
     align: "left",
     field: (row) => row.submission.created_at,
     sortable: true,
-    component: DateTimeCell,
-    label: "Created"
+    component: DateTimeCell
   },
   {
     name: "updated_at",
     align: "left",
     field: (row) => row.submission.updated_at,
     sortable: true,
-    component: DateTimeCell,
-    label: "Updated"
+    component: DateTimeCell
   }
 ]
 

@@ -79,20 +79,17 @@ const columns: QueryTableColumn[] = [
     name: "name",
     required: true,
     align: "left",
-    field: (row) => row.publication.name,
-    label: "Name"
+    field: (row) => row.publication.name
   },
   {
     name: "role",
     align: "left",
-    field: (row) => t(`admin.users.details.roles.${row.role}`),
-    label: "Role"
+    field: (row) => t(`admin.users.details.roles.${row.role}`)
   },
   {
     name: "actions",
     align: "right",
-    field: "id",
-    label: ""
+    field: "id"
   }
 ]
 </script>

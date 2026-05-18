@@ -1,7 +1,7 @@
 <template>
   <q-card-section class="q-pb-none">
     <q-card-section class="text-weight-bold q-pa-none">
-      {{ $t("admin.users.details.submissions.filters.status") }}
+      {{ $t("submissions.filters.status_header") }}
     </q-card-section>
     <q-option-group v-model="filter" :options="tOptions" type="checkbox" />
   </q-card-section>

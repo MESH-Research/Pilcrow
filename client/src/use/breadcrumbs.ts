@@ -10,6 +10,7 @@ import {
 import type { RouteLocationRaw } from "vue-router"
 import { useRoute, useRouter } from "vue-router"
 import type { RouteNamedMap } from "vue-router/auto-routes"
+import { useI18n } from "vue-i18n"
 
 declare module "vue-router" {
   interface RouteMeta {
@@ -18,6 +19,8 @@ declare module "vue-router" {
 }
 
 export interface Crumb {
+  // i18n key resolved via $t in useCrumbs. Override via setCrumbLabel
+  // when the final label is dynamic (e.g. a fetched user name).
   label: string
   to?: RouteLocationRaw
   icon?: string
@@ -49,6 +52,7 @@ export function useCrumbs() {
   if (!started) {
     const route = useRoute()
     const router = useRouter()
+    const { t } = useI18n()
     started = true
     watchEffect(() => {
       const list: ResolvedCrumb[] = []
@@ -78,7 +82,7 @@ export function useCrumbs() {
                   : (override as string | undefined)
               if (unwrapped !== undefined) return unwrapped
             }
-            return def.label
+            return t(def.label)
           })
           list.push({ label, to: resolved, icon: def.icon })
         }

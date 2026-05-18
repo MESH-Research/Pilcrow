@@ -14,11 +14,19 @@
         <template #avatar>
           <q-icon name="o_filter_alt" />
         </template>
-        Head's up: Your filters will not return any results.
-        <span v-if="statusFilter.length === 0"> (no status selected) </span>
-        <span v-if="roleFilter.length === 0"> (no role selected) </span>
+        {{ $t("admin.users.details.submissions.no_data.banner_warning") }}
+        <span v-if="statusFilter.length === 0">
+          {{ $t("admin.users.details.submissions.no_data.no_status") }}
+        </span>
+        <span v-if="roleFilter.length === 0">
+          {{ $t("admin.users.details.submissions.no_data.no_role") }}
+        </span>
         <template #action>
-          <q-btn label="Reset filters" flat @click="$emit('resetFilters')" />
+          <q-btn
+            :label="$t('admin.users.details.submissions.no_data.reset')"
+            flat
+            @click="$emit('resetFilters')"
+          />
         </template>
       </q-banner>
     </div>
