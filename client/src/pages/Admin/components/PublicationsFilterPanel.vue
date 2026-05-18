@@ -4,31 +4,41 @@
     dense
     no-caps
     icon="filter_list"
-    :label="activeCount > 0 ? `Filter · ${activeCount} active` : 'Filter'"
-    aria-label="Filter publications"
+    :label="
+      activeCount > 0
+        ? $t('admin.filters.active', { count: activeCount })
+        : $t('admin.filters.label')
+    "
+    :aria-label="$t('admin.publication.filters.aria')"
   >
     <q-menu>
-      <q-card-section class="q-pb-none">
-        <q-btn-group flat stretch class="full-width">
-          <q-btn dense no-caps label="All" @click="selectAll" />
-          <q-btn dense no-caps label="None" @click="selectNone" />
-          <q-btn dense no-caps label="Invert" @click="invert" />
-        </q-btn-group>
-      </q-card-section>
-      <q-separator class="q-mt-sm" />
       <q-card-section>
-        <div class="text-weight-bold q-mb-sm">Visibility</div>
-        <q-option-group
+        <div class="text-weight-bold q-mb-sm">
+          {{ $t("admin.publication.filters.visibility") }}
+        </div>
+        <q-btn-toggle
           v-model="visibilityFilter"
           :options="visibilityOptions"
-          type="checkbox"
+          spread
+          unelevated
+          toggle-color="primary"
+          color="grey-3"
+          text-color="grey-9"
+          no-caps
         />
-        <q-separator class="q-my-sm" />
-        <div class="text-weight-bold q-mb-sm">Accepting Submissions</div>
-        <q-option-group
+        <q-separator class="q-my-md" />
+        <div class="text-weight-bold q-mb-sm">
+          {{ $t("admin.publication.filters.accepting_submissions") }}
+        </div>
+        <q-btn-toggle
           v-model="acceptingFilter"
           :options="acceptingOptions"
-          type="checkbox"
+          spread
+          unelevated
+          toggle-color="primary"
+          color="grey-3"
+          text-color="grey-9"
+          no-caps
         />
       </q-card-section>
     </q-menu>
@@ -36,60 +46,54 @@
 </template>
 
 <script lang="ts">
-export const defaultVisibility = ["public", "hidden"]
-export const defaultAccepting = ["yes", "no"]
+export type VisibilityFilter = "all" | "public" | "hidden"
+export type AcceptingFilter = "all" | "yes" | "no"
+
+export const defaultVisibility: VisibilityFilter = "all"
+export const defaultAccepting: AcceptingFilter = "all"
 </script>
 
 <script setup lang="ts">
 import { computed } from "vue"
+import { useI18n } from "vue-i18n"
 
-const visibilityFilter = defineModel<string[]>("visibilityFilter", {
-  default: () => []
+const { t } = useI18n()
+
+const visibilityFilter = defineModel<VisibilityFilter>("visibilityFilter", {
+  default: defaultVisibility
 })
-const acceptingFilter = defineModel<string[]>("acceptingFilter", {
-  default: () => []
+const acceptingFilter = defineModel<AcceptingFilter>("acceptingFilter", {
+  default: defaultAccepting
 })
 
-const visibilityOptions = [
-  { label: "Public", value: "public" },
-  { label: "Hidden", value: "hidden" }
-]
+const visibilityOptions = computed(() => [
+  { label: t("admin.filters.all"), value: "all" as const },
+  {
+    label: t("admin.publication.filters.visibility_options.public"),
+    value: "public" as const
+  },
+  {
+    label: t("admin.publication.filters.visibility_options.hidden"),
+    value: "hidden" as const
+  }
+])
 
-const acceptingOptions = [
-  { label: "Yes", value: "yes" },
-  { label: "No", value: "no" }
-]
-
-function isDefault(current: string[], defaults: string[]): boolean {
-  return (
-    current.length === defaults.length &&
-    current.every((v) => defaults.includes(v))
-  )
-}
+const acceptingOptions = computed(() => [
+  { label: t("admin.filters.all"), value: "all" as const },
+  {
+    label: t("admin.publication.filters.accepting_options.yes"),
+    value: "yes" as const
+  },
+  {
+    label: t("admin.publication.filters.accepting_options.no"),
+    value: "no" as const
+  }
+])
 
 const activeCount = computed(() => {
   let n = 0
-  if (!isDefault(visibilityFilter.value, defaultVisibility)) n++
-  if (!isDefault(acceptingFilter.value, defaultAccepting)) n++
+  if (visibilityFilter.value !== defaultVisibility) n++
+  if (acceptingFilter.value !== defaultAccepting) n++
   return n
 })
-
-function selectAll() {
-  visibilityFilter.value = [...defaultVisibility]
-  acceptingFilter.value = [...defaultAccepting]
-}
-
-function selectNone() {
-  visibilityFilter.value = []
-  acceptingFilter.value = []
-}
-
-function invert() {
-  visibilityFilter.value = defaultVisibility.filter(
-    (v) => !visibilityFilter.value.includes(v)
-  )
-  acceptingFilter.value = defaultAccepting.filter(
-    (v) => !acceptingFilter.value.includes(v)
-  )
-}
 </script>

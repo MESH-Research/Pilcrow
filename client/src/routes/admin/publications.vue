@@ -44,7 +44,7 @@
             size="sm"
             dense
             icon="settings"
-            label="Configure"
+            :label="$t('admin.publication.actions.configure')"
             :to="destRoute(rProps.value as string, 'basic')"
           />
         </q-td>
@@ -67,12 +67,17 @@
           <CreateForm ref="createFormRef" @created="publicationCreated" />
         </q-card-section>
         <q-card-actions align="right" class="q-px-md q-pb-md">
-          <q-btn v-close-popup flat label="Cancel" color="grey-9" />
+          <q-btn
+            v-close-popup
+            flat
+            :label="$t('buttons.cancel')"
+            color="grey-9"
+          />
           <q-btn
             color="accent"
             text-color="white"
             icon="add"
-            label="Create"
+            :label="$t('buttons.create')"
             @click="createFormRef?.submit()"
           />
         </q-card-actions>
@@ -122,16 +127,18 @@ import { GetAdminPublicationsDocument } from "src/graphql/generated/graphql"
 import CreateForm from "src/components/forms/Publication/CreateForm.vue"
 import PublicationsFilterPanel, {
   defaultVisibility,
-  defaultAccepting
+  defaultAccepting,
+  type VisibilityFilter,
+  type AcceptingFilter
 } from "src/pages/Admin/components/PublicationsFilterPanel.vue"
 import DateTimeCell from "src/components/tables/common/DateTimeCell.vue"
 import { useRouter, useRoute } from "vue-router"
-import { ref, computed, watch, onMounted } from "vue"
+import { ref, computed, watch } from "vue"
 
 definePage({
   name: "admin:publication:index",
   meta: {
-    crumb: { label: "Publications" }
+    crumb: { label: "breadcrumbs.admin.publications" }
   }
 })
 
@@ -145,36 +152,31 @@ const columns: QueryTableColumn[] = [
     name: "name",
     field: "name",
     align: "left",
-    sortable: true,
-    label: "Name"
+    sortable: true
   },
   {
     name: "is_publicly_visible",
     field: (row) => (row.is_publicly_visible ? "Public" : "Hidden"),
     align: "center",
-    sortable: true,
-    label: "Visibility"
+    sortable: true
   },
   {
     name: "is_accepting_submissions",
     field: (row) => (row.is_accepting_submissions ? "Yes" : "No"),
     align: "center",
-    sortable: true,
-    label: "Accepting Submissions"
+    sortable: true
   },
   {
     name: "created_at",
     field: "created_at",
     align: "left",
     sortable: true,
-    component: DateTimeCell,
-    label: "Created"
+    component: DateTimeCell
   },
   {
     name: "actions",
     field: "id",
-    align: "right",
-    label: "Actions"
+    align: "right"
   }
 ]
 
@@ -185,42 +187,28 @@ const createFormRef = ref<InstanceType<typeof CreateForm> | null>(null)
 const route = useRoute()
 const router = useRouter()
 
-function parseList(value: string | string[] | undefined): string[] {
-  if (!value) return []
-  const str = Array.isArray(value) ? value[0] : value
-  if (!str) return []
-  const inner = str.startsWith("[") ? str.slice(1, -1) : str
-  return inner ? inner.split(",") : []
+function parseVisibility(value: unknown): VisibilityFilter {
+  return value === "public" || value === "hidden" ? value : defaultVisibility
 }
 
-function formatList(values: string[]): string {
-  return `[${values.join(",")}]`
+function parseAccepting(value: unknown): AcceptingFilter {
+  return value === "yes" || value === "no" ? value : defaultAccepting
 }
 
-const visibilityFilter = ref<string[]>(
-  parseList(route.query.visibility as string)
+const visibilityFilter = ref<VisibilityFilter>(
+  parseVisibility(route.query.visibility)
 )
-const acceptingFilter = ref<string[]>(
-  parseList(route.query.accepting as string)
+const acceptingFilter = ref<AcceptingFilter>(
+  parseAccepting(route.query.accepting)
 )
-
-onMounted(() => {
-  if (visibilityFilter.value.length === 0) {
-    visibilityFilter.value = [...defaultVisibility]
-  }
-  if (acceptingFilter.value.length === 0) {
-    acceptingFilter.value = [...defaultAccepting]
-  }
-})
 
 const filterVariables = computed(() => {
   const vars: Record<string, unknown> = {}
-  // Only pass the filter when exactly one option is selected
-  if (visibilityFilter.value.length === 1) {
-    vars.public = visibilityFilter.value[0] === "public"
+  if (visibilityFilter.value !== "all") {
+    vars.public = visibilityFilter.value === "public"
   }
-  if (acceptingFilter.value.length === 1) {
-    vars.accepting_submissions = acceptingFilter.value[0] === "yes"
+  if (acceptingFilter.value !== "all") {
+    vars.accepting_submissions = acceptingFilter.value === "yes"
   }
   return vars
 })
@@ -235,16 +223,10 @@ watch([visibilityFilter, acceptingFilter], ([visibility, accepting]) => {
     string
   >
 
-  const isDefaultVisibility =
-    visibility.length === defaultVisibility.length &&
-    visibility.every((v) => defaultVisibility.includes(v))
-  if (!isDefaultVisibility) query.visibility = formatList(visibility)
+  if (visibility !== defaultVisibility) query.visibility = visibility
   else delete query.visibility
 
-  const isDefaultAccepting =
-    accepting.length === defaultAccepting.length &&
-    accepting.every((v) => defaultAccepting.includes(v))
-  if (!isDefaultAccepting) query.accepting = formatList(accepting)
+  if (accepting !== defaultAccepting) query.accepting = accepting
   else delete query.accepting
 
   router.replace({ query })
