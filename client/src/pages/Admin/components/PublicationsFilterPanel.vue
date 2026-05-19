@@ -22,8 +22,8 @@
           spread
           unelevated
           toggle-color="primary"
-          color="grey-3"
-          text-color="grey-9"
+          :color="unselectedColor"
+          :text-color="unselectedTextColor"
           no-caps
         />
         <q-separator class="q-my-md" />
@@ -36,8 +36,8 @@
           spread
           unelevated
           toggle-color="primary"
-          color="grey-3"
-          text-color="grey-9"
+          :color="unselectedColor"
+          :text-color="unselectedTextColor"
           no-caps
         />
       </q-card-section>
@@ -56,8 +56,15 @@ export const defaultAccepting: AcceptingFilter = "all"
 <script setup lang="ts">
 import { computed } from "vue"
 import { useI18n } from "vue-i18n"
+import { useQuasar } from "quasar"
 
 const { t } = useI18n()
+const $q = useQuasar()
+
+const unselectedColor = computed(() => ($q.dark.isActive ? "dark-1" : "grey-3"))
+const unselectedTextColor = computed(() =>
+  $q.dark.isActive ? "grey-3" : "grey-9"
+)
 
 const visibilityFilter = defineModel<VisibilityFilter>("visibilityFilter", {
   default: defaultVisibility
