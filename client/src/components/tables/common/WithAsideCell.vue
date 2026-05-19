@@ -15,17 +15,20 @@
   </q-td>
 </template>
 
-<script setup lang="ts">
-import { computed } from "vue"
-import type { QTableBodyCellScope } from "../QueryTable.vue"
+<script lang="ts">
+import type { QTableBodyCellScope, QueryTableColumn } from "../QueryTable.vue"
 
-interface ColumnWithAside {
+export interface WithAsideColumn extends QueryTableColumn {
   aside?: string | ((row: Record<string, unknown>) => string)
   asideLabel?: string | ((row: Record<string, unknown>) => string)
 }
+</script>
+
+<script setup lang="ts">
+import { computed } from "vue"
 
 interface Props {
-  scope: QTableBodyCellScope & { col: ColumnWithAside }
+  scope: QTableBodyCellScope<WithAsideColumn>
 }
 
 const props = defineProps<Props>()

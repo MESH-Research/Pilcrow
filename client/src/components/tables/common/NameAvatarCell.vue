@@ -23,6 +23,7 @@
 
 <script lang="ts">
 import { graphql } from "src/graphql/generated"
+import type { QTableBodyCellScope, QueryTableColumn } from "../QueryTable.vue"
 
 graphql(`
   fragment NameAvatarCell on User {
@@ -31,16 +32,19 @@ graphql(`
     ...avatarImage
   }
 `)
+
+export interface NameAvatarColumn extends QueryTableColumn {
+  hideUsername?: boolean
+}
 </script>
 
 <script setup lang="ts">
 import { computed } from "vue"
 import AvatarImage from "src/components/atoms/AvatarImage.vue"
 import type { NameAvatarCellFragment as NameAvatarCellType } from "src/graphql/generated/graphql"
-import type { QTableBodyCellScope, QueryTableColumn } from "../QueryTable.vue"
 
 interface Props {
-  scope: QTableBodyCellScope
+  scope: QTableBodyCellScope<NameAvatarColumn>
 }
 
 const props = defineProps<Props>()
@@ -49,7 +53,5 @@ const user = computed(
   () => (props.scope.value as NameAvatarCellType | null) ?? null
 )
 
-const hideUsername = computed(
-  () => (props.scope.col as QueryTableColumn).hideUsername === true
-)
+const hideUsername = computed(() => props.scope.col.hideUsername === true)
 </script>

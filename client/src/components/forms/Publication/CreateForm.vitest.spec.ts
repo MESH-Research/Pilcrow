@@ -40,12 +40,15 @@ describe("CreateForm", () => {
     wrapper.findComponent({ ref: "nameInput" }).setValue(name)
     wrapper.vm.submit()
     await flushPromises()
-    expect(warn).toHaveBeenCalledTimes(1)
+    expect(warn).toHaveBeenCalledTimes(2)
     expect(warn).toHaveBeenCalledWith(
       expect.stringContaining(encodeURIComponent('"message":43'))
     )
     expect(warn).toHaveBeenCalledWith(
       expect.stringContaining("GetPublications")
+    )
+    expect(warn).toHaveBeenCalledWith(
+      expect.stringContaining("GetAdminPublications")
     )
     expect(mutationHandler).toHaveBeenCalledWith(
       expect.objectContaining({ name })

@@ -100,32 +100,21 @@
 import { graphql } from "src/graphql/generated"
 import type { Component } from "vue"
 import type { QTableProps } from "quasar"
-import type { RouteLocationRaw } from "vue-router"
 
 type QTableColumn = NonNullable<QTableProps["columns"]>[number]
 
 // QueryTable resolves header labels exclusively from
 // `${tPrefix}.headers.${column.name}`. Quasar's required `label`
 // field is omitted from the public column type — every column must
-// have a matching i18n entry.
+// have a matching i18n entry. Cell-specific column options live on
+// the cell component (e.g. WithAsideColumn, NameAvatarColumn) and
+// callers union them into the columns array as needed.
 export interface QueryTableColumn extends Omit<QTableColumn, "label"> {
   component?: Component
-  aside?: string | ((row: Record<string, unknown>) => string)
-  asideLabel?: string | ((row: Record<string, unknown>) => string)
-  /**
-   * When provided, cells that support it (e.g. TextCell) render their
-   * content as a router-link to the returned route.
-   */
-  linkTo?: (row: Record<string, unknown>) => RouteLocationRaw
-  /**
-   * For NameAvatarCell: suppress the username caption below the
-   * display name (e.g. when a dedicated username column is present).
-   */
-  hideUsername?: boolean
 }
 
-export interface QTableBodyCellScope {
-  col: QTableColumn
+export interface QTableBodyCellScope<TCol = QTableColumn> {
+  col: TCol
   value: unknown
   row: Record<string, unknown>
   dense?: boolean

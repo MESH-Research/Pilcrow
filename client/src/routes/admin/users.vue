@@ -62,7 +62,9 @@ graphql(`
 import QueryTable, {
   type QueryTableColumn
 } from "src/components/tables/QueryTable.vue"
-import NameAvatarCell from "src/components/tables/common/NameAvatarCell.vue"
+import NameAvatarCell, {
+  type NameAvatarColumn
+} from "src/components/tables/common/NameAvatarCell.vue"
 import DateTimeCell from "src/components/tables/common/DateTimeCell.vue"
 import {
   GetUsersDocument,
@@ -79,7 +81,7 @@ definePage({
 
 type UserRow = GetUsersQuery["users"]["data"][number]
 
-const columns: QueryTableColumn[] = [
+const columns: (QueryTableColumn | NameAvatarColumn)[] = [
   {
     name: "name",
     required: true,

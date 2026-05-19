@@ -88,7 +88,9 @@ graphql(`
 <script setup lang="ts">
 import SubmissionsFilterPanel from "src/pages/Admin/components/SubmissionsFilterPanel.vue"
 import UserSubmissionsNoDataSlot from "src/pages/Admin/components/UserSubmissionsNoDataSlot.vue"
-import WithAsideCell from "src/components/tables/common/WithAsideCell.vue"
+import WithAsideCell, {
+  type WithAsideColumn
+} from "src/components/tables/common/WithAsideCell.vue"
 import DateTimeCell from "src/components/tables/common/DateTimeCell.vue"
 import QueryTable, {
   type QueryTableColumn
@@ -115,7 +117,7 @@ const id = computed(() => route.params.id as string)
 
 const queryTableRef = ref<InstanceType<typeof QueryTable> | null>(null)
 
-const columns: QueryTableColumn[] = [
+const columns: (QueryTableColumn | WithAsideColumn)[] = [
   {
     name: "title",
     required: true,
