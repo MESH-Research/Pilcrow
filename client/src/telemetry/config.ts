@@ -17,12 +17,7 @@ declare global {
 // content (manuscript text, review comments). Field-level redaction is
 // preferred over dropping entire mutation variables so non-sensitive context
 // like ids, ranges, and style criteria stays available for triage.
-const SENSITIVE_KEYS = new Set([
-  "password",
-  "token",
-  "code",
-  "content"
-])
+const SENSITIVE_KEYS = new Set(["password", "token", "code", "content"])
 
 export function readTelemetryConfig(): TelemetryConfig | null {
   if (typeof window === "undefined") return null
