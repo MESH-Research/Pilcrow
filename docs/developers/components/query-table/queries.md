@@ -42,10 +42,10 @@ Three things are non-negotiable:
 
 ## Required variables
 
-| Variable | Type | Why |
-|----------|------|-----|
-| `$page` | `Int` | Drives the paginator's current page. Without it the search/sort/pagination plumbing is disabled. |
-| `$first` | `Int` | Page size. Without it the per-page selector is hidden. |
+| Variable | Type  | Why                                                                                              |
+| -------- | ----- | ------------------------------------------------------------------------------------------------ |
+| `$page`  | `Int` | Drives the paginator's current page. Without it the search/sort/pagination plumbing is disabled. |
+| `$first` | `Int` | Page size. Without it the per-page selector is hidden.                                           |
 
 `QueryTable` reads the operation's variable definitions at runtime via
 `useQueryCapabilities` to decide what UI to render:

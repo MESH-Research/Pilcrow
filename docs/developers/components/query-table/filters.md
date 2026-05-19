@@ -114,11 +114,11 @@ watch([visibilityFilter, acceptingFilter], () => {
 
 `QueryTable` exposes three top-bar slots:
 
-| Slot | Position | Use for |
-|------|----------|---------|
-| `top-before` | Left of the search input | Rare — section labels, mode toggles. |
-| `top-extra` | Between search and create button | Most filters live here. |
-| `top-after` | Right of the create/refresh buttons | Filter panel triggers, secondary actions. |
+| Slot         | Position                            | Use for                                   |
+| ------------ | ----------------------------------- | ----------------------------------------- |
+| `top-before` | Left of the search input            | Rare — section labels, mode toggles.      |
+| `top-extra`  | Between search and create button    | Most filters live here.                   |
+| `top-after`  | Right of the create/refresh buttons | Filter panel triggers, secondary actions. |
 
 The publications page uses `#top-after` because the filter is a
 single `q-btn` that opens a `q-menu`. If your filter is an inline

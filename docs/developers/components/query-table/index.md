@@ -58,65 +58,65 @@ loading, request).
 
 How data is fetched and where the paginator lives in the result.
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `query` | `DocumentNode` | — | GraphQL document. Must select the paginator fields via the `QueryTable` fragment. See [Structuring queries](./queries.md). |
-| `field` | `string` | `""` | Dotted path from the query result to the paginator (e.g. `"user.submissions"`). Omit when the paginator is the top-level field. |
-| `variables` | `Record<string, unknown>` | `{}` | Extra GraphQL variables (filters, ids). Pagination, search, and sort variables are managed by `QueryTable`. |
-| `defaultSort` | `{ sortBy: string; descending?: boolean }` | — | Initial sort applied when no URL state is present. |
+| Prop          | Type                                       | Default | Description                                                                                                                     |
+| ------------- | ------------------------------------------ | ------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| `query`       | `DocumentNode`                             | —       | GraphQL document. Must select the paginator fields via the `QueryTable` fragment. See [Structuring queries](./queries.md).      |
+| `field`       | `string`                                   | `""`    | Dotted path from the query result to the paginator (e.g. `"user.submissions"`). Omit when the paginator is the top-level field. |
+| `variables`   | `Record<string, unknown>`                  | `{}`    | Extra GraphQL variables (filters, ids). Pagination, search, and sort variables are managed by `QueryTable`.                     |
+| `defaultSort` | `{ sortBy: string; descending?: boolean }` | —       | Initial sort applied when no URL state is present.                                                                              |
 
-### Columns
+### Columns prop
 
 What renders in each row.
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `columns` | `QueryTableColumn[]` | — | Column definitions. See [Columns](#columns). |
-| `visibleColumns` | `string[]` | — | Forwarded to `q-table`. |
+| Prop             | Type                 | Default | Description                                  |
+| ---------------- | -------------------- | ------- | -------------------------------------------- |
+| `columns`        | `QueryTableColumn[]` | —       | Column definitions. See [Columns](#columns). |
+| `visibleColumns` | `string[]`           | —       | Forwarded to `q-table`.                      |
 
 ### Top bar
 
 The create/refresh/search affordances above the table.
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `newTo` | `RouteLocationRaw` | — | Renders a "Create" button that routes to this location. |
-| `onNew` | `() => void` | — | Alternative to `newTo` — emits `new` instead of routing. |
-| `refreshBtn` | `boolean` | `true` | Show the manual refresh button in the top bar. |
-| `searchHint` | `string` | `""` | Helper text rendered below the search input. |
+| Prop         | Type               | Default | Description                                              |
+| ------------ | ------------------ | ------- | -------------------------------------------------------- |
+| `newTo`      | `RouteLocationRaw` | —       | Renders a "Create" button that routes to this location.  |
+| `onNew`      | `() => void`       | —       | Alternative to `newTo` — emits `new` instead of routing. |
+| `refreshBtn` | `boolean`          | `true`  | Show the manual refresh button in the top bar.           |
+| `searchHint` | `string`           | `""`    | Helper text rendered below the search input.             |
 
 ### Labels & i18n
 
 How labels resolve.
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `tPrefix` | `string` | `""` | i18n prefix used for column headers (`${tPrefix}.headers.${column.name}`). Does not affect the built-in search/create/refresh buttons. See [Headers](#headers). |
-| `labels` | `QueryTableLabelKeys` | `{}` | Override the i18n keys used for the search placeholder, create button, and refresh button. See [Built-in chrome labels](#built-in-chrome-labels). |
+| Prop      | Type                  | Default | Description                                                                                                                                                     |
+| --------- | --------------------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `tPrefix` | `string`              | `""`    | i18n prefix used for column headers (`${tPrefix}.headers.${column.name}`). Does not affect the built-in search/create/refresh buttons. See [Headers](#headers). |
+| `labels`  | `QueryTableLabelKeys` | `{}`    | Override the i18n keys used for the search placeholder, create button, and refresh button. See [Built-in chrome labels](#built-in-chrome-labels).               |
 
 ### State & URL
 
 State mirroring.
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
+| Prop      | Type      | Default | Description                                                    |
+| --------- | --------- | ------- | -------------------------------------------------------------- |
 | `syncUrl` | `boolean` | `false` | Mirror page, search, and sort state into the URL query string. |
 
 ### Style & layout
 
 Visual presentation. Forwarded to `q-table`.
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
+| Prop    | Type      | Default | Description                                        |
+| ------- | --------- | ------- | -------------------------------------------------- |
 | `dense` | `boolean` | `false` | Forwarded to `q-table` and to row cell components. |
-| `grid` | `boolean` | `false` | Forwarded to `q-table`. |
+| `grid`  | `boolean` | `false` | Forwarded to `q-table`.                            |
 
 ## Events
 
-| Event | Payload | Notes |
-|-------|---------|-------|
+| Event       | Payload             | Notes                                                                                                                |
+| ----------- | ------------------- | -------------------------------------------------------------------------------------------------------------------- |
 | `row-click` | `(evt, row, index)` | Only forwarded when the parent listens — prevents the hover-pointer cursor from appearing on non-interactive tables. |
-| `new` | `()` | Emitted when `onNew` is set and the Create button is clicked. |
+| `new`       | `()`                | Emitted when `onNew` is set and the Create button is clicked.                                                        |
 
 ## Columns
 
@@ -127,10 +127,10 @@ etc.) work as documented by Quasar.
 
 Project-specific extensions:
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `component` | `Component` | Cell renderer. Import the component and pass the reference directly. The cell receives `{ scope, dense }` props. |
-| `linkTo` | `(row) => RouteLocationRaw` | When supported by the cell component (e.g. `TextCell`), wraps the cell content in a `router-link`. |
+| Field       | Type                        | Description                                                                                                      |
+| ----------- | --------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `component` | `Component`                 | Cell renderer. Import the component and pass the reference directly. The cell receives `{ scope, dense }` props. |
+| `linkTo`    | `(row) => RouteLocationRaw` | When supported by the cell component (e.g. `TextCell`), wraps the cell content in a `router-link`.               |
 
 Renderer-specific column fields (e.g. `WithAsideCell`'s `aside`,
 `NameAvatarCell`'s `hideUsername`) live with their renderer in
@@ -197,11 +197,11 @@ The search input, Create button, and refresh button each resolve
 their text from a dedicated i18n key that is independent of
 `tPrefix`. Defaults:
 
-| Element | Default key |
-|---------|-------------|
-| Search placeholder | `queryTable.search.placeholder` |
-| Create button | `buttons.create` |
-| Refresh button (aria) | `buttons.refresh` |
+| Element               | Default key                     |
+| --------------------- | ------------------------------- |
+| Search placeholder    | `queryTable.search.placeholder` |
+| Create button         | `buttons.create`                |
+| Refresh button (aria) | `buttons.refresh`               |
 
 The `queryTable.*` namespace exists specifically for table-shell
 labels. The Create/Refresh defaults reuse the project-wide
@@ -231,13 +231,13 @@ omitted key falls back to the default above.
 With `sync-url`, `QueryTable` keeps its internal state in sync with
 the route's query string. The following keys are mirrored both ways:
 
-| Query key | Source | Notes |
-|-----------|--------|-------|
-| `page` | Current page number | Omitted when on page 1. |
-| `perPage` | Rows per page | Omitted when at the default (25). |
-| `search` | Search input value | Omitted when empty. |
-| `sortBy` | Active sort column name | Omitted when no sort. |
-| `sortDir` | Sort direction | Set to `desc` only when sorted descending; absent otherwise. |
+| Query key | Source                  | Notes                                                        |
+| --------- | ----------------------- | ------------------------------------------------------------ |
+| `page`    | Current page number     | Omitted when on page 1.                                      |
+| `perPage` | Rows per page           | Omitted when at the default (25).                            |
+| `search`  | Search input value      | Omitted when empty.                                          |
+| `sortBy`  | Active sort column name | Omitted when no sort.                                        |
+| `sortDir` | Sort direction          | Set to `desc` only when sorted descending; absent otherwise. |
 
 What this gets you:
 
@@ -260,7 +260,7 @@ states.
 "smith", sorted by email descending, jumped to page 3, and bumped
 the page size to 50 lands on:
 
-```
+```text
 /admin/users?search=smith&sortBy=email&sortDir=desc&page=3&perPage=50
 ```
 
@@ -288,13 +288,13 @@ server-side GraphQL layer.
 
 When holding a ref to the component:
 
-| Member | Description |
-|--------|-------------|
-| `refetch()` | Force a network round-trip. |
-| `rows` | Reactive current page rows. |
-| `page` | Two-way ref for current page. |
-| `pagination` | Full pagination state. |
-| `result` | Raw Apollo query result. |
+| Member       | Description                   |
+| ------------ | ----------------------------- |
+| `refetch()`  | Force a network round-trip.   |
+| `rows`       | Reactive current page rows.   |
+| `page`       | Two-way ref for current page. |
+| `pagination` | Full pagination state.        |
+| `result`     | Raw Apollo query result.      |
 
 Use `queryTableRef.value.page = 1` after a filter change so the user
 returns to the first page (see admin tables for examples).

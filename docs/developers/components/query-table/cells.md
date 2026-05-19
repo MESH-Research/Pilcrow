@@ -27,15 +27,15 @@ of them require additional props on the column beyond the standard
 
 Two-line cell: primary value above a muted caption.
 
-| Source | Where the value comes from |
-|--------|----------------------------|
+| Source    | Where the value comes from                            |
+| --------- | ----------------------------------------------------- |
 | Main line | `scope.value` (the column's `field`) or `#value` slot |
-| Caption | `column.aside` + `column.asideLabel` or `#aside` slot |
+| Caption   | `column.aside` + `column.asideLabel` or `#aside` slot |
 
 **Column options.** Set these on the `QueryTableColumn`:
 
 | Field | Type | Description |
-|-------|------|-------------|
+| ----- | ---- | ----------- |
 | `aside` | `string \| ((row) => string)` | Caption text. String form is treated as a dot path into the row; function form is called with the row. |
 | `asideLabel` | `string \| ((row) => string)` | Optional descriptive label rendered before the aside value (e.g. `Publication: Acme Press`). |
 
@@ -115,8 +115,8 @@ username in a caption. Designed for `User` rows.
 
 **Column options.** Set these on the `QueryTableColumn`:
 
-| Field | Type | Description |
-|-------|------|-------------|
+| Field          | Type      | Description                                                                                                    |
+| -------------- | --------- | -------------------------------------------------------------------------------------------------------------- |
 | `hideUsername` | `boolean` | Suppress the username caption below the display name — useful when a dedicated username column already exists. |
 
 ```ts
@@ -204,12 +204,12 @@ const columns: QueryTableColumn[] = [
 `QTableBodyCellScope` is exported from
 `src/components/tables/QueryTable.vue`:
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `value` | `unknown` | Result of the column's `field` (string property or function) applied to the row. |
-| `row` | `Record<string, unknown>` | Full row object. |
-| `col` | `QTableColumn` | The column definition. Cast to `QueryTableColumn` to read project extensions (`aside`, `linkTo`, `hideUsername`, etc.). |
-| `dense` | `boolean` | Forwarded from `QueryTable`'s `dense` prop. |
+| Field   | Type                      | Description                                                                                                             |
+| ------- | ------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `value` | `unknown`                 | Result of the column's `field` (string property or function) applied to the row.                                        |
+| `row`   | `Record<string, unknown>` | Full row object.                                                                                                        |
+| `col`   | `QTableColumn`            | The column definition. Cast to `QueryTableColumn` to read project extensions (`aside`, `linkTo`, `hideUsername`, etc.). |
+| `dense` | `boolean`                 | Forwarded from `QueryTable`'s `dense` prop.                                                                             |
 
 Standard Quasar body-cell scope fields (`rowIndex`, `pageIndex`,
 `expand`, `selected`, etc.) are present on `scope` at runtime; add

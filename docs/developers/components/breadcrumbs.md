@@ -31,11 +31,11 @@ in `client/src/i18n/en-US.json`.
 
 ### Crumb fields
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `label` | `string` | i18n key. Resolved via `$t`. |
-| `to` | `RouteLocationRaw` | Optional link target. Defaults to the route's own location. The final crumb in the trail typically does not link anywhere — Quasar renders it as plain text automatically. |
-| `icon` | `string` | Optional Quasar icon name rendered before the label. |
+| Field   | Type               | Description                                                                                                                                                                |
+| ------- | ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `label` | `string`           | i18n key. Resolved via `$t`.                                                                                                                                               |
+| `to`    | `RouteLocationRaw` | Optional link target. Defaults to the route's own location. The final crumb in the trail typically does not link anywhere — Quasar renders it as plain text automatically. |
+| `icon`  | `string`           | Optional Quasar icon name rendered before the label.                                                                                                                       |
 
 ## Stacking multiple crumbs from one route
 
