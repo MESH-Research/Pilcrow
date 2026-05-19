@@ -49,7 +49,7 @@ const publicationRules = {
   }
 }
 const { mutate, error } = useMutation(CREATE_PUBLICATION, {
-  refetchQueries: ["GetPublications"]
+  refetchQueries: ["GetPublications", "GetAdminPublications"]
 })
 
 const pubV$ = useVuelidate(publicationRules, newPublication, {

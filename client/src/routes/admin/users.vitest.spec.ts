@@ -72,7 +72,5 @@ describe("User Index page mount", () => {
 
     const rows = wrapper.findAll("tbody tr")
     expect(rows).toHaveLength(2)
-
-    //TODO: Validate router.push on click
   })
 })
