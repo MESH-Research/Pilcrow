@@ -1,8 +1,36 @@
 <template>
   <q-card-section class="q-pb-none">
-    <q-card-section class="text-weight-bold q-pa-none">
-      {{ $t("submissions.filters.status_header") }}
-    </q-card-section>
+    <div class="row items-center justify-between q-mb-xs">
+      <div class="text-weight-bold">
+        {{ $t("submissions.filters.status_header") }}
+      </div>
+      <q-btn-group flat>
+        <q-btn
+          dense
+          flat
+          no-caps
+          size="sm"
+          :label="$t('admin.filters.all')"
+          @click="selectAll"
+        />
+        <q-btn
+          dense
+          flat
+          no-caps
+          size="sm"
+          :label="$t('admin.filters.none')"
+          @click="selectNone"
+        />
+        <q-btn
+          dense
+          flat
+          no-caps
+          size="sm"
+          :label="$t('admin.filters.invert')"
+          @click="invert"
+        />
+      </q-btn-group>
+    </div>
     <q-option-group v-model="filter" :options="tOptions" type="checkbox" />
   </q-card-section>
 </template>
@@ -59,4 +87,14 @@ const tOptions = options.map((s) => ({
   label: s.label ? t(s.label) : s.label,
   value: s.value
 }))
+
+function selectAll() {
+  filter.value = [...defaultOptions]
+}
+function selectNone() {
+  filter.value = []
+}
+function invert() {
+  filter.value = defaultOptions.filter((v) => !filter.value.includes(v))
+}
 </script>

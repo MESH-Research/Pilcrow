@@ -12,40 +12,17 @@
     :aria-label="$t('submissions.filters.aria')"
   >
     <q-menu>
-      <q-card-section class="q-pb-none">
-        <q-btn-group flat stretch class="full-width">
-          <q-btn
-            dense
-            no-caps
-            :label="$t('admin.filters.all')"
-            @click="selectAll"
-          />
-          <q-btn
-            dense
-            no-caps
-            :label="$t('admin.filters.none')"
-            @click="selectNone"
-          />
-          <q-btn
-            dense
-            no-caps
-            :label="$t('admin.filters.invert')"
-            @click="invert"
-          />
-        </q-btn-group>
-      </q-card-section>
-      <q-separator class="q-mt-sm" />
       <q-card-section :horizontal="true">
         <SubmissionsFilterPanelStatus v-model="statusFilter" :dense="dense" />
         <q-separator vertical />
-        <q-card-section>
+        <div class="column">
           <SubmissionsFilterPanelRoles v-model="roleFilter" :dense="dense" />
           <q-separator />
           <SubmissionsFilterPanelPublication
             v-model="publicationFilter"
             :dense="dense"
           />
-        </q-card-section>
+        </div>
       </q-card-section>
     </q-menu>
   </q-btn>
@@ -99,31 +76,6 @@ const activeCount = computed(() => {
   return n
 })
 
-// "All" restores each dimension's default set — the meaningful
-// "everything on" state. Publication is single-select with no default,
-// so it clears to null.
-function selectAll() {
-  statusFilter.value = [...defaultStatusOptions]
-  roleFilter.value = [...defaultRoleOptions]
-  publicationFilter.value = null
-}
-
-function selectNone() {
-  statusFilter.value = []
-  roleFilter.value = []
-  publicationFilter.value = null
-}
-
-function invert() {
-  statusFilter.value = defaultStatusOptions.filter(
-    (v) => !statusFilter.value.includes(v)
-  )
-  roleFilter.value = defaultRoleOptions.filter(
-    (v) => !roleFilter.value.includes(v)
-  )
-  // Publication is single-select; nothing meaningful to invert.
-}
-
 onMounted(() => {
   if (statusFilter.value?.length === 0) {
     statusFilter.value = [...defaultStatusOptions]
@@ -132,6 +84,4 @@ onMounted(() => {
     roleFilter.value = [...defaultRoleOptions]
   }
 })
-
-defineExpose({ selectAll, selectNone, invert })
 </script>
