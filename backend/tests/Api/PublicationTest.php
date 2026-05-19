@@ -492,6 +492,43 @@ class PublicationTest extends ApiTestCase
         $this->assertCount(1, $json);
     }
 
+    /**
+     * Regression: the visible() scope must AND with search, not bleed
+     * unrelated public rows past the search filter via SQL precedence.
+     *
+     * @return void
+     */
+    public function testSearchAndVisibilityCombineCorrectly()
+    {
+        /** @var User $user */
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        Publication::factory()->create(['name' => 'Alpha Quarterly']);
+        Publication::factory()->create(['name' => 'Beta Review']);
+        Publication::factory()->hidden()
+            ->hasAttached($user, [], 'editors')
+            ->create(['name' => 'Beta Secret']);
+        Publication::factory()->hidden()->create(['name' => 'Beta Hidden Other']);
+
+        $response = $this->graphQL(
+            'query GetPublications($search: String) {
+                publications(search: $search) {
+                    data {
+                        name
+                    }
+                }
+            }',
+            ['search' => 'Beta']
+        );
+        $names = collect($response->json('data.publications.data'))
+            ->pluck('name')
+            ->all();
+
+        sort($names);
+        $this->assertSame(['Beta Review', 'Beta Secret'], $names);
+    }
+
     protected function executePublicationRoleAssignment(string $role, Publication $publication, User $user)
     {
         return $this->graphQL(

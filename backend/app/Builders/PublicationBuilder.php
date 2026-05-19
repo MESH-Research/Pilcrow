@@ -40,8 +40,12 @@ class PublicationBuilder extends Builder
      * @param string $search
      * @return self
      */
-    public function search(mixed $search): self
+    public function search(?string $search): self
     {
+        if (!$search) {
+            return $this;
+        }
+
         return $this->where('name', 'like', '%' . $search . '%');
     }
 
@@ -58,8 +62,11 @@ class PublicationBuilder extends Builder
             return $this;
         }
 
-        return $this->public()->orWhereHas('users', function (Builder $query) use ($user) {
-            $query->where('user_id', $user->id);
+        return $this->where(function (Builder $query) use ($user) {
+            $query->where('is_publicly_visible', true)
+                ->orWhereHas('users', function (Builder $sub) use ($user) {
+                    $sub->where('user_id', $user->id);
+                });
         });
     }
 

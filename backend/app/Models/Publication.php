@@ -56,28 +56,6 @@ class Publication extends BaseModel
     }
 
     /**
-     * Scope only publically visible publications.
-     *
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeIsPubliclyVisible($query)
-    {
-        return $query->where('is_publicly_visible', true);
-    }
-
-    /**
-     * Scope only publications that are accepting submissions
-     *
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeIsAcceptingSubmissions($query)
-    {
-        return $query->where('is_accepting_submissions', true);
-    }
-
-    /**
      * Users that belong to a publication
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany

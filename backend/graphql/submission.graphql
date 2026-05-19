@@ -10,6 +10,7 @@ extend type Query {
         my_roles: [SubmissionUserRoles!] @scope(name: myRoleFilter)
         publication: [ID!] @scope(name: publicationFilter)
     ): [Submission!]
+        @guard
         @can(ability: "viewAll", query: true)
         @paginate(defaultCount: 100)
         @orderBy(column: "created_at", direction: DESC)
