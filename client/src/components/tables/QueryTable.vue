@@ -5,7 +5,7 @@
     flat
     binary-state-sort
     table-class="q-table--bordered"
-    table-header-class="bg-grey-2"
+    :table-header-class="headerClass"
     :rows="rows"
     :columns="tColumns"
     :visible-columns="props.visibleColumns"
@@ -148,6 +148,7 @@ graphql(`
 import { omit } from "lodash"
 import { computed, getCurrentInstance, useId, useSlots } from "vue"
 import type { DocumentNode } from "graphql"
+import { useQuasar } from "quasar"
 import { useI18nPrefix } from "src/use/i18nPrefix"
 import { usePaginatedQuery } from "./usePaginatedQuery"
 import { useUrlPaginationSync } from "./useUrlPaginationSync"
@@ -269,6 +270,14 @@ const refreshKey = computed(
 const slots = useSlots()
 const searchHintId = `search-hint-${useId()}`
 
+// In dark mode use a slight lift over the page background ($dark)
+// to mirror how bg-grey-2 lifts off white in light mode. Plain
+// grey-9 reads as cool/neutral against the blue-tinted page.
+const $q = useQuasar()
+const headerClass = computed(
+  () => `${$q.dark.isActive ? "bg-dark-1" : "bg-grey-2"}`
+)
+
 // Resolve every column header from `${tPrefix}.headers.${column.name}`.
 // Missing keys fall back to the key string (vue-i18n default) and
 // emit a console warning in dev so the missing translation is loud.
@@ -325,5 +334,8 @@ const topShow = computed(() => {
 :deep(.q-table__top) {
   padding: 12px 0;
   display: v-bind("topShow");
+}
+:deep(.q-table thead th) {
+  font-weight: 700;
 }
 </style>
