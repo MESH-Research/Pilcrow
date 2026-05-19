@@ -1307,14 +1307,10 @@
         "name": "Name",
         "is_publicly_visible": "Visibility",
         "is_accepting_submissions": "Accepting Submissions",
-        "created_at": "Created",
-        "actions": "Actions"
+        "created_at": "Created"
       },
       "btn": {
         "create": "Create"
-      },
-      "actions": {
-        "configure": "Configure"
       },
       "filters": {
         "aria": "Filter publications",

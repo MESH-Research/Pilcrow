@@ -37,18 +37,6 @@
           </router-link>
         </q-td>
       </template>
-      <template #body-cell-actions="rProps">
-        <q-td :props="rProps">
-          <q-btn
-            color="primary"
-            size="sm"
-            dense
-            icon="settings"
-            :label="$t('admin.publication.actions.configure')"
-            :to="destRoute(rProps.value as string, 'basic')"
-          />
-        </q-td>
-      </template>
     </QueryTable>
     <q-dialog
       v-model="showCreateDialog"
@@ -142,11 +130,6 @@ definePage({
   }
 })
 
-const destRoute = (id: string, page: string) => ({
-  name: `publication:setup:${page}`,
-  params: { id }
-})
-
 const columns: QueryTableColumn[] = [
   {
     name: "name",
@@ -172,11 +155,6 @@ const columns: QueryTableColumn[] = [
     align: "left",
     sortable: true,
     component: DateTimeCell
-  },
-  {
-    name: "actions",
-    field: "id",
-    align: "right"
   }
 ]
 
