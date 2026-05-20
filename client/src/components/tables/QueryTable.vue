@@ -17,7 +17,7 @@
   >
     <template #top="scope">
       <slot name="top">
-        <div class="col q-pa-none">
+        <div class="col q-pb-md">
           <div class="row q-gutter-sm q-pa-none">
             <slot name="top-before" v-bind="scope" />
             <q-input
