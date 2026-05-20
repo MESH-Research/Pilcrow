@@ -65,6 +65,33 @@ class Publication extends BaseModel
     }
 
     /**
+     * Scope to publications the current user is allowed to see.
+     *
+     * Guests see only publicly visible publications. Application
+     * administrators see everything. Other authenticated users see publicly
+     * visible publications plus any private publication they hold a role on.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeVisibleToCurrentUser($query)
+    {
+        /** @var \App\Models\User|null $user */
+        $user = auth()->user();
+
+        if ($user && $user->hasRole(Role::APPLICATION_ADMINISTRATOR)) {
+            return $query;
+        }
+
+        return $query->where(function ($q) use ($user) {
+            $q->where('is_publicly_visible', true);
+            if ($user) {
+                $q->orWhereIn('id', $user->publications()->select('publications.id'));
+            }
+        });
+    }
+
+    /**
      * Users that belong to a publication
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany

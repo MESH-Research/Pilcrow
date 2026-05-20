@@ -58,6 +58,9 @@ class PublicationPolicy
         if ($publication->is_publicly_visible) {
             return true;
         }
+        if ($user === null) {
+            return false;
+        }
         if ($user->hasRole(Role::APPLICATION_ADMINISTRATOR)) {
             return true;
         }
