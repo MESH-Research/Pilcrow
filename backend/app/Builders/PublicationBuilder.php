@@ -52,6 +52,10 @@ class PublicationBuilder extends Builder
     /**
      * Scope to publications visible to the current user.
      *
+     * Guests see only publicly visible publications. Application
+     * administrators see everything. Other authenticated users see publicly
+     * visible publications plus any private publication they hold a role on.
+     *
      * @return self
      */
     public function visible(): self
@@ -63,10 +67,12 @@ class PublicationBuilder extends Builder
         }
 
         return $this->where(function (Builder $query) use ($user) {
-            $query->where('is_publicly_visible', true)
-                ->orWhereHas('users', function (Builder $sub) use ($user) {
+            $query->where('is_publicly_visible', true);
+            if ($user) {
+                $query->orWhereHas('users', function (Builder $sub) use ($user) {
                     $sub->where('user_id', $user->id);
                 });
+            }
         });
     }
 
