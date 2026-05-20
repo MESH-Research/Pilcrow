@@ -95,7 +95,22 @@ const telemetryErrorLink = onError(
         scope.setExtra("graphql.variables", scrub(operation?.variables))
         if (graphQLErrors?.length) {
           for (const err of graphQLErrors) {
-            Sentry.captureException(err)
+            // GraphQLError arrives as POJO over the wire; wrap so Sentry
+            // gets a real Error with message-based grouping instead of
+            // logging "Object captured as exception".
+            const wrapped =
+              err instanceof Error
+                ? err
+                : new Error(err.message ?? "GraphQL error")
+            Sentry.captureException(wrapped, {
+              contexts: {
+                graphql: {
+                  path: err.path,
+                  locations: err.locations,
+                  extensions: err.extensions
+                }
+              }
+            })
           }
         }
         if (
