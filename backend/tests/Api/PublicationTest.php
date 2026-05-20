@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Tests\Api;
 
 use App\Models\Publication;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
@@ -443,6 +444,85 @@ class PublicationTest extends ApiTestCase
         $json = $response->json('data.publications.data');
 
         $this->assertCount(2, $json);
+    }
+
+    /**
+     * @return void
+     */
+    public function testGuestSeesOnlyPubliclyVisiblePublications()
+    {
+        Publication::factory()->count(2)->create();
+        Publication::factory()->hidden()->count(3)->create();
+
+        $response = $this->graphQL(
+            'query GetPublications {
+                publications {
+                    data { id }
+                }
+            }'
+        );
+
+        $response->assertGraphQLErrorFree();
+        $json = $response->json('data.publications.data');
+        $this->assertCount(2, $json);
+    }
+
+    /**
+     * @return void
+     */
+    public function testMemberSeesPrivatePublicationsTheyBelongTo()
+    {
+        /** @var User $user */
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        Publication::factory()->count(2)->create();
+        Publication::factory()->hidden()->count(2)->create();
+        $memberPub = Publication::factory()->hidden()->create();
+        $user->publications()->attach($memberPub->id, ['role_id' => Role::EDITOR_ROLE_ID]);
+
+        $response = $this->graphQL(
+            'query GetPublications {
+                publications {
+                    data { id }
+                }
+            }'
+        );
+
+        $response->assertGraphQLErrorFree();
+        $json = $response->json('data.publications.data');
+        $ids = array_column($json, 'id');
+        $this->assertCount(3, $json);
+        $this->assertContains((string)$memberPub->id, $ids);
+    }
+
+    /**
+     * @return void
+     */
+    public function testNonMemberCannotSeePrivatePublications()
+    {
+        /** @var User $user */
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        Publication::factory()->count(2)->create();
+        $hiddenPubs = Publication::factory()->hidden()->count(3)->create();
+
+        $response = $this->graphQL(
+            'query GetPublications {
+                publications {
+                    data { id }
+                }
+            }'
+        );
+
+        $response->assertGraphQLErrorFree();
+        $json = $response->json('data.publications.data');
+        $ids = array_column($json, 'id');
+        $this->assertCount(2, $json);
+        foreach ($hiddenPubs as $p) {
+            $this->assertNotContains((string)$p->id, $ids);
+        }
     }
 
     protected function executePublicationRoleAssignment(string $role, Publication $publication, User $user)
