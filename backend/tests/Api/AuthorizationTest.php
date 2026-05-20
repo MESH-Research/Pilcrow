@@ -137,16 +137,17 @@ class AuthorizationTest extends ApiTestCase
         $this->assertNull($response->json('errors'));
     }
 
-    public function testGuestCannotListPublications(): void
+    public function testGuestSeesOnlyPubliclyVisiblePublications(): void
     {
         Publication::factory()->count(2)->create();
+        Publication::factory()->hidden()->count(3)->create();
 
         $response = $this->graphQL(
             'query { publications(first: 10) { data { id name } } }'
         );
 
-        $this->assertNotEmpty($response->json('errors'));
-        $this->assertNull($response->json('data.publications'));
+        $response->assertGraphQLErrorFree();
+        $this->assertCount(2, $response->json('data.publications.data'));
     }
 
     public function testGuestCannotListSubmissions(): void

@@ -12,7 +12,6 @@ extend type Query {
     ): [Publication!]!
         @paginate(defaultCount: 10, scopes: ["visible"])
         @orderBy(column: "name", direction: ASC)
-        @guard
 }
 
 """
