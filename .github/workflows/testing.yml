@@ -80,7 +80,7 @@ jobs:
           use_oidc: true
       - name: Upload test results to Codecov
         if: ${{ !cancelled() }}
-        uses: codecov/test-results-action@v5
+        uses: codecov/test-results-action@v1
         with:
           files: ./coverage-web/junit.xml
           flags: client
@@ -150,7 +150,7 @@ jobs:
           use_oidc: true
       - name: Upload test results to Codecov
         if: ${{ !cancelled() }}
-        uses: codecov/test-results-action@v5
+        uses: codecov/test-results-action@v1
         with:
           files: ./coverage-fpm/junit.xml
           flags: backend
