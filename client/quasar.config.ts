@@ -60,7 +60,7 @@ export default defineConfig(function (/* ctx */) {
         browser: ["es2019", "edge88", "firefox78", "chrome87", "safari13.1"],
         node: "node20"
       },
-      extendViteConf(viteConf) {
+      async extendViteConf(viteConf) {
         viteConf.experimental = viteConf.experimental || {}
         viteConf.experimental.renderBuiltUrl = function (
           filename,
@@ -73,6 +73,16 @@ export default defineConfig(function (/* ctx */) {
           }
         }
         viteConf.plugins = viteConf.plugins || []
+        if (process.env.CODECOV_BUNDLE_ANALYSIS === "true") {
+          const { codecovVitePlugin } = await import("@codecov/vite-plugin")
+          viteConf.plugins.push(
+            codecovVitePlugin({
+              enableBundleAnalysis: true,
+              bundleName: "pilcrow-client",
+              oidc: { useGitHubOIDC: true },
+            }),
+          )
+        }
         viteConf.plugins.push({
           name: "watch-backend-schema",
           configureServer(server) {
@@ -149,16 +159,6 @@ export default defineConfig(function (/* ctx */) {
             matchOnSchemas: false,
             configOverrideOnBuild: {
               schema: "src/graphql/schema.graphql",
-            },
-          },
-        ],
-        [
-          "@codecov/vite-plugin",
-          {
-            enableBundleAnalysis: process.env.CODECOV_BUNDLE_ANALYSIS === "true",
-            bundleName: "pilcrow-client",
-            oidc: {
-              useGitHubOIDC: true,
             },
           },
         ],
