@@ -1,0 +1,35 @@
+coverage:
+  status:
+    project:
+      default:
+        target: auto
+        threshold: 1%
+    patch:
+      default:
+        target: auto
+        threshold: 1%
+
+flag_management:
+  default_rules:
+    carryforward: true
+  individual_flags:
+    - name: client
+      paths:
+        - client/src/
+    - name: backend
+      paths:
+        - backend/app/
+
+comment:
+  layout: "header, diff, flags, components, files"
+  require_changes: false
+
+ignore:
+  - "**/*.test.*"
+  - "**/*.spec.*"
+  - "**/*.vitest.*"
+  - "**/tests/**"
+  - "**/test/**"
+  - "client/src/graphql/operations/**"
+  - "docs/**"
+  - "helm/**"
