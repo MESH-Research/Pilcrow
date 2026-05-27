@@ -39,7 +39,13 @@ ARG BUILDSTAMP
 RUN --mount=type=cache,target=/usr/local/share/.cache/yarn/v6 \
     yarn test:unit:ci \
       --reporter=default \
-      --reporter=github-actions
+      --reporter=github-actions \
+      --coverage \
+      --coverage.reporter=cobertura \
+      --coverage.reporter=text-summary
+
+FROM scratch AS coverage
+COPY --from=unit-test /app/coverage/cobertura-coverage.xml /cobertura-coverage.xml
 
 FROM base AS lint
 ARG BUILDSTAMP
