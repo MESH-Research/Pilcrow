@@ -80,9 +80,9 @@ variable "NETWORK" {
 
 target "fpm-test" {
     inherits = ["fpm"]
-    target = "unit-test"
+    target = "coverage"
     platforms = [LOCAL_PLATFORM]
-    output = ["type=cacheonly"]
+    output = ["type=local,dest=./coverage-fpm"]
     network = NETWORK
     args = {
         BUILDSTAMP = BUILDSTAMP
@@ -102,9 +102,9 @@ target "fpm-lint" {
 
 target "web-test" {
     inherits = ["web"]
-    target = "unit-test"
+    target = "coverage"
     platforms = [LOCAL_PLATFORM]
-    output = ["type=cacheonly"]
+    output = ["type=local,dest=./coverage-web"]
 }
 
 target "web-bundle" {
