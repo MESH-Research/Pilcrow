@@ -152,6 +152,16 @@ export default defineConfig(function (/* ctx */) {
             },
           },
         ],
+        [
+          "@codecov/vite-plugin",
+          {
+            enableBundleAnalysis: process.env.CODECOV_BUNDLE_ANALYSIS === "true",
+            bundleName: "pilcrow-client",
+            oidc: {
+              useGitHubOIDC: true,
+            },
+          },
+        ],
       ],
       useFilenameHashes: false
     },

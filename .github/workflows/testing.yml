@@ -87,6 +87,37 @@ jobs:
           fail_ci_if_error: false
           use_oidc: true
 
+  client-bundle-analytics:
+    name: "Client / Bundle Analytics"
+    runs-on: ubuntu-24.04
+    needs: [changes]
+    if: ${{ needs.changes.outputs.client == 'true' }}
+    defaults:
+      run:
+        working-directory: client
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: yarn
+          cache-dependency-path: client/yarn.lock
+      - name: Install dependencies
+        env:
+          NO_POSTINSTALL: "1"
+        run: yarn install --frozen-lockfile
+      - name: Quasar prepare
+        run: yarn quasar prepare
+      - name: GraphQL codegen
+        run: yarn graphql:codegen-local
+      - name: Build with bundle analysis
+        env:
+          CODECOV_BUNDLE_ANALYSIS: "true"
+        run: yarn build
+
   build-images:
     name: "Build"
     runs-on: ubuntu-24.04
