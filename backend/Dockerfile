@@ -94,10 +94,12 @@ ARG DB_HOST=127.0.0.1
 ENV DB_HOST=${DB_HOST}
 RUN ./artisan migrate:fresh --seed
 
-RUN touch .env && ./artisan test --coverage-cobertura=coverage/cobertura.xml
+RUN touch .env && ./artisan test \
+    --coverage-cobertura=coverage/cobertura.xml \
+    --log-junit=coverage/junit.xml
 
 FROM scratch AS coverage
-COPY --from=unit-test /var/www/html/coverage/cobertura.xml /cobertura.xml
+COPY --from=unit-test /var/www/html/coverage/ /
 
 FROM base AS lint
 

@@ -78,6 +78,14 @@ jobs:
           flags: client
           fail_ci_if_error: false
           use_oidc: true
+      - name: Upload test results to Codecov
+        if: ${{ !cancelled() }}
+        uses: codecov/test-results-action@v5
+        with:
+          files: ./coverage-web/junit.xml
+          flags: client
+          fail_ci_if_error: false
+          use_oidc: true
 
   build-images:
     name: "Build"
@@ -137,6 +145,14 @@ jobs:
         uses: codecov/codecov-action@v4
         with:
           files: ./coverage-fpm/cobertura.xml
+          flags: backend
+          fail_ci_if_error: false
+          use_oidc: true
+      - name: Upload test results to Codecov
+        if: ${{ !cancelled() }}
+        uses: codecov/test-results-action@v5
+        with:
+          files: ./coverage-fpm/junit.xml
           flags: backend
           fail_ci_if_error: false
           use_oidc: true
