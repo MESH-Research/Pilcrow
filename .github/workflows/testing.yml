@@ -14,6 +14,8 @@ on:
       - ".release-please-manifest.json"
 permissions:
   packages: write
+  id-token: write
+  contents: read
 concurrency:
   group: tests-${{ format('{0}-{1}', github.head_ref || github.run_number, github.job) }}
   cancel-in-progress: true
@@ -68,6 +70,53 @@ jobs:
         name: Run Unit Tests
         with:
           target: "web-test-ci"
+      - name: Upload coverage to Codecov
+        if: ${{ !cancelled() }}
+        uses: codecov/codecov-action@v4
+        with:
+          files: ./coverage-web/cobertura-coverage.xml
+          flags: client
+          fail_ci_if_error: false
+          use_oidc: true
+      - name: Upload test results to Codecov
+        if: ${{ !cancelled() }}
+        uses: codecov/test-results-action@v1
+        with:
+          files: ./coverage-web/junit.xml
+          flags: client
+          fail_ci_if_error: false
+          use_oidc: true
+
+  client-bundle-analytics:
+    name: "Client / Bundle Analytics"
+    runs-on: ubuntu-24.04
+    needs: [changes]
+    if: ${{ needs.changes.outputs.client == 'true' }}
+    defaults:
+      run:
+        working-directory: client
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: yarn
+          cache-dependency-path: client/yarn.lock
+      - name: Install dependencies
+        env:
+          NO_POSTINSTALL: "1"
+        run: yarn install --frozen-lockfile
+      - name: Quasar prepare
+        run: yarn quasar prepare
+      - name: GraphQL codegen
+        run: yarn graphql:codegen-local
+      - name: Build with bundle analysis
+        env:
+          CODECOV_BUNDLE_ANALYSIS: "true"
+        run: yarn build
 
   build-images:
     name: "Build"
@@ -122,6 +171,22 @@ jobs:
       - uses: mesh-research/github-actions/build-image@v2
         with:
           target: "fpm-test-ci"
+      - name: Upload coverage to Codecov
+        if: ${{ !cancelled() }}
+        uses: codecov/codecov-action@v4
+        with:
+          files: ./coverage-fpm/cobertura.xml
+          flags: backend
+          fail_ci_if_error: false
+          use_oidc: true
+      - name: Upload test results to Codecov
+        if: ${{ !cancelled() }}
+        uses: codecov/test-results-action@v1
+        with:
+          files: ./coverage-fpm/junit.xml
+          flags: backend
+          fail_ci_if_error: false
+          use_oidc: true
   # e2e:
   #   name: "E2E Test"
   #   needs: [build-images]
