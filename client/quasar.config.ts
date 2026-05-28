@@ -8,7 +8,6 @@
 // Configuration for your app
 // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js
 
-import { codecovVitePlugin } from "@codecov/vite-plugin"
 import { resolve } from "node:path"
 import { defineConfig } from "#q-app/wrappers"
 
@@ -74,15 +73,6 @@ export default defineConfig(function (/* ctx */) {
           }
         }
         viteConf.plugins = viteConf.plugins || []
-        if (process.env.CODECOV_BUNDLE_ANALYSIS === "true") {
-          viteConf.plugins.push(
-            codecovVitePlugin({
-              enableBundleAnalysis: true,
-              bundleName: "pilcrow-client",
-              oidc: { useGitHubOIDC: true },
-            }),
-          )
-        }
         viteConf.plugins.push({
           name: "watch-backend-schema",
           configureServer(server) {
