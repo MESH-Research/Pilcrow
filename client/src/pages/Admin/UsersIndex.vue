@@ -1,5 +1,5 @@
 <template>
-  <h2 class="q-pl-lg">All Users</h2>
+  <h2 class="q-pl-lg">{{ $t("user.all_users") }}</h2>
   <div v-if="users.length">
     <user-list-basic
       ref="user_list_basic"
