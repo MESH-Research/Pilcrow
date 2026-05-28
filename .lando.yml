@@ -9,6 +9,7 @@ config:
   composer: []
   webroot: backend/public
   via: nginx
+  xdebug: "coverage"
   config:
     php: backend/php.dev.ini
     vhosts: .lando/default.conf.tpl
@@ -91,6 +92,14 @@ tooling:
     description: Run PHPUnit tests (cwd-independent)
     env:
       DB_CONNECTION: testing
+  backend-coverage:
+    service: appserver
+    cmd: php artisan test --coverage-cobertura=coverage/cobertura.xml --coverage-text
+    dir: /app/backend
+    description: Run PHPUnit with Xdebug coverage (cobertura + text)
+    env:
+      DB_CONNECTION: testing
+      XDEBUG_MODE: coverage
   extras:
     service: client
     cmd: node scripts/lando-extras/extras.js
