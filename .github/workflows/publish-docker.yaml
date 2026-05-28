@@ -43,13 +43,12 @@ jobs:
         run: |
           gh release upload ${{ github.ref_name }} \
             ${{ steps.build-image.outputs.frontend-bundle }}
-      - name: Upload sourcemaps to GlitchTip
+      - name: Upload sourcemaps to Sentry
         if: steps.build-image.outputs.frontend-bundle != ''
         env:
-          SENTRY_AUTH_TOKEN: ${{ secrets.GLITCHTIP_AUTH_TOKEN }}
-          SENTRY_URL: ${{ secrets.GLITCHTIP_URL }}
-          SENTRY_ORG: ${{ secrets.GLITCHTIP_ORG }}
-          SENTRY_PROJECT: ${{ secrets.GLITCHTIP_PROJECT }}
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
           BUNDLE: ${{ steps.build-image.outputs.frontend-bundle }}
         run: |
           VERSION=$(git describe --tags --match 'v*')
