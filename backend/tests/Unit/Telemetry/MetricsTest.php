@@ -124,6 +124,7 @@ class MetricsTest extends TestCase
         $agg = $this->aggregator();
         $prop = (new ReflectionObject($agg))->getProperty('metrics');
         $prop->setAccessible(true);
+
         return $prop->getValue($agg);
     }
 
