@@ -61,7 +61,10 @@ jobs:
             echo "No sourcemaps to upload; skipping."
             exit 0
           fi
+          RELEASE="pilcrow-client@${VERSION}"
+          npx --yes @sentry/cli@^2 releases new "$RELEASE"
           npx --yes @sentry/cli@^2 sourcemaps upload \
-            --release "pilcrow-client@${VERSION}" \
+            --release "$RELEASE" \
             --url-prefix '~/' \
             /tmp/sourcemap-extract
+          npx --yes @sentry/cli@^2 releases finalize "$RELEASE"
