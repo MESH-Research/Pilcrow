@@ -1141,4 +1141,123 @@ class SubmissionTest extends ApiTestCase
         ];
         $response->assertJsonPath('data', $expected_data);
     }
+
+    /**
+     * A publication administrator should see only submissions in publications
+     * where they hold that role, and submissions in unrelated publications must
+     * not cause the whole query to fail.
+     *
+     * @return void
+     */
+    public function testPublicationAdminCanQuerySubmissionsAcrossPublications()
+    {
+        /** @var User $admin */
+        $admin = User::factory()->create();
+        $this->actingAs($admin);
+
+        $ownPublication = Publication::factory()
+            ->hasAttached($admin, [], 'publicationAdmins')
+            ->create();
+        $ownSubmission = Submission::factory()
+            ->for($ownPublication)
+            ->create(['title' => 'Own publication submission']);
+
+        $otherPublication = Publication::factory()->create();
+        Submission::factory()
+            ->for($otherPublication)
+            ->create(['title' => 'Other publication submission']);
+
+        $response = $this->graphQL(
+            'query GetSubmissions {
+                submissions {
+                    data {
+                        id
+                        title
+                    }
+                    paginatorInfo {
+                        total
+                    }
+                }
+            }'
+        );
+
+        $this->assertNull(
+            $response->json('errors'),
+            'Expected no authorization errors but got: ' . json_encode($response->json('errors'))
+        );
+        $response->assertJsonPath('data.submissions.paginatorInfo.total', 1);
+        $response->assertJsonPath('data.submissions.data.0.id', (string)$ownSubmission->id);
+    }
+
+    /**
+     * An application administrator should see every submission, regardless of
+     * publication membership.
+     *
+     * @return void
+     */
+    public function testApplicationAdminSeesAllSubmissions()
+    {
+        $this->beAppAdmin();
+
+        $pubA = Publication::factory()->create();
+        $pubB = Publication::factory()->create();
+        Submission::factory()->for($pubA)->create();
+        Submission::factory()->for($pubB)->create();
+
+        $response = $this->graphQL(
+            'query GetSubmissions {
+                submissions {
+                    data { id }
+                    paginatorInfo { total }
+                }
+            }'
+        );
+
+        $this->assertNull(
+            $response->json('errors'),
+            'Expected no authorization errors but got: ' . json_encode($response->json('errors'))
+        );
+        $response->assertJsonPath('data.submissions.paginatorInfo.total', 2);
+    }
+
+    /**
+     * An editor should see only submissions in publications where they hold
+     * the editor role.
+     *
+     * @return void
+     */
+    public function testEditorSeesSubmissionsOnlyInOwnPublications()
+    {
+        /** @var User $editor */
+        $editor = User::factory()->create();
+        $this->actingAs($editor);
+
+        $ownPublication = Publication::factory()
+            ->hasAttached($editor, [], 'editors')
+            ->create();
+        $ownSubmission = Submission::factory()
+            ->for($ownPublication)
+            ->create(['title' => 'Editor publication submission']);
+
+        $otherPublication = Publication::factory()->create();
+        Submission::factory()
+            ->for($otherPublication)
+            ->create(['title' => 'Unrelated publication submission']);
+
+        $response = $this->graphQL(
+            'query GetSubmissions {
+                submissions {
+                    data { id title }
+                    paginatorInfo { total }
+                }
+            }'
+        );
+
+        $this->assertNull(
+            $response->json('errors'),
+            'Expected no authorization errors but got: ' . json_encode($response->json('errors'))
+        );
+        $response->assertJsonPath('data.submissions.paginatorInfo.total', 1);
+        $response->assertJsonPath('data.submissions.data.0.id', (string)$ownSubmission->id);
+    }
 }

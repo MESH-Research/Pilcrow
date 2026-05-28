@@ -21,9 +21,7 @@ describe("readTelemetryConfig", () => {
       enabled: false,
       dsn: "https://k@example.ingest.sentry.io/1",
       environment: "production",
-      tracesSampleRate: 0,
-      replaysSessionSampleRate: 0,
-      replaysOnErrorSampleRate: 0
+      tracesSampleRate: 0
     })
     expect(readTelemetryConfig()).toBeNull()
   })
@@ -33,9 +31,7 @@ describe("readTelemetryConfig", () => {
       enabled: true,
       dsn: null,
       environment: "production",
-      tracesSampleRate: 0,
-      replaysSessionSampleRate: 0,
-      replaysOnErrorSampleRate: 0
+      tracesSampleRate: 0
     })
     expect(readTelemetryConfig()).toBeNull()
   })
@@ -45,9 +41,7 @@ describe("readTelemetryConfig", () => {
       enabled: true,
       dsn: "https://k@example.ingest.sentry.io/1",
       environment: "staging",
-      tracesSampleRate: 0.25,
-      replaysSessionSampleRate: 0,
-      replaysOnErrorSampleRate: 0.1
+      tracesSampleRate: 0.25
     }
     setCfg(cfg)
     expect(readTelemetryConfig()).toEqual(cfg)

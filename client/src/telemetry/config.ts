@@ -3,8 +3,6 @@ export type TelemetryConfig = {
   dsn: string | null
   environment: string | null
   tracesSampleRate: number
-  replaysSessionSampleRate: number
-  replaysOnErrorSampleRate: number
 }
 
 declare global {

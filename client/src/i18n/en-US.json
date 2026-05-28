@@ -7,6 +7,7 @@
   },
   "user": {
     "self": "No users | User | Users",
+    "all_users": "All Users",
     "email": "Email",
     "name": "Name",
     "username": "Username",
@@ -502,6 +503,7 @@
       "assign": "Assign",
       "criteria": "Style Criteria",
       "content": "Page Content",
+      "content_description": "Customize blocks of text displayed to your publication's users.",
       "problems": {
         "no_admins": "This publication has no users assigned to administer it.",
         "no_criteria": "Set up style criteria for your publication."
@@ -654,6 +656,7 @@
     "empty": "No Publications Created"
   },
   "submission": {
+    "preview_notice": "You are previewing this submission.",
     "edit_title": {
       "tooltip": "Edit Title",
       "set_title": "Set Submission Title",
@@ -1070,6 +1073,7 @@
     },
     "error_403": "Oops, you don't have permission to view this page.",
     "error_404": {
+      "404": "404",
       "text": "Sorry, nothing here... (404)",
       "back": "Go Back",
       "home": "Go Home"

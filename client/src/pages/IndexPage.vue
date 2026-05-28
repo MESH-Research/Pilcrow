@@ -42,7 +42,7 @@
             <i18n-t keypath="home.open_source.statement" tag="p">
               <template #pilcrow_docs>
                 <a href="https://latest.docs.pilcrow.dev/" class="text-primary">
-                  https://latest.docs/pilcrow.dev/
+                  https://latest.docs.pilcrow.dev/
                 </a>
               </template>
             </i18n-t>

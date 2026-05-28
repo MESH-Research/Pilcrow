@@ -49,6 +49,18 @@ server {
         }
         add_header SourceMap $sourcemap_url always;
 
+        # Entry bundle filename is not content-hashed (useFilenameHashes:false),
+        # so the URL never changes between deploys. Force revalidation via etag
+        # on every load; without this nginx sends no Cache-Control and Chrome
+        # heuristic-caches stale JS until a manual hard reload.
+        add_header Cache-Control "no-cache" always;
+
+        try_files $uri @backend;
+    }
+
+    location ~* \.css$ {
+        # Same hashless-filename reasoning as the .js block above.
+        add_header Cache-Control "no-cache" always;
         try_files $uri @backend;
     }
 

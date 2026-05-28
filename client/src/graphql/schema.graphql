@@ -591,7 +591,9 @@ type Query {
   """Return a submission by ID"""
   submission(id: ID): Submission
 
-  """Return all submissions"""
+  """
+  Return submissions in publications managed by the current user (application admins see all; publication admins and editors see submissions in publications where they hold that role).
+  """
   submissions(
     """Limits number of fetched items."""
     first: Int! = 100

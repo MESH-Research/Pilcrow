@@ -6,6 +6,7 @@ namespace App\Models;
 use App\Builders\SubmissionBuilder;
 use App\Events\SubmissionStatusUpdated;
 use App\Http\Traits\CreatedUpdatedBy;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -46,6 +47,30 @@ class Submission extends Model implements Auditable
             $changes = $submission->getChanges();
             SubmissionStatusUpdated::dispatchIf(array_key_exists('status', $changes), $submission);
         });
+    }
+
+    /**
+     * Restrict the query to submissions in publications managed by the
+     * authenticated user:
+     *  - Application administrators manage all publications, so see all submissions.
+     *  - Users with any publication role (currently administrator or editor —
+     *    the only roles attached at the publication level) see submissions in
+     *    those publications.
+     *  - Anyone else sees nothing.
+     *
+     * Relies on the @guard directive to reject unauthenticated requests before
+     * this scope runs, so Auth::user() is always populated here.
+     */
+    public function scopeManagedPublicationSubmissions(Builder $query): Builder
+    {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
+        if ($user->hasRole(Role::APPLICATION_ADMINISTRATOR)) {
+            return $query;
+        }
+
+        return $query->whereIn('publication_id', $user->publications()->pluck('publications.id'));
     }
 
     /**

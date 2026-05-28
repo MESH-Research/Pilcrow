@@ -4,15 +4,14 @@ extend type Query {
     "Return a submission by ID"
     submission(id: ID @eq): Submission @find @can(ability: "view", find: "id")
 
-    "Return all submissions"
+    "Return submissions in publications managed by the current user (application admins see all; publication admins and editors see submissions in publications where they hold that role)."
     submissions(
         status: [SubmissionStatus!] @scope(name: statusFilter)
         my_roles: [SubmissionUserRoles!] @scope(name: myRoleFilter)
         publication: [ID!] @scope(name: publicationFilter)
     ): [Submission!]
         @guard
-        @can(ability: "viewAll", query: true)
-        @paginate(defaultCount: 100)
+        @paginate(defaultCount: 100, scopes: ["managedPublicationSubmissions"])
         @orderBy(column: "created_at", direction: DESC)
 }
 
