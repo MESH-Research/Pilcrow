@@ -31,8 +31,6 @@
       'dsn' => config('app.telemetry.enabled') ? (config('app.telemetry.public_dsn') ?? config('app.telemetry.dsn')) : null,
       'environment' => config('app.telemetry.environment'),
       'tracesSampleRate' => (float) config('app.telemetry.traces_sample_rate'),
-      'replaysSessionSampleRate' => (float) config('app.telemetry.replays_session_sample_rate'),
-      'replaysOnErrorSampleRate' => (float) config('app.telemetry.replays_on_error_sample_rate'),
     ])
     window.__TELEMETRY_CONFIG = @json($telemetry);
   </script>

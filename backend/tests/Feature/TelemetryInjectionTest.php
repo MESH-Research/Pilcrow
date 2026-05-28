@@ -27,8 +27,6 @@ class TelemetryInjectionTest extends TestCase
             'app.telemetry.dsn' => 'https://public@example.ingest.sentry.io/1',
             'app.telemetry.environment' => 'staging',
             'app.telemetry.traces_sample_rate' => 0.25,
-            'app.telemetry.replays_session_sample_rate' => 0.0,
-            'app.telemetry.replays_on_error_sample_rate' => 0.1,
         ]);
 
         $response = $this->get('/');
@@ -38,7 +36,7 @@ class TelemetryInjectionTest extends TestCase
         $response->assertSee('"environment":"staging"', false);
         $response->assertDontSee('"release"', false);
         $response->assertSee('"tracesSampleRate":0.25', false);
-        $response->assertSee('"replaysOnErrorSampleRate":0.1', false);
+        $response->assertDontSee('replays', false);
     }
 
     public function testTelemetryDsnSuppressedWhenDisabledEvenIfSet(): void

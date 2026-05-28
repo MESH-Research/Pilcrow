@@ -28,8 +28,6 @@ return [
         'environment' => env('TELEMETRY_ENVIRONMENT', env('APP_ENV', 'production')),
         'release' => env('TELEMETRY_RELEASE'),
         'traces_sample_rate' => (float) env('TELEMETRY_TRACES_SAMPLE_RATE', 0.0),
-        'replays_session_sample_rate' => (float) env('TELEMETRY_REPLAYS_SESSION_SAMPLE_RATE', 0.0),
-        'replays_on_error_sample_rate' => (float) env('TELEMETRY_REPLAYS_ON_ERROR_SAMPLE_RATE', 0.0),
     ],
 
     /*
