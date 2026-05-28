@@ -189,22 +189,6 @@ class SubmissionPolicy
     }
 
     /**
-     * View submission policy
-     *
-     * @param \App\Models\User $user
-     * @param \App\Models\Submission $submission
-     * @return \Illuminate\Auth\Access\Response|bool
-     */
-    public function viewAll(User $user, Submission $submission)
-    {
-        if ($this->checkAdminRoles($user, $submission->publication_id)) {
-            return true;
-        }
-
-        return Response::deny('UNAUTHORIZED');
-    }
-
-    /**
      * Update Submission Policy
      *
      * @param \App\Models\User $user
