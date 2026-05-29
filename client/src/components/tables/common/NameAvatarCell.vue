@@ -16,7 +16,7 @@
       v-else
       class="text-grey-8"
       :aria-label="$t('admin.users.no_user_assigned')"
-      >&mdash;</span
+      >{{ emptyPlaceholder }}</span
     >
   </q-td>
 </template>
@@ -54,4 +54,8 @@ const user = computed(
 )
 
 const hideUsername = computed(() => props.scope.col.hideUsername === true)
+
+// Em-dash placeholder shown when no user is assigned. Kept as a constant so the
+// raw glyph lives in script and is not flagged by @intlify/vue-i18n/no-raw-text.
+const emptyPlaceholder = "—"
 </script>
