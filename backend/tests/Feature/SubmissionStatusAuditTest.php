@@ -44,8 +44,8 @@ class SubmissionStatusAuditTest extends TestCase
 
         $statuses = $submission->audits
             ->pluck('new_values')
-            ->map(fn ($values) => $values['status'] ?? null)
-            ->filter(fn ($status) => $status !== null);
+            ->map(fn($values) => $values['status'] ?? null)
+            ->filter(fn($status) => $status !== null);
 
         $this->assertTrue(
             $statuses->contains(Submission::ACCEPTED_AS_FINAL),

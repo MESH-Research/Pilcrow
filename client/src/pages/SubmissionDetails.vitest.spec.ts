@@ -148,6 +148,7 @@ describe("submissions details page mount", () => {
     }),
     isAppAdmin: ref(true),
     isSubmitter: () => true,
+    isReviewer: () => false,
     isReviewCoordinator: () => false,
     isEditor: () => false,
     isPublicationAdmin: () => false
