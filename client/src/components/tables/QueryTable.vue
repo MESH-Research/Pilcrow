@@ -338,7 +338,7 @@ const effectiveGrid = computed(
     gridable.value &&
     (props.grid || isSmallScreen.value || viewPreference.value === "grid")
 )
-const effectiveDense = computed(() => props.dense || $q.screen.md)
+const effectiveDense = computed(() => props.dense || isSmallScreen.value)
 
 function toggleViewPreference() {
   viewPreference.value = viewPreference.value === "grid" ? null : "grid"
