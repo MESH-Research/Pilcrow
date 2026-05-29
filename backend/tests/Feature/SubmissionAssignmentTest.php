@@ -37,8 +37,8 @@ class SubmissionAssignmentTest extends TestCase
         $this->assertTrue($assignment->user->is($user));
         $this->assertTrue($assignment->submission->is($submission));
         $this->assertEquals(
-            (int) Role::REVIEWER_ROLE_ID,
-            (int) $assignment->role->id
+            (int)Role::REVIEWER_ROLE_ID,
+            (int)$assignment->role->id
         );
     }
 
