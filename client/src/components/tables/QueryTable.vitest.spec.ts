@@ -5,9 +5,13 @@ import { describe, expect, it, vi, beforeEach } from "vitest"
 import gql from "graphql-tag"
 import QueryTable from "./QueryTable.vue"
 
+const routerState = vi.hoisted(() => ({
+  query: {} as Record<string, string>,
+  replace: vi.fn()
+}))
 vi.mock("vue-router", () => ({
-  useRoute: () => ({ query: {} }),
-  useRouter: () => ({ replace: vi.fn() })
+  useRoute: () => ({ query: routerState.query }),
+  useRouter: () => ({ replace: routerState.replace })
 }))
 
 // te() drives the missing-header-translation warning branch.
@@ -25,6 +29,28 @@ const mockClient = installApolloClient()
 const PAGED = gql`
   query Paged($page: Int, $first: Int, $search: String) {
     items(page: $page, first: $first, search: $search) {
+      data {
+        id
+        title
+        status
+      }
+      paginatorInfo {
+        total
+        currentPage
+        perPage
+      }
+    }
+  }
+`
+
+const PAGED_SORTED = gql`
+  query PagedSorted(
+    $page: Int
+    $first: Int
+    $search: String
+    $orderBy: [OrderBy!]
+  ) {
+    items(page: $page, first: $first, search: $search, orderBy: $orderBy) {
       data {
         id
         title
@@ -71,7 +97,34 @@ function factory(props: Record<string, unknown> = {}) {
 beforeEach(() => {
   translationExists = true
   vi.restoreAllMocks()
+  routerState.query = {}
+  routerState.replace = vi.fn()
 })
+
+const sortableColumns = [
+  { name: "title", field: "title", sortable: true },
+  { name: "status", field: "status" }
+]
+
+// Mounts with an `item` slot so the table is gridable, and attaches to the
+// document so q-menu portal content is queryable.
+function gridFactory(
+  props: Record<string, unknown> = {},
+  slots: Record<string, unknown> = {}
+) {
+  return mount(QueryTable, {
+    props: { query: PAGED, columns, tPrefix: "admin.table", ...props },
+    slots: {
+      item: (scope: { row?: { title?: string } }) =>
+        h("div", { class: "grid-card" }, String(scope.row?.title ?? "")),
+      ...slots
+    },
+    attachTo: document.body
+  })
+}
+
+const findByText = (wrapper: ReturnType<typeof mount>, text: string) =>
+  wrapper.findAll("button").find((b) => b.text().includes(text))
 
 describe("QueryTable", () => {
   it("renders a search input when the query supports search", async () => {
@@ -143,5 +196,129 @@ describe("QueryTable", () => {
     await flushPromises()
     // No columns configured -> no header cells from our set rendered
     expect(wrapper.text()).not.toContain("admin.table.headers.title")
+  })
+})
+
+describe("QueryTable grid view", () => {
+  it("hides the view toggle when no item slot is provided", async () => {
+    resolveWith()
+    const wrapper = factory()
+    await flushPromises()
+    expect(wrapper.text()).not.toContain("tables.view.grid")
+  })
+
+  it("shows the view toggle when an item slot is provided", async () => {
+    resolveWith()
+    const wrapper = gridFactory()
+    await flushPromises()
+    expect(wrapper.text()).toContain("tables.view.grid")
+  })
+
+  it("switches to grid view when the toggle is clicked", async () => {
+    resolveWith([{ id: "1", title: "Hello", status: "DRAFT" }])
+    const wrapper = gridFactory()
+    await flushPromises()
+    // Table mode: item slot is not rendered.
+    expect(wrapper.find(".grid-card").exists()).toBe(false)
+
+    await findByText(wrapper, "tables.view.grid")!.trigger("click")
+    await flushPromises()
+
+    expect(wrapper.find(".grid-card").exists()).toBe(true)
+    expect(wrapper.find(".grid-card").text()).toBe("Hello")
+    // The toggle now offers a switch back to the table view.
+    expect(wrapper.text()).toContain("tables.view.table")
+    wrapper.unmount()
+  })
+
+  it("starts in grid view when the URL requests it", async () => {
+    routerState.query = { view: "grid" }
+    resolveWith([{ id: "1", title: "Hello", status: "DRAFT" }])
+    const wrapper = gridFactory()
+    await flushPromises()
+    expect(wrapper.find(".grid-card").exists()).toBe(true)
+    wrapper.unmount()
+  })
+
+  it("writes the view preference to the URL when syncUrl is set", async () => {
+    resolveWith([{ id: "1", title: "Hello", status: "DRAFT" }])
+    const wrapper = gridFactory({ syncUrl: true })
+    await flushPromises()
+
+    await findByText(wrapper, "tables.view.grid")!.trigger("click")
+    await flushPromises()
+
+    expect(routerState.replace).toHaveBeenCalledWith(
+      expect.objectContaining({
+        query: expect.objectContaining({ view: "grid" })
+      })
+    )
+    wrapper.unmount()
+  })
+})
+
+describe("QueryTable sort menu", () => {
+  it("shows the sort menu only in grid view with sortable columns", async () => {
+    resolveWith([{ id: "1", title: "Hello", status: "DRAFT" }])
+    const wrapper = gridFactory({ columns: sortableColumns })
+    await flushPromises()
+    // Table mode: no sort menu.
+    expect(wrapper.text()).not.toContain("tables.sort.label")
+
+    await findByText(wrapper, "tables.view.grid")!.trigger("click")
+    await flushPromises()
+    expect(wrapper.text()).toContain("tables.sort.label")
+    wrapper.unmount()
+  })
+
+  it("hides the sort menu in grid view when no column is sortable", async () => {
+    resolveWith([{ id: "1", title: "Hello", status: "DRAFT" }])
+    const wrapper = gridFactory({ columns })
+    await flushPromises()
+
+    await findByText(wrapper, "tables.view.grid")!.trigger("click")
+    await flushPromises()
+    expect(wrapper.text()).not.toContain("tables.sort.label")
+    wrapper.unmount()
+  })
+
+  it("applies a chosen sort option as an orderBy query variable", async () => {
+    const handler = mockClient
+      .getRequestHandler(PAGED_SORTED)
+      .mockResolvedValue({
+        data: {
+          items: {
+            data: [],
+            paginatorInfo: { total: 0, currentPage: 1, perPage: 25 }
+          }
+        }
+      })
+    const wrapper = gridFactory({
+      query: PAGED_SORTED,
+      columns: sortableColumns
+    })
+    await flushPromises()
+    await findByText(wrapper, "tables.view.grid")!.trigger("click")
+    await flushPromises()
+
+    await findByText(wrapper, "tables.sort.label")!.trigger("click")
+    await flushPromises()
+
+    // Two options per sortable column (asc, desc); only `title` is sortable.
+    const items = Array.from(
+      document.querySelectorAll<HTMLElement>(".q-menu .q-item")
+    )
+    expect(items).toHaveLength(2)
+
+    handler.mockClear()
+    items[1].click() // descending
+    await flushPromises()
+
+    const lastCall = handler.mock.calls.at(-1)?.[0] as Record<string, unknown>
+    expect(lastCall).toMatchObject({
+      orderBy: [{ column: "TITLE", order: "DESC" }],
+      page: 1
+    })
+    wrapper.unmount()
   })
 })
