@@ -69,13 +69,13 @@
                 v-for="coordinator in submission.review_coordinators"
                 :key="coordinator.id"
                 :user="coordinator"
-                role="Review Coordinator"
+                :role="$t('admin.users.details.roles.review_coordinator')"
               />
               <record-of-review-user
                 v-for="reviewer in submission.reviewers"
                 :key="reviewer.id"
                 :user="reviewer"
-                role="Reviewer"
+                :role="$t('admin.users.details.roles.reviewer')"
               />
             </div>
           </section>
@@ -269,10 +269,16 @@ const completionDate = computed(() => {
   if (audits.length === 0) {
     return t("record_of_review.completed.incomplete")
   }
-  const last_audit = audits.reduce((a, b) =>
-    a.created_at > b.created_at ? a : b
+  // Most recent transition into a post-review state. Compare parsed
+  // timestamps rather than raw ISO strings so ordering is robust to any
+  // timezone-offset or precision variation in `created_at`.
+  const latest = audits.reduce((a, b) =>
+    DateTime.fromISO(b.created_at) > DateTime.fromISO(a.created_at) ? b : a
   )
-  return DateTime.fromISO(last_audit.created_at).toFormat("yyyy-MM-dd")
+  const completed = DateTime.fromISO(latest.created_at)
+  return completed.isValid
+    ? completed.toFormat("yyyy-MM-dd")
+    : t("record_of_review.completed.incomplete")
 })
 
 let pendingBlobUrl = ""
