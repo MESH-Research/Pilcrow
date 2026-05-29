@@ -379,6 +379,17 @@
     "page_title": "Reviews"
   },
   "record_of_review": {
+    "headers": {
+      "id": "Number",
+      "title": "Submission Title",
+      "submitters": "Submitted By",
+      "role": "My Role",
+      "status": "Status",
+      "updated": "Last Updated"
+    },
+    "aside": {
+      "publication": "Publication"
+    },
     "title": "Record of Review",
     "title_record": "Record of Review for { title }",
     "title_combined": "Records of Review",

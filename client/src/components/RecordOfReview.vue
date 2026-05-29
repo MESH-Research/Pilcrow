@@ -161,7 +161,7 @@
               </i18n-t>
               <p class="ror__footer-detail">
                 {{ $t("record_of_review.identifier") }}: {{ submission.id }}
-                &middot;
+                {{ separator }}
                 {{ $t("record_of_review.completed.heading") }}:
                 {{ completionDate }}
               </p>
@@ -235,6 +235,11 @@ import { computed, onBeforeUnmount, ref, watch } from "vue"
 import { useI18n } from "vue-i18n"
 
 const { t } = useI18n()
+
+// Decorative middot separator. Kept as a constant so the raw glyph lives
+// in script and is not flagged by @intlify/vue-i18n/no-raw-text.
+const separator = "·"
+
 const blobUrl = ref("")
 const recordContainer = ref<HTMLElement | null>(null)
 

@@ -186,14 +186,7 @@ graphql(`
 
 <script setup lang="ts">
 import { omit } from "lodash"
-import {
-  computed,
-  getCurrentInstance,
-  ref,
-  useId,
-  useSlots,
-  watch
-} from "vue"
+import { computed, getCurrentInstance, ref, useId, useSlots, watch } from "vue"
 import type { DocumentNode } from "graphql"
 import { useQuasar } from "quasar"
 import { useRoute, useRouter } from "vue-router"

@@ -5,6 +5,7 @@
     class="record-of-review-table"
     :query="query"
     field="currentUser.submissions"
+    t-prefix="record_of_review"
     :variables="variables"
     :columns="cols"
     :default-sort="{ sortBy: 'created_at', descending: true }"
@@ -99,7 +100,8 @@
           </router-link>
         </template>
         <template #aside>
-          Publication: {{ p.row.submission.publication.name }}
+          {{ $t("record_of_review.aside.publication") }}:
+          {{ p.row.submission.publication.name }}
         </template>
       </WithAsideCell>
     </template>
@@ -273,7 +275,6 @@ const cols: QueryTableColumn[] = [
   {
     name: "id",
     field: (row) => (row.submission as Submission).id,
-    label: t(`submission_tables.columns.number`),
     sortable: false,
     style: "width: 85px",
     align: "right"
@@ -281,7 +282,6 @@ const cols: QueryTableColumn[] = [
   {
     name: "title",
     field: (row) => (row.submission as Submission).title,
-    label: t(`submission_tables.columns.title`),
     sortable: true,
     style: "width: 30%",
     align: "left"
@@ -289,28 +289,24 @@ const cols: QueryTableColumn[] = [
   {
     name: "submitters",
     field: (row) => (row.submission as Submission).submitters,
-    label: t(`submission_tables.columns.submitted_by`),
     sortable: false,
     align: "left"
   },
   {
     name: "role",
     field: (row) => row.role,
-    label: t(`submission_tables.columns.role`),
     sortable: false,
     align: "left"
   },
   {
     name: "status",
     field: (row) => (row.submission as Submission).status,
-    label: t(`submission_tables.columns.status`),
     sortable: true,
     align: "center"
   },
   {
     name: "updated",
     field: (row) => (row.submission as Submission).updated_at,
-    label: t(`submission_tables.columns.updated_at`),
     sortable: false,
     align: "left",
     component: DateTimeCell

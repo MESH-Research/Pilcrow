@@ -80,8 +80,8 @@ class SubmissionSeeder extends Seeder
      * Two saves occur: first as DRAFT (so the audit log records a status
      * transition into the final state), then the targeted status.
      *
-     * @param string[] $coordinators usernames assigned as review coordinators
-     * @param string[] $reviewers usernames assigned as reviewers
+     * @param array<string> $coordinators usernames assigned as review coordinators
+     * @param array<string> $reviewers usernames assigned as reviewers
      */
     protected function createSubmissionWithTeam(
         int $id,

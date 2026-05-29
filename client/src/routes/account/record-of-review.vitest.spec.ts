@@ -83,7 +83,7 @@ describe("Record of Review page", () => {
                       id: "1",
                       username: "applicationAdminUser",
                       name: "Application Administrator",
-                      email: "applicationadministrator@meshresearch.net",
+                      avatar_color: "#1976d2",
                       __typename: "User"
                     }
                   ],
@@ -113,6 +113,7 @@ describe("Record of Review page", () => {
                         username: "publicationEditor",
                         name: "Publication Editor",
                         email: "publicationeditor@meshresearch.net",
+                        avatar_color: "#388e3c",
                         staged: null,
                         __typename: "User"
                       }
@@ -124,6 +125,7 @@ describe("Record of Review page", () => {
                         username: "publicationAdministrator",
                         name: "Publication Administrator",
                         email: "publicationadministrator@meshresearch.net",
+                        avatar_color: "#d32f2f",
                         staged: null,
                         __typename: "User"
                       }

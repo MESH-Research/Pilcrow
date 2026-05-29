@@ -17,7 +17,7 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        $orcid = fn (string $id) => [
+        $orcid = fn(string $id) => [
             'academic_profiles' => ['orcid_id' => $id],
         ];
 
