@@ -39,6 +39,24 @@ const UNPAGED = gql`
   }
 `
 
+const NESTED = gql`
+  query Nested($page: Int, $first: Int) {
+    wrapper {
+      items(page: $page, first: $first) {
+        data {
+          id
+          name
+        }
+        paginatorInfo {
+          total
+          currentPage
+          perPage
+        }
+      }
+    }
+  }
+`
+
 type ApiShape = ReturnType<typeof usePaginatedQuery>
 type Captured = { api: ApiShape | null }
 
@@ -141,5 +159,76 @@ describe("usePaginatedQuery", () => {
     })
     const { captured } = host(UNPAGED)
     expect(captured.api!.paginationModel.value).toBeUndefined()
+  })
+
+  it("page setter parses string input", () => {
+    mockClient.getRequestHandler(PAGED).mockResolvedValue({
+      data: { items: { data: [], paginatorInfo: null } }
+    })
+    const { captured } = host(PAGED)
+    ;(captured.api!.page as unknown as { value: number | string }).value = "3"
+    expect(captured.api!.pagination.value.page).toBe(3)
+  })
+
+  it("page setter ignores values that are not greater than zero", () => {
+    mockClient.getRequestHandler(PAGED).mockResolvedValue({
+      data: { items: { data: [], paginatorInfo: null } }
+    })
+    const { captured } = host(PAGED)
+    const setter = captured.api!.page as unknown as { value: number | string }
+    setter.value = 4
+    setter.value = 0
+    setter.value = -2
+    expect(captured.api!.pagination.value.page).toBe(4)
+  })
+
+  it("reads the paginated field from a dotted field path", async () => {
+    mockClient.getRequestHandler(NESTED).mockResolvedValue({
+      data: {
+        wrapper: {
+          items: {
+            data: [{ id: "1", name: "a" }],
+            paginatorInfo: { total: 3, currentPage: 1, perPage: 5 }
+          }
+        }
+      }
+    })
+    const { captured } = host(NESTED, { field: "wrapper.items" })
+    await flushPromises()
+    expect(captured.api!.rows.value).toHaveLength(1)
+    expect(captured.api!.pagination.value.rowsNumber).toBe(3)
+    expect(captured.api!.pagination.value.rowsPerPage).toBe(5)
+  })
+
+  it("merges caller-supplied variables into the query", async () => {
+    const handler = mockClient.getRequestHandler(PAGED).mockResolvedValue({
+      data: { items: { data: [], paginatorInfo: null } }
+    })
+    host(PAGED, {
+      variables: { orderBy: [{ column: "CUSTOM", order: "ASC" }] }
+    })
+    await flushPromises()
+    const lastCall = handler.mock.calls.at(-1)?.[0] as Record<string, unknown>
+    expect(lastCall).toMatchObject({
+      orderBy: [{ column: "CUSTOM", order: "ASC" }],
+      first: 25,
+      page: 1
+    })
+  })
+
+  it("paginationModel setter applies a new pagination object", () => {
+    mockClient.getRequestHandler(PAGED).mockResolvedValue({
+      data: { items: { data: [], paginatorInfo: null } }
+    })
+    const { captured } = host(PAGED)
+    const next = {
+      sortBy: "name",
+      descending: true,
+      page: 2,
+      rowsPerPage: 50,
+      rowsNumber: 9
+    }
+    captured.api!.paginationModel.value = next
+    expect(captured.api!.pagination.value).toEqual(next)
   })
 })
