@@ -299,10 +299,11 @@ class Submission extends Model implements Auditable
      */
     public function getSubmittedAt()
     {
-        return $this->audits
+        return $this->audits()
             ->where('event', 'updated')
             ->where('old_values', 'like', '%"status":0%')
-            ->where('new_values', 'like', '%"status":1%')->first()->created_at ?? null;
+            ->where('new_values', 'like', '%"status":1%')
+            ->first()->created_at ?? null;
     }
 
     /**
