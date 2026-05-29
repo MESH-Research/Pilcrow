@@ -1,8 +1,11 @@
 import { describe, expect, it, vi } from "vitest"
+import type { RouteLocationRaw } from "vue-router"
 
 type Resolvable = {
   name?: string
-  meta?: { navigation?: { label?: string | false; icon?: string; order?: number } }
+  meta?: {
+    navigation?: { label?: string | false; icon?: string; order?: number }
+  }
   matched?: Array<{ children?: unknown[] }>
 }
 
@@ -20,8 +23,8 @@ vi.mock("vue-router", () => ({
 
 import { useNavigation } from "./navigation"
 
-function parentWith(children: Resolvable[]): Resolvable {
-  return { matched: [{ children }] }
+function parentWith(children: Resolvable[]): RouteLocationRaw {
+  return { matched: [{ children }] } as unknown as RouteLocationRaw
 }
 
 describe("useNavigation childrenOf", () => {
@@ -88,22 +91,30 @@ describe("useNavigation childrenOf", () => {
 
   it("returns an empty list when the matched route has no children", () => {
     const { childrenOf } = useNavigation()
-    expect(childrenOf({ matched: [{}] }).value).toEqual([])
+    expect(
+      childrenOf({ matched: [{}] } as unknown as RouteLocationRaw).value
+    ).toEqual([])
   })
 
   it("returns an empty list when nothing is matched", () => {
     const { childrenOf } = useNavigation()
-    expect(childrenOf({ matched: [] }).value).toEqual([])
+    expect(
+      childrenOf({ matched: [] } as unknown as RouteLocationRaw).value
+    ).toEqual([])
   })
 
   it("selects the matched entry via the slice argument", () => {
     const { childrenOf } = useNavigation()
-    const route: Resolvable = {
+    const route = {
       matched: [
-        { children: [{ name: "deep", meta: { navigation: { label: "deep" } } }] },
-        { children: [{ name: "leaf", meta: { navigation: { label: "leaf" } } }] }
+        {
+          children: [{ name: "deep", meta: { navigation: { label: "deep" } } }]
+        },
+        {
+          children: [{ name: "leaf", meta: { navigation: { label: "leaf" } } }]
+        }
       ]
-    }
+    } as unknown as RouteLocationRaw
     // default slice(-1) takes the last matched entry's children
     expect(childrenOf(route).value.map((r) => r.name)).toEqual(["leaf"])
     // slice(0) takes from the first matched entry onward
