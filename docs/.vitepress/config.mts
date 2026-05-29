@@ -88,6 +88,34 @@ export default withMermaid(defineConfig({
                             ],
                         },
                         {
+                            text: "Components",
+                            link: "/developers/components/",
+                            items: [
+                                {
+                                    text: "QueryTable",
+                                    link: "/developers/components/query-table/",
+                                    items: [
+                                        {
+                                            text: "Cell renderers",
+                                            link: "/developers/components/query-table/cells",
+                                        },
+                                        {
+                                            text: "Structuring queries",
+                                            link: "/developers/components/query-table/queries",
+                                        },
+                                        {
+                                            text: "Filters",
+                                            link: "/developers/components/query-table/filters",
+                                        },
+                                    ],
+                                },
+                                {
+                                    text: "BreadCrumbs",
+                                    link: "/developers/components/breadcrumbs",
+                                },
+                            ],
+                        },
+                        {
                             text: "Testing",
                             link: "/developers/testing",
                         },

@@ -1,4 +1,5 @@
 import { RouteRecordRaw } from "vue-router"
+import { routes as autoRoutes } from "vue-router/auto-routes"
 
 const routes: RouteRecordRaw[] = [
   {
@@ -103,27 +104,9 @@ const routes: RouteRecordRaw[] = [
         path: "feed/",
         component: () => import("src/pages/FeedPage.vue")
       },
-      {
-        path: "/admin/users",
-        component: () => import("pages/Admin/UsersIndex.vue"),
-        meta: {
-          requiresAppAdmin: true
-        }
-      },
-      {
-        name: "user_details",
-        path: "/admin/user/:id",
-        props: true,
-        component: () => import("pages/Admin/UserDetails.vue")
-      },
-      {
-        path: "/admin/publications",
-        name: "admin:publication:index",
-        component: () => import("src/pages/Admin/PublicationIndexPage.vue"),
-        meta: {
-          requiresAppAdmin: true
-        }
-      },
+      // File-based routes under src/routes/ (see quasar.config.ts).
+      // Spread here so they inherit MainLayout + its requiresAuth meta.
+      ...autoRoutes,
       {
         path: "/publications",
         name: "publication:index",

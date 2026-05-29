@@ -20,6 +20,7 @@ import { createApolloProvider } from "@vue/apollo-option"
 import { ApolloClients } from "@vue/apollo-composable"
 import createUploadLink from "apollo-upload-client/createUploadLink.mjs"
 import { BatchHttpLink } from "@apollo/client/link/batch-http"
+import generatedPossibleTypes from "src/graphql/generated/possibleTypes"
 
 const httpOptions = {
   uri: "/graphql"
@@ -39,13 +40,15 @@ export default defineBoot(async ({ app, router }) => {
       httpLink
     ]),
     cache: new InMemoryCache({
-      possibleTypes: {
-        Comment: [
-          "InlineComment",
-          "InlineCommentReply",
-          "OverallComment",
-          "OverallCommentReply"
-        ]
+      possibleTypes: generatedPossibleTypes.possibleTypes,
+      typePolicies: {
+        Query: {
+          fields: {
+            user: {
+              merge: true
+            }
+          }
+        }
       }
     }),
     devtools: {

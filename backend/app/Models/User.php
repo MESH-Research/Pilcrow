@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Builders\UserBuilder;
 use Carbon\Carbon;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -58,6 +59,17 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
         'profile_metadata' => 'array',
     ];
+
+    /**
+     * Create a new Eloquent query builder for the model.
+     *
+     * @param \Illuminate\Database\Query\Builder $query
+     * @return \App\Builders\UserBuilder
+     */
+    public function newEloquentBuilder($query): UserBuilder
+    {
+        return new UserBuilder($query);
+    }
 
     /**
      * Model booted
@@ -150,16 +162,6 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Get the name of the index associated with the model.
-     *
-     * @return string
-     */
-    public function searchableAs(): string
-    {
-        return 'users_index';
-    }
-
-    /**
      * Submissions that belong to the user
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
@@ -181,6 +183,26 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->belongsToMany(Publication::class)
             ->withTimestamps()
             ->withPivot('role_id');
+    }
+
+    /**
+     * Submission assignments for this user.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function submissionAssignments(): HasMany
+    {
+        return $this->hasMany(SubmissionAssignment::class, 'user_id');
+    }
+
+    /**
+     * Publication assignments for this user.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function publicationAssignments(): HasMany
+    {
+        return $this->hasMany(PublicationAssignment::class, 'user_id');
     }
 
     /**
@@ -213,7 +235,7 @@ class User extends Authenticatable implements MustVerifyEmail
             return PublicationUser::where('user_id', $this->id)->min('role_id');
         }
         if ($this->submissions->isNotEmpty()) {
-            return SubmissionUser::where('user_id', $this->id)->min('role_id');
+            return SubmissionAssignment::where('user_id', $this->id)->min('role_id');
         }
 
         return null;

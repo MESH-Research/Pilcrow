@@ -18,10 +18,8 @@
     "test:unit": "vitest",
     "test:unit:ci": "vitest run",
     "postinstall": "node -e \"process.env.NO_POSTINSTALL===1&&process.exit(1)\" || quasar prepare",
-    "graphql:fetch-schema": "lando artisan lighthouse:print-schema --no-ansi --sort > src/graphql/schema.graphql",
     "graphql:codegen": "graphql-codegen --config codegen.ts",
-    "graphql:codegen-local": "GRAPHQL_SCHEMA=src/graphql/schema.graphql graphql-codegen --config codegen.ts",
-    "graphql:codegen-offline": "yarn graphql:fetch-schema && yarn graphql:codegen-local"
+    "graphql:codegen-local": "GRAPHQL_SCHEMA=src/graphql/schema.graphql graphql-codegen --config codegen.ts"
   },
   "dependencies": {
     "@apollo/client": "^3.7.2",
@@ -59,11 +57,13 @@
     "@eslint/js": "^10.0.0",
     "@graphql-codegen/cli": "^6.1.1",
     "@graphql-codegen/client-preset": "^5.2.4",
+    "@graphql-codegen/fragment-matcher": "^6.0.0",
     "@graphql-codegen/schema-ast": "^5.0.0",
     "@graphql-codegen/typescript": "^5.0.7",
     "@graphql-codegen/typescript-operations": "^5.0.7",
     "@intlify/eslint-plugin-vue-i18n": "^4.5.0",
     "@quasar/app-vite": "^2.0.0",
+    "@types/lodash": "^4.17.24",
     "@types/validator": "^13.15.10",
     "@vitest/coverage-v8": "^4.0.0",
     "@vitest/eslint-plugin": "^1.2.2",

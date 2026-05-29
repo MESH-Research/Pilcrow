@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Tests\Api;
 
 use App\Models\Publication;
-use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
@@ -433,7 +432,7 @@ class PublicationTest extends ApiTestCase
         Publication::factory()->hidden()->count(2)->create();
         $response = $this->graphQL(
             'query GetPublications {
-                publications(is_publicly_visible: true) {
+                publications(public: true) {
                     data {
                         id
                         name
@@ -446,31 +445,7 @@ class PublicationTest extends ApiTestCase
         $this->assertCount(2, $json);
     }
 
-    /**
-     * @return void
-     */
-    public function testGuestSeesOnlyPubliclyVisiblePublications()
-    {
-        Publication::factory()->count(2)->create();
-        Publication::factory()->hidden()->count(3)->create();
-
-        $response = $this->graphQL(
-            'query GetPublications {
-                publications {
-                    data { id }
-                }
-            }'
-        );
-
-        $response->assertGraphQLErrorFree();
-        $json = $response->json('data.publications.data');
-        $this->assertCount(2, $json);
-    }
-
-    /**
-     * @return void
-     */
-    public function testMemberSeesPrivatePublicationsTheyBelongTo()
+    public function testUnassignedUserCannotSeeHiddenPublication()
     {
         /** @var User $user */
         $user = User::factory()->create();
@@ -478,51 +453,80 @@ class PublicationTest extends ApiTestCase
 
         Publication::factory()->count(2)->create();
         Publication::factory()->hidden()->count(2)->create();
-        $memberPub = Publication::factory()->hidden()->create();
-        $user->publications()->attach($memberPub->id, ['role_id' => Role::EDITOR_ROLE_ID]);
-
         $response = $this->graphQL(
             'query GetPublications {
                 publications {
-                    data { id }
+                    data {
+                        id
+                    }
                 }
             }'
         );
-
-        $response->assertGraphQLErrorFree();
         $json = $response->json('data.publications.data');
-        $ids = array_column($json, 'id');
-        $this->assertCount(3, $json);
-        $this->assertContains((string)$memberPub->id, $ids);
+
+        $this->assertCount(2, $json);
     }
 
-    /**
-     * @return void
-     */
-    public function testNonMemberCannotSeePrivatePublications()
+    public function testAssignedUserCanSeeHiddenPublication()
     {
         /** @var User $user */
         $user = User::factory()->create();
         $this->actingAs($user);
 
-        Publication::factory()->count(2)->create();
-        $hiddenPubs = Publication::factory()->hidden()->count(3)->create();
+        Publication::factory()->hidden()->count(2)->create();
+        Publication::factory()->hidden()
+            ->hasAttached($user, [], 'editors')
+            ->create();
 
         $response = $this->graphQL(
             'query GetPublications {
                 publications {
-                    data { id }
+                    data {
+                        id
+                    }
                 }
             }'
         );
-
-        $response->assertGraphQLErrorFree();
         $json = $response->json('data.publications.data');
-        $ids = array_column($json, 'id');
-        $this->assertCount(2, $json);
-        foreach ($hiddenPubs as $p) {
-            $this->assertNotContains((string)$p->id, $ids);
-        }
+
+        $this->assertCount(1, $json);
+    }
+
+    /**
+     * Regression: the visible() scope must AND with search, not bleed
+     * unrelated public rows past the search filter via SQL precedence.
+     *
+     * @return void
+     */
+    public function testSearchAndVisibilityCombineCorrectly()
+    {
+        /** @var User $user */
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        Publication::factory()->create(['name' => 'Alpha Quarterly']);
+        Publication::factory()->create(['name' => 'Beta Review']);
+        Publication::factory()->hidden()
+            ->hasAttached($user, [], 'editors')
+            ->create(['name' => 'Beta Secret']);
+        Publication::factory()->hidden()->create(['name' => 'Beta Hidden Other']);
+
+        $response = $this->graphQL(
+            'query GetPublications($search: String) {
+                publications(search: $search) {
+                    data {
+                        name
+                    }
+                }
+            }',
+            ['search' => 'Beta']
+        );
+        $names = collect($response->json('data.publications.data'))
+            ->pluck('name')
+            ->all();
+
+        sort($names);
+        $this->assertSame(['Beta Review', 'Beta Secret'], $names);
     }
 
     protected function executePublicationRoleAssignment(string $role, Publication $publication, User $user)

@@ -8,6 +8,15 @@ export default defineBoot(async ({ app, router }) => {
   // Dynamic import so disabled installations never download the ~80 KB SDK.
   const Sentry = await import("@sentry/vue")
 
+  // Sentry's browserTracingIntegration declares its own narrow VueRouter
+  // shape (params: Record<string, string | string[]>). With typed routes
+  // enabled via unplugin-vue-router, Quasar's Router exposes params as
+  // GenericParams (string | number), so the structural types diverge even
+  // though the runtime contract is satisfied.
+  type SentryRouter = Parameters<
+    typeof Sentry.browserTracingIntegration
+  >[0]["router"]
+
   const release = process.env.VERSION
     ? `pilcrow-client@${process.env.VERSION}`
     : undefined
@@ -19,7 +28,11 @@ export default defineBoot(async ({ app, router }) => {
     release,
     tracesSampleRate: cfg.tracesSampleRate,
     sendDefaultPii: false,
-    integrations: [Sentry.browserTracingIntegration({ router })],
+    integrations: [
+      Sentry.browserTracingIntegration({
+        router: router as unknown as SentryRouter
+      })
+    ],
     beforeSend(event) {
       if (event.request) event.request = scrub(event.request)
       if (event.extra) event.extra = scrub(event.extra)

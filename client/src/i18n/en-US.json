@@ -1,5 +1,10 @@
 {
   "needs_attention": "Needs attention",
+  "queryTable": {
+    "search": {
+      "placeholder": "Search"
+    }
+  },
   "user": {
     "self": "No users | User | Users",
     "all_users": "All Users",
@@ -29,7 +34,19 @@
     "saving": "Saving",
     "saved": "Saved",
     "discard_changes": "Discard Changes",
-    "delete": "Delete"
+    "delete": "Delete",
+    "refresh": "Refresh",
+    "cancel": "Cancel",
+    "create": "Create"
+  },
+  "breadcrumbs": {
+    "admin": {
+      "administration": "Administration",
+      "users": "Users",
+      "user": "User",
+      "publications": "Publications",
+      "submissions": "Submissions"
+    }
   },
   "lists": {
     "move_up": "Move {0} Up",
@@ -147,7 +164,7 @@
     "publications": "Publications",
     "submissions": "Submissions",
     "reviews": "Reviews",
-    "user_list": "All Users",
+    "user_list": "Users",
     "notification_button": "View Notifications",
     "application_administration": "Application Administration",
     "account_dropdown_aria": "User Account Dropdown",
@@ -593,6 +610,7 @@
     },
     "admin_header": "Publication Administration",
     "create_button": "Create New Publication",
+    "create_dialog_title": "Create New Publication",
     "view_button_aria": "View Publication Page",
     "view_button": "View Publication"
   },
@@ -779,6 +797,18 @@
     "term": "No Submissions | Submission | Submissions",
     "heading": "Submissions",
     "none": "No Submissions Created",
+    "filters": {
+      "aria": "Filter submissions",
+      "select_publication": "Select a publication",
+      "status_header": "Status",
+      "roles_header": "Roles",
+      "publication_header": "Publication",
+      "role_options": {
+        "submitter": "Submitter",
+        "reviewer": "Reviewer",
+        "review_coordinator": "Review Coordinator"
+      }
+    },
     "details_heading": "Submission Details",
     "latest_comments_heading": "Latest Comments",
     "draft_with_no_content": "This submission draft must have content before it can be reviewed.",
@@ -1262,5 +1292,121 @@
   "generic": {
     "more_info": "More info"
   },
-  "app_banner_dismiss_tip": "Dismiss for 1 week"
+  "app_banner_dismiss_tip": "Dismiss for 1 week",
+  "admin": {
+    "search": "Search",
+    "filters": {
+      "label": "Filter",
+      "active": "Filter · {count} active",
+      "all": "All",
+      "none": "None",
+      "invert": "Invert"
+    },
+    "dashboard": {
+      "users_description": "Manage user accounts and permissions.",
+      "publications_description": "Manage publications and their settings."
+    },
+    "publication": {
+      "headers": {
+        "name": "Name",
+        "is_publicly_visible": "Visibility",
+        "is_accepting_submissions": "Accepting Submissions",
+        "created_at": "Created"
+      },
+      "btn": {
+        "create": "Create"
+      },
+      "filters": {
+        "aria": "Filter publications",
+        "visibility": "Visibility",
+        "accepting_submissions": "Accepting Submissions",
+        "visibility_options": {
+          "public": "Public",
+          "hidden": "Hidden"
+        },
+        "accepting_options": {
+          "yes": "Yes",
+          "no": "No"
+        }
+      }
+    },
+    "users": {
+      "title": "User Administration",
+      "no_user_assigned": "No user assigned",
+      "email_status": {
+        "verified": "Verified",
+        "unverified": "Unverified"
+      },
+      "headers": {
+        "name": "Name",
+        "username": "Username",
+        "email": "Email",
+        "created_at": "Created"
+      },
+      "details": {
+        "tabs": {
+          "publications": "Publications",
+          "submissions": "Submissions"
+        },
+        "title": "User Details",
+        "username": "Username",
+        "name": "Name",
+        "email": "Email",
+        "role": "Role",
+        "created_at": "Created",
+        "verified_at": "Email Verified",
+        "not_verified": "Not Verified",
+        "isAdmin": "Application Administrator",
+        "isNormal": "Standard User",
+        "roles": {
+          "submitter": "Submitter",
+          "reviewer": "Reviewer",
+          "review_coordinator": "Review Coordinator",
+          "publication_admin": "Publication Administrator",
+          "editor": "Editor"
+        },
+        "submissions": {
+          "headers": {
+            "id": "ID",
+            "status": "Status",
+            "title": "Title",
+            "created_at": "Created",
+            "updated_at": "Updated",
+            "actions": "Actions",
+            "role": "Role"
+          },
+          "btn": {
+            "create": "Create"
+          },
+          "actions": {
+            "view": "View"
+          },
+          "aside": {
+            "publication": "Publication"
+          },
+          "no_data": {
+            "banner_warning": "Head's up: Your filters will not return any results.",
+            "no_status": "(no status selected)",
+            "no_role": "(no role selected)",
+            "reset": "Reset filters"
+          }
+        },
+        "no_publications": "This user is not assigned to any publications.",
+        "no_submissions": "This user is not attached to any submissions.",
+        "publications": {
+          "headers": {
+            "name": "Name",
+            "role": "Role",
+            "actions": "Actions"
+          },
+          "actions": {
+            "view": "View"
+          },
+          "btn": {
+            "create": "Create"
+          }
+        }
+      }
+    }
+  }
 }

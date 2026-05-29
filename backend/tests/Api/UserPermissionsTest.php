@@ -24,6 +24,7 @@ class UserPermissionsTest extends ApiTestCase
      */
     public function testRoleForUserIsQueryableFromGraphqlEndpoint()
     {
+        $this->beAppAdmin();
         $test_role = Role::factory()->create(['name' => $this->test_user_role]);
         $this->beAppAdmin();
         $user = User::factory()->create();

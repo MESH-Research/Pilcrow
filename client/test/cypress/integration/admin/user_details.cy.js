@@ -23,20 +23,18 @@ describe("Admin User Details", () => {
   })
 
   it("should assert the User Details page of an admin is accessible", () => {
-    // Inject the axe-core libraray
     cy.login({ email: "applicationadministrator@meshresearch.net" })
     cy.visit("/admin/user/2")
+    cy.get(".q-tabs").should("be.visible")
     cy.injectAxe()
-    cy.dataCy("userDetailsHeading")
     cy.checkA11y(null, null, a11yLogViolations)
   })
 
   it("should assert the User Details page of an non-admin is accessible", () => {
-    // Inject the axe-core libraray
     cy.login({ email: "applicationadministrator@meshresearch.net" })
     cy.visit("/admin/user/1")
+    cy.get(".q-tabs").should("be.visible")
     cy.injectAxe()
-    cy.dataCy("userDetailsHeading")
     cy.checkA11y(null, null, a11yLogViolations)
   })
 })

@@ -3,10 +3,12 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Builders\PublicationBuilder;
 use App\Models\Casts\CleanAdminHtml;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Auth;
 
 class Publication extends BaseModel
 {
@@ -32,6 +34,17 @@ class Publication extends BaseModel
     ];
 
     /**
+     * Create a new Eloquent query builder for the model.
+     *
+     * @param \Illuminate\Database\Query\Builder $query
+     * @return \App\Builders\PublicationBuilder
+     */
+    public function newEloquentBuilder($query): PublicationBuilder
+    {
+        return new PublicationBuilder($query);
+    }
+
+    /**
      * Mutator: Trim name attribute before persisting
      *
      * @param string $value
@@ -40,55 +53,6 @@ class Publication extends BaseModel
     public function setNameAttribute($value)
     {
         $this->attributes['name'] = is_string($value) ? trim($value) : $value;
-    }
-
-    /**
-     * Scope only publically visible publications.
-     *
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeIsPubliclyVisible($query)
-    {
-        return $query->where('is_publicly_visible', true);
-    }
-
-    /**
-     * Scope only publications that are accepting submissions
-     *
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeIsAcceptingSubmissions($query)
-    {
-        return $query->where('is_accepting_submissions', true);
-    }
-
-    /**
-     * Scope to publications the current user is allowed to see.
-     *
-     * Guests see only publicly visible publications. Application
-     * administrators see everything. Other authenticated users see publicly
-     * visible publications plus any private publication they hold a role on.
-     *
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeVisibleToCurrentUser($query)
-    {
-        /** @var \App\Models\User|null $user */
-        $user = auth()->user();
-
-        if ($user && $user->hasRole(Role::APPLICATION_ADMINISTRATOR)) {
-            return $query;
-        }
-
-        return $query->where(function ($q) use ($user) {
-            $q->where('is_publicly_visible', true);
-            if ($user) {
-                $q->orWhereIn('id', $user->publications()->select('publications.id'));
-            }
-        });
     }
 
     /**
@@ -110,8 +74,7 @@ class Publication extends BaseModel
      */
     public function publicationAdmins(): BelongsToMany
     {
-        return $this->belongsToMany(User::class)
-            ->withTimestamps()
+        return $this->users()
             ->withPivotValue('role_id', Role::PUBLICATION_ADMINISTRATOR_ROLE_ID);
     }
 
@@ -122,8 +85,7 @@ class Publication extends BaseModel
      */
     public function editors(): BelongsToMany
     {
-        return $this->belongsToMany(User::class)
-            ->withTimestamps()
+        return $this->users()
             ->withPivotValue('role_id', Role::EDITOR_ROLE_ID);
     }
 
@@ -155,12 +117,20 @@ class Publication extends BaseModel
     public function getMyRole(): ?int
     {
         /** @var \App\Models\User $user */
-        $user = auth()->user();
+        $user = Auth::user();
         if (!$user) {
             return null;
         }
 
-        return $this->users()->wherePivot('user_id', $user->id)->first()->pivot->role_id ?? null;
+        $first = $this->users->first(
+            fn(User $u) => $u->pivot->user_id === $user->id
+        );
+
+        if (!$first) {
+            return null;
+        }
+
+        return $first->pivot->role_id;
     }
 
     /**
@@ -171,7 +141,7 @@ class Publication extends BaseModel
     public function getEffectiveRole(): ?int
     {
         /** @var \App\Models\User $user */
-        $user = auth()->user();
+        $user = Auth::user();
         if (!$user) {
             return null;
         }
