@@ -86,9 +86,13 @@ class PublicationBuilder extends Builder
     {
         $user = Auth::user();
 
+        if (!$user) {
+            return $this->whereRaw('1 = 0');
+        }
+
         return $this->whereHas('users', function (Builder $query) use ($user, $roles) {
             $query->where('user_id', $user->id)
-                ->whereIn('role', $roles);
+                ->whereIn('role_id', $roles);
         });
     }
 }
