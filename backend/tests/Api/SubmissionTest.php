@@ -1260,4 +1260,103 @@ class SubmissionTest extends ApiTestCase
         $response->assertJsonPath('data.submissions.paginatorInfo.total', 1);
         $response->assertJsonPath('data.submissions.data.0.id', (string)$ownSubmission->id);
     }
+
+    /**
+     * The submissions query can be filtered by status.
+     *
+     * @return void
+     */
+    public function testSubmissionsCanBeFilteredByStatus()
+    {
+        $this->beAppAdmin();
+        $publication = Publication::factory()->create();
+
+        $accepted = Submission::factory()
+            ->for($publication)
+            ->create(['title' => 'Accepted', 'status' => 6]);
+
+        Submission::factory()
+            ->for($publication)
+            ->create(['title' => 'Draft', 'status' => 0]);
+
+        $response = $this->graphQL(
+            'query ($status: [SubmissionStatus!]) {
+                submissions(status: $status) {
+                    data { id title }
+                    paginatorInfo { total }
+                }
+            }',
+            ['status' => ['ACCEPTED_AS_FINAL']]
+        );
+
+        $response->assertJsonPath('data.submissions.paginatorInfo.total', 1);
+        $response->assertJsonPath('data.submissions.data.0.id', (string)$accepted->id);
+    }
+
+    /**
+     * The submissions query can be filtered by publication.
+     *
+     * @return void
+     */
+    public function testSubmissionsCanBeFilteredByPublication()
+    {
+        $this->beAppAdmin();
+        $publicationA = Publication::factory()->create();
+        $publicationB = Publication::factory()->create();
+
+        $expected = Submission::factory()
+            ->for($publicationA)
+            ->create(['title' => 'In Publication A']);
+
+        Submission::factory()
+            ->for($publicationB)
+            ->create(['title' => 'In Publication B']);
+
+        $response = $this->graphQL(
+            'query ($publication: [ID!]) {
+                submissions(publication: $publication) {
+                    data { id }
+                    paginatorInfo { total }
+                }
+            }',
+            ['publication' => [(string)$publicationA->id]]
+        );
+
+        $response->assertJsonPath('data.submissions.paginatorInfo.total', 1);
+        $response->assertJsonPath('data.submissions.data.0.id', (string)$expected->id);
+    }
+
+    /**
+     * The submissions query can be filtered by the authenticated user's roles.
+     *
+     * @return void
+     */
+    public function testSubmissionsCanBeFilteredByMyRoles()
+    {
+        $admin = $this->beAppAdmin();
+        $publication = Publication::factory()->create();
+
+        $reviewing = Submission::factory()
+            ->for($publication)
+            ->hasAttached($admin, [], 'reviewers')
+            ->create(['title' => 'Reviewing']);
+
+        Submission::factory()
+            ->for($publication)
+            ->hasAttached($admin, [], 'submitters')
+            ->create(['title' => 'Submitting']);
+
+        $response = $this->graphQL(
+            'query ($my_roles: [SubmissionUserRoles!]) {
+                submissions(my_roles: $my_roles) {
+                    data { id }
+                    paginatorInfo { total }
+                }
+            }',
+            ['my_roles' => ['reviewer']]
+        );
+
+        $response->assertJsonPath('data.submissions.paginatorInfo.total', 1);
+        $response->assertJsonPath('data.submissions.data.0.id', (string)$reviewing->id);
+    }
 }

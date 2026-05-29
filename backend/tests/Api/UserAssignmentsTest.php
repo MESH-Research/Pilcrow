@@ -163,6 +163,162 @@ class UserAssignmentsTest extends ApiTestCase
     }
 
     /**
+     * Test that submissions can be filtered by publication.
+     *
+     * @return void
+     */
+    public function test_submissions_filters_by_publication(): void
+    {
+        $this->beAppAdmin();
+        $user = User::factory()->create();
+        $publicationA = Publication::factory()->create();
+        $publicationB = Publication::factory()->create();
+
+        $expected = Submission::factory()
+            ->for($publicationA)
+            ->hasAttached($user, [], 'submitters')
+            ->create(['title' => 'In Publication A']);
+
+        Submission::factory()
+            ->for($publicationB)
+            ->hasAttached($user, [], 'submitters')
+            ->create(['title' => 'In Publication B']);
+
+        $response = $this->graphQL(
+            'query ($id: ID!, $first: Int!, $publication: [ID!]) {
+                user(id: $id) {
+                    submissions(first: $first, publication: $publication) {
+                        data {
+                            submission {
+                                id
+                                title
+                            }
+                        }
+                        paginatorInfo {
+                            total
+                        }
+                    }
+                }
+            }',
+            [
+                'id' => $user->id,
+                'first' => 10,
+                'publication' => [(string)$publicationA->id],
+            ]
+        );
+
+        $response->assertJsonPath('data.user.submissions.paginatorInfo.total', 1);
+        $response->assertJsonPath(
+            'data.user.submissions.data.0.submission.id',
+            (string)$expected->id
+        );
+    }
+
+    /**
+     * Test that submissions can be searched by submission title.
+     *
+     * @return void
+     */
+    public function test_submissions_search_by_title(): void
+    {
+        $this->beAppAdmin();
+        $user = User::factory()->create();
+        $publication = Publication::factory()->create();
+
+        Submission::factory()
+            ->for($publication)
+            ->hasAttached($user, [], 'submitters')
+            ->create(['title' => 'Quantum entanglement study']);
+
+        Submission::factory()
+            ->for($publication)
+            ->hasAttached($user, [], 'submitters')
+            ->create(['title' => 'Unrelated essay']);
+
+        $response = $this->graphQL(
+            'query ($id: ID!, $first: Int!, $search: String) {
+                user(id: $id) {
+                    submissions(first: $first, search: $search) {
+                        data {
+                            submission {
+                                title
+                            }
+                        }
+                        paginatorInfo {
+                            total
+                        }
+                    }
+                }
+            }',
+            [
+                'id' => $user->id,
+                'first' => 10,
+                'search' => 'Quantum',
+            ]
+        );
+
+        $response->assertJsonPath('data.user.submissions.paginatorInfo.total', 1);
+        $response->assertJsonPath(
+            'data.user.submissions.data.0.submission.title',
+            'Quantum entanglement study'
+        );
+    }
+
+    /**
+     * Test that submissions can be ordered by a related submission column.
+     *
+     * @return void
+     */
+    public function test_submissions_order_by_submission_title(): void
+    {
+        $this->beAppAdmin();
+        $user = User::factory()->create();
+        $publication = Publication::factory()->create();
+
+        Submission::factory()
+            ->for($publication)
+            ->hasAttached($user, [], 'submitters')
+            ->create(['title' => 'Banana']);
+
+        Submission::factory()
+            ->for($publication)
+            ->hasAttached($user, [], 'submitters')
+            ->create(['title' => 'Apple']);
+
+        $response = $this->graphQL(
+            'query ($id: ID!, $first: Int!, $orderBy: [SubmissionAssignmentOrderBy!]) {
+                user(id: $id) {
+                    submissions(first: $first, orderBy: $orderBy) {
+                        data {
+                            submission {
+                                title
+                            }
+                        }
+                        paginatorInfo {
+                            total
+                        }
+                    }
+                }
+            }',
+            [
+                'id' => $user->id,
+                'first' => 10,
+                'orderBy' => [['column' => 'TITLE', 'order' => 'ASC']],
+            ]
+        );
+
+        $response->assertJsonPath('data.user.submissions.paginatorInfo.total', 2);
+        $response->assertJsonPath(
+            'data.user.submissions.data.0.submission.title',
+            'Apple'
+        );
+        $response->assertJsonPath(
+            'data.user.submissions.data.1.submission.title',
+            'Banana'
+        );
+    }
+
+    /**
      * Test that publications returns assignments for a user.
      *
      * @return void
