@@ -38,7 +38,7 @@
       <status-change-dropdown :submission />
 
       <q-icon
-        v-if="isDisabledByState"
+        v-if="isDisabledByRole || isDisabledByState"
         data-cy="submission_export_btn"
         name="exit_to_app"
         size="sm"
@@ -46,7 +46,10 @@
         class="q-ma-xs cursor-not-allowed"
         style="opacity: 0.5"
       >
-        <q-tooltip v-if="isDisabledByState">{{
+        <q-tooltip v-if="isDisabledByRole">{{
+          $t(`export.disabled.by_role`)
+        }}</q-tooltip>
+        <q-tooltip v-else-if="isDisabledByState">{{
           $t(`export.disabled.by_state`)
         }}</q-tooltip>
       </q-icon>
@@ -112,7 +115,8 @@ interface Props {
 const props = defineProps<Props>()
 
 const submissionRef = ref(props.submission)
-const { isDisabledByState } = useSubmissionExport(submissionRef)
+const { isDisabledByRole, isDisabledByState } =
+  useSubmissionExport(submissionRef)
 useStatusChangeControls(submissionRef)
 interface Emits {
   "update:commentDrawerOpen": [value: boolean]
