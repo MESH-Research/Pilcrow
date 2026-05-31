@@ -163,7 +163,7 @@ describe("admin user detail layout", () => {
     await flushPromises()
 
     wrapper
-      .findComponent('[data-cy="user_beta_toggle"]')
+      .findComponent({ name: "QToggle" })
       .vm.$emit("update:modelValue", true)
     await flushPromises()
 
@@ -186,7 +186,7 @@ describe("admin user detail layout", () => {
     await flushPromises()
 
     wrapper
-      .findComponent('[data-cy="user_beta_toggle"]')
+      .findComponent({ name: "QToggle" })
       .vm.$emit("update:modelValue", false)
     await flushPromises()
 
@@ -204,7 +204,7 @@ describe("admin user detail layout", () => {
     await flushPromises()
 
     wrapper
-      .findComponent('[data-cy="user_beta_toggle"]')
+      .findComponent({ name: "QToggle" })
       .vm.$emit("update:modelValue", true)
     await flushPromises()
 
