@@ -116,6 +116,10 @@ export default withMermaid(defineConfig({
                             ],
                         },
                         {
+                            text: "Beta Features",
+                            link: "/developers/beta-features",
+                        },
+                        {
                             text: "Testing",
                             link: "/developers/testing",
                         },

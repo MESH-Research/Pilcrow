@@ -36,20 +36,12 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       Record<never, never>,
       | 'account:labs'
-      | 'account:labs:labs-test'
       | 'account:profile'
       | 'account:settings'
     >,
     'account:labs': RouteRecordInfo<
       'account:labs',
       '/account/labs',
-      Record<never, never>,
-      Record<never, never>,
-      | 'account:labs:labs-test'
-    >,
-    'account:labs:labs-test': RouteRecordInfo<
-      'account:labs:labs-test',
-      '/account/labs/labs-test',
       Record<never, never>,
       Record<never, never>,
       | never
@@ -148,7 +140,6 @@ declare module 'vue-router/auto-routes' {
       routes:
         | 'account'
         | 'account:labs'
-        | 'account:labs:labs-test'
         | 'account:profile'
         | 'account:settings'
       views:
@@ -157,13 +148,6 @@ declare module 'vue-router/auto-routes' {
     'src/routes/account/labs.vue': {
       routes:
         | 'account:labs'
-        | 'account:labs:labs-test'
-      views:
-        | 'default'
-    }
-    'src/routes/account/labs/labs-test.vue': {
-      routes:
-        | 'account:labs:labs-test'
       views:
         | never
     }

@@ -2,16 +2,6 @@
   <h1 class="text-h2 q-pl-md" data-cy="page_heading">
     {{ $t("labs.page_title") }}
   </h1>
-  <!-- Proof that the Labs Test feature gates UI: this banner is wired to
-       the labs_test opt-in and appears only while it's active. -->
-  <q-banner
-    v-if="labsTestEnabled"
-    rounded
-    class="bg-positive text-white q-ma-md"
-    data-cy="labs_test_banner"
-  >
-    {{ $t("labs.labs_test.banner") }}
-  </q-banner>
   <div class="q-pa-md">
     <p class="text-body1 q-mb-md">
       {{ $t("labs.intro") }}
@@ -77,11 +67,7 @@ watch(
 )
 
 const { childrenOf } = useNavigation()
-const { isBeta, isFeatureEnabled } = useFeatures()
-
-// Demo banner toggled by the labs_test opt-in — exercises read-time
-// feature gating from a real component.
-const labsTestEnabled = isFeatureEnabled("labs_test")
+const { isBeta } = useFeatures()
 
 // Build the Labs list from the child routes' meta.feature. Private
 // features only show for users with beta access; ungated ones always.

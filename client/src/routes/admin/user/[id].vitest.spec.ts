@@ -130,13 +130,13 @@ describe("admin user detail layout", () => {
   it("lists the user's opted-in Labs features as chips", async () => {
     mockClient
       .getRequestHandler(getUserDetailDocument)
-      .mockResolvedValue(userResult({ feature_opt_ins: ["labs_test"] }))
+      .mockResolvedValue(userResult({ feature_opt_ins: ["sample_feature"] }))
     const wrapper = factory()
     await flushPromises()
     const chips = wrapper.find('[data-cy="user_feature_opt_ins"]')
     expect(chips.exists()).toBe(true)
     // useI18n mock resolves keys to the key string itself.
-    expect(chips.text()).toContain("labs.labs_test.label")
+    expect(chips.text()).toContain("labs.sample_feature.label")
   })
 
   it("shows the empty state when the user has no opt-ins", async () => {

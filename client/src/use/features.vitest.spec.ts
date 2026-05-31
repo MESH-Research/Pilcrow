@@ -55,26 +55,26 @@ describe("useFeatures composable", () => {
 
   test("non-beta user with opt-in: not advertised, but feature enabled", async () => {
     const result = mountComposable(
-      userResponse({ beta: false, feature_opt_ins: ["labs_test"] })
+      userResponse({ beta: false, feature_opt_ins: ["sample_feature"] })
     )
     await flushPromises()
 
     // `beta` governs Labs visibility only, not enablement.
     expect(result.isBeta.value).toBe(false)
-    expect(result.hasOptedIn("labs_test").value).toBe(true)
+    expect(result.hasOptedIn("sample_feature").value).toBe(true)
     // The opt-in record IS the grant — enabled even without beta access.
     // (Mirrors a future key-entry grant for a non-beta user.)
-    expect(result.isFeatureEnabled("labs_test").value).toBe(true)
+    expect(result.isFeatureEnabled("sample_feature").value).toBe(true)
   })
 
   test("beta user with opt-in: feature enabled", async () => {
     const result = mountComposable(
-      userResponse({ beta: true, feature_opt_ins: ["labs_test"] })
+      userResponse({ beta: true, feature_opt_ins: ["sample_feature"] })
     )
     await flushPromises()
 
     expect(result.isBeta.value).toBe(true)
-    expect(result.isFeatureEnabled("labs_test").value).toBe(true)
+    expect(result.isFeatureEnabled("sample_feature").value).toBe(true)
     // A beta feature the user hasn't opted into stays off.
     expect(result.isFeatureEnabled("other_feature").value).toBe(false)
   })
@@ -86,6 +86,6 @@ describe("useFeatures composable", () => {
     await flushPromises()
 
     expect(result.isBeta.value).toBe(true)
-    expect(result.isFeatureEnabled("labs_test").value).toBe(false)
+    expect(result.isFeatureEnabled("sample_feature").value).toBe(false)
   })
 })

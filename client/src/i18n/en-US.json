@@ -1438,11 +1438,6 @@
     "no_access": "There are currently no active labs features available.",
     "activate": "Activate",
     "deactivate": "Deactivate",
-    "error": "Could not update this feature. Please try again.",
-    "labs_test": {
-      "label": "Labs Test Feature",
-      "description": "A placeholder feature used to exercise the Labs opt-in flow end to end.",
-      "banner": "The Labs Test feature is active."
-    }
+    "error": "Could not update this feature. Please try again."
   }
 }

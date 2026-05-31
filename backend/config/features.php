@@ -32,6 +32,7 @@ return [
      * answer hasFeatureEnabled().
      */
     'beta' => [
-        'labs_test',
+        // No beta features are currently active. Add a key here (and a
+        // matching Labs child route on the client) to introduce one.
     ],
 ];

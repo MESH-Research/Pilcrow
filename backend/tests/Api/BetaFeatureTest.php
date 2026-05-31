@@ -18,14 +18,14 @@ class BetaFeatureTest extends ApiTestCase
 
         // Pin a known beta catalog so the suite doesn't track edits to
         // the real config/features.php as features graduate to GA.
-        Config::set('features.beta', ['labs_test']);
+        Config::set('features.beta', ['sample_feature']);
     }
 
     public function testBetaAndOptInsAreExposedOnUser(): void
     {
         $this->beAppAdmin();
         $target = User::factory()->beta()->create([
-            'feature_opt_ins' => ['labs_test'],
+            'feature_opt_ins' => ['sample_feature'],
         ]);
 
         $response = $this->graphQL(
@@ -37,7 +37,7 @@ class BetaFeatureTest extends ApiTestCase
 
         $this->assertTrue($response->json('data.user.beta'));
         $this->assertSame(
-            ['labs_test'],
+            ['sample_feature'],
             $response->json('data.user.feature_opt_ins')
         );
     }
@@ -51,15 +51,15 @@ class BetaFeatureTest extends ApiTestCase
             'mutation ($feature: String!, $enabled: Boolean!) {
                 setFeatureOptIn (feature: $feature, enabled: $enabled) { id feature_opt_ins }
             }',
-            ['feature' => 'labs_test', 'enabled' => true]
+            ['feature' => 'sample_feature', 'enabled' => true]
         );
 
         $this->assertEmpty($response->json('errors'));
         $this->assertSame(
-            ['labs_test'],
+            ['sample_feature'],
             $response->json('data.setFeatureOptIn.feature_opt_ins')
         );
-        $this->assertTrue($user->fresh()->hasFeatureEnabled('labs_test'));
+        $this->assertTrue($user->fresh()->hasFeatureEnabled('sample_feature'));
     }
 
     public function testEnablementIsDecoupledFromBetaFlag(): void
@@ -71,19 +71,19 @@ class BetaFeatureTest extends ApiTestCase
         // the user has no `beta` flag — the feature is still enabled.
         $user = User::factory()->create([
             'beta' => false,
-            'feature_opt_ins' => ['labs_test'],
+            'feature_opt_ins' => ['sample_feature'],
         ]);
 
-        $this->assertTrue($user->hasFeatureEnabled('labs_test'));
+        $this->assertTrue($user->hasFeatureEnabled('sample_feature'));
     }
 
     public function testOptingInPreservesExistingOptIns(): void
     {
         // Opting into a second feature must not clobber an existing
         // opt-in — the write is additive.
-        Config::set('features.beta', ['labs_test', 'second_feature']);
+        Config::set('features.beta', ['sample_feature', 'second_feature']);
         $user = User::factory()->beta()->create([
-            'feature_opt_ins' => ['labs_test'],
+            'feature_opt_ins' => ['sample_feature'],
         ]);
         $this->actingAs($user);
 
@@ -96,7 +96,7 @@ class BetaFeatureTest extends ApiTestCase
 
         $this->assertEmpty($response->json('errors'));
         $this->assertEqualsCanonicalizing(
-            ['labs_test', 'second_feature'],
+            ['sample_feature', 'second_feature'],
             $response->json('data.setFeatureOptIn.feature_opt_ins')
         );
     }
@@ -105,7 +105,7 @@ class BetaFeatureTest extends ApiTestCase
     {
         // Opting into a feature already enabled must not duplicate the key.
         $user = User::factory()->beta()->create([
-            'feature_opt_ins' => ['labs_test'],
+            'feature_opt_ins' => ['sample_feature'],
         ]);
         $this->actingAs($user);
 
@@ -113,12 +113,12 @@ class BetaFeatureTest extends ApiTestCase
             'mutation ($feature: String!, $enabled: Boolean!) {
                 setFeatureOptIn (feature: $feature, enabled: $enabled) { id feature_opt_ins }
             }',
-            ['feature' => 'labs_test', 'enabled' => true]
+            ['feature' => 'sample_feature', 'enabled' => true]
         );
 
         $this->assertEmpty($response->json('errors'));
         $this->assertSame(
-            ['labs_test'],
+            ['sample_feature'],
             $response->json('data.setFeatureOptIn.feature_opt_ins')
         );
     }
@@ -126,9 +126,9 @@ class BetaFeatureTest extends ApiTestCase
     public function testOptingOutOfFeatureNotEnabledIsNoOp(): void
     {
         // Opting out a key that was never enabled leaves the rest intact.
-        Config::set('features.beta', ['labs_test', 'second_feature']);
+        Config::set('features.beta', ['sample_feature', 'second_feature']);
         $user = User::factory()->beta()->create([
-            'feature_opt_ins' => ['labs_test'],
+            'feature_opt_ins' => ['sample_feature'],
         ]);
         $this->actingAs($user);
 
@@ -141,7 +141,7 @@ class BetaFeatureTest extends ApiTestCase
 
         $this->assertEmpty($response->json('errors'));
         $this->assertSame(
-            ['labs_test'],
+            ['sample_feature'],
             $response->json('data.setFeatureOptIn.feature_opt_ins')
         );
     }
@@ -153,7 +153,7 @@ class BetaFeatureTest extends ApiTestCase
             'mutation ($feature: String!, $enabled: Boolean!) {
                 setFeatureOptIn (feature: $feature, enabled: $enabled) { id feature_opt_ins }
             }',
-            ['feature' => 'labs_test', 'enabled' => true]
+            ['feature' => 'sample_feature', 'enabled' => true]
         );
 
         $this->assertNotEmpty($response->json('errors'));
@@ -171,15 +171,15 @@ class BetaFeatureTest extends ApiTestCase
             'mutation ($feature: String!, $enabled: Boolean!) {
                 setFeatureOptIn (feature: $feature, enabled: $enabled) { id feature_opt_ins }
             }',
-            ['feature' => 'labs_test', 'enabled' => true]
+            ['feature' => 'sample_feature', 'enabled' => true]
         );
 
         $this->assertEmpty($response->json('errors'));
         $this->assertSame(
-            ['labs_test'],
+            ['sample_feature'],
             $response->json('data.setFeatureOptIn.feature_opt_ins')
         );
-        $this->assertTrue($user->fresh()->hasFeatureEnabled('labs_test'));
+        $this->assertTrue($user->fresh()->hasFeatureEnabled('sample_feature'));
     }
 
     public function testOptingIntoUnknownFeatureIsRejected(): void
@@ -203,7 +203,7 @@ class BetaFeatureTest extends ApiTestCase
         // access can still clear the opt-in.
         $user = User::factory()->create([
             'beta' => false,
-            'feature_opt_ins' => ['labs_test'],
+            'feature_opt_ins' => ['sample_feature'],
         ]);
         $this->actingAs($user);
 
@@ -211,7 +211,7 @@ class BetaFeatureTest extends ApiTestCase
             'mutation ($feature: String!, $enabled: Boolean!) {
                 setFeatureOptIn (feature: $feature, enabled: $enabled) { id feature_opt_ins }
             }',
-            ['feature' => 'labs_test', 'enabled' => false]
+            ['feature' => 'sample_feature', 'enabled' => false]
         );
 
         $this->assertEmpty($response->json('errors'));
@@ -259,7 +259,7 @@ class BetaFeatureTest extends ApiTestCase
         // so the feature remains enabled until the opt-in is cleared.
         $this->beAppAdmin();
         $target = User::factory()->beta()->create([
-            'feature_opt_ins' => ['labs_test'],
+            'feature_opt_ins' => ['sample_feature'],
         ]);
 
         $this->graphQL(
@@ -271,8 +271,8 @@ class BetaFeatureTest extends ApiTestCase
 
         $fresh = $target->fresh();
         $this->assertFalse($fresh->beta);
-        $this->assertSame(['labs_test'], $fresh->getActiveFeatureOptIns());
-        $this->assertTrue($fresh->hasFeatureEnabled('labs_test'));
+        $this->assertSame(['sample_feature'], $fresh->getActiveFeatureOptIns());
+        $this->assertTrue($fresh->hasFeatureEnabled('sample_feature'));
     }
 
     public function testGuestCannotSetUserBetaAccess(): void
@@ -403,9 +403,9 @@ class BetaFeatureTest extends ApiTestCase
     {
         // The catalog is the sole validity gate on opting in: a key is
         // known iff it is listed. Beta access plays no part here.
-        Config::set('features.beta', ['labs_test']);
+        Config::set('features.beta', ['sample_feature']);
 
-        $this->assertTrue(User::featureExists('labs_test'));
+        $this->assertTrue(User::featureExists('sample_feature'));
         $this->assertFalse(User::featureExists('not_in_catalog'));
     }
 }

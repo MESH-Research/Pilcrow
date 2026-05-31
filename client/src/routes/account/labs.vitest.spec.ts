@@ -18,20 +18,15 @@ vi.mock("vue-router", () => ({
 }))
 
 // Drive the page from controllable composable stubs so each test fixes
-// the visible children + beta/enablement state.
+// the visible children + beta state.
 const isBeta = ref(false)
-const enabled = ref<string[]>([])
 let children: ChildRoute[] = []
 
 vi.mock("src/use/navigation", () => ({
   useNavigation: () => ({ childrenOf: () => computed(() => children) })
 }))
 vi.mock("src/use/features", () => ({
-  useFeatures: () => ({
-    isBeta,
-    isFeatureEnabled: (key: string) =>
-      computed(() => enabled.value.includes(key))
-  })
+  useFeatures: () => ({ isBeta })
 }))
 
 import LabsPage from "./labs.vue"
@@ -64,10 +59,9 @@ function factory() {
 describe("Labs page", () => {
   beforeEach(() => {
     isBeta.value = false
-    enabled.value = []
     routeName = "account:labs"
     children = [
-      child("labs_test", true, 10, "Private Test"),
+      child("private_feature", true, 10, "Private Test"),
       child("public_thing", false, 20, "Public Thing")
     ]
     replace.mockReset()
@@ -87,22 +81,13 @@ describe("Labs page", () => {
   })
 
   it("shows the empty banner when no features are visible", () => {
-    children = [child("labs_test", true, 10, "Private Test")]
+    children = [child("private_feature", true, 10, "Private Test")]
     const wrapper = factory()
     expect(wrapper.find('[data-cy="no_labs_access"]').exists()).toBe(true)
   })
 
-  it("shows the labs_test banner only when that feature is enabled", () => {
-    const off = factory()
-    expect(off.find('[data-cy="labs_test_banner"]').exists()).toBe(false)
-
-    enabled.value = ["labs_test"]
-    const on = factory()
-    expect(on.find('[data-cy="labs_test_banner"]').exists()).toBe(true)
-  })
-
   it("redirects back to the index when a child route is hit directly", () => {
-    routeName = "account:labs:labs-test"
+    routeName = "account:labs:private_feature"
     factory()
     expect(replace).toHaveBeenCalledWith({ name: "account:labs" })
   })
