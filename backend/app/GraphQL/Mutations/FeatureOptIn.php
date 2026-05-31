@@ -22,7 +22,6 @@ class FeatureOptIn
      * @param mixed $_
      * @param array<string, mixed> $args
      * @return \App\Models\User
-     *
      * @throws \GraphQL\Error\Error
      */
     public function setFeatureOptIn($_, array $args): User
