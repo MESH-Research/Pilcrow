@@ -25,6 +25,8 @@ function userResult(overrides: Record<string, unknown> = {}) {
         email_verified_at: "2024-01-03T10:00:00Z",
         avatar_color: "#123456",
         roles: [{ __typename: "Role", name: "Reviewer" }],
+        beta: false,
+        feature_opt_ins: [],
         ...overrides
       }
     }
@@ -111,5 +113,28 @@ describe("admin user detail layout", () => {
     const wrapper = factory()
     await flushPromises()
     expect(wrapper.find(".text-h5").text()).toBe("jdoe")
+  })
+
+  it("lists the user's opted-in Labs features as chips", async () => {
+    mockClient
+      .getRequestHandler(getUserDetailDocument)
+      .mockResolvedValue(userResult({ feature_opt_ins: ["labs_test"] }))
+    const wrapper = factory()
+    await flushPromises()
+    const chips = wrapper.find('[data-cy="user_feature_opt_ins"]')
+    expect(chips.exists()).toBe(true)
+    // useI18n mock resolves keys to the key string itself.
+    expect(chips.text()).toContain("labs.labs_test.label")
+  })
+
+  it("shows the empty state when the user has no opt-ins", async () => {
+    mockClient
+      .getRequestHandler(getUserDetailDocument)
+      .mockResolvedValue(userResult({ feature_opt_ins: [] }))
+    const wrapper = factory()
+    await flushPromises()
+    expect(wrapper.find('[data-cy="user_no_feature_opt_ins"]').exists()).toBe(
+      true
+    )
   })
 })

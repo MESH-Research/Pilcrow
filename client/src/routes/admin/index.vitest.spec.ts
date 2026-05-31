@@ -23,10 +23,10 @@ describe("AdminDashboard", () => {
     expect(wrapper).toBeTruthy()
   })
 
-  it("renders links to users and publications pages", () => {
+  it("renders links to users, publications, and beta-users pages", () => {
     const wrapper = makeWrapper()
     const cards = wrapper.findAll(".admin-card")
-    expect(cards).toHaveLength(2)
+    expect(cards).toHaveLength(3)
   })
 
   it("navigates to users page on card click", async () => {
@@ -41,5 +41,12 @@ describe("AdminDashboard", () => {
     const cards = wrapper.findAll(".admin-card")
     await cards[1].trigger("click")
     expect(mockPush).toHaveBeenCalledWith({ name: "admin:publication:index" })
+  })
+
+  it("navigates to beta-users page on card click", async () => {
+    const wrapper = makeWrapper()
+    const cards = wrapper.findAll(".admin-card")
+    await cards[2].trigger("click")
+    expect(mockPush).toHaveBeenCalledWith({ name: "admin:beta-users" })
   })
 })
