@@ -14,10 +14,11 @@ class FeatureOptIn
      *
      * Opt-ins are stored as a flat array of enabled feature keys: opting
      * in adds the key, opting out removes it. Presence of the key IS the
-     * grant. Opting *in* is gated: the feature key must be known and,
-     * when it is beta-gated, the user must have beta access. Opting *out*
-     * is always permitted so access can be revoked without leaving a
-     * dangling opt-in.
+     * grant. The ONLY gate on opting in is that the feature key is known
+     * (in the catalog); the `beta` flag is not checked here — beta is an
+     * advertisement concern owned by the client, not a server security
+     * boundary. Opting *out* is always permitted so a stale opt-in can
+     * be cleared.
      *
      * @param mixed $_
      * @param array<string, mixed> $args
@@ -32,16 +33,12 @@ class FeatureOptIn
         $feature = $args['feature'];
         $enabled = (bool)$args['enabled'];
 
-        // Opting in is only valid for a currently-gated beta feature the
-        // user can access. Opting out is always allowed so a stale
-        // opt-in can be cleared (e.g. after beta access is revoked).
-        if ($enabled) {
-            if (!User::featureIsBetaGated($feature)) {
-                throw new Error('Unknown beta feature.');
-            }
-            if (!$user->canAccessFeature($feature)) {
-                throw new Error('Feature is not available to this user.');
-            }
+        // The only opt-in gate is a known feature key. Beta access is
+        // not checked — it governs client advertisement, not server
+        // authorization. Opting out is always allowed so a stale opt-in
+        // can be cleared.
+        if ($enabled && !User::featureExists($feature)) {
+            throw new Error('Unknown feature.');
         }
 
         // Remove the key first (dedups / clears a prior opt-in), then

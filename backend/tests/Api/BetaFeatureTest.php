@@ -42,7 +42,7 @@ class BetaFeatureTest extends ApiTestCase
         );
     }
 
-    public function testBetaUserCanOptIntoGatedFeature(): void
+    public function testUserCanOptIntoValidFeature(): void
     {
         $user = User::factory()->beta()->create();
         $this->actingAs($user);
@@ -159,8 +159,11 @@ class BetaFeatureTest extends ApiTestCase
         $this->assertNotEmpty($response->json('errors'));
     }
 
-    public function testNonBetaUserCannotOptIntoGatedFeature(): void
+    public function testNonBetaUserCanOptIntoValidFeature(): void
     {
+        // Beta is an advertisement concern, not a server gate: a user
+        // without the beta flag may still opt into any known feature key.
+        // (The client simply doesn't advertise it to them.)
         $user = User::factory()->create(['beta' => false]);
         $this->actingAs($user);
 
@@ -171,8 +174,12 @@ class BetaFeatureTest extends ApiTestCase
             ['feature' => 'labs_test', 'enabled' => true]
         );
 
-        $this->assertNotEmpty($response->json('errors'));
-        $this->assertNull($user->fresh()->feature_opt_ins);
+        $this->assertEmpty($response->json('errors'));
+        $this->assertSame(
+            ['labs_test'],
+            $response->json('data.setFeatureOptIn.feature_opt_ins')
+        );
+        $this->assertTrue($user->fresh()->hasFeatureEnabled('labs_test'));
     }
 
     public function testOptingIntoUnknownFeatureIsRejected(): void
@@ -341,23 +348,13 @@ class BetaFeatureTest extends ApiTestCase
         }
     }
 
-    public function testCanAccessFeatureGatesOnBetaForCatalogKeys(): void
+    public function testFeatureExistsReflectsTheCatalog(): void
     {
-        // Unit-level guard on the WRITE-path helper: a gated (catalog)
-        // key requires beta access; an ungated key is open to anyone.
+        // The catalog is the sole validity gate on opting in: a key is
+        // known iff it is listed. Beta access plays no part here.
         Config::set('features.beta', ['labs_test']);
 
-        $this->assertTrue(User::featureIsBetaGated('labs_test'));
-        $this->assertFalse(User::featureIsBetaGated('not_in_catalog'));
-
-        $betaUser = User::factory()->beta()->create();
-        $plainUser = User::factory()->create(['beta' => false]);
-
-        $this->assertTrue($betaUser->canAccessFeature('labs_test'));
-        $this->assertFalse($plainUser->canAccessFeature('labs_test'));
-
-        // Ungated keys are accessible regardless of the beta flag.
-        $this->assertTrue($betaUser->canAccessFeature('not_in_catalog'));
-        $this->assertTrue($plainUser->canAccessFeature('not_in_catalog'));
+        $this->assertTrue(User::featureExists('labs_test'));
+        $this->assertFalse(User::featureExists('not_in_catalog'));
     }
 }

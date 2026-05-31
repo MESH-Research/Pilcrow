@@ -176,47 +176,27 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Whether a private-beta feature key is gated. A key listed in the
-     * `features.beta` catalog requires the `beta` flag to access; any
-     * other key (e.g. one that has graduated to GA) is ungated.
+     * Whether a feature key is known — i.e. it appears in the feature
+     * catalog (`config/features.php`). This is the ONLY server-side gate
+     * on opting in: the backend accepts any opt-in for a valid key from
+     * any authenticated user. The `beta` flag does NOT gate this. Beta
+     * features are hidden for advertisement, not for security — the
+     * client decides what to show; the server only rejects junk keys.
      *
      * @param string $key
      * @return bool
      */
-    public static function featureIsBetaGated(string $key): bool
+    public static function featureExists(string $key): bool
     {
         return in_array($key, Config::get('features.beta', []), true);
     }
 
     /**
-     * Whether this user may newly opt into a feature. This gates the
-     * WRITE path only (the `setFeatureOptIn` mutation): gated (private
-     * beta) features require the `beta` flag; ungated features are
-     * accessible to everyone. Enablement at READ time is decided
-     * solely by the opt-in record (see `hasFeatureEnabled`), so a
-     * future grant path (e.g. a user entering a beta key) can enable a
-     * feature without the `beta` flag and without advertising it.
-     *
-     * @param string $key
-     * @return bool
-     */
-    public function canAccessFeature(string $key): bool
-    {
-        if (self::featureIsBetaGated($key)) {
-            return (bool)$this->beta;
-        }
-
-        return true;
-    }
-
-    /**
      * Whether a feature is effectively enabled for this user: purely
      * whether they hold an active opt-in record. The opt-in record IS
-     * the access grant — whoever can write it (the `beta`-gated
-     * `setFeatureOptIn` mutation today, a key-entry grant tomorrow) is
-     * the security boundary. The `beta` flag and the `features.beta`
-     * catalog only decide what we advertise in the Labs UI, not what is
-     * on. Gated code paths (admin publications, ROR, ...) call this.
+     * the grant. The `beta` flag only decides what the client advertises
+     * in the Labs UI, never what is on. Gated code paths (admin
+     * publications, ROR, ...) call this.
      *
      * @param string $key
      * @return bool
