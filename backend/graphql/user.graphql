@@ -15,6 +15,10 @@ type User {
     highest_privileged_role: UserRoles @method(name: "getHighestPrivilegedRole")
     permissions: [Permission!] @belongsToMany
     profile_metadata: ProfileMetadata
+    "Whether the user has access to private beta features (admin-set)."
+    beta: Boolean!
+    "Beta feature keys the user has explicitly opted into."
+    feature_opt_ins: [String!]! @method(name: "getActiveFeatureOptIns")
     raw_submissions: [Submission!]
         @belongsToMany(relation: "submissions")
         @deprecated(reason: "Use `submissions` (SubmissionAssignment) instead")

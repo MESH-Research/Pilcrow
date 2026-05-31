@@ -1,0 +1,19 @@
+extend type Mutation {
+    """
+    Toggle the authenticated user's opt-in for a beta feature. Stores
+    the boolean explicitly so "opted out" (`false`) is distinguishable
+    from "never asked" (key absent). Rejects unknown feature keys and
+    rejects opting into a gated feature the user has no beta access to.
+    """
+    setFeatureOptIn(feature: String!, enabled: Boolean!): User!
+        @guard
+        @field(resolver: "App\\GraphQL\\Mutations\\FeatureOptIn@setFeatureOptIn")
+
+    """
+    Grant or revoke a user's access to private beta features.
+    Application-administrator only.
+    """
+    setUserBetaAccess(id: ID!, enabled: Boolean!): User!
+        @can(ability: "manageBeta", find: "id")
+        @field(resolver: "App\\GraphQL\\Mutations\\FeatureOptIn@setUserBetaAccess")
+}

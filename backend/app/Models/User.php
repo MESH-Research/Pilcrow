@@ -58,6 +58,8 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $casts = [
         'email_verified_at' => 'datetime',
         'profile_metadata' => 'array',
+        'beta' => 'boolean',
+        'feature_opt_ins' => 'array',
     ];
 
     /**
@@ -159,6 +161,69 @@ class User extends Authenticatable implements MustVerifyEmail
             'username' => $this->username,
             'email' => $this->email,
         ];
+    }
+
+    /**
+     * Feature-flag keys the user has opted into, stored as a flat array
+     * of enabled keys. An absent key means not opted in (opting out
+     * removes the key). Presence of the key is the access grant.
+     *
+     * @return array<int, string>
+     */
+    public function getActiveFeatureOptIns(): array
+    {
+        return array_values($this->feature_opt_ins ?? []);
+    }
+
+    /**
+     * Whether a private-beta feature key is gated. A key listed in the
+     * `features.beta` catalog requires the `beta` flag to access; any
+     * other key (e.g. one that has graduated to GA) is ungated.
+     *
+     * @param string $key
+     * @return bool
+     */
+    public static function featureIsBetaGated(string $key): bool
+    {
+        return in_array($key, Config::get('features.beta', []), true);
+    }
+
+    /**
+     * Whether this user may newly opt into a feature. This gates the
+     * WRITE path only (the `setFeatureOptIn` mutation): gated (private
+     * beta) features require the `beta` flag; ungated features are
+     * accessible to everyone. Enablement at READ time is decided
+     * solely by the opt-in record (see `hasFeatureEnabled`), so a
+     * future grant path (e.g. a user entering a beta key) can enable a
+     * feature without the `beta` flag and without advertising it.
+     *
+     * @param string $key
+     * @return bool
+     */
+    public function canAccessFeature(string $key): bool
+    {
+        if (self::featureIsBetaGated($key)) {
+            return (bool)$this->beta;
+        }
+
+        return true;
+    }
+
+    /**
+     * Whether a feature is effectively enabled for this user: purely
+     * whether they hold an active opt-in record. The opt-in record IS
+     * the access grant — whoever can write it (the `beta`-gated
+     * `setFeatureOptIn` mutation today, a key-entry grant tomorrow) is
+     * the security boundary. The `beta` flag and the `features.beta`
+     * catalog only decide what we advertise in the Labs UI, not what is
+     * on. Gated code paths (admin publications, ROR, ...) call this.
+     *
+     * @param string $key
+     * @return bool
+     */
+    public function hasFeatureEnabled(string $key): bool
+    {
+        return in_array($key, $this->getActiveFeatureOptIns(), true);
     }
 
     /**
