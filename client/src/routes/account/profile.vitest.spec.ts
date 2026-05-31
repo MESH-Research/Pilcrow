@@ -8,7 +8,7 @@ import type {
   UpdateProfileMetaDataMutation
 } from "src/graphql/generated/graphql"
 import { ref as mockRef } from "vue"
-import ProfilePage from "./ProfilePage.vue"
+import ProfilePage from "./profile.vue"
 
 import { beforeEach, describe, expect, test, vi } from "vitest"
 

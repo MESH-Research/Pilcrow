@@ -293,6 +293,20 @@ type Mutation {
     """
     id: ID
   ): User!
+
+  """
+  Toggle the authenticated user's opt-in for a beta feature. Stores
+  the boolean explicitly so "opted out" (`false`) is distinguishable
+  from "never asked" (key absent). Rejects unknown feature keys and
+  rejects opting into a gated feature the user has no beta access to.
+  """
+  setFeatureOptIn(enabled: Boolean!, feature: String!): User!
+
+  """
+  Grant or revoke a user's access to private beta features.
+  Application-administrator only.
+  """
+  setUserBetaAccess(enabled: Boolean!, id: ID!): User!
   updatePublication(publication: UpdatePublicationInput!): Publication
 
   """Update an existing submission"""
@@ -618,6 +632,8 @@ type Query {
     term: String
   ): UserPaginator! @deprecated(reason: "Use the `users` query instead, which supports pagination and filtering by search term")
   users(
+    beta: Boolean
+
     """Limits number of fetched items."""
     first: Int! = 10
     orderBy: [QueryUsersOrderByOrderByClause!]
@@ -991,10 +1007,16 @@ scalar Upload
 """A user account"""
 type User {
   avatar_color: String! @deprecated(reason: "Temporary placeholder for stable avatar colors; will be removed when user-uploaded avatars are introduced.")
+
+  """Whether the user has access to private beta features (admin-set)."""
+  beta: Boolean!
   created_at: DateTimeUtc!
   display_label: String
   email: String
   email_verified_at: DateTimeUtc
+
+  """Beta feature keys the user has explicitly opted into."""
+  feature_opt_ins: [String!]!
   highest_privileged_role: UserRoles
   id: ID!
   name: String

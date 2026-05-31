@@ -45,7 +45,8 @@
       "users": "Users",
       "user": "User",
       "publications": "Publications",
-      "submissions": "Submissions"
+      "submissions": "Submissions",
+      "beta_users": "Beta Users"
     }
   },
   "lists": {
@@ -1304,7 +1305,8 @@
     },
     "dashboard": {
       "users_description": "Manage user accounts and permissions.",
-      "publications_description": "Manage publications and their settings."
+      "publications_description": "Manage publications and their settings.",
+      "beta_users_description": "Grant or revoke private beta access for users."
     },
     "publication": {
       "headers": {
@@ -1405,8 +1407,42 @@
           "btn": {
             "create": "Create"
           }
-        }
+        },
+        "beta": "Beta Access",
+        "beta_enabled": "Beta features enabled",
+        "beta_disabled": "Beta features disabled",
+        "beta_error": "Could not update beta access. Please try again.",
+        "feature_opt_ins": "Labs Features",
+        "no_feature_opt_ins": "No labs features enabled"
       }
+    },
+    "beta_users": {
+      "title": "Beta Users",
+      "intro": "Users with beta access can opt into private beta features from their account. Add or remove access here.",
+      "search_hint": "Search by name, username, or email.",
+      "add_label": "Find a user to grant beta access",
+      "add_btn": "Grant Access",
+      "remove_btn": "Remove",
+      "error": "Could not update beta access. Please try again.",
+      "headers": {
+        "name": "Name",
+        "username": "Username",
+        "email": "Email",
+        "actions": "Actions"
+      }
+    }
+  },
+  "labs": {
+    "page_title": "Labs",
+    "intro": "Get early access to features we're still building. Turn on the ones you'd like to try — you can turn them off again at any time.",
+    "no_access": "There are currently no active labs features available.",
+    "activate": "Activate",
+    "deactivate": "Deactivate",
+    "error": "Could not update this feature. Please try again.",
+    "labs_test": {
+      "label": "Labs Test Feature",
+      "description": "A placeholder feature used to exercise the Labs opt-in flow end to end.",
+      "banner": "The Labs Test feature is active."
     }
   }
 }

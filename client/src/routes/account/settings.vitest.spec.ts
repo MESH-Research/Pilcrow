@@ -8,7 +8,7 @@ import type {
   UpdateUserMutation
 } from "src/graphql/generated/graphql"
 import { ref as mockRef } from "vue"
-import SettingsPage from "./SettingsPage.vue"
+import SettingsPage from "./settings.vue"
 
 import { beforeEach, describe, expect, it, test, vi } from "vitest"
 
@@ -59,7 +59,9 @@ describe("Settings page", () => {
           email: "test@example.com",
           avatar_color: "blue",
           email_verified_at: null,
-          roles: []
+          roles: [],
+          beta: false,
+          feature_opt_ins: []
         }
       }
     }
