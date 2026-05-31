@@ -42,6 +42,26 @@
           </q-card-section>
         </q-card>
       </div>
+      <div class="col-xs-12 col-sm-6 col-md-4">
+        <q-card
+          flat
+          bordered
+          class="cursor-pointer admin-card"
+          @click="goToBetaUsers"
+        >
+          <q-card-section class="row items-center q-gutter-md">
+            <q-icon name="science" size="xl" color="accent" />
+            <div>
+              <div class="text-subtitle1 text-weight-bold">
+                {{ $t("admin.beta_users.title") }}
+              </div>
+              <div class="text-caption">
+                {{ $t("admin.dashboard.beta_users_description") }}
+              </div>
+            </div>
+          </q-card-section>
+        </q-card>
+      </div>
     </div>
   </div>
 </template>
@@ -66,6 +86,10 @@ function goToUsers() {
 
 function goToPublications() {
   push({ name: "admin:publication:index" })
+}
+
+function goToBetaUsers() {
+  push({ name: "admin:beta-users" })
 }
 </script>
 

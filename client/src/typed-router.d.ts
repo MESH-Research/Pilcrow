@@ -35,9 +35,17 @@ declare module 'vue-router/auto-routes' {
       '/account',
       Record<never, never>,
       Record<never, never>,
+      | 'account:labs'
       | 'account:profile'
       | 'account:record_of_review'
       | 'account:settings'
+    >,
+    'account:labs': RouteRecordInfo<
+      'account:labs',
+      '/account/labs',
+      Record<never, never>,
+      Record<never, never>,
+      | never
     >,
     'account:profile': RouteRecordInfo<
       'account:profile',
@@ -65,6 +73,7 @@ declare module 'vue-router/auto-routes' {
       '/admin',
       Record<never, never>,
       Record<never, never>,
+      | 'admin:beta-users'
       | 'admin:dashboard'
       | 'admin:publication:index'
       | 'admin:user:id'
@@ -75,6 +84,13 @@ declare module 'vue-router/auto-routes' {
     'admin:dashboard': RouteRecordInfo<
       'admin:dashboard',
       '/admin',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    'admin:beta-users': RouteRecordInfo<
+      'admin:beta-users',
+      '/admin/beta-users',
       Record<never, never>,
       Record<never, never>,
       | never
@@ -131,11 +147,18 @@ declare module 'vue-router/auto-routes' {
     'src/routes/account.vue': {
       routes:
         | 'account'
+        | 'account:labs'
         | 'account:profile'
         | 'account:record_of_review'
         | 'account:settings'
       views:
         | 'default'
+    }
+    'src/routes/account/labs.vue': {
+      routes:
+        | 'account:labs'
+      views:
+        | never
     }
     'src/routes/account/profile.vue': {
       routes:
@@ -158,6 +181,7 @@ declare module 'vue-router/auto-routes' {
     'src/routes/admin.vue': {
       routes:
         | '/admin'
+        | 'admin:beta-users'
         | 'admin:dashboard'
         | 'admin:publication:index'
         | 'admin:user:id'
@@ -170,6 +194,12 @@ declare module 'vue-router/auto-routes' {
     'src/routes/admin/index.vue': {
       routes:
         | 'admin:dashboard'
+      views:
+        | never
+    }
+    'src/routes/admin/beta-users.vue': {
+      routes:
+        | 'admin:beta-users'
       views:
         | never
     }

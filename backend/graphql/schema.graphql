@@ -1,4 +1,5 @@
 #import academic_profiles.graphql
+#import feature.graphql
 #import notification.graphql
 #import permission.graphql
 #import profile_metadata.graphql
@@ -30,7 +31,7 @@ type Query {
     "Return user accounts optionally based on a supplied search term"
     userSearch(term: String @search): [User!]! @paginate(defaultCount: 10) @guard @deprecated(reason: "Use the `users` query instead, which supports pagination and filtering by search term")
 
-    users(search: String @scope, orderBy: _ @orderBy(columns: ["name", "username", "email", "created_at"])): [User!]!
+    users(search: String @scope, beta: Boolean @eq, orderBy: _ @orderBy(columns: ["name", "username", "email", "created_at"])): [User!]!
         @paginate(defaultCount: 10)
         @orderBy(column: "name", direction: ASC)
         @can(ability: "viewAny", query: true)

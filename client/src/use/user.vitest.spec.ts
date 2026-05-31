@@ -53,7 +53,9 @@ describe("useCurrentUser composable", () => {
           avatar_color: "blue",
           email_verified_at: "2021-08-14 02:26:32",
           highest_privileged_role: UserRoles.application_admin,
-          roles: [{ name: "tester" }]
+          roles: [{ name: "tester" }],
+          beta: false,
+          feature_opt_ins: []
         }
       }
     }

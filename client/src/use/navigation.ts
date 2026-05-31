@@ -1,8 +1,15 @@
-import { computed, type ComputedRef } from "vue"
+import {
+  computed,
+  defineAsyncComponent,
+  type AsyncComponentLoader,
+  type Component,
+  type ComputedRef
+} from "vue"
 import {
   useRouter,
   type RouteLocationRaw,
-  type RouteLocationResolved
+  type RouteLocationResolved,
+  type RouteMeta
 } from "vue-router"
 
 declare module "vue-router" {
@@ -37,6 +44,13 @@ export type ChildRoute = {
   label: string
   icon: string | undefined
   url: RouteLocationRaw
+  // Full resolved meta, so callers can filter on their own meta keys
+  // (e.g. a beta sub-layout hiding `meta.feature.private` entries).
+  meta: RouteMeta
+  // The child's page component, ready to render inline via
+  // `<component :is>`. Lets a parent build a list from file-based routes
+  // and render the children itself instead of routing to them.
+  component: Component | undefined
 }
 
 export function useNavigation() {
@@ -60,14 +74,23 @@ export function useNavigation() {
         const bo = b.r.meta.navigation?.order ?? Number.POSITIVE_INFINITY
         return ao - bo || a.i - b.i
       })
-      return indexed.map(({ r }) => ({
-        name: r.name,
-        label:
-          (r.meta.navigation?.label as string | undefined) ??
-          (r.name as string),
-        icon: r.meta.navigation?.icon,
-        url: { name: r.name } as RouteLocationRaw
-      }))
+      return indexed.map(({ r }) => {
+        const loader = r.matched[r.matched.length - 1]?.components?.default
+        return {
+          name: r.name,
+          label:
+            (r.meta.navigation?.label as string | undefined) ??
+            (r.name as string),
+          icon: r.meta.navigation?.icon,
+          url: { name: r.name } as RouteLocationRaw,
+          meta: r.meta,
+          // unplugin-vue-router records use lazy `() => import()` loaders,
+          // so wrap in defineAsyncComponent for inline rendering.
+          component: loader
+            ? defineAsyncComponent(loader as AsyncComponentLoader)
+            : undefined
+        }
+      })
     })
   }
 

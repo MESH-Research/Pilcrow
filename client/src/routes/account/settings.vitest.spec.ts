@@ -59,7 +59,9 @@ describe("Settings page", () => {
           email: "test@example.com",
           avatar_color: "blue",
           email_verified_at: null,
-          roles: []
+          roles: [],
+          beta: false,
+          feature_opt_ins: []
         }
       }
     }

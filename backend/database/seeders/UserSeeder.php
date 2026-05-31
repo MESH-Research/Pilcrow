@@ -100,5 +100,12 @@ class UserSeeder extends Seeder
             'password' => Hash::make('regularPassword!@#'),
             'profile_metadata' => $orcid('0000-0001-9032-7714'),
         ]);
+
+        User::factory()->beta()->create([
+            'username' => 'betaUser',
+            'email' => 'betaUser@meshresearch.net',
+            'name' => 'Beta User',
+            'password' => Hash::make('betaPassword!@#'),
+        ]);
     }
 }

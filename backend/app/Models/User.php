@@ -58,6 +58,8 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $casts = [
         'email_verified_at' => 'datetime',
         'profile_metadata' => 'array',
+        'beta' => 'boolean',
+        'feature_opt_ins' => 'array',
     ];
 
     /**
@@ -159,6 +161,49 @@ class User extends Authenticatable implements MustVerifyEmail
             'username' => $this->username,
             'email' => $this->email,
         ];
+    }
+
+    /**
+     * Feature-flag keys the user has opted into, stored as a flat array
+     * of enabled keys. An absent key means not opted in (opting out
+     * removes the key). Presence of the key is the access grant.
+     *
+     * @return array<int, string>
+     */
+    public function getActiveFeatureOptIns(): array
+    {
+        return array_values($this->feature_opt_ins ?? []);
+    }
+
+    /**
+     * Whether a feature key is known — i.e. it appears in the feature
+     * catalog (`config/features.php`). This is the ONLY server-side gate
+     * on opting in: the backend accepts any opt-in for a valid key from
+     * any authenticated user. The `beta` flag does NOT gate this. Beta
+     * features are hidden for advertisement, not for security — the
+     * client decides what to show; the server only rejects junk keys.
+     *
+     * @param string $key
+     * @return bool
+     */
+    public static function featureExists(string $key): bool
+    {
+        return in_array($key, Config::get('features.beta', []), true);
+    }
+
+    /**
+     * Whether a feature is effectively enabled for this user: purely
+     * whether they hold an active opt-in record. The opt-in record IS
+     * the grant. The `beta` flag only decides what the client advertises
+     * in the Labs UI, never what is on. Gated code paths (admin
+     * publications, ROR, ...) call this.
+     *
+     * @param string $key
+     * @return bool
+     */
+    public function hasFeatureEnabled(string $key): bool
+    {
+        return in_array($key, $this->getActiveFeatureOptIns(), true);
     }
 
     /**
