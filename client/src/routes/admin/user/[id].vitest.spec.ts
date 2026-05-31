@@ -1,12 +1,20 @@
 import { installQuasarPlugin, installApolloClient } from "app/test/vitest/utils"
 import { mount, flushPromises } from "@vue/test-utils"
-import { describe, expect, it, vi } from "vitest"
-import { getUserDetailDocument } from "src/graphql/generated/graphql"
+import { describe, expect, it, beforeEach, vi } from "vitest"
+import {
+  getUserDetailDocument,
+  SetUserBetaAccessDocument
+} from "src/graphql/generated/graphql"
 import UserDetailLayout from "./[id].vue"
 
 vi.mock("vue-router", () => ({
   useRoute: () => ({ params: { id: "5" } }),
   useRouter: () => ({ resolve: vi.fn(), push: vi.fn() })
+}))
+
+const mockNewStatus = vi.fn()
+vi.mock("src/use/guiElements", () => ({
+  useFeedbackMessages: () => ({ newStatusMessage: mockNewStatus })
 }))
 
 installQuasarPlugin()
@@ -49,6 +57,10 @@ function factory() {
 }
 
 describe("admin user detail layout", () => {
+  beforeEach(() => {
+    mockNewStatus.mockReset()
+  })
+
   it("shows a loading state before the user resolves", () => {
     mockClient.getRequestHandler(getUserDetailDocument).mockResolvedValue({
       data: { user: null }
@@ -135,6 +147,70 @@ describe("admin user detail layout", () => {
     await flushPromises()
     expect(wrapper.find('[data-cy="user_no_feature_opt_ins"]').exists()).toBe(
       true
+    )
+  })
+
+  it("grants beta access when the toggle is switched on", async () => {
+    mockClient
+      .getRequestHandler(getUserDetailDocument)
+      .mockResolvedValue(userResult({ beta: false }))
+    const betaHandler = mockClient
+      .getRequestHandler(SetUserBetaAccessDocument)
+      .mockResolvedValue({
+        data: { setUserBetaAccess: { __typename: "User", id: "5", beta: true } }
+      })
+    const wrapper = factory()
+    await flushPromises()
+
+    wrapper
+      .findComponent('[data-cy="user_beta_toggle"]')
+      .vm.$emit("update:modelValue", true)
+    await flushPromises()
+
+    expect(betaHandler).toHaveBeenCalledWith({ id: "5", enabled: true })
+    expect(mockNewStatus).not.toHaveBeenCalled()
+  })
+
+  it("revokes beta access when the toggle is switched off", async () => {
+    mockClient
+      .getRequestHandler(getUserDetailDocument)
+      .mockResolvedValue(userResult({ beta: true }))
+    const betaHandler = mockClient
+      .getRequestHandler(SetUserBetaAccessDocument)
+      .mockResolvedValue({
+        data: {
+          setUserBetaAccess: { __typename: "User", id: "5", beta: false }
+        }
+      })
+    const wrapper = factory()
+    await flushPromises()
+
+    wrapper
+      .findComponent('[data-cy="user_beta_toggle"]')
+      .vm.$emit("update:modelValue", false)
+    await flushPromises()
+
+    expect(betaHandler).toHaveBeenCalledWith({ id: "5", enabled: false })
+  })
+
+  it("surfaces a failure message when the beta mutation rejects", async () => {
+    mockClient
+      .getRequestHandler(getUserDetailDocument)
+      .mockResolvedValue(userResult({ beta: false }))
+    mockClient
+      .getRequestHandler(SetUserBetaAccessDocument)
+      .mockRejectedValue(new Error("network"))
+    const wrapper = factory()
+    await flushPromises()
+
+    wrapper
+      .findComponent('[data-cy="user_beta_toggle"]')
+      .vm.$emit("update:modelValue", true)
+    await flushPromises()
+
+    expect(mockNewStatus).toHaveBeenCalledWith(
+      "failure",
+      "admin.users.details.beta_error"
     )
   })
 })

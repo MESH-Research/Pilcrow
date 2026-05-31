@@ -295,10 +295,10 @@ type Mutation {
   ): User!
 
   """
-  Toggle the authenticated user's opt-in for a beta feature. Stores
-  the boolean explicitly so "opted out" (`false`) is distinguishable
-  from "never asked" (key absent). Rejects unknown feature keys and
-  rejects opting into a gated feature the user has no beta access to.
+  Toggle the authenticated user's opt-in for a feature. Opting in adds
+  the key, opting out removes it. The only gate is that the feature key
+  is known (in the catalog); beta access is not checked here — beta
+  governs client advertisement, not server authorization.
   """
   setFeatureOptIn(enabled: Boolean!, feature: String!): User!
 

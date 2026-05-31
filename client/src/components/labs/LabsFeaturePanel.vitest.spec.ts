@@ -1,12 +1,17 @@
 import { installQuasarPlugin, installApolloClient } from "app/test/vitest/utils"
 import { mount, flushPromises } from "@vue/test-utils"
-import { describe, expect, it, beforeEach } from "vitest"
+import { describe, expect, it, beforeEach, vi } from "vitest"
 import { CURRENT_USER } from "src/graphql/queries"
 import {
   SetFeatureOptInDocument,
   UserRoles
 } from "src/graphql/generated/graphql"
 import LabsFeaturePanel from "./LabsFeaturePanel.vue"
+
+const mockNewStatus = vi.fn()
+vi.mock("src/use/guiElements", () => ({
+  useFeedbackMessages: () => ({ newStatusMessage: mockNewStatus })
+}))
 
 installQuasarPlugin()
 const mockClient = installApolloClient()
@@ -42,6 +47,7 @@ function factory() {
 describe("LabsFeaturePanel", () => {
   beforeEach(() => {
     mockClient.mockReset()
+    mockNewStatus.mockReset()
     mockClient.getRequestHandler(SetFeatureOptInDocument).mockResolvedValue({
       data: {
         setFeatureOptIn: {
@@ -93,6 +99,20 @@ describe("LabsFeaturePanel", () => {
     expect(
       mockClient.getRequestHandler(SetFeatureOptInDocument)
     ).toHaveBeenCalledWith({ feature: "labs_test", enabled: false })
+  })
+
+  it("surfaces a failure message when the opt-in mutation rejects", async () => {
+    mockClient.getRequestHandler(CURRENT_USER).mockResolvedValue(currentUser())
+    mockClient
+      .getRequestHandler(SetFeatureOptInDocument)
+      .mockRejectedValue(new Error("network"))
+    const wrapper = factory()
+    await flushPromises()
+
+    await wrapper.find('[data-cy="labs_feature_labs_test"]').trigger("click")
+    await flushPromises()
+
+    expect(mockNewStatus).toHaveBeenCalledWith("failure", "labs.error")
   })
 
   it("renders a custom title via the title slot", async () => {

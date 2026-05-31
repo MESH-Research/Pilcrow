@@ -275,6 +275,39 @@ class BetaFeatureTest extends ApiTestCase
         $this->assertTrue($fresh->hasFeatureEnabled('labs_test'));
     }
 
+    public function testGuestCannotSetUserBetaAccess(): void
+    {
+        // The mutation is @can-gated, which also rejects unauthenticated
+        // callers — a guest must not be able to grant beta access.
+        $target = User::factory()->create(['beta' => false]);
+
+        $response = $this->graphQL(
+            'mutation ($id: ID!, $enabled: Boolean!) {
+                setUserBetaAccess (id: $id, enabled: $enabled) { id beta }
+            }',
+            ['id' => $target->id, 'enabled' => true]
+        );
+
+        $this->assertNotEmpty($response->json('errors'));
+        $this->assertFalse($target->fresh()->beta);
+    }
+
+    public function testSettingBetaAccessForUnknownUserFails(): void
+    {
+        // setUserBetaAccess resolves the target via findOrFail; an id with
+        // no matching user surfaces an error rather than silently passing.
+        $this->beAppAdmin();
+
+        $response = $this->graphQL(
+            'mutation ($id: ID!, $enabled: Boolean!) {
+                setUserBetaAccess (id: $id, enabled: $enabled) { id beta }
+            }',
+            ['id' => 999999, 'enabled' => true]
+        );
+
+        $this->assertNotEmpty($response->json('errors'));
+    }
+
     public function testNonAdminCannotGrantBetaAccess(): void
     {
         $actor = User::factory()->create();
@@ -308,6 +341,24 @@ class BetaFeatureTest extends ApiTestCase
         );
 
         $this->assertFalse($user->fresh()->beta);
+    }
+
+    public function testUserCannotSelfSetFeatureOptInsViaUpdateUser(): void
+    {
+        // `feature_opt_ins` is intentionally absent from $fillable and
+        // UpdateUserInput, so a normal updateUser cannot inject opt-ins;
+        // they only change through the guarded setFeatureOptIn mutation.
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        $this->graphQL(
+            'mutation ($id: ID!) {
+                updateUser (user: { id: $id, name: "Renamed" }) { id name }
+            }',
+            ['id' => $user->id]
+        );
+
+        $this->assertSame([], $user->fresh()->getActiveFeatureOptIns());
     }
 
     public function testBetaFilterListsOnlyBetaUsers(): void

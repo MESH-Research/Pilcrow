@@ -7,8 +7,13 @@ import type { ChildRoute } from "src/use/navigation"
 // labs.vue normalizes a stray child-route name back to the index via a
 // router.replace watcher; the page itself never routes to children.
 const replace = vi.fn()
+let routeName = "account:labs"
 vi.mock("vue-router", () => ({
-  useRoute: () => ({ name: "account:labs" }),
+  useRoute: () => ({
+    get name() {
+      return routeName
+    }
+  }),
   useRouter: () => ({ replace })
 }))
 
@@ -60,6 +65,7 @@ describe("Labs page", () => {
   beforeEach(() => {
     isBeta.value = false
     enabled.value = []
+    routeName = "account:labs"
     children = [
       child("labs_test", true, 10, "Private Test"),
       child("public_thing", false, 20, "Public Thing")
@@ -93,5 +99,16 @@ describe("Labs page", () => {
     enabled.value = ["labs_test"]
     const on = factory()
     expect(on.find('[data-cy="labs_test_banner"]').exists()).toBe(true)
+  })
+
+  it("redirects back to the index when a child route is hit directly", () => {
+    routeName = "account:labs:labs-test"
+    factory()
+    expect(replace).toHaveBeenCalledWith({ name: "account:labs" })
+  })
+
+  it("does not redirect when already on the index route", () => {
+    factory()
+    expect(replace).not.toHaveBeenCalled()
   })
 })
