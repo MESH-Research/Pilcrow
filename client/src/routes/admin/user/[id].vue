@@ -48,6 +48,51 @@
               :label="$t('admin.users.details.created_at')"
               :value="formatDateTime(user.created_at)"
             />
+            <FieldDisplay
+              class="col-sm-6 col-xs-12"
+              icon="science"
+              :label="$t('admin.users.details.beta')"
+            >
+              <q-toggle
+                :model-value="user.beta"
+                :loading="savingBeta"
+                :disable="savingBeta"
+                :label="
+                  user.beta
+                    ? $t('admin.users.details.beta_enabled')
+                    : $t('admin.users.details.beta_disabled')
+                "
+                data-cy="user_beta_toggle"
+                @update:model-value="onBetaToggle"
+              />
+            </FieldDisplay>
+            <FieldDisplay
+              class="col-xs-12"
+              icon="o_science"
+              :label="$t('admin.users.details.feature_opt_ins')"
+            >
+              <div
+                v-if="optedInFeatures.length"
+                class="row q-gutter-xs"
+                data-cy="user_feature_opt_ins"
+              >
+                <q-chip
+                  v-for="feature in optedInFeatures"
+                  :key="feature.key"
+                  square
+                  color="primary"
+                  text-color="white"
+                  :label="feature.label"
+                />
+              </div>
+              <span
+                v-else
+                class="text-grey-5"
+                data-cy="user_no_feature_opt_ins"
+              >
+                {{ $t("admin.users.details.no_feature_opt_ins") }}
+              </span>
+            </FieldDisplay>
           </div>
         </q-card-section>
       </q-card-section>
@@ -84,10 +129,21 @@ graphql(`
       name
       created_at
       email_verified_at
+      beta
+      feature_opt_ins
       ...avatarImage
       roles {
         name
       }
+    }
+  }
+`)
+
+graphql(`
+  mutation SetUserBetaAccess($id: ID!, $enabled: Boolean!) {
+    setUserBetaAccess(id: $id, enabled: $enabled) {
+      id
+      beta
     }
   }
 `)
@@ -96,12 +152,17 @@ graphql(`
 <script setup lang="ts">
 import AvatarImage from "src/components/atoms/AvatarImage.vue"
 import FieldDisplay from "src/components/molecules/FieldDisplay.vue"
-import { getUserDetailDocument } from "src/graphql/generated/graphql"
-import { useQuery } from "@vue/apollo-composable"
-import { computed } from "vue"
+import {
+  getUserDetailDocument,
+  SetUserBetaAccessDocument
+} from "src/graphql/generated/graphql"
+import { useMutation, useQuery } from "@vue/apollo-composable"
+import { computed, ref } from "vue"
 import { useRoute } from "vue-router"
 import { DateTime } from "luxon"
+import { useI18n } from "vue-i18n"
 import { setCrumbLabel } from "src/use/breadcrumbs"
+import { useFeedbackMessages } from "src/use/guiElements"
 
 definePage({
   // Named so setCrumbLabel below can target it by name. The user
@@ -131,6 +192,34 @@ const user = computed(() => result.value?.user)
 const isAdmin = computed(() =>
   user.value?.roles.some((r) => r.name === "Application Administrator")
 )
+
+const { t, te } = useI18n()
+
+// Map each opted-in feature key to its client-side Labs label, falling
+// back to the raw key when the catalog has no label (e.g. a key that was
+// retired from the client but is still stored on the user).
+const optedInFeatures = computed(() =>
+  (user.value?.feature_opt_ins ?? []).map((key) => {
+    const labelKey = `labs.${key}.label`
+    return { key, label: te(labelKey) ? t(labelKey) : key }
+  })
+)
+
+const { newStatusMessage } = useFeedbackMessages()
+const { mutate: setUserBetaAccess } = useMutation(SetUserBetaAccessDocument)
+const savingBeta = ref(false)
+
+async function onBetaToggle(enabled: boolean) {
+  if (!user.value) return
+  savingBeta.value = true
+  try {
+    await setUserBetaAccess({ id: user.value.id, enabled })
+  } catch {
+    newStatusMessage("failure", t("admin.users.details.beta_error"))
+  } finally {
+    savingBeta.value = false
+  }
+}
 
 // Swap the placeholder "User" crumb label for the user's name once
 // the query resolves. breadcrumbs applies the override to the last

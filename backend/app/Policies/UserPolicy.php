@@ -31,6 +31,19 @@ class UserPolicy
     }
 
     /**
+     * Determine whether the viewer can grant or revoke a user's beta
+     * access. Restricted to application administrators.
+     *
+     * @param \App\Models\User  $viewer
+     * @param \App\Models\User  $_target
+     * @return bool
+     */
+    public function manageBeta(User $viewer, User $_target): bool
+    {
+        return $viewer->hasRole(Role::APPLICATION_ADMINISTRATOR);
+    }
+
+    /**
      * Determine whether the user can update the model.
      *
      * @param \App\Models\User  $user

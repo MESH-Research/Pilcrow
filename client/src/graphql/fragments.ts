@@ -34,6 +34,8 @@ export const _CURRENT_USER_FIELDS = gql`
       name
     }
     highest_privileged_role
+    beta
+    feature_opt_ins
   }
 `
 

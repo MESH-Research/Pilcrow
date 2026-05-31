@@ -46,20 +46,6 @@ const routes: RouteRecordRaw[] = [
         component: () => import("pages/DashboardPage.vue")
       },
       {
-        path: "account/",
-        component: () => import("src/layouts/Account/AccountLayout.vue"),
-        children: [
-          {
-            path: "profile",
-            component: () => import("src/pages/Account/ProfilePage.vue")
-          },
-          {
-            path: "settings",
-            component: () => import("src/pages/Account/SettingsPage.vue")
-          }
-        ]
-      },
-      {
         path: "publication/:id/setup/",
         component: () => import("src/layouts/Publication/SetupLayout.vue"),
         props: true,

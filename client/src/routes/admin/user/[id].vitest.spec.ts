@@ -1,12 +1,20 @@
 import { installQuasarPlugin, installApolloClient } from "app/test/vitest/utils"
 import { mount, flushPromises } from "@vue/test-utils"
-import { describe, expect, it, vi } from "vitest"
-import { getUserDetailDocument } from "src/graphql/generated/graphql"
+import { describe, expect, it, beforeEach, vi } from "vitest"
+import {
+  getUserDetailDocument,
+  SetUserBetaAccessDocument
+} from "src/graphql/generated/graphql"
 import UserDetailLayout from "./[id].vue"
 
 vi.mock("vue-router", () => ({
   useRoute: () => ({ params: { id: "5" } }),
   useRouter: () => ({ resolve: vi.fn(), push: vi.fn() })
+}))
+
+const mockNewStatus = vi.fn()
+vi.mock("src/use/guiElements", () => ({
+  useFeedbackMessages: () => ({ newStatusMessage: mockNewStatus })
 }))
 
 installQuasarPlugin()
@@ -25,6 +33,8 @@ function userResult(overrides: Record<string, unknown> = {}) {
         email_verified_at: "2024-01-03T10:00:00Z",
         avatar_color: "#123456",
         roles: [{ __typename: "Role", name: "Reviewer" }],
+        beta: false,
+        feature_opt_ins: [],
         ...overrides
       }
     }
@@ -47,6 +57,10 @@ function factory() {
 }
 
 describe("admin user detail layout", () => {
+  beforeEach(() => {
+    mockNewStatus.mockReset()
+  })
+
   it("shows a loading state before the user resolves", () => {
     mockClient.getRequestHandler(getUserDetailDocument).mockResolvedValue({
       data: { user: null }
@@ -111,5 +125,92 @@ describe("admin user detail layout", () => {
     const wrapper = factory()
     await flushPromises()
     expect(wrapper.find(".text-h5").text()).toBe("jdoe")
+  })
+
+  it("lists the user's opted-in Labs features as chips", async () => {
+    mockClient
+      .getRequestHandler(getUserDetailDocument)
+      .mockResolvedValue(userResult({ feature_opt_ins: ["sample_feature"] }))
+    const wrapper = factory()
+    await flushPromises()
+    const chips = wrapper.find('[data-cy="user_feature_opt_ins"]')
+    expect(chips.exists()).toBe(true)
+    // useI18n mock resolves keys to the key string itself.
+    expect(chips.text()).toContain("labs.sample_feature.label")
+  })
+
+  it("shows the empty state when the user has no opt-ins", async () => {
+    mockClient
+      .getRequestHandler(getUserDetailDocument)
+      .mockResolvedValue(userResult({ feature_opt_ins: [] }))
+    const wrapper = factory()
+    await flushPromises()
+    expect(wrapper.find('[data-cy="user_no_feature_opt_ins"]').exists()).toBe(
+      true
+    )
+  })
+
+  it("grants beta access when the toggle is switched on", async () => {
+    mockClient
+      .getRequestHandler(getUserDetailDocument)
+      .mockResolvedValue(userResult({ beta: false }))
+    const betaHandler = mockClient
+      .getRequestHandler(SetUserBetaAccessDocument)
+      .mockResolvedValue({
+        data: { setUserBetaAccess: { __typename: "User", id: "5", beta: true } }
+      })
+    const wrapper = factory()
+    await flushPromises()
+
+    wrapper
+      .findComponent({ name: "QToggle" })
+      .vm.$emit("update:modelValue", true)
+    await flushPromises()
+
+    expect(betaHandler).toHaveBeenCalledWith({ id: "5", enabled: true })
+    expect(mockNewStatus).not.toHaveBeenCalled()
+  })
+
+  it("revokes beta access when the toggle is switched off", async () => {
+    mockClient
+      .getRequestHandler(getUserDetailDocument)
+      .mockResolvedValue(userResult({ beta: true }))
+    const betaHandler = mockClient
+      .getRequestHandler(SetUserBetaAccessDocument)
+      .mockResolvedValue({
+        data: {
+          setUserBetaAccess: { __typename: "User", id: "5", beta: false }
+        }
+      })
+    const wrapper = factory()
+    await flushPromises()
+
+    wrapper
+      .findComponent({ name: "QToggle" })
+      .vm.$emit("update:modelValue", false)
+    await flushPromises()
+
+    expect(betaHandler).toHaveBeenCalledWith({ id: "5", enabled: false })
+  })
+
+  it("surfaces a failure message when the beta mutation rejects", async () => {
+    mockClient
+      .getRequestHandler(getUserDetailDocument)
+      .mockResolvedValue(userResult({ beta: false }))
+    mockClient
+      .getRequestHandler(SetUserBetaAccessDocument)
+      .mockRejectedValue(new Error("network"))
+    const wrapper = factory()
+    await flushPromises()
+
+    wrapper
+      .findComponent({ name: "QToggle" })
+      .vm.$emit("update:modelValue", true)
+    await flushPromises()
+
+    expect(mockNewStatus).toHaveBeenCalledWith(
+      "failure",
+      "admin.users.details.beta_error"
+    )
   })
 })
