@@ -129,8 +129,8 @@ graphql(`
 <script setup lang="ts">
 import { ref } from "vue"
 import { useI18n } from "vue-i18n"
-import RecordOfReviewTable from "src/components/RecordOfReviewTable.vue"
-import RecordOfReview from "src/components/RecordOfReview.vue"
+import RecordOfReviewTable from "src/components/ror/RecordOfReviewTable.vue"
+import RecordOfReview from "src/components/ror/RecordOfReview.vue"
 import DialogTitle from "src/components/atoms/DialogTitle.vue"
 import {
   buildRorExportBlob,

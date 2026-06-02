@@ -1,4 +1,4 @@
-import exportCss from "src/components/recordOfReview.export.css?raw"
+import exportCss from "src/components/ror/recordOfReview.export.css?raw"
 
 const imageDataUriCache = new Map<string, Promise<string>>()
 

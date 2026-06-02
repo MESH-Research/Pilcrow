@@ -41,7 +41,7 @@
 </template>
 
 <script setup lang="ts">
-import RecordOfReviewPageSection from "src/components/atoms/RecordOfReviewPageSection.vue"
+import RecordOfReviewPageSection from "src/components/ror/RecordOfReviewPageSection.vue"
 import SubmissionTable from "src/components/SubmissionTable.vue"
 import { CURRENT_USER_SUBMISSIONS, GET_SUBMISSIONS } from "src/graphql/queries"
 import { compareDatesDesc } from "src/utils/dateSort"

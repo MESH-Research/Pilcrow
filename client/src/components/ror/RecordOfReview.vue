@@ -218,7 +218,7 @@ graphql(`
 </script>
 
 <script setup lang="ts">
-import RecordOfReviewUser from "src/components/atoms/RecordOfReviewUser.vue"
+import RecordOfReviewUser from "src/components/ror/RecordOfReviewUser.vue"
 import { post_review_states } from "src/utils/postReviewStates"
 import {
   buildRorExportBlob,

@@ -177,7 +177,7 @@ import QueryTable, {
 import WithAsideCell from "src/components/tables/common/WithAsideCell.vue"
 import DateTimeCell from "src/components/tables/common/DateTimeCell.vue"
 import AvatarImage from "src/components/atoms/AvatarImage.vue"
-import RecordOfReviewCard from "src/components/RecordOfReviewCard.vue"
+import RecordOfReviewCard from "src/components/ror/RecordOfReviewCard.vue"
 import SubmissionsFilterPanel from "src/pages/Admin/components/SubmissionsFilterPanel.vue"
 import { defaultOptions as defaultRoleOptions } from "src/pages/Admin/components/SubmissionsFilterPanelRoles.vue"
 
