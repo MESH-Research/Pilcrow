@@ -109,7 +109,9 @@ describe("LabsFeaturePanel", () => {
     const wrapper = factory()
     await flushPromises()
 
-    await wrapper.find('[data-cy="labs_feature_sample_feature"]').trigger("click")
+    await wrapper
+      .find('[data-cy="labs_feature_sample_feature"]')
+      .trigger("click")
     await flushPromises()
 
     expect(mockNewStatus).toHaveBeenCalledWith("failure", "labs.error")

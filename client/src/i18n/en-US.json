@@ -425,7 +425,7 @@
     },
     "no_users": "No users assigned",
     "download_all": {
-      "label": "Download All",
+      "label": "Download Selected",
       "byline": "Download a Record of Review for all selected reviews.",
       "dialog": {
         "title": "Download selected records",
@@ -1520,6 +1520,24 @@
     "no_access": "There are currently no active labs features available.",
     "activate": "Activate",
     "deactivate": "Deactivate",
-    "error": "Could not update this feature. Please try again."
+    "error": "Could not update this feature. Please try again.",
+    "previews": {
+      "expand_aria": "Expand preview: {caption}",
+      "close": "Close preview"
+    },
+    "record_of_review": {
+      "label": "Record of Review",
+      "description": "Downloadable HTML artifacts documenting a reviewer's participation in the peer review process — your role, the review team, and submission and publication details. Available from your account menu.",
+      "previews": {
+        "record": {
+          "title": "Downloadable Record of Review",
+          "caption": "A self-contained document of each review you've completed — your participation, the review team, and submission and publication details."
+        },
+        "list": {
+          "title": "Browse and select reviews",
+          "caption": "Find your completed reviews in your account and select one or more to download — the page follows your light or dark theme."
+        }
+      }
+    }
   }
 }

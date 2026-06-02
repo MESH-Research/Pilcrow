@@ -1,5 +1,5 @@
 <template>
-  <q-card bordered class="rorr-user">
+  <q-card flat bordered class="rorr-user">
     <q-card-section class="rorr-user__inner">
       <h3 class="text-h4 text-bold rorr-user__name">
         {{ user.display_label }}
@@ -52,7 +52,9 @@ defineProps<Props>()
 
 .rorr-user
   width: 220px
-  background: #fff
+  background: transparent
+  color: $dark
+  border: 1px solid $light-grey
 
 .rorr-user__inner
   display: flex
@@ -87,5 +89,4 @@ defineProps<Props>()
 
   dd
     margin: 0
-    color: $dark
 </style>

@@ -13,7 +13,6 @@
     <q-banner
       v-if="visibleFeatures.length === 0"
       rounded
-      class="bg-grey-2"
       data-cy="no_labs_access"
     >
       {{ $t("labs.no_access") }}

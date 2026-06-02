@@ -1,18 +1,15 @@
 <template>
   <article data-cy="record_of_review" class="q-mb-lg ror">
-    <q-card bordered class="ror__card">
-      <div class="flex justify-end q-mt-md q-mr-md ror__actions">
+
         <q-btn
-          :label="$t('record_of_review.download_one')"
-          icon="download"
-          color="accent"
-          :href="blobUrl"
-          class="record-download-button"
-          :download="`record_of_review_${submission.id}.html`"
-        />
-      </div>
+        :label="$t('record_of_review.download_one')"
+        icon="download"
+        color="accent"
+        :href="blobUrl"
+        class="ror__download_btn"
+        :download="`record_of_review_${submission.id}.html`"
+      />
       <div ref="recordContainer" class="ror__document">
-        <q-card-section class="ror__inner">
           <header class="ror__header">
             <p class="ror__eyebrow">
               {{ $t("record_of_review.eyebrow") }}
@@ -167,9 +164,7 @@
               </p>
             </div>
           </footer>
-        </q-card-section>
       </div>
-    </q-card>
   </article>
 </template>
 
@@ -315,32 +310,23 @@ defineExpose({
 <style lang="sass" scoped>
 @import 'src/css/quasar.variables.sass'
 
-.ror__card
-  background: linear-gradient(180deg, #fdfcf7 0%, #ffffff 35%)
+.ror
   position: relative
 
 .ror__document
-  padding: 0 1.5rem 1.5rem
-
-.ror__inner
+  background: #fbfbf3
+  color: $dark
+  color-scheme: light
   border: 1px solid $light-grey
-  border-radius: 4px
-  padding: 2.5rem 2rem
+  border-radius: 8px
   position: relative
+  padding: 2.5rem 2rem 0 2rem
 
-  &::before, &::after
-    content: ''
-    position: absolute
-    left: 1rem
-    right: 1rem
-    height: 1px
-    background: $light-grey
-
-  &::before
-    top: 0.5rem
-
-  &::after
-    bottom: 0.5rem
+.ror__download_btn
+  position: absolute
+  left: 1rem
+  top: 1rem
+  z-index: 10
 
 .ror__header
   text-align: center
@@ -407,11 +393,11 @@ defineExpose({
     color: $dark
 
 .ror__footer
+  padding: 1.5rem 2rem
   display: flex
   align-items: center
   gap: 1rem
   margin-top: 2.5rem
-  padding-top: 1.25rem
   border-top: 2px double $light-grey
 
 .ror__seal

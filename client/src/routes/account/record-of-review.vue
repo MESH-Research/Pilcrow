@@ -22,14 +22,24 @@
     />
   </section>
   <section id="report" class="q-pa-lg">
-    <div v-if="selected_assignments.length > 1" class="q-pa-lg">
-      <q-btn
-        :label="$t('record_of_review.download_all.label')"
-        icon="download"
-        color="accent"
-        class="q-mb-sm"
-        @click="downloadDialog = true"
-      />
+    <q-banner
+      v-if="selected_assignments.length > 1"
+      rounded
+      inline-actions
+      class="ror-download-callout q-mb-lg"
+    >
+      <template #avatar>
+        <q-icon name="folder_zip" color="accent" />
+      </template>
+      {{ $t("record_of_review.download_all.byline") }}
+      <template #action>
+        <q-btn
+          :label="$t('record_of_review.download_all.label')"
+          icon="folder_zip"
+          color="accent"
+          @click="downloadDialog = true"
+        />
+      </template>
       <q-dialog v-model="downloadDialog" data-cy="ror_download_dialog">
         <q-card style="min-width: 320px">
           <dialog-title icon="download">
@@ -71,11 +81,7 @@
           </q-card-actions>
         </q-card>
       </q-dialog>
-      <p>
-        <q-icon name="info" />
-        {{ $t("record_of_review.download_all.byline") }}
-      </p>
-    </div>
+    </q-banner>
     <record-of-review
       v-for="assignment in selected_assignments"
       :key="assignment.id"
@@ -144,7 +150,11 @@ definePage({
       icon: "history_edu",
       label: "record_of_review.title",
       order: 30
-    }
+    },
+    // Beta-gated: the account menu and header only surface this page while
+    // the user has opted into the `record_of_review` feature. `private`
+    // keeps the opt-in itself hidden from non-beta users in Labs.
+    feature: { key: "record_of_review", private: true }
   }
 })
 
@@ -212,3 +222,11 @@ async function confirmDownload() {
   }
 }
 </script>
+
+<style lang="sass" scoped>
+@import 'src/css/quasar.variables.sass'
+
+.ror-download-callout
+  border: 1px solid $accent
+  background: rgba($accent, 0.06)
+</style>

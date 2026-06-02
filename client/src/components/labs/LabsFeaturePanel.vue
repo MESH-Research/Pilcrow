@@ -11,7 +11,7 @@
       <!-- Default slot: the feature's body. Each feature supplies its own
            description markup; receives the opt-in state so it can render
            richer, state-aware content. -->
-      <div class="text-body1 text-grey-8 q-mb-lg">
+      <div class="text-body1 labs-feature-body q-mb-lg">
         <slot :opted-in="optedIn" :saving="saving" :toggle="toggle" />
       </div>
 
@@ -65,3 +65,14 @@ defineSlots<{
 
 const { optedIn, saving, toggle } = useLabsFeature(props.featureKey)
 </script>
+
+<style scoped>
+/* grey-8 body copy is fine on light but too dark to read on the dark
+   surface — lift to grey-4 in dark mode for legible contrast. */
+.labs-feature-body {
+  color: #424242; /* $grey-8 */
+}
+.body--dark .labs-feature-body {
+  color: #bdbdbd; /* $grey-4 */
+}
+</style>
