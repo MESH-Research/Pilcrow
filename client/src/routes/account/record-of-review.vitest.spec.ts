@@ -1,156 +1,153 @@
-import { installQuasarPlugin } from "app/test/vitest/utils"
+import { installQuasarPlugin, installApolloClient } from "app/test/vitest/utils"
 import { mount, flushPromises } from "@vue/test-utils"
-import { installApolloClient } from "app/test/vitest/utils"
-import {
-  GetRecordsOfReviewDocument,
-  type GetRecordsOfReviewQuery,
-  type SubmissionStatus,
-  type SubmissionUserRoles
-} from "src/graphql/generated/graphql"
+import { defineComponent, h } from "vue"
+import { beforeEach, describe, expect, it, vi } from "vitest"
 import RecordOfReviewPage from "./record-of-review.vue"
 
-import { beforeEach, describe, expect, it, vi } from "vitest"
-
 vi.mock("vue-router", () => ({
-  useRoute: vi.fn(() => ({
-    query: {}
-  })),
-  useRouter: vi.fn(() => ({
-    push: vi.fn(),
-    replace: vi.fn()
-  }))
+  useRoute: vi.fn(() => ({ query: {} })),
+  useRouter: vi.fn(() => ({ push: vi.fn(), replace: vi.fn() }))
+}))
+
+// Capture the export builders so we can assert which download path ran
+// without exercising html2canvas / zip internals (covered in their own spec).
+const buildRorExportHtml = vi.fn(async () => "<html></html>")
+const buildRorExportBlob = vi.fn(
+  () => new Blob(["html"], { type: "text/html" })
+)
+const buildRorZipBlob = vi.fn(async () => new Blob(["zip"]))
+vi.mock("src/utils/recordOfReviewExport", () => ({
+  buildRorExportHtml: (...args: unknown[]) => buildRorExportHtml(...args),
+  buildRorExportBlob: (...args: unknown[]) => buildRorExportBlob(...args),
+  buildRorZipBlob: (...args: unknown[]) => buildRorZipBlob(...args)
 }))
 
 installQuasarPlugin()
-const mockClient = installApolloClient()
+installApolloClient()
+
+// Table stub: lets the test drive the v-model:selected the page reacts to.
+const TableStub = defineComponent({
+  name: "RecordOfReviewTable",
+  props: {
+    query: { type: Object, default: null },
+    selected: { type: Array, default: () => [] }
+  },
+  emits: ["update:selected"],
+  setup: () => () => h("div", { class: "table-stub" })
+})
+
+// Record stub: exposes getRecordElement like the real component so the page's
+// recordRefs collect a (possibly null) element for confirmDownload.
+function makeRecordStub(element: HTMLElement | null) {
+  return defineComponent({
+    name: "RecordOfReview",
+    props: { assignment: { type: Object, required: true } },
+    setup: (_props, { expose }) => {
+      expose({ getRecordElement: () => element })
+      return () => h("div", { class: "record-stub" })
+    }
+  })
+}
+
+const assignment = (id: string, title: string) => ({
+  id,
+  submission: { title }
+})
 
 describe("Record of Review page", () => {
-  const makeWrapper = async () => {
-    const wrapper = mount(RecordOfReviewPage, {
-      global: {
-        stubs: ["router-link", "i18n-t"]
-      }
-    })
-    await flushPromises()
-    return wrapper
-  }
-
   beforeEach(() => {
-    vi.resetAllMocks()
-    const RecordsOfReview: { data: GetRecordsOfReviewQuery } = {
-      data: {
-        currentUser: {
-          id: "1",
-          submissions: {
-            paginatorInfo: {
-              count: 1,
-              currentPage: 1,
-              lastPage: 1,
-              perPage: 25,
-              total: 1,
-              __typename: "PaginatorInfo"
-            },
-            data: [
-              {
-                id: "1",
-                role: "submitter" as SubmissionUserRoles,
-                user: {
-                  id: "1",
-                  display_label: "Application Administrator",
-                  name: "Application Administrator",
-                  email: "applicationadministrator@meshresearch.net",
-                  profile_metadata: null,
-                  __typename: "User"
-                },
-                submission: {
-                  id: "1",
-                  audits: [
-                    {
-                      id: "35",
-                      created_at: "2026-05-05T17:31:52.000000Z",
-                      new_values: {
-                        status: "ACCEPTED_AS_FINAL" as SubmissionStatus,
-                        __typename: "SubmissionAuditValues"
-                      },
-                      __typename: "SubmissionAudit"
-                    }
-                  ],
-                  title: "Hello World",
-                  status: "ACCEPTED_AS_FINAL" as SubmissionStatus,
-                  updated_at: "2026-05-05T17:31:52.000000Z",
-                  submitters: [
-                    {
-                      id: "1",
-                      username: "applicationAdminUser",
-                      name: "Application Administrator",
-                      avatar_color: "#1976d2",
-                      __typename: "User"
-                    }
-                  ],
-                  reviewers: [
-                    {
-                      id: "5",
-                      display_label: "Reviewer for Submission",
-                      profile_metadata: null,
-                      __typename: "User"
-                    }
-                  ],
-                  review_coordinators: [
-                    {
-                      id: "4",
-                      display_label: "Review Coordinator for Submission",
-                      profile_metadata: null,
-                      __typename: "User"
-                    }
-                  ],
-                  publication: {
-                    id: "1",
-                    name: "Pilcrow Test Publication 1",
-                    editors: [
-                      {
-                        id: "3",
-                        display_label: "Publication Editor",
-                        username: "publicationEditor",
-                        name: "Publication Editor",
-                        email: "publicationeditor@meshresearch.net",
-                        avatar_color: "#388e3c",
-                        staged: null,
-                        __typename: "User"
-                      }
-                    ],
-                    publication_admins: [
-                      {
-                        id: "2",
-                        display_label: "Publication Administrator",
-                        username: "publicationAdministrator",
-                        name: "Publication Administrator",
-                        email: "publicationadministrator@meshresearch.net",
-                        avatar_color: "#d32f2f",
-                        staged: null,
-                        __typename: "User"
-                      }
-                    ],
-                    __typename: "Publication"
-                  },
-                  __typename: "Submission"
-                },
-                __typename: "SubmissionAssignment"
-              }
-            ],
-            __typename: "SubmissionAssignmentPaginator"
-          },
-          __typename: "User"
-        }
-      }
-    }
-    requestHandler.mockResolvedValue(RecordsOfReview)
+    vi.clearAllMocks()
+    // jsdom lacks object-URL APIs used by triggerDownload.
+    window.URL.createObjectURL = vi.fn(() => "blob:mock")
+    window.URL.revokeObjectURL = vi.fn()
   })
 
-  const requestHandler = vi.fn()
-  mockClient.setRequestHandler(GetRecordsOfReviewDocument, requestHandler)
+  const makeWrapper = (
+    recordEl: HTMLElement | null = document.createElement("div")
+  ) =>
+    mount(RecordOfReviewPage, {
+      attachTo: document.body,
+      global: {
+        stubs: {
+          "router-link": true,
+          "i18n-t": true,
+          RecordOfReviewTable: TableStub,
+          RecordOfReview: makeRecordStub(recordEl)
+        }
+      }
+    })
+
+  const select = async (
+    wrapper: ReturnType<typeof makeWrapper>,
+    rows: ReturnType<typeof assignment>[]
+  ) => {
+    wrapper.findComponent(TableStub).vm.$emit("update:selected", rows)
+    await flushPromises()
+  }
 
   it("mounts without errors", async () => {
-    const wrapper = await makeWrapper()
-    expect(wrapper).toBeTruthy()
+    const wrapper = makeWrapper()
+    await flushPromises()
+    expect(wrapper.find("[data-cy=record_of_review]").exists()).toBe(true)
+  })
+
+  it("hides the download-all banner with one or fewer selections", async () => {
+    const wrapper = makeWrapper()
+    await select(wrapper, [assignment("1", "One")])
+    expect(wrapper.findComponent({ name: "QBanner" }).exists()).toBe(false)
+  })
+
+  it("shows the download-all banner once more than one record is selected", async () => {
+    const wrapper = makeWrapper()
+    await select(wrapper, [assignment("1", "One"), assignment("2", "Two")])
+    expect(wrapper.findAll(".record-stub")).toHaveLength(2)
+    expect(wrapper.findComponent({ name: "QBanner" }).exists()).toBe(true)
+  })
+
+  const openDialog = async (wrapper: ReturnType<typeof makeWrapper>) => {
+    // The banner's first button is the "download all" action that opens the dialog.
+    await wrapper.findAllComponents({ name: "QBtn" })[0].trigger("click")
+    await flushPromises()
+  }
+
+  const confirm = async (wrapper: ReturnType<typeof makeWrapper>) => {
+    const btn = wrapper
+      .findAllComponents({ name: "QBtn" })
+      .find((b) => b.attributes("data-cy") === "ror_download_confirm")
+    await btn!.trigger("click")
+    await flushPromises()
+  }
+
+  it("downloads a combined HTML file by default", async () => {
+    const wrapper = makeWrapper()
+    await select(wrapper, [assignment("1", "One"), assignment("2", "Two")])
+    await openDialog(wrapper)
+    await confirm(wrapper)
+    expect(buildRorExportHtml).toHaveBeenCalledTimes(1)
+    expect(buildRorExportBlob).toHaveBeenCalledTimes(1)
+    expect(buildRorZipBlob).not.toHaveBeenCalled()
+    expect(window.URL.createObjectURL).toHaveBeenCalled()
+  })
+
+  it("downloads a zip when the zip format is selected", async () => {
+    const wrapper = makeWrapper()
+    await select(wrapper, [assignment("1", "One"), assignment("2", "Two")])
+    await openDialog(wrapper)
+    wrapper
+      .findComponent({ name: "QOptionGroup" })
+      .vm.$emit("update:modelValue", "zip")
+    await flushPromises()
+    await confirm(wrapper)
+    expect(buildRorZipBlob).toHaveBeenCalledTimes(1)
+    expect(buildRorExportHtml).not.toHaveBeenCalled()
+  })
+
+  it("does nothing when no record elements are available", async () => {
+    const wrapper = makeWrapper(null)
+    await select(wrapper, [assignment("1", "One"), assignment("2", "Two")])
+    await openDialog(wrapper)
+    await confirm(wrapper)
+    expect(buildRorExportHtml).not.toHaveBeenCalled()
+    expect(buildRorZipBlob).not.toHaveBeenCalled()
   })
 })

@@ -36,6 +36,26 @@ describe("buildRorExportHtml", () => {
     expect(html).toContain(".ror + .ror")
   })
 
+  it("uses the document language when one is set", async () => {
+    const prev = document.documentElement.lang
+    document.documentElement.lang = "fr"
+    try {
+      const html = await buildRorExportHtml([recordEl("<p>x</p>")], "Lang")
+      expect(html).toContain('lang="fr"')
+    } finally {
+      document.documentElement.lang = prev
+    }
+  })
+
+  it("ignores images without a src attribute", async () => {
+    const html = await buildRorExportHtml(
+      [recordEl("<img alt='no-src'>")],
+      "NoSrc"
+    )
+    expect(fetch).not.toHaveBeenCalled()
+    expect(html).toContain('alt="no-src"')
+  })
+
   it("appends each record's root element to the document body", async () => {
     const html = await buildRorExportHtml(
       [recordEl("<p>first</p>"), recordEl("<p>second</p>")],
@@ -93,6 +113,15 @@ describe("buildRorExportHtml", () => {
     expect(html).toContain(`href="${window.location.origin}/foo"`)
     expect(html).toContain('href="http://ext.example/x"')
     expect(html).toContain('href="mailto:a@b.com"')
+  })
+
+  it("leaves anchors with an empty href untouched", async () => {
+    const html = await buildRorExportHtml(
+      [recordEl('<a href="">empty</a>')],
+      "Empty"
+    )
+    expect(html).toContain('href=""')
+    expect(html).not.toContain(`href="${window.location.origin}"`)
   })
 
   it("caches a fetched image so a repeated source hits the network once", async () => {

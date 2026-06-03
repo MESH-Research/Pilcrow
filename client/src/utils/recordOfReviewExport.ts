@@ -61,14 +61,14 @@ export async function buildRorExportHtml(
   const style = doc.createElement("style")
   style.textContent = `${exportCss}\n.ror + .ror { page-break-before: always; margin-top: 3rem; }`
   doc.head.appendChild(style)
-  records.forEach((el, i) => {
+  // Page breaks between records are handled by the appended CSS, so each
+  // record just needs its root element moved into the export body.
+  records.forEach((el) => {
     const wrapper = doc.createElement("div")
     wrapper.innerHTML = el.outerHTML
     const ror = wrapper.firstElementChild
+    /* v8 ignore next -- ror is never null: an element's outerHTML always has a root child */
     if (ror) doc.body.appendChild(ror)
-    if (i < records.length - 1) {
-      // page break already handled via CSS; no extra DOM needed
-    }
   })
   await inlineImages(doc.body)
   absolutizeLinks(doc.body)
