@@ -1526,7 +1526,9 @@
           "title": "Browse and select reviews",
           "caption": "Find your completed reviews in your account and select one or more to download — the page follows your light or dark theme."
         }
-      }
+      },
+      "feedback_lead": "Tried it out? Tell us what works and what's missing.",
+      "feedback": "Share feedback"
     }
   }
 }

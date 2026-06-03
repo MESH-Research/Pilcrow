@@ -1,8 +1,11 @@
+import { installQuasarPlugin } from "app/test/vitest/utils"
 import { mount } from "@vue/test-utils"
 import { defineComponent, h } from "vue"
 import { describe, expect, it } from "vitest"
 import type { LabsPreview } from "src/components/labs/LabsFeaturePreviews.vue"
 import RecordOfReviewLabsPage from "./record-of-review.vue"
+
+installQuasarPlugin()
 
 // Stub the shared panel: this page is a thin wrapper, so we only assert it
 // wires the right feature key + label and supplies a description slot.
@@ -60,5 +63,15 @@ describe("Record of Review labs page", () => {
         srcDark: "/lab-features/record-of-review-list-dark.png"
       }
     ] satisfies LabsPreview[])
+  })
+
+  it("links to the Fider feedback board in a new tab", () => {
+    const link = factory().find("[data-cy=ror_feedback_link]")
+    expect(link.exists()).toBe(true)
+    expect(link.attributes("href")).toBe(
+      "https://feedback.pilcrow.dev/"
+    )
+    expect(link.attributes("target")).toBe("_blank")
+    expect(link.attributes("rel")).toContain("noopener")
   })
 })

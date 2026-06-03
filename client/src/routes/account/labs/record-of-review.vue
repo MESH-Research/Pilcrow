@@ -8,6 +8,23 @@
       :previews="previews"
       previews-key="labs.record_of_review.previews"
     />
+    <div class="row items-center q-gutter-sm q-mt-lg">
+      <span>{{ $t("labs.record_of_review.feedback_lead") }}</span>
+      <q-btn
+        class="ror-feedback-btn"
+        type="a"
+        :href="feedbackUrl"
+        target="_blank"
+        rel="noopener noreferrer"
+        no-caps
+        outline
+        color="primary"
+        icon="forum"
+        icon-right="open_in_new"
+        :label="$t('labs.record_of_review.feedback')"
+        data-cy="ror_feedback_link"
+      />
+    </div>
   </labs-feature-panel>
 </template>
 
@@ -16,6 +33,11 @@ import LabsFeaturePanel from "src/components/labs/LabsFeaturePanel.vue"
 import LabsFeaturePreviews, {
   type LabsPreview
 } from "src/components/labs/LabsFeaturePreviews.vue"
+
+// Deep-links to the Fider feedback board with the Record of Review tag
+// pre-selected. Fider only supports prefilling `tags` via the URL — the
+// title and description are left for the user to fill in.
+const feedbackUrl = "https://feedback.pilcrow.dev/"
 
 definePage({
   name: "account:labs:record-of-review",
@@ -39,3 +61,11 @@ const previews: readonly LabsPreview[] = [
   }
 ]
 </script>
+
+<style lang="sass" scoped>
+// Global `a[target="_blank"]::after` appends an open_in_new glyph, but inside
+// the q-btn flex it lands outside the content row and wraps to a new line.
+// Suppress it here and use a real `icon-right` that sits within the content.
+.ror-feedback-btn::after
+  content: none
+</style>
