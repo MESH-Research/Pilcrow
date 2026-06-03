@@ -11,11 +11,11 @@ vi.mock("vue-router", () => ({
 
 // Capture the export builders so we can assert which download path ran
 // without exercising html2canvas / zip internals (covered in their own spec).
-const buildRorExportHtml = vi.fn(async () => "<html></html>")
+const buildRorExportHtml = vi.fn(async (..._args: unknown[]) => "<html></html>")
 const buildRorExportBlob = vi.fn(
-  () => new Blob(["html"], { type: "text/html" })
+  (..._args: unknown[]) => new Blob(["html"], { type: "text/html" })
 )
-const buildRorZipBlob = vi.fn(async () => new Blob(["zip"]))
+const buildRorZipBlob = vi.fn(async (..._args: unknown[]) => new Blob(["zip"]))
 vi.mock("src/utils/recordOfReviewExport", () => ({
   buildRorExportHtml: (...args: unknown[]) => buildRorExportHtml(...args),
   buildRorExportBlob: (...args: unknown[]) => buildRorExportBlob(...args),
