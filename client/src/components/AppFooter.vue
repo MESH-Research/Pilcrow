@@ -11,7 +11,7 @@
           <component :is="versionUrl ? 'a' : 'span'" :href="versionUrl">
             {{ version }}
           </component>
-          <q-tooltip v-if="parsedDate && !parsedDate.invalid">
+          <q-tooltip v-if="parsedDate && parsedDate.isValid">
             {{ parsedDate.toFormat("dd-LLL-yyyy T") }} ({{ versionAge }})
           </q-tooltip>
         </span>
@@ -35,7 +35,7 @@ const parsedDate = computed(() =>
   versionDate ? DateTime.fromISO(versionDate) : undefined
 )
 const versionAge = computed(() =>
-  parsedDate.value && !parsedDate.value.invalid
+  parsedDate.value && parsedDate.value.isValid
     ? timeAgo.format(parsedDate.value.toJSDate(), "long")
     : ""
 )

@@ -9,7 +9,8 @@
     :rows="rows"
     :columns="tColumns"
     :visible-columns="props.visibleColumns"
-    :grid="props.grid"
+    :grid="effectiveGrid"
+    :dense="effectiveDense"
     :loading="loading"
     :rows-per-page-options
     v-on="rowClickListeners"
@@ -24,7 +25,7 @@
               v-if="searchable"
               v-model="filter"
               class="col"
-              :dense="props.dense"
+              :dense="effectiveDense"
               debounce="300"
               :placeholder="t(searchKey)"
               clearable
@@ -41,14 +42,14 @@
             <q-btn
               v-if="props.newTo"
               color="primary"
-              :dense="props.dense"
+              :dense="effectiveDense"
               :to="newTo"
             >
               {{ t(createKey) }}
             </q-btn>
             <q-btn
               v-else-if="props.onNew"
-              :dense="props.dense"
+              :dense="effectiveDense"
               color="primary"
               @click="$emit('new')"
             >
@@ -61,6 +62,56 @@
               icon="refresh"
               :aria-label="t(refreshKey)"
               @click="refetch()"
+            />
+            <q-btn
+              v-if="effectiveGrid && sortOptions.length > 0"
+              flat
+              dense
+              no-caps
+              icon="sort"
+              :label="$t('tables.sort.label')"
+              :aria-label="$t('tables.sort.label')"
+            >
+              <q-menu>
+                <q-list dense style="min-width: 220px">
+                  <q-item
+                    v-for="option in sortOptions"
+                    :key="option.id"
+                    v-close-popup
+                    clickable
+                    @click="applySort(option)"
+                  >
+                    <q-item-section>{{ option.label }}</q-item-section>
+                    <q-item-section side>
+                      <q-icon
+                        :name="
+                          option.descending ? 'arrow_downward' : 'arrow_upward'
+                        "
+                        size="xs"
+                      />
+                    </q-item-section>
+                    <q-item-section v-if="isCurrentSort(option)" side>
+                      <q-icon name="check" size="xs" />
+                    </q-item-section>
+                  </q-item>
+                </q-list>
+              </q-menu>
+            </q-btn>
+            <q-btn
+              v-if="gridable && !isSmallScreen"
+              flat
+              dense
+              no-caps
+              :icon="effectiveGrid ? 'table_rows' : 'grid_view'"
+              :label="
+                effectiveGrid ? $t('tables.view.table') : $t('tables.view.grid')
+              "
+              :aria-label="
+                effectiveGrid
+                  ? $t('tables.view.switch_to_table')
+                  : $t('tables.view.switch_to_grid')
+              "
+              @click="toggleViewPreference"
             />
             <q-separator v-if="slots['top-after']" vertical inset />
             <slot name="top-after" v-bind="scope" />
@@ -90,7 +141,7 @@
         :is="column.component"
         v-if="column.component"
         :scope="scope"
-        :dense="props.dense"
+        :dense="effectiveDense"
       />
     </template>
   </q-table>
@@ -135,9 +186,10 @@ graphql(`
 
 <script setup lang="ts">
 import { omit } from "lodash"
-import { computed, getCurrentInstance, useId, useSlots } from "vue"
+import { computed, getCurrentInstance, ref, useId, useSlots, watch } from "vue"
 import type { DocumentNode } from "graphql"
 import { useQuasar } from "quasar"
+import { useRoute, useRouter } from "vue-router"
 import { useI18nPrefix } from "src/use/i18nPrefix"
 import { usePaginatedQuery } from "./usePaginatedQuery"
 import { useUrlPaginationSync } from "./useUrlPaginationSync"
@@ -173,6 +225,7 @@ interface QueryTableProps {
   visibleColumns?: string[]
   grid?: boolean
   labels?: QueryTableLabelKeys
+  enabled?: boolean
 }
 
 const props = withDefaults(defineProps<QueryTableProps>(), {
@@ -189,7 +242,8 @@ const props = withDefaults(defineProps<QueryTableProps>(), {
   searchHint: "",
   visibleColumns: undefined,
   grid: false,
-  labels: () => ({})
+  labels: () => ({}),
+  enabled: true
 })
 
 interface Emits {
@@ -223,7 +277,10 @@ const tableProps = computed(() =>
     "tPrefix",
     "onNew",
     "searchable",
-    "timeRange"
+    "timeRange",
+    "enabled",
+    "grid",
+    "dense"
   ])
 )
 
@@ -242,7 +299,8 @@ const {
 } = usePaginatedQuery(props.query, {
   variables: computed(() => props.variables ?? {}),
   field: computed(() => props.field),
-  defaultSort: props.defaultSort
+  defaultSort: props.defaultSort,
+  enabled: computed(() => props.enabled)
 })
 
 if (props.syncUrl) {
@@ -266,6 +324,80 @@ const $q = useQuasar()
 const headerClass = computed(
   () => `${$q.dark.isActive ? "bg-dark-1" : "bg-grey-2"}`
 )
+
+const route = useRoute()
+const router = useRouter()
+
+const gridable = computed(() => !!slots.item)
+const isSmallScreen = computed(() => $q.screen.lt.md)
+const viewPreference = ref<"grid" | null>(
+  route.query.view === "grid" ? "grid" : null
+)
+const effectiveGrid = computed(
+  () =>
+    gridable.value &&
+    (props.grid || isSmallScreen.value || viewPreference.value === "grid")
+)
+const effectiveDense = computed(() => props.dense || isSmallScreen.value)
+
+function toggleViewPreference() {
+  viewPreference.value = viewPreference.value === "grid" ? null : "grid"
+}
+
+if (props.syncUrl) {
+  watch(viewPreference, (value) => {
+    const query: Record<string, string> = { ...route.query } as Record<
+      string,
+      string
+    >
+    if (value === "grid") query.view = "grid"
+    else delete query.view
+    void router.replace({ query })
+  })
+}
+
+interface SortOption {
+  id: string
+  label: string
+  sortBy: string
+  descending: boolean
+}
+
+// Sort option labels resolve from the same i18n header keys as the
+// columns (`${tPrefix}.headers.${column.name}`); QueryTableColumn omits
+// the native `label` field, so there is no inline string to fall back to.
+const sortOptions = computed<SortOption[]>(() => {
+  if (!props.columns?.length) return []
+  return props.columns
+    .filter((c) => c.sortable)
+    .flatMap((c) => [
+      {
+        id: `${c.name}_asc`,
+        label: pt(`headers.${c.name}`),
+        sortBy: c.name as string,
+        descending: false
+      },
+      {
+        id: `${c.name}_desc`,
+        label: pt(`headers.${c.name}`),
+        sortBy: c.name as string,
+        descending: true
+      }
+    ])
+})
+
+function isCurrentSort(option: SortOption): boolean {
+  return (
+    pagination.value.sortBy === option.sortBy &&
+    !!pagination.value.descending === option.descending
+  )
+}
+
+function applySort(option: SortOption) {
+  pagination.value.sortBy = option.sortBy
+  pagination.value.descending = option.descending
+  pagination.value.page = 1
+}
 
 // Resolve every column header from `${tPrefix}.headers.${column.name}`.
 // Missing keys fall back to the key string (vue-i18n default) and

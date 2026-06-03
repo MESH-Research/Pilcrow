@@ -62,6 +62,18 @@
                 {{ $t("settings.page_title") }}
               </q-item-section>
             </q-item>
+            <q-item
+              v-if="recordOfReviewEnabled"
+              clickable
+              :to="{ name: 'account:record_of_review' }"
+            >
+              <q-item-section avatar>
+                <q-icon name="description" />
+              </q-item-section>
+              <q-item-section>{{
+                $t("record_of_review.title")
+              }}</q-item-section>
+            </q-item>
             <div v-if="isAppAdmin">
               <q-separator />
               <q-item :to="{ name: 'admin:dashboard' }">
@@ -156,6 +168,7 @@
 import { useMagicKeys } from "@vueuse/core"
 import NotificationPopup from "src/components/molecules/NotificationPopup.vue"
 import { useCurrentUser } from "src/use/user"
+import { useFeatures } from "src/use/features"
 import { defineAsyncComponent, watchEffect } from "vue"
 import { useQuasar } from "quasar"
 import { useI18n } from "vue-i18n"
@@ -174,6 +187,8 @@ interface Props {
 defineProps<Props>()
 
 const { currentUser, isAppAdmin } = useCurrentUser()
+const { isFeatureEnabled } = useFeatures()
+const recordOfReviewEnabled = isFeatureEnabled("record_of_review")
 const { locale } = useI18n({ useScope: "global" })
 const { ctrl, shift, alt, t } = useMagicKeys()
 

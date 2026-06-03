@@ -25,6 +25,8 @@ class SubmissionSeeder extends Seeder
         $this->callOnce(PublicationSeeder::class);
         $this->callOnce(UserSeeder::class);
 
+        config(['audit.console' => true]);
+
         $this->createSubmission(100, 'Pilcrow Test Submission 1')
             ->update(['updated_by' => 1, 'status' => Submission::UNDER_REVIEW]);
 
@@ -61,6 +63,73 @@ class SubmissionSeeder extends Seeder
 
         $this->createSubmissionWithUpload(112, 'Endnote Test')
             ->update(['updated_by' => 1, 'status' => Submission::UNDER_REVIEW]);
+
+        $this->createSubmissionWithTeam(
+            114,
+            'Methodological Tradeoffs in Cross-Cultural Survey Design',
+            submitter: 'publicationAdministrator',
+            coordinators: ['naomiOkafor'],
+            reviewers: ['regularUser', 'hiroshiTanaka', 'priyaRamanathan'],
+            status: Submission::ACCEPTED_AS_FINAL,
+        );
+    }
+
+    /**
+     * Create a submission with explicit team assignments and a final status.
+     *
+     * Two saves occur: first as DRAFT (so the audit log records a status
+     * transition into the final state), then the targeted status.
+     *
+     * @param array<string> $coordinators usernames assigned as review coordinators
+     * @param array<string> $reviewers usernames assigned as reviewers
+     */
+    protected function createSubmissionWithTeam(
+        int $id,
+        string $title,
+        string $submitter,
+        array $coordinators,
+        array $reviewers,
+        int $status,
+    ): Submission {
+        $submitterUser = User::firstWhere('username', $submitter);
+
+        $factory = Submission::factory()
+            ->hasAttached($submitterUser, [], 'submitters')
+            ->has(SubmissionContent::factory()->count(3), 'contentHistory');
+
+        foreach ($coordinators as $username) {
+            $factory = $factory->hasAttached(
+                User::firstWhere('username', $username),
+                [],
+                'reviewCoordinators'
+            );
+        }
+
+        foreach ($reviewers as $username) {
+            $factory = $factory->hasAttached(
+                User::firstWhere('username', $username),
+                [],
+                'reviewers'
+            );
+        }
+
+        $submission = $factory->create([
+            'id' => $id,
+            'title' => $title,
+            'publication_id' => 1,
+            'created_by' => $submitterUser->id,
+            'updated_by' => $submitterUser->id,
+            'status' => Submission::DRAFT,
+        ]);
+
+        $submission->content()->associate($submission->contentHistory->last());
+        $submission->status = $status;
+        // Force `updated_by` to a different value than `created_by` so the
+        // CreatedUpdatedBy trait sees it as dirty and skips its `auth()` path.
+        $submission->updated_by = $submitterUser->id === 1 ? 2 : 1;
+        $submission->save();
+
+        return $submission;
     }
 
     /**

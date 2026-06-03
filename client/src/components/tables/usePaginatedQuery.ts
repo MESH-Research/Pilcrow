@@ -15,6 +15,7 @@ interface UsePaginatedQueryOptions {
   variables?: MaybeRefOrGetter<Record<string, unknown>>
   field?: MaybeRefOrGetter<string>
   defaultSort?: { sortBy: string; descending?: boolean }
+  enabled?: MaybeRefOrGetter<boolean>
 }
 
 type PaginatedField = QueryTableFragment & { data: Record<string, unknown>[] }
@@ -83,13 +84,24 @@ export function usePaginatedQuery(
     }
   })
 
-  const { result, refetch, loading } = useQuery(query, queryVariables)
+  const enabled = computed(() =>
+    options.enabled !== undefined ? toValue(options.enabled) : true
+  )
+
+  const { result, refetch, loading } = useQuery(query, queryVariables, () => ({
+    enabled: enabled.value
+  }))
 
   const rows = ref<Record<string, unknown>[]>([])
 
   watch(
-    result,
-    (newValue) => {
+    [result, enabled],
+    ([newValue, isEnabled]) => {
+      if (!isEnabled) {
+        rows.value = []
+        pagination.value.rowsNumber = 0
+        return
+      }
       if (newValue) {
         const fieldData = getField(
           newValue as Record<string, unknown>,

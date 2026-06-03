@@ -36,7 +36,9 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       Record<never, never>,
       | 'account:labs'
+      | 'account:labs:record-of-review'
       | 'account:profile'
+      | 'account:record_of_review'
       | 'account:settings'
     >,
     'account:labs': RouteRecordInfo<
@@ -44,11 +46,25 @@ declare module 'vue-router/auto-routes' {
       '/account/labs',
       Record<never, never>,
       Record<never, never>,
+      | 'account:labs:record-of-review'
+    >,
+    'account:labs:record-of-review': RouteRecordInfo<
+      'account:labs:record-of-review',
+      '/account/labs/record-of-review',
+      Record<never, never>,
+      Record<never, never>,
       | never
     >,
     'account:profile': RouteRecordInfo<
       'account:profile',
       '/account/profile',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    'account:record_of_review': RouteRecordInfo<
+      'account:record_of_review',
+      '/account/record-of-review',
       Record<never, never>,
       Record<never, never>,
       | never
@@ -140,7 +156,9 @@ declare module 'vue-router/auto-routes' {
       routes:
         | 'account'
         | 'account:labs'
+        | 'account:labs:record-of-review'
         | 'account:profile'
+        | 'account:record_of_review'
         | 'account:settings'
       views:
         | 'default'
@@ -148,12 +166,25 @@ declare module 'vue-router/auto-routes' {
     'src/routes/account/labs.vue': {
       routes:
         | 'account:labs'
+        | 'account:labs:record-of-review'
+      views:
+        | 'default'
+    }
+    'src/routes/account/labs/record-of-review.vue': {
+      routes:
+        | 'account:labs:record-of-review'
       views:
         | never
     }
     'src/routes/account/profile.vue': {
       routes:
         | 'account:profile'
+      views:
+        | never
+    }
+    'src/routes/account/record-of-review.vue': {
+      routes:
+        | 'account:record_of_review'
       views:
         | never
     }

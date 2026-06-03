@@ -78,23 +78,41 @@ export const defaultOptions = options.map((s) => s.value)
 </script>
 
 <script setup lang="ts">
+import { computed } from "vue"
 import { useI18n } from "vue-i18n"
 
 const { t } = useI18n()
 const filter = defineModel<string[]>({ default: () => [] })
 
-const tOptions = options.map((s) => ({
-  label: s.label ? t(s.label) : s.label,
-  value: s.value
-}))
+interface Props {
+  allowedValues?: string[]
+}
+const props = defineProps<Props>()
+
+const tOptions = computed(() =>
+  options
+    .filter(
+      (s) => !props.allowedValues || props.allowedValues.includes(s.value)
+    )
+    .map((s) => ({
+      label: s.label ? t(s.label) : s.label,
+      value: s.value
+    }))
+)
+
+const allowedDefaults = computed(() =>
+  props.allowedValues
+    ? defaultOptions.filter((v) => props.allowedValues!.includes(v))
+    : defaultOptions
+)
 
 function selectAll() {
-  filter.value = [...defaultOptions]
+  filter.value = [...allowedDefaults.value]
 }
 function selectNone() {
   filter.value = []
 }
 function invert() {
-  filter.value = defaultOptions.filter((v) => !filter.value.includes(v))
+  filter.value = allowedDefaults.value.filter((v) => !filter.value.includes(v))
 }
 </script>

@@ -96,9 +96,10 @@ import QueryTable, {
   type QueryTableColumn
 } from "src/components/tables/QueryTable.vue"
 import { getUserSubmissionsDocument } from "src/graphql/generated/graphql"
-import { computed, ref, watch } from "vue"
+import { computed, ref } from "vue"
 import { useI18n } from "vue-i18n"
 import { useRoute, useRouter } from "vue-router"
+import { useSubmissionFilters } from "src/use/submissionFilters"
 import { defaultOptions as defaultStatusOptions } from "src/pages/Admin/components/SubmissionsFilterPanelStatus.vue"
 import { defaultOptions as defaultRoleOptions } from "src/pages/Admin/components/SubmissionsFilterPanelRoles.vue"
 
@@ -166,52 +167,9 @@ function onRowClick(_evt: Event, row: { submission: { id: string } }) {
   })
 }
 
-function parseList(value: string | string[] | undefined): string[] {
-  if (!value) return []
-  const str = Array.isArray(value) ? value[0] : value
-  if (!str) return []
-  const inner = str.startsWith("[") ? str.slice(1, -1) : str
-  return inner ? inner.split(",") : []
-}
-
-function formatList(values: string[]): string {
-  return `[${values.join(",")}]`
-}
-
-const statusFilter = ref<string[]>(parseList(route.query.status as string))
-const roleFilter = ref<string[]>(parseList(route.query.roles as string))
-const publicationFilter = ref<string | null>(
-  (route.query.publication as string) || null
-)
-
-watch(
-  [statusFilter, roleFilter, publicationFilter],
-  ([status, roles, publication]) => {
-    if (queryTableRef.value) {
-      queryTableRef.value.page = 1
-    }
-
-    const query: Record<string, string> = { ...route.query } as Record<
-      string,
-      string
-    >
-
-    const isDefaultStatus =
-      status.length === defaultStatusOptions.length &&
-      status.every((s) => defaultStatusOptions.includes(s))
-    if (!isDefaultStatus) query.status = formatList(status)
-    else delete query.status
-
-    const isDefaultRoles =
-      roles.length === defaultRoleOptions.length &&
-      roles.every((r) => defaultRoleOptions.includes(r))
-    if (!isDefaultRoles) query.roles = formatList(roles)
-    else delete query.roles
-
-    if (publication) query.publication = publication
-    else delete query.publication
-
-    router.replace({ query })
-  }
-)
+const { statusFilter, roleFilter, publicationFilter } = useSubmissionFilters({
+  defaultStatuses: defaultStatusOptions,
+  defaultRoles: defaultRoleOptions,
+  tableRef: queryTableRef
+})
 </script>

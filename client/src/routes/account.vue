@@ -27,6 +27,7 @@ import AvatarBlock from "src/components/molecules/AvatarBlock.vue"
 import CollapseMenu from "src/components/molecules/CollapseMenu.vue"
 import { useCurrentUser } from "src/use/user"
 import { useNavigation } from "src/use/navigation"
+import { useFeatures } from "src/use/features"
 
 definePage({
   name: "account"
@@ -35,13 +36,21 @@ definePage({
 const { t } = useI18n()
 const { currentUser } = useCurrentUser()
 const { childrenOf } = useNavigation()
+const { optedInFeatures } = useFeatures()
 
 const children = childrenOf({ name: "account" })
 const items = computed(() =>
-  children.value.map((c) => ({
-    icon: c.icon,
-    label: t(c.label),
-    url: c.url
-  }))
+  children.value
+    // Hide beta-gated pages (meta.feature) unless the user has opted in.
+    // Pages without a feature gate always show.
+    .filter((c) => {
+      const key = c.meta.feature?.key
+      return !key || optedInFeatures.value.includes(key)
+    })
+    .map((c) => ({
+      icon: c.icon,
+      label: t(c.label),
+      url: c.url
+    }))
 )
 </script>

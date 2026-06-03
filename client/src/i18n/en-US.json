@@ -49,6 +49,17 @@
       "beta_users": "Beta Users"
     }
   },
+  "tables": {
+    "view": {
+      "table": "Table view",
+      "grid": "Grid view",
+      "switch_to_table": "Switch to table view",
+      "switch_to_grid": "Switch to grid view"
+    },
+    "sort": {
+      "label": "Sort"
+    }
+  },
   "lists": {
     "move_up": "Move {0} Up",
     "move_down": "Move {0} Down",
@@ -368,6 +379,62 @@
   "reviews": {
     "page_title": "Reviews"
   },
+  "record_of_review": {
+    "headers": {
+      "id": "Number",
+      "title": "Submission Title",
+      "submitters": "Submitted By",
+      "role": "My Role",
+      "status": "Status",
+      "updated": "Last Updated"
+    },
+    "aside": {
+      "publication": "Publication"
+    },
+    "title": "Record of Review",
+    "title_record": "Record of Review for { title }",
+    "title_combined": "Records of Review",
+    "title_participation": "Your Participation",
+    "title_team": "Review Team",
+    "title_submission": "Submission Information",
+    "title_publication": "Publication Information",
+    "eyebrow": "Record of Review",
+    "subtitle": "This document records participation in the peer review process.",
+    "footer_certified": "Issued by { host } for { publication }.",
+    "tooltip": "Only reviews that have completed will appear here",
+    "label_header_checkbox": "Review Selection",
+    "label_select_review_checkbox": "Select review number {id}, {title}",
+    "document_type": {
+      "heading": "Document Type",
+      "journal_article": "Journal Article"
+    },
+    "completed": {
+      "heading": "Review Completed",
+      "incomplete": "Incomplete"
+    },
+    "identifier": "Review Identifier",
+    "byline": "Select one or more reviews to get a record of review",
+    "no_data": "There are no reviews for you.",
+    "no_filter": {
+      "status": "No status selected. Pick at least one status to see results.",
+      "role": "No role selected. Pick at least one role to see results.",
+      "status_and_role": "No status or role selected. Pick at least one of each to see results."
+    },
+    "no_users": "No users assigned",
+    "download_all": {
+      "label": "Download Selected",
+      "byline": "Download a Record of Review for all selected reviews.",
+      "dialog": {
+        "title": "Download selected records",
+        "format_label": "Format",
+        "format_combined": "Single combined HTML file",
+        "format_zip": "ZIP archive (one HTML file per record)",
+        "confirm": "Download",
+        "cancel": "Cancel"
+      }
+    },
+    "download_one": "Download This Record"
+  },
   "submission_tables": {
     "filter_label": "Filter by Status",
     "columns": {
@@ -375,8 +442,10 @@
       "title": "Submission Title",
       "submitted_by": "Submitted By",
       "submitted_at": "Submitted",
+      "updated_at": "Last Updated",
       "publication": "Publication Name",
       "status": "Status",
+      "role": "My Role",
       "actions": "Actions"
     },
     "type": {
@@ -496,6 +565,8 @@
   },
   "publication": {
     "entity": "Publication | Publications",
+    "editor": "Editor | Editors",
+    "publication_admin": "Publication Administrator | Publication Administrators",
     "configure": "Configure Publication",
     "setup_pages": {
       "breadcrumb_heading": "Setup",
@@ -1438,6 +1509,26 @@
     "no_access": "There are currently no active labs features available.",
     "activate": "Activate",
     "deactivate": "Deactivate",
-    "error": "Could not update this feature. Please try again."
+    "error": "Could not update this feature. Please try again.",
+    "previews": {
+      "expand_aria": "Expand preview: {caption}",
+      "close": "Close preview"
+    },
+    "record_of_review": {
+      "label": "Record of Review",
+      "description": "Downloadable HTML artifacts documenting a reviewer's participation in the peer review process — your role, the review team, and submission and publication details. Available from your account menu.",
+      "previews": {
+        "record": {
+          "title": "Downloadable Record of Review",
+          "caption": "A self-contained document of each review you've completed — your participation, the review team, and submission and publication details."
+        },
+        "list": {
+          "title": "Browse and select reviews",
+          "caption": "Find your completed reviews in your account and select one or more to download — the page follows your light or dark theme."
+        }
+      },
+      "feedback_lead": "Tried it out? Tell us what works and what's missing.",
+      "feedback": "Share feedback"
+    }
   }
 }

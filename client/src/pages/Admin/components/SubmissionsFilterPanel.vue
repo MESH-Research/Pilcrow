@@ -13,10 +13,18 @@
   >
     <q-menu>
       <q-card-section :horizontal="true">
-        <SubmissionsFilterPanelStatus v-model="statusFilter" :dense="dense" />
+        <SubmissionsFilterPanelStatus
+          v-model="statusFilter"
+          :allowed-values="allowedStatuses"
+          :dense="dense"
+        />
         <q-separator vertical />
         <div class="column">
-          <SubmissionsFilterPanelRoles v-model="roleFilter" :dense="dense" />
+          <SubmissionsFilterPanelRoles
+            v-model="roleFilter"
+            :allowed-values="allowedRoles"
+            :dense="dense"
+          />
           <q-separator />
           <SubmissionsFilterPanelPublication
             v-model="publicationFilter"
@@ -51,11 +59,27 @@ const publicationFilter = defineModel<string | null>("publicationFilter", {
 
 interface Props {
   dense?: boolean
+  allowedStatuses?: string[]
+  allowedRoles?: string[]
 }
 
-withDefaults(defineProps<Props>(), {
-  dense: false
+const props = withDefaults(defineProps<Props>(), {
+  dense: false,
+  allowedStatuses: undefined,
+  allowedRoles: undefined
 })
+
+const effectiveStatusDefaults = computed(() =>
+  props.allowedStatuses
+    ? defaultStatusOptions.filter((v) => props.allowedStatuses!.includes(v))
+    : defaultStatusOptions
+)
+
+const effectiveRoleDefaults = computed(() =>
+  props.allowedRoles
+    ? defaultRoleOptions.filter((v) => props.allowedRoles!.includes(v))
+    : defaultRoleOptions
+)
 
 function isEqual(a: string[], b: string[]): boolean {
   if (a.length !== b.length) return false
@@ -65,23 +89,20 @@ function isEqual(a: string[], b: string[]): boolean {
   )
 }
 
-// Number of dimensions currently restricting results (non-default).
-// Surfaced in the button label so the user can tell from the toolbar
-// how much their view diverges from the default filter set.
 const activeCount = computed(() => {
   let n = 0
-  if (!isEqual(statusFilter.value, defaultStatusOptions)) n++
-  if (!isEqual(roleFilter.value, defaultRoleOptions)) n++
+  if (!isEqual(statusFilter.value, effectiveStatusDefaults.value)) n++
+  if (!isEqual(roleFilter.value, effectiveRoleDefaults.value)) n++
   if (publicationFilter.value) n++
   return n
 })
 
 onMounted(() => {
   if (statusFilter.value?.length === 0) {
-    statusFilter.value = [...defaultStatusOptions]
+    statusFilter.value = [...effectiveStatusDefaults.value]
   }
   if (roleFilter.value.length === 0) {
-    roleFilter.value = [...defaultRoleOptions]
+    roleFilter.value = [...effectiveRoleDefaults.value]
   }
 })
 </script>

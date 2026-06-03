@@ -28,7 +28,10 @@ const QueryTableStub = defineComponent({
       h("div", { class: "query-table-stub" }, [
         h(
           "div",
-          { class: "row-click-trigger", onClick: () => emit("row-click", new Event("click"), { id: "7" }) },
+          {
+            class: "row-click-trigger",
+            onClick: () => emit("row-click", new Event("click"), { id: "7" })
+          },
           "row"
         ),
         slots["body-cell-actions"]?.({ row: { id: "7" } })
@@ -48,7 +51,10 @@ const FindUserSelectStub = defineComponent({
 // renders.
 const QTdStub = defineComponent({
   name: "QTd",
-  setup: (_, { slots }) => () => h("td", slots.default?.())
+  setup:
+    (_, { slots }) =>
+    () =>
+      h("td", slots.default?.())
 })
 
 installQuasarPlugin()

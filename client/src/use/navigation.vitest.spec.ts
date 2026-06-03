@@ -61,18 +61,23 @@ function makeRouter(): Router {
 
 // Mount a throwaway component so useNavigation has a live router, and
 // expose the resolved children list off the instance.
-async function resolveChildren(router: Router): Promise<ChildRoute[]> {
+async function resolveChildren(
+  router: Router,
+  parent: string = "labs",
+  slice?: number
+): Promise<ChildRoute[]> {
   let children!: ComputedRef<ChildRoute[]>
   const Harness = defineComponent({
     setup() {
       // Test-only route names sit outside the app's typed route union.
-      children = useNavigation().childrenOf({
-        name: "labs"
-      } as unknown as RouteLocationRaw)
+      const route = { name: parent } as unknown as RouteLocationRaw
+      const { childrenOf } = useNavigation()
+      children =
+        slice === undefined ? childrenOf(route) : childrenOf(route, slice)
       return () => h("div")
     }
   })
-  router.push("/labs")
+  await router.push({ name: parent } as RouteLocationRaw)
   await router.isReady()
   mount(Harness, { global: { plugins: [router] } })
   return children.value
@@ -116,5 +121,73 @@ describe("useNavigation childrenOf", () => {
   it("wraps lazy component loaders for inline rendering", async () => {
     const children = await resolveChildren(router)
     expect(byName(children, "labs:first")?.component).toBeTruthy()
+  })
+
+  it("falls back to the route name when no navigation label is set", async () => {
+    const bareRouter = createRouter({
+      history: createMemoryHistory(),
+      routes: [
+        {
+          path: "/p",
+          name: "p",
+          component: Dummy,
+          children: [
+            {
+              path: "/p/bare",
+              name: "p:bare",
+              component: Dummy,
+              // navigation present (so it's not filtered) but no label
+              meta: { navigation: {} as { label: string | false } }
+            }
+          ]
+        }
+      ]
+    })
+    const children = await resolveChildren(bareRouter, "p")
+    expect(byName(children, "p:bare")?.label).toBe("p:bare")
+  })
+
+  it("returns an empty list when the matched route has no children", async () => {
+    const childlessRouter = createRouter({
+      history: createMemoryHistory(),
+      routes: [{ path: "/leaf", name: "leaf", component: Dummy }]
+    })
+    const children = await resolveChildren(childlessRouter, "leaf")
+    expect(children).toEqual([])
+  })
+
+  it("selects the matched entry via the slice argument", async () => {
+    // Nested layout: childrenOf(slice=0) reads the outer match's children,
+    // default slice(-1) reads the innermost match's children.
+    const nestedRouter = createRouter({
+      history: createMemoryHistory(),
+      routes: [
+        {
+          path: "/outer",
+          name: "outer",
+          component: Dummy,
+          children: [
+            {
+              path: "inner",
+              name: "inner",
+              component: Dummy,
+              children: [
+                {
+                  path: "leaf",
+                  name: "inner:leaf",
+                  component: Dummy,
+                  meta: { navigation: { label: "Leaf" } }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    })
+    // Resolve on the deepest route so matched holds outer → inner → leaf.
+    const deepDefault = await resolveChildren(nestedRouter, "inner:leaf")
+    expect(names(deepDefault)).toEqual([])
+    const deepFromStart = await resolveChildren(nestedRouter, "inner:leaf", 0)
+    expect(names(deepFromStart)).toEqual(["inner"])
   })
 })

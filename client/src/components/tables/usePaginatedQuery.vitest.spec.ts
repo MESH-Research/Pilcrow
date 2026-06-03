@@ -1,6 +1,6 @@
 import { installQuasarPlugin, installApolloClient } from "app/test/vitest/utils"
 import { mount, flushPromises } from "@vue/test-utils"
-import { defineComponent, h, type Ref } from "vue"
+import { defineComponent, h, ref, type Ref } from "vue"
 import { describe, expect, it, vi } from "vitest"
 import gql from "graphql-tag"
 import { usePaginatedQuery } from "./usePaginatedQuery"
@@ -214,6 +214,65 @@ describe("usePaginatedQuery", () => {
       first: 25,
       page: 1
     })
+  })
+
+  it("does not run the query while disabled", async () => {
+    const handler = mockClient.getRequestHandler(PAGED).mockResolvedValue({
+      data: {
+        items: {
+          data: [{ id: "1", name: "a" }],
+          paginatorInfo: { total: 1, currentPage: 1, perPage: 25 }
+        }
+      }
+    })
+    // The handler is shared across the file; only count calls from here on.
+    handler.mockClear()
+    const { captured } = host(PAGED, { enabled: false })
+    await flushPromises()
+    expect(handler).not.toHaveBeenCalled()
+    expect(captured.api!.rows.value).toEqual([])
+    expect(captured.api!.pagination.value.rowsNumber).toBe(0)
+  })
+
+  it("runs the query once enabled flips to true", async () => {
+    const handler = mockClient.getRequestHandler(PAGED).mockResolvedValue({
+      data: {
+        items: {
+          data: [{ id: "1", name: "a" }],
+          paginatorInfo: { total: 1, currentPage: 1, perPage: 25 }
+        }
+      }
+    })
+    handler.mockClear()
+    const enabled = ref(false)
+    const { captured } = host(PAGED, { enabled })
+    await flushPromises()
+    expect(handler).not.toHaveBeenCalled()
+
+    enabled.value = true
+    await flushPromises()
+    expect(handler).toHaveBeenCalled()
+    expect(captured.api!.rows.value).toHaveLength(1)
+  })
+
+  it("clears rows when disabled after having loaded data", async () => {
+    mockClient.getRequestHandler(PAGED).mockResolvedValue({
+      data: {
+        items: {
+          data: [{ id: "1", name: "a" }],
+          paginatorInfo: { total: 1, currentPage: 1, perPage: 25 }
+        }
+      }
+    })
+    const enabled = ref(true)
+    const { captured } = host(PAGED, { enabled })
+    await flushPromises()
+    expect(captured.api!.rows.value).toHaveLength(1)
+
+    enabled.value = false
+    await flushPromises()
+    expect(captured.api!.rows.value).toEqual([])
+    expect(captured.api!.pagination.value.rowsNumber).toBe(0)
   })
 
   it("paginationModel setter applies a new pagination object", () => {

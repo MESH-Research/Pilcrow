@@ -32,7 +32,9 @@ return [
      * answer hasFeatureEnabled().
      */
     'beta' => [
-        // No beta features are currently active. Add a key here (and a
-        // matching Labs child route on the client) to introduce one.
+        // Record of Review: the per-reviewer history page at
+        // /account/record-of-review and its header/account-menu links.
+        // Gated client-side via isFeatureEnabled('record_of_review').
+        'record_of_review',
     ],
 ];
