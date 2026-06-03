@@ -76,7 +76,9 @@
         <q-card-section class="row items-start q-gutter-x-md">
           <div class="col">
             <div class="text-h3 q-mb-xs">{{ activeTitle }}</div>
-            <div class="text-body2 labs-feature-caption">{{ activeCaption }}</div>
+            <div class="text-body2 labs-feature-caption">
+              {{ activeCaption }}
+            </div>
           </div>
           <q-btn
             v-close-popup

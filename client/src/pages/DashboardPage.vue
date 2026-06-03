@@ -107,15 +107,11 @@
         />
       </div>
     </section>
-    <section class="q-mt-lg">
-      <record-of-review-page-section />
-    </section>
   </article>
 </template>
 
 <script setup lang="ts">
 import AvatarImage from "src/components/atoms/AvatarImage.vue"
-import RecordOfReviewPageSection from "src/components/ror/RecordOfReviewPageSection.vue"
 import SubmissionTable from "src/components/SubmissionTable.vue"
 import { CURRENT_USER_SUBMISSIONS, GET_SUBMISSIONS } from "src/graphql/queries"
 import { compareDatesDesc } from "src/utils/dateSort"

@@ -1,170 +1,167 @@
 <template>
   <article data-cy="record_of_review" class="q-mb-lg ror">
+    <q-btn
+      :label="$t('record_of_review.download_one')"
+      icon="download"
+      color="accent"
+      :href="blobUrl"
+      class="ror__download_btn"
+      :download="`record_of_review_${submission.id}.html`"
+    />
+    <div ref="recordContainer" class="ror__document">
+      <header class="ror__header">
+        <p class="ror__eyebrow">
+          {{ $t("record_of_review.eyebrow") }}
+        </p>
+        <h1 class="text-h2 q-mt-none ror__title" data-cy="page_heading">
+          {{ submission.title }}
+        </h1>
+        <p class="ror__subtitle">
+          {{ $t("record_of_review.subtitle") }}
+        </p>
+        <div class="ror__rule" aria-hidden="true" />
+      </header>
 
-        <q-btn
-        :label="$t('record_of_review.download_one')"
-        icon="download"
-        color="accent"
-        :href="blobUrl"
-        class="ror__download_btn"
-        :download="`record_of_review_${submission.id}.html`"
-      />
-      <div ref="recordContainer" class="ror__document">
-          <header class="ror__header">
-            <p class="ror__eyebrow">
-              {{ $t("record_of_review.eyebrow") }}
-            </p>
-            <h1 class="text-h2 q-mt-none ror__title" data-cy="page_heading">
-              {{ submission.title }}
-            </h1>
-            <p class="ror__subtitle">
-              {{ $t("record_of_review.subtitle") }}
-            </p>
-            <div class="ror__rule" aria-hidden="true" />
-          </header>
+      <section class="ror__section">
+        <h2 class="text-h3 ror__section-title">
+          {{ $t("record_of_review.title_participation") }}
+        </h2>
+        <dl class="ror__dl">
+          <dt>{{ $t("user.name") }}</dt>
+          <dd>
+            {{ assignment.user.name || assignment.user.display_label }}
+          </dd>
+          <dt>{{ $t("user.email") }}</dt>
+          <dd>{{ assignment.user.email }}</dd>
+          <template v-if="orcidId">
+            <dt>
+              {{
+                $t(
+                  "account.profile.fields.profile_metadata.academic_profiles.orcid_id.label"
+                )
+              }}
+            </dt>
+            <dd>{{ orcidId }}</dd>
+          </template>
+          <dt>{{ $t("submission_tables.columns.role") }}</dt>
+          <dd>{{ $t(`admin.users.details.roles.${assignment.role}`) }}</dd>
+        </dl>
+      </section>
 
-          <section class="ror__section">
-            <h2 class="text-h3 ror__section-title">
-              {{ $t("record_of_review.title_participation") }}
-            </h2>
-            <dl class="ror__dl">
-              <dt>{{ $t("user.name") }}</dt>
-              <dd>
-                {{ assignment.user.name || assignment.user.display_label }}
-              </dd>
-              <dt>{{ $t("user.email") }}</dt>
-              <dd>{{ assignment.user.email }}</dd>
-              <template v-if="orcidId">
-                <dt>
-                  {{
-                    $t(
-                      "account.profile.fields.profile_metadata.academic_profiles.orcid_id.label"
-                    )
-                  }}
-                </dt>
-                <dd>{{ orcidId }}</dd>
-              </template>
-              <dt>{{ $t("submission_tables.columns.role") }}</dt>
-              <dd>{{ $t(`admin.users.details.roles.${assignment.role}`) }}</dd>
-            </dl>
-          </section>
+      <section class="ror__section">
+        <h2 class="text-h3 ror__section-title">
+          {{ $t("record_of_review.title_team") }}
+        </h2>
+        <div
+          v-if="
+            submission.review_coordinators.length === 0 &&
+            submission.reviewers.length === 0
+          "
+        >
+          <p>{{ $t("record_of_review.no_users") }}</p>
+        </div>
+        <div v-else class="row items-start q-gutter-md items-stretch">
+          <record-of-review-user
+            v-for="coordinator in submission.review_coordinators"
+            :key="coordinator.id"
+            :user="coordinator"
+            :role="$t('admin.users.details.roles.review_coordinator')"
+          />
+          <record-of-review-user
+            v-for="reviewer in submission.reviewers"
+            :key="reviewer.id"
+            :user="reviewer"
+            :role="$t('admin.users.details.roles.reviewer')"
+          />
+        </div>
+      </section>
 
-          <section class="ror__section">
-            <h2 class="text-h3 ror__section-title">
-              {{ $t("record_of_review.title_team") }}
-            </h2>
-            <div
-              v-if="
-                submission.review_coordinators.length === 0 &&
-                submission.reviewers.length === 0
-              "
-            >
-              <p>{{ $t("record_of_review.no_users") }}</p>
-            </div>
-            <div v-else class="row items-start q-gutter-md items-stretch">
-              <record-of-review-user
-                v-for="coordinator in submission.review_coordinators"
-                :key="coordinator.id"
-                :user="coordinator"
-                :role="$t('admin.users.details.roles.review_coordinator')"
-              />
-              <record-of-review-user
-                v-for="reviewer in submission.reviewers"
-                :key="reviewer.id"
-                :user="reviewer"
-                :role="$t('admin.users.details.roles.reviewer')"
-              />
-            </div>
-          </section>
+      <section class="ror__section">
+        <h2 class="text-h3 ror__section-title">
+          {{ $t("record_of_review.title_submission") }}
+        </h2>
+        <dl class="ror__dl">
+          <dt>{{ $t("record_of_review.document_type.heading") }}</dt>
+          <dd>
+            {{ $t("record_of_review.document_type.journal_article") }}
+          </dd>
+          <dt>{{ $t("record_of_review.completed.heading") }}</dt>
+          <dd>{{ completionDate }}</dd>
+          <dt>{{ $t("record_of_review.identifier") }}</dt>
+          <dd>{{ submission.id }}</dd>
+        </dl>
+      </section>
 
-          <section class="ror__section">
-            <h2 class="text-h3 ror__section-title">
-              {{ $t("record_of_review.title_submission") }}
-            </h2>
-            <dl class="ror__dl">
-              <dt>{{ $t("record_of_review.document_type.heading") }}</dt>
-              <dd>
-                {{ $t("record_of_review.document_type.journal_article") }}
-              </dd>
-              <dt>{{ $t("record_of_review.completed.heading") }}</dt>
-              <dd>{{ completionDate }}</dd>
-              <dt>{{ $t("record_of_review.identifier") }}</dt>
-              <dd>{{ submission.id }}</dd>
-            </dl>
-          </section>
+      <section class="ror__section">
+        <h2 class="text-h3 ror__section-title">
+          {{ $t("record_of_review.title_publication") }}
+        </h2>
+        <dl class="ror__dl">
+          <dt>{{ $t("publication.entity", 1) }}</dt>
+          <dd>{{ submission.publication.name }}</dd>
+          <template
+            v-for="editor in submission.publication.editors"
+            :key="`editor-${editor.id}`"
+          >
+            <dt>{{ $t("publication.editor", 1) }}</dt>
+            <dd>{{ editor.display_label }}</dd>
+          </template>
+          <template
+            v-for="admin in submission.publication.publication_admins"
+            :key="`admin-${admin.id}`"
+          >
+            <dt>{{ $t("publication.publication_admin", 1) }}</dt>
+            <dd>{{ admin.display_label }}</dd>
+          </template>
+        </dl>
+      </section>
 
-          <section class="ror__section">
-            <h2 class="text-h3 ror__section-title">
-              {{ $t("record_of_review.title_publication") }}
-            </h2>
-            <dl class="ror__dl">
-              <dt>{{ $t("publication.entity", 1) }}</dt>
-              <dd>{{ submission.publication.name }}</dd>
-              <template
-                v-for="editor in submission.publication.editors"
-                :key="`editor-${editor.id}`"
+      <footer class="ror__footer">
+        <div class="ror__seal">
+          <svg
+            class="ror__seal-icon"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <path
+              fill="currentColor"
+              d="M23 12l-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72l-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"
+            />
+          </svg>
+          <img src="/logo/logo.svg" alt="Pilcrow" class="ror__seal-logo" />
+        </div>
+        <div class="ror__footer-meta">
+          <i18n-t
+            keypath="record_of_review.footer_certified"
+            tag="p"
+            class="ror__footer-line"
+            scope="global"
+          >
+            <template #host>
+              <a :href="siteUrl" class="ror__footer-link">{{ issuingHost }}</a>
+            </template>
+            <template #publication>
+              <router-link
+                :to="{
+                  name: 'publication:home',
+                  params: { id: submission.publication.id }
+                }"
+                class="ror__footer-link"
               >
-                <dt>{{ $t("publication.editor", 1) }}</dt>
-                <dd>{{ editor.display_label }}</dd>
-              </template>
-              <template
-                v-for="admin in submission.publication.publication_admins"
-                :key="`admin-${admin.id}`"
-              >
-                <dt>{{ $t("publication.publication_admin", 1) }}</dt>
-                <dd>{{ admin.display_label }}</dd>
-              </template>
-            </dl>
-          </section>
-
-          <footer class="ror__footer">
-            <div class="ror__seal">
-              <svg
-                class="ror__seal-icon"
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-                focusable="false"
-              >
-                <path
-                  fill="currentColor"
-                  d="M23 12l-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72l-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"
-                />
-              </svg>
-              <img src="/logo/logo.svg" alt="Pilcrow" class="ror__seal-logo" />
-            </div>
-            <div class="ror__footer-meta">
-              <i18n-t
-                keypath="record_of_review.footer_certified"
-                tag="p"
-                class="ror__footer-line"
-                scope="global"
-              >
-                <template #host>
-                  <a :href="siteUrl" class="ror__footer-link">{{
-                    issuingHost
-                  }}</a>
-                </template>
-                <template #publication>
-                  <router-link
-                    :to="{
-                      name: 'publication:home',
-                      params: { id: submission.publication.id }
-                    }"
-                    class="ror__footer-link"
-                  >
-                    {{ submission.publication.name }}
-                  </router-link>
-                </template>
-              </i18n-t>
-              <p class="ror__footer-detail">
-                {{ $t("record_of_review.identifier") }}: {{ submission.id }}
-                {{ separator }}
-                {{ $t("record_of_review.completed.heading") }}:
-                {{ completionDate }}
-              </p>
-            </div>
-          </footer>
-      </div>
+                {{ submission.publication.name }}
+              </router-link>
+            </template>
+          </i18n-t>
+          <p class="ror__footer-detail">
+            {{ $t("record_of_review.identifier") }}: {{ submission.id }}
+            {{ separator }}
+            {{ $t("record_of_review.completed.heading") }}:
+            {{ completionDate }}
+          </p>
+        </div>
+      </footer>
+    </div>
   </article>
 </template>
 

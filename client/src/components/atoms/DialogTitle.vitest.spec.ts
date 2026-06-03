@@ -44,8 +44,8 @@ describe("DialogTitle", () => {
   })
 
   it("hides the separator when noSeparator is set", () => {
-    expect(factory({ noSeparator: true }).findComponent(QSeparator).exists()).toBe(
-      false
-    )
+    expect(
+      factory({ noSeparator: true }).findComponent(QSeparator).exists()
+    ).toBe(false)
   })
 })

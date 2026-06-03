@@ -167,10 +167,10 @@ graphql(`
 import type { DocumentNode } from "graphql"
 import type { Submission } from "src/graphql/generated/graphql"
 import { useI18n } from "vue-i18n"
-import { ref, computed, watch } from "vue"
-import { useRoute, useRouter } from "vue-router"
+import { ref, computed } from "vue"
 import { useQuasar } from "quasar"
 import { post_review_states } from "src/utils/postReviewStates"
+import { useSubmissionFilters } from "src/use/submissionFilters"
 import QueryTable, {
   type QueryTableColumn
 } from "src/components/tables/QueryTable.vue"
@@ -191,34 +191,16 @@ defineProps<Props>()
 
 const selected = defineModel<unknown[]>("selected", { default: () => [] })
 
-const route = useRoute()
-const router = useRouter()
+const queryTableRef = ref<InstanceType<typeof QueryTable> | null>(null)
 
-function parseList(value: string | string[] | undefined): string[] {
-  if (!value) return []
-  const str = Array.isArray(value) ? value[0] : value
-  if (!str) return []
-  const inner = str.startsWith("[") ? str.slice(1, -1) : str
-  return inner ? inner.split(",") : []
-}
-
-function formatList(values: string[]): string {
-  return `[${values.join(",")}]`
-}
-
-const statusFilter = ref<string[]>(
-  route.query.status
-    ? parseList(route.query.status as string)
-    : [...post_review_states]
-)
-const roleFilter = ref<string[]>(
-  route.query.roles
-    ? parseList(route.query.roles as string)
-    : [...defaultRoleOptions]
-)
-const publicationFilter = ref<string | null>(
-  (route.query.publication as string) || null
-)
+// Record of Review seeds the filters with the full default set so the table
+// shows everything until the user narrows it.
+const { statusFilter, roleFilter, publicationFilter } = useSubmissionFilters({
+  defaultStatuses: post_review_states,
+  defaultRoles: defaultRoleOptions,
+  tableRef: queryTableRef,
+  prefillDefaults: true
+})
 
 const filtersEnabled = computed(
   () => statusFilter.value.length > 0 && roleFilter.value.length > 0
@@ -229,39 +211,6 @@ const variables = computed(() => ({
   roles: roleFilter.value.filter((r) => defaultRoleOptions.includes(r)),
   publication: publicationFilter.value ? [publicationFilter.value] : undefined
 }))
-
-watch(
-  [statusFilter, roleFilter, publicationFilter],
-  ([status, roles, publication]) => {
-    if (queryTableRef.value) {
-      queryTableRef.value.page = 1
-    }
-
-    const query: Record<string, string> = { ...route.query } as Record<
-      string,
-      string
-    >
-
-    const isDefaultStatus =
-      status.length === post_review_states.length &&
-      status.every((s) => post_review_states.includes(s))
-    if (!isDefaultStatus) query.status = formatList(status)
-    else delete query.status
-
-    const isDefaultRoles =
-      roles.length === defaultRoleOptions.length &&
-      roles.every((r) => defaultRoleOptions.includes(r))
-    if (!isDefaultRoles) query.roles = formatList(roles)
-    else delete query.roles
-
-    if (publication) query.publication = publication
-    else delete query.publication
-
-    router.replace({ query })
-  }
-)
-
-const queryTableRef = ref<InstanceType<typeof QueryTable> | null>(null)
 
 function generateCheckboxLabel(row: Submission) {
   return t("record_of_review.label_select_review_checkbox", {
