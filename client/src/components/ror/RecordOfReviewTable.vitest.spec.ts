@@ -163,3 +163,38 @@ describe("RecordOfReviewTable URL sync", () => {
     expect(queryTable(wrapper).vm.page).toBe(1)
   })
 })
+
+describe("RecordOfReviewTable selection reset", () => {
+  it("clears the selection when a filter changes so hidden rows can't strand", async () => {
+    const wrapper = mount(RecordOfReviewTable, {
+      props: {
+        query,
+        selected: [{ id: "1" }, { id: "2" }],
+        "onUpdate:selected": (value: unknown[]) =>
+          wrapper.setProps({ selected: value })
+      },
+      global: {
+        stubs: {
+          QueryTable: QueryTableStub,
+          SubmissionsFilterPanel: FilterPanelStub,
+          "router-link": true
+        }
+      }
+    })
+    await flushPromises()
+
+    panel(wrapper).vm.$emit("update:statusFilter", ["ACCEPTED_AS_FINAL"])
+    await flushPromises()
+    expect(wrapper.props("selected")).toEqual([])
+  })
+
+  it("does not emit a redundant reset when nothing is selected", async () => {
+    const wrapper = await mountTable()
+    const updates = () =>
+      wrapper.emitted("update:selected")?.length ?? 0
+    const before = updates()
+    panel(wrapper).vm.$emit("update:publicationFilter", "12")
+    await flushPromises()
+    expect(updates()).toBe(before)
+  })
+})

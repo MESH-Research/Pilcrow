@@ -167,7 +167,7 @@ graphql(`
 import type { DocumentNode } from "graphql"
 import type { Submission } from "src/graphql/generated/graphql"
 import { useI18n } from "vue-i18n"
-import { ref, computed } from "vue"
+import { ref, computed, watch } from "vue"
 import { useQuasar } from "quasar"
 import { post_review_states } from "src/utils/postReviewStates"
 import { useSubmissionFilters } from "src/use/submissionFilters"
@@ -205,6 +205,13 @@ const { statusFilter, roleFilter, publicationFilter } = useSubmissionFilters({
 const filtersEnabled = computed(
   () => statusFilter.value.length > 0 && roleFilter.value.length > 0
 )
+
+// A row selected under one filter set is hidden when a later filter excludes
+// it, leaving it stuck in the selection with no checkbox to clear. Reset the
+// selection whenever any filter changes so the count never strands rows.
+watch([statusFilter, roleFilter, publicationFilter], () => {
+  if (selected.value.length > 0) selected.value = []
+})
 
 const variables = computed(() => ({
   status: statusFilter.value.filter((s) => post_review_states.includes(s)),
