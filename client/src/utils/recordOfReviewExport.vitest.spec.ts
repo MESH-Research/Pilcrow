@@ -5,7 +5,7 @@ import {
   buildRorZipBlob
 } from "./recordOfReviewExport"
 
-function recordEl(inner: string, className = "ror"): HTMLElement {
+function recordEl(inner: string, className = "ror__document"): HTMLElement {
   const el = document.createElement("div")
   el.className = className
   el.innerHTML = inner
@@ -32,8 +32,9 @@ describe("buildRorExportHtml", () => {
     expect(html.startsWith("<!DOCTYPE html>")).toBe(true)
     expect(html).toContain('lang="en"')
     expect(html).toContain('charset="utf-8"')
-    // page-break rule the builder appends after the imported CSS
-    expect(html).toContain(".ror + .ror")
+    // page-break rule the builder appends after the imported CSS; the
+    // selector must match the exported root element (`.ror__document`)
+    expect(html).toContain(".ror__document + .ror__document")
   })
 
   it("uses the document language when one is set", async () => {
@@ -63,8 +64,8 @@ describe("buildRorExportHtml", () => {
     )
     expect(html).toContain("first")
     expect(html).toContain("second")
-    // both .ror wrappers land in the body
-    expect(html.match(/class="ror"/g)).toHaveLength(2)
+    // both record wrappers land in the body
+    expect(html.match(/class="ror__document"/g)).toHaveLength(2)
   })
 
   it("inlines relative image sources as data URIs", async () => {

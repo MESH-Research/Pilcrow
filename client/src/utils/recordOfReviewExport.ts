@@ -59,7 +59,7 @@ export async function buildRorExportHtml(
   meta.setAttribute("charset", "utf-8")
   doc.head.appendChild(meta)
   const style = doc.createElement("style")
-  style.textContent = `${exportCss}\n.ror + .ror { page-break-before: always; margin-top: 3rem; }`
+  style.textContent = `${exportCss}\n.ror__document + .ror__document { page-break-before: always; margin-top: 3rem; }`
   doc.head.appendChild(style)
   // Page breaks between records are handled by the appended CSS, so each
   // record just needs its root element moved into the export body.
