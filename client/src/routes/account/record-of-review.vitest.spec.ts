@@ -11,15 +11,18 @@ vi.mock("vue-router", () => ({
 
 // Capture the export builders so we can assert which download path ran
 // without exercising html2canvas / zip internals (covered in their own spec).
-const buildRorExportHtml = vi.fn(async (..._args: unknown[]) => "<html></html>")
-const buildRorExportBlob = vi.fn(
-  (..._args: unknown[]) => new Blob(["html"], { type: "text/html" })
+// vi.hoisted lifts the mocks above the hoisted vi.mock factory.
+const { buildRorExportHtml, buildRorExportBlob, buildRorZipBlob } = vi.hoisted(
+  () => ({
+    buildRorExportHtml: vi.fn(async () => "<html></html>"),
+    buildRorExportBlob: vi.fn(() => new Blob(["html"], { type: "text/html" })),
+    buildRorZipBlob: vi.fn(async () => new Blob(["zip"]))
+  })
 )
-const buildRorZipBlob = vi.fn(async (..._args: unknown[]) => new Blob(["zip"]))
 vi.mock("src/utils/recordOfReviewExport", () => ({
-  buildRorExportHtml: (...args: unknown[]) => buildRorExportHtml(...args),
-  buildRorExportBlob: (...args: unknown[]) => buildRorExportBlob(...args),
-  buildRorZipBlob: (...args: unknown[]) => buildRorZipBlob(...args)
+  buildRorExportHtml,
+  buildRorExportBlob,
+  buildRorZipBlob
 }))
 
 installQuasarPlugin()
