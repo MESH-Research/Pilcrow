@@ -53,7 +53,12 @@ describe("Record of Review labs page", () => {
     const previews = factory().findComponent(PreviewsStub)
     expect(previews.props("previewsKey")).toBe("labs.record_of_review.previews")
     expect(previews.props("previews")).toEqual([
-      { key: "record", src: "/lab-features/record-of-review.png" }
+      { key: "record", src: "/lab-features/record-of-review.png" },
+      {
+        key: "list",
+        src: "/lab-features/record-of-review-list-light.png",
+        srcDark: "/lab-features/record-of-review-list-dark.png"
+      }
     ] satisfies LabsPreview[])
   })
 })
