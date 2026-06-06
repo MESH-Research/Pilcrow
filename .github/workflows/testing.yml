@@ -104,7 +104,9 @@ jobs:
         with:
           command: audit
           root: ./client
-          sarif: true
+          # sarif upload disabled: audit emits multiple SARIF runs with the
+          # same category, which GitHub code scanning now rejects
+          sarif: false
           comment: true
           review-comments: true
           fail-on-issues: true

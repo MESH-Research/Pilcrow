@@ -145,22 +145,30 @@ import { ref, computed, provide } from "vue"
 import CommentHeader from "./CommentHeader.vue"
 import CommentReply from "./CommentReply.vue"
 import CommentEditor from "../forms/CommentEditor.vue"
-import { useActiveComment } from "src/use/submissionContext"
+import {
+  useCommentReplyState,
+  useIsActiveComment
+} from "src/use/commentReplyState"
 
 const isCollapsed = ref(true)
-const isReplying = ref(false)
-const isQuoteReplying = ref(false)
-const commentReply = ref(null)
-const isModifying = ref(null)
-const commentModify = ref(null)
+const {
+  isReplying,
+  isQuoteReplying,
+  commentReply,
+  isModifying,
+  commentModify,
+  resetReplyState,
+  submitReply,
+  cancelReply,
+  initiateReply,
+  initiateQuoteReply,
+  modifyComment
+} = useCommentReplyState()
 
 function toggleThread() {
   isCollapsed.value = !isCollapsed.value
 }
-import type {
-  Comment,
-  InlineComment as InlineCommentType
-} from "src/graphql/generated/graphql"
+import type { InlineComment as InlineCommentType } from "src/graphql/generated/graphql"
 
 interface Props {
   comment: InlineCommentType
@@ -180,41 +188,8 @@ const hasReplies = computed(() => {
   return props.comment.replies.length > 0
 })
 
-function submitReply() {
-  isReplying.value = false
-  isModifying.value = false
-  isQuoteReplying.value = false
-  commentReply.value = null
-}
-function cancelReply() {
-  isReplying.value = false
-  isModifying.value = false
-  isQuoteReplying.value = false
-  commentReply.value = null
-}
-function initiateReply() {
-  isReplying.value = true
-  isModifying.value = false
-  isQuoteReplying.value = false
-}
-function initiateQuoteReply(comment?: Comment) {
-  isReplying.value = true
-  isModifying.value = false
-  isQuoteReplying.value = true
-  commentReply.value = comment ?? null
-}
-
-function modifyComment(comment) {
-  isReplying.value = false
-  isQuoteReplying.value = false
-  isModifying.value = true
-  commentModify.value = comment
-}
 function deleteComment() {
-  isReplying.value = false
-  isQuoteReplying.value = false
-  isModifying.value = false
-  commentReply.value = null
+  resetReplyState()
   activeComment.value = null
 }
 
@@ -226,13 +201,7 @@ const showReplyButton = computed(() => {
 
 const replyRefs = ref([])
 const scrollTarget = ref(null)
-const activeComment = useActiveComment()
-const isActive = computed(() => {
-  return (
-    activeComment.value?.__typename === props.comment.__typename &&
-    activeComment.value?.id === props.comment.id
-  )
-})
+const { activeComment, isActive } = useIsActiveComment(props.comment)
 
 defineExpose({
   scrollTarget,

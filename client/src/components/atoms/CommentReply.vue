@@ -40,13 +40,13 @@ import { computed, ref, provide } from "vue"
 import CommentReplyReference from "./CommentReplyReference.vue"
 import CommentHeader from "./CommentHeader.vue"
 import CommentEditor from "../forms/CommentEditor.vue"
-import { useActiveComment } from "src/use/submissionContext"
+import {
+  useCommentReplyState,
+  useIsActiveComment
+} from "src/use/commentReplyState"
 
-const isReplying = ref(false)
-const isQuoteReplying = ref(false)
-const commentReply = ref(null)
-const isModifying = ref(null)
-const commentModify = ref(null)
+const { isModifying, commentModify, submitReply, cancelReply, modifyComment } =
+  useCommentReplyState()
 
 import type {
   InlineComment,
@@ -77,37 +77,12 @@ const dataCy = computed(
   () => props.commentType.charAt(0).toLowerCase() + props.commentType.slice(1)
 )
 
-const activeComment = useActiveComment()
-const isActive = computed(() => {
-  return (
-    activeComment.value?.__typename === props.comment.__typename &&
-    activeComment.value?.id === props.comment.id
-  )
-})
+const { isActive } = useIsActiveComment(props.comment)
 const scrollTarget = ref(null)
 defineExpose({
   scrollTarget,
   comment: props.comment
 })
-
-function submitReply() {
-  isReplying.value = false
-  isModifying.value = false
-  isQuoteReplying.value = false
-  commentReply.value = null
-}
-function cancelReply() {
-  isReplying.value = false
-  isModifying.value = false
-  isQuoteReplying.value = false
-  commentReply.value = null
-}
-function modifyComment(comment) {
-  isReplying.value = false
-  isQuoteReplying.value = false
-  isModifying.value = true
-  commentModify.value = comment
-}
 </script>
 
 <style lang="sass" scoped>
