@@ -83,10 +83,11 @@
 
       <section class="overall-comment-replies">
         <div v-if="!isCollapsed">
-          <overall-comment-reply
+          <CommentReply
             v-for="reply in comment.replies"
             :key="reply.id"
             ref="replyRefs"
+            comment-type="OverallCommentReply"
             :comment="reply"
             :parent="comment"
             :replies="comment.replies"
@@ -129,7 +130,7 @@
 </template>
 <script setup lang="ts">
 import { computed, ref, provide } from "vue"
-import OverallCommentReply from "./OverallCommentReply.vue"
+import CommentReply from "./CommentReply.vue"
 import CommentEditor from "../forms/CommentEditor.vue"
 import CommentHeader from "./CommentHeader.vue"
 import { useActiveComment } from "src/use/submissionContext"

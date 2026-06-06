@@ -8,10 +8,11 @@
         username: comment.created_by.username
       })
     "
-    data-cy="inlineCommentReply"
+    :data-cy="dataCy"
   >
     <q-separator />
     <comment-header
+      data-cy="CommentHeader"
       :comment="comment"
       class="comment-header q-pt-sm"
       @quote-reply-to="$emit('quoteReplyTo', comment)"
@@ -24,8 +25,8 @@
     </q-card-section>
     <q-card-section v-else ref="modify_comment" class="q-pa-md q-pb-lg">
       <comment-editor
-        comment-type="InlineCommentReply"
-        data-cy="modifyInlineCommentReplyEditor"
+        :comment-type="commentType"
+        :data-cy="`modify${commentType}Editor`"
         :comment="commentModify"
         :is-modifying="isModifying"
         @cancel="cancelReply"
@@ -49,23 +50,32 @@ const commentModify = ref(null)
 
 import type {
   InlineComment,
-  InlineCommentReply as InlineCommentReplyType
+  InlineCommentReply,
+  OverallComment,
+  OverallCommentReply
 } from "src/graphql/generated/graphql"
 
+type CommentReplyType = InlineCommentReply | OverallCommentReply
+
 interface Props {
-  parent: InlineComment
-  comment: InlineCommentReplyType
-  replies: InlineCommentReplyType[]
+  commentType: "InlineCommentReply" | "OverallCommentReply"
+  parent: InlineComment | OverallComment
+  comment: CommentReplyType
+  replies: CommentReplyType[]
 }
 
 const props = defineProps<Props>()
 interface Emits {
-  quoteReplyTo: [comment: InlineCommentReplyType]
+  quoteReplyTo: [comment: CommentReplyType]
   replyTo: []
 }
 defineEmits<Emits>()
 
 provide("comment", props.comment)
+
+const dataCy = computed(
+  () => props.commentType.charAt(0).toLowerCase() + props.commentType.slice(1)
+)
 
 const activeComment = useActiveComment()
 const isActive = computed(() => {

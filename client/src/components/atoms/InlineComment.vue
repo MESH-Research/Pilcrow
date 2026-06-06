@@ -97,10 +97,11 @@
         </q-btn>
       </q-card-actions>
       <section v-if="!isCollapsed" class="inline-comment-replies">
-        <inline-comment-reply
+        <CommentReply
           v-for="reply in comment.replies"
           :key="reply.id"
           ref="replyRefs"
+          comment-type="InlineCommentReply"
           :comment="reply"
           :parent="comment"
           :replies="comment.replies"
@@ -142,7 +143,7 @@
 <script setup lang="ts">
 import { ref, computed, provide } from "vue"
 import CommentHeader from "./CommentHeader.vue"
-import InlineCommentReply from "./InlineCommentReply.vue"
+import CommentReply from "./CommentReply.vue"
 import CommentEditor from "../forms/CommentEditor.vue"
 import { useActiveComment } from "src/use/submissionContext"
 
