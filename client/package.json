@@ -102,6 +102,7 @@
     "eslint": "10",
     "eslint-plugin-cypress": "^6.0.0",
     "eslint-plugin-vue": "^10.2.0",
+    "fallow": "^2.89.0",
     "globals": "^17.0.0",
     "happy-dom": "^20.0.0",
     "jsonc-eslint-parser": "^3.1.0",
