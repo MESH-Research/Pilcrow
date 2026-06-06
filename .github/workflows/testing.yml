@@ -87,6 +87,28 @@ jobs:
           fail_ci_if_error: false
           use_oidc: true
 
+  client-fallow-audit:
+    name: "Client / Fallow Audit"
+    runs-on: ubuntu-24.04
+    needs: [changes]
+    if: ${{ needs.changes.outputs.client == 'true' && github.event_name == 'pull_request' }}
+    permissions:
+      contents: read
+      pull-requests: write
+      security-events: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: fallow-rs/fallow@v2
+        with:
+          command: audit
+          root: ./client
+          sarif: true
+          comment: true
+          review-comments: true
+          fail-on-issues: true
+
   build-images:
     name: "Build"
     runs-on: ubuntu-24.04
