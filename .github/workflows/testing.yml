@@ -100,6 +100,19 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: yarn
+          cache-dependency-path: client/yarn.lock
+      # Install deps and generate graphql artifacts so fallow resolves
+      # imports of src/graphql/generated and node_modules packages
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+        working-directory: ./client
+      - name: Generate GraphQL artifacts
+        run: yarn graphql:codegen-local
+        working-directory: ./client
       - uses: fallow-rs/fallow@v2
         with:
           command: audit
