@@ -11,6 +11,9 @@
 import { resolve } from "node:path"
 import { defineConfig } from "#q-app/wrappers"
 import VueRouter from "vue-router/vite"
+import { checker } from "vite-plugin-checker"
+import eslint from "vite-plugin-eslint2"
+import graphqlCodegen from "vite-plugin-graphql-codegen"
 
 export default defineConfig(function (/* ctx */) {
   return {
@@ -137,21 +140,21 @@ export default defineConfig(function (/* ctx */) {
       // ]
       vitePlugins: [
         [
-          "vite-plugin-checker",
+          checker,
           {
             vueTsc: true,
           },
           { server: false }
         ],
         [
-          "vite-plugin-eslint2",
+          eslint,
           {
             lintOnStart: true,
             fix: false,
           }
         ],
         [
-          "vite-plugin-graphql-codegen",
+          graphqlCodegen,
           {
             runOnStart: true,
             runOnBuild: true,

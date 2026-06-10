@@ -1,0 +1,57 @@
+name: Fallow Health Report
+on:
+  push:
+    branches: [master]
+    paths:
+      - "client/**"
+      - ".github/workflows/fallow-report.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+  issues: write
+concurrency:
+  group: fallow-report
+  cancel-in-progress: true
+
+jobs:
+  report:
+    name: "Fallow / Health Report"
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: yarn
+          cache-dependency-path: client/yarn.lock
+      # Install deps and generate the graphql + quasar artifacts so fallow
+      # resolves the app/src path aliases (same setup as the audit job)
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+        working-directory: ./client
+      - name: Generate GraphQL artifacts
+        run: yarn graphql:codegen-local
+        working-directory: ./client
+      - name: Prepare Quasar
+        run: yarn quasar prepare
+        working-directory: ./client
+      - name: Generate health report
+        working-directory: ./client
+        run: |
+          {
+            echo "_Updated for [\`${GITHUB_SHA::7}\`](${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/commit/${GITHUB_SHA}) by [run #${GITHUB_RUN_NUMBER}](${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID})._"
+            echo
+            npx fallow health --format markdown
+          } > "${GITHUB_WORKSPACE}/fallow-report.md"
+      - name: Upsert health issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          title="Fallow: code-health report"
+          num=$(gh issue list --search "code-health report in:title" --state open \
+            --json number,title --jq "map(select(.title == \"$title\")) | .[0].number")
+          if [ -n "$num" ]; then
+            gh issue edit "$num" --body-file fallow-report.md
+          else
+            gh issue create --title "$title" --body-file fallow-report.md
+          fi

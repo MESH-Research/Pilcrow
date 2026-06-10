@@ -10,12 +10,9 @@ const routes: RouteRecordRaw[] = [
       { path: "register", component: () => import("pages/RegisterPage.vue") },
       { path: "login", component: () => import("pages/LoginPage.vue") },
       {
-        path: "auth/redirect/orcid",
-        component: () => import("pages/LoginOrcid.vue")
-      },
-      {
-        path: "auth/redirect/google",
-        component: () => import("pages/LoginGoogle.vue")
+        path: "auth/redirect/:providerName(orcid|google)",
+        component: () => import("pages/LoginOauthCallback.vue"),
+        props: true
       },
       { path: "logout", component: () => import("src/pages/LogoutPage.vue") },
       {

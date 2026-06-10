@@ -126,11 +126,15 @@ import {
   REGISTER_OAUTH_USER
 } from "src/graphql/mutations"
 
+const props = defineProps<{
+  providerName: string
+}>()
+
 const { push } = useRouter()
 const route = useRoute()
 const code = route.query.code
 const { mutate: handleCallback } = useMutation(LOGIN_OAUTH_CALLBACK, {
-  variables: { provider_name: "orcid", code: code }
+  variables: { provider_name: props.providerName, code: code }
 })
 const { mutate: registerOauthUser } = useMutation(REGISTER_OAUTH_USER)
 
