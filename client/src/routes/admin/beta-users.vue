@@ -90,8 +90,9 @@ import { useRouter } from "vue-router"
 import QueryTable, {
   type QueryTableColumn
 } from "src/components/tables/QueryTable.vue"
-import type { NameAvatarColumn } from "src/components/tables/common/NameAvatarCell.vue"
-import { userBaseColumns } from "src/components/tables/common/userColumns"
+import NameAvatarCell, {
+  type NameAvatarColumn
+} from "src/components/tables/common/NameAvatarCell.vue"
 import FindUserSelect, {
   type FindUserSelectValue
 } from "src/components/forms/FindUserSelect.vue"
@@ -112,7 +113,27 @@ definePage({
 type BetaUserRow = GetBetaUsersQuery["users"]["data"][number]
 
 const columns: (QueryTableColumn | NameAvatarColumn)[] = [
-  ...userBaseColumns,
+  {
+    name: "name",
+    required: true,
+    align: "left",
+    field: (row) => row,
+    component: NameAvatarCell,
+    hideUsername: true,
+    sortable: true
+  },
+  {
+    name: "username",
+    align: "left",
+    field: "username",
+    sortable: true
+  },
+  {
+    name: "email",
+    align: "left",
+    field: "email",
+    sortable: true
+  },
   {
     name: "actions",
     align: "right",

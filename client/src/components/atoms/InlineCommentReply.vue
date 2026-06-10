@@ -8,11 +8,10 @@
         username: comment.created_by.username
       })
     "
-    :data-cy="dataCy"
+    data-cy="inlineCommentReply"
   >
     <q-separator />
     <comment-header
-      data-cy="CommentHeader"
       :comment="comment"
       class="comment-header q-pt-sm"
       @quote-reply-to="$emit('quoteReplyTo', comment)"
@@ -25,8 +24,8 @@
     </q-card-section>
     <q-card-section v-else ref="modify_comment" class="q-pa-md q-pb-lg">
       <comment-editor
-        :comment-type="commentType"
-        :data-cy="`modify${commentType}Editor`"
+        comment-type="InlineCommentReply"
+        data-cy="modifyInlineCommentReplyEditor"
         :comment="commentModify"
         :is-modifying="isModifying"
         @cancel="cancelReply"
@@ -40,49 +39,65 @@ import { computed, ref, provide } from "vue"
 import CommentReplyReference from "./CommentReplyReference.vue"
 import CommentHeader from "./CommentHeader.vue"
 import CommentEditor from "../forms/CommentEditor.vue"
-import {
-  useCommentReplyState,
-  useIsActiveComment
-} from "src/use/commentReplyState"
+import { useActiveComment } from "src/use/submissionContext"
 
-const { isModifying, commentModify, submitReply, cancelReply, modifyComment } =
-  useCommentReplyState()
+const isReplying = ref(false)
+const isQuoteReplying = ref(false)
+const commentReply = ref(null)
+const isModifying = ref(null)
+const commentModify = ref(null)
 
 import type {
   InlineComment,
-  InlineCommentReply,
-  OverallComment,
-  OverallCommentReply
+  InlineCommentReply as InlineCommentReplyType
 } from "src/graphql/generated/graphql"
 
-type CommentReplyType = InlineCommentReply | OverallCommentReply
-
 interface Props {
-  commentType: "InlineCommentReply" | "OverallCommentReply"
-  parent: InlineComment | OverallComment
-  comment: CommentReplyType
-  replies: CommentReplyType[]
+  parent: InlineComment
+  comment: InlineCommentReplyType
+  replies: InlineCommentReplyType[]
 }
 
 const props = defineProps<Props>()
 interface Emits {
-  quoteReplyTo: [comment: CommentReplyType]
+  quoteReplyTo: [comment: InlineCommentReplyType]
   replyTo: []
 }
 defineEmits<Emits>()
 
 provide("comment", props.comment)
 
-const dataCy = computed(
-  () => props.commentType.charAt(0).toLowerCase() + props.commentType.slice(1)
-)
-
-const { isActive } = useIsActiveComment(props.comment)
+const activeComment = useActiveComment()
+const isActive = computed(() => {
+  return (
+    activeComment.value?.__typename === props.comment.__typename &&
+    activeComment.value?.id === props.comment.id
+  )
+})
 const scrollTarget = ref(null)
 defineExpose({
   scrollTarget,
   comment: props.comment
 })
+
+function submitReply() {
+  isReplying.value = false
+  isModifying.value = false
+  isQuoteReplying.value = false
+  commentReply.value = null
+}
+function cancelReply() {
+  isReplying.value = false
+  isModifying.value = false
+  isQuoteReplying.value = false
+  commentReply.value = null
+}
+function modifyComment(comment) {
+  isReplying.value = false
+  isQuoteReplying.value = false
+  isModifying.value = true
+  commentModify.value = comment
+}
 </script>
 
 <style lang="sass" scoped>
