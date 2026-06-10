@@ -113,6 +113,11 @@ jobs:
       - name: Generate GraphQL artifacts
         run: yarn graphql:codegen-local
         working-directory: ./client
+      # Generates .quasar/tsconfig.json so fallow resolves the `app`/`src`
+      # path aliases instead of flagging them as unlisted dependencies
+      - name: Prepare Quasar
+        run: yarn quasar prepare
+        working-directory: ./client
       - uses: fallow-rs/fallow@v2
         with:
           command: audit
