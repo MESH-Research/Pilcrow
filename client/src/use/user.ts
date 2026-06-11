@@ -40,9 +40,30 @@ export function useCurrentUser() {
     return !!roles.value.includes("Application Administrator")
   })
 
-  const abilities = computed(() => {
-    return query.result.value?.currentUser.abilities ?? []
+  /**
+   * Names of every permission the current user has (directly-assigned
+   * plus permissions inherited from their roles). Populated from the
+   * `permissions { name }` selection in currentUserFields.
+   */
+  const permissions = computed<string[]>(() => {
+    return (
+      query.result.value?.currentUser?.permissions?.map(({ name }) => name) ??
+      []
+    )
   })
+
+  /**
+   * True if the current user has the named permission.
+   * Usage: `can("moderate avatars")`.
+   */
+  const can = (permission: string): boolean =>
+    permissions.value.includes(permission)
+
+  /**
+   * @deprecated Prefer `permissions` + `can()` — kept so existing
+   * callers don't break. Will be removed once those call sites land.
+   */
+  const abilities = permissions
 
   const roles = computed(() => {
     return query.result.value?.currentUser.roles.map(({ name }) => name) ?? []
@@ -88,6 +109,8 @@ export function useCurrentUser() {
     isLoggedIn,
     roles,
     abilities,
+    permissions,
+    can,
     isAppAdmin,
     isSubmitter,
     isReviewer,

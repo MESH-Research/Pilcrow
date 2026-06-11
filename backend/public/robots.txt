@@ -1,2 +1,3 @@
 User-agent: *
-Disallow:
+# User-uploaded media (avatars). Not secret, but no reason to index.
+Disallow: /storage/

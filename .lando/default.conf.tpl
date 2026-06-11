@@ -38,6 +38,15 @@ server {
         try_files /dev/null @backend;
     }
 
+    # Media-library uploads (avatars) live on the public disk, symlinked at
+    # public/storage. Serve them straight from disk — Laravel has no /storage
+    # route, and the generic location / below proxies non-text/html requests
+    # (like <img> loads) to the vite dev server, which answers with the SPA
+    # index.html (text/html) so the image never renders.
+    location /storage/ {
+        try_files $uri =404;
+    }
+
     # SPA navigation (Accept: text/html) goes to Laravel so index.blade.php can
     # inject runtime globals (__TELEMETRY_CONFIG, __APP_BANNER).
     # Everything else (JS modules, HMR, asset files) proxies to the vite dev server.

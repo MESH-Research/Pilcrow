@@ -29,6 +29,7 @@ function userResponse(overrides: Partial<CurrentUser> = {}): {
         email: "beta@example.com",
         username: "betaUser",
         avatar_color: "blue",
+        avatar_upload_blocked: false,
         email_verified_at: "2021-08-14 02:26:32",
         highest_privileged_role: UserRoles.submitter,
         roles: [{ name: "Submitter" }],

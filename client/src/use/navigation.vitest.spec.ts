@@ -190,4 +190,45 @@ describe("useNavigation childrenOf", () => {
     const deepFromStart = await resolveChildren(nestedRouter, "inner:leaf", 0)
     expect(names(deepFromStart)).toEqual(["inner"])
   })
+
+  it("does not descend into a section's nested param route", async () => {
+    // The admin tree nests drill-down routes (`users/:id`) *under* their
+    // section rather than alongside the dashboard tiles. childrenOf only
+    // reads one level, so the param route is never a direct child and
+    // never gets resolved — no "Missing required param" throw, and only
+    // the resolvable section appears.
+    const sectionRouter = createRouter({
+      history: createMemoryHistory(),
+      routes: [
+        {
+          path: "/admin",
+          name: "admin",
+          component: Dummy,
+          children: [
+            {
+              path: "users",
+              name: "admin:users-section",
+              component: Dummy,
+              meta: { navigation: { label: "Users" } },
+              children: [
+                { path: "", name: "admin:users", component: Dummy },
+                { path: ":id", name: "admin:user:id", component: Dummy }
+              ]
+            },
+            {
+              path: "publications",
+              name: "admin:publications",
+              component: Dummy,
+              meta: { navigation: { label: "Publications" } }
+            }
+          ]
+        }
+      ]
+    })
+    const children = await resolveChildren(sectionRouter, "admin")
+    expect(names(children)).toEqual([
+      "admin:users-section",
+      "admin:publications"
+    ])
+  })
 })

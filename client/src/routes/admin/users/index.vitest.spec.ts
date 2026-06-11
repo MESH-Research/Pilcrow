@@ -1,7 +1,7 @@
 import { installQuasarPlugin } from "app/test/vitest/utils"
 import { mount, flushPromises } from "@vue/test-utils"
 import { installApolloClient } from "app/test/vitest/utils"
-import UsersIndexPage from "./users.vue"
+import UsersIndexPage from "./index.vue"
 import {
   GetUsersDocument,
   type GetUsersQuery
@@ -37,7 +37,6 @@ describe("User Index page mount", () => {
               name: "test1",
               email: "test1@msu.edu",
               username: "test1",
-              avatar_color: "blue",
               created_at: "2026-01-01T00:00:00Z",
               email_verified_at: null
             },
@@ -46,7 +45,6 @@ describe("User Index page mount", () => {
               name: "test2",
               email: "test2@msu.edu",
               username: "test2",
-              avatar_color: "green",
               created_at: "2026-01-02T00:00:00Z",
               email_verified_at: null
             }

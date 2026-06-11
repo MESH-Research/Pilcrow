@@ -63,5 +63,20 @@ class PermissionSeeder extends Seeder
 
         Permission::findOrCreate(Permission::UPDATE_SITE_SETTINGS)
             ->assignRole(Role::APPLICATION_ADMINISTRATOR);
+
+        Permission::findOrCreate(Permission::MODERATE_AVATARS)
+            ->assignRole(Role::APPLICATION_ADMINISTRATOR);
+
+        // Granted to every role by default. Moderators *revoke* it
+        // from individual users to block avatar uploads. Role-less
+        // newly-registered users also get it granted directly via
+        // User::booted so fresh accounts can upload.
+        Permission::findOrCreate(Permission::UPLOAD_AVATAR)
+            ->assignRole(Role::APPLICATION_ADMINISTRATOR)
+            ->assignRole(Role::PUBLICATION_ADMINISTRATOR)
+            ->assignRole(Role::EDITOR)
+            ->assignRole(Role::REVIEW_COORDINATOR)
+            ->assignRole(Role::REVIEWER)
+            ->assignRole(Role::SUBMITTER);
     }
 }

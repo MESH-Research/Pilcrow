@@ -13,7 +13,14 @@ type User {
     email_verified_at: DateTimeUtc
     roles: [Role!]! @belongsToMany
     highest_privileged_role: UserRoles @method(name: "getHighestPrivilegedRole")
-    permissions: [Permission!] @belongsToMany
+    """
+    Every permission the user effectively has — both directly-assigned
+    and inherited via their roles. Uses `getAllPermissions()` rather
+    than the `permissions()` relation so role-derived permissions are
+    included (e.g. Application Administrators inherit `moderate
+    avatars` via the role, not a direct user->permission pivot).
+    """
+    permissions: [Permission!] @method(name: "getAllPermissions")
     profile_metadata: ProfileMetadata
     "Whether the user has access to private beta features (admin-set)."
     beta: Boolean!
@@ -35,6 +42,26 @@ type User {
     ): [PublicationAssignment!]!
         @hasMany(relation: "publicationAssignments", type: "PAGINATOR", defaultCount: 10)
     staged: Boolean
+
+    "The user's uploaded avatar, or null if the user has not set one."
+    avatar: Avatar @method(name: "getAvatar")
+
+    "True when a moderator has revoked this user's ability to upload an avatar."
+    avatar_upload_blocked: Boolean! @method(name: "getAvatarUploadBlocked")
+}
+
+"""
+An uploaded avatar image with URLs for the original and derived conversions.
+"""
+type Avatar {
+    "URL for the original uploaded image."
+    url: String!
+
+    "URL for the 96x96 thumbnail conversion, suitable for inline avatar display."
+    thumb_url: String!
+
+    "URL for the 256x256 medium conversion, suitable for profile pages."
+    medium_url: String!
 }
 
 enum UserRoles {

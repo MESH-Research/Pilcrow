@@ -34,7 +34,12 @@
           :aria-label="$t('header.account_btn_aria')"
         >
           <template #label>
-            <q-icon name="account_circle" class="lt-md" />
+            <avatar-image
+              :user="currentUser"
+              round
+              size="28px"
+              class="header-avatar q-mr-xs"
+            />
             <span class="gt-sm">{{ currentUser.username }}</span>
           </template>
           <q-list
@@ -166,6 +171,7 @@
 
 <script setup lang="ts">
 import { useMagicKeys } from "@vueuse/core"
+import AvatarImage from "src/components/atoms/AvatarImage.vue"
 import NotificationPopup from "src/components/molecules/NotificationPopup.vue"
 import { useCurrentUser } from "src/use/user"
 import { useFeatures } from "src/use/features"

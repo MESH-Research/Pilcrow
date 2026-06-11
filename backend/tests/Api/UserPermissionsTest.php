@@ -26,7 +26,6 @@ class UserPermissionsTest extends ApiTestCase
     {
         $this->beAppAdmin();
         $test_role = Role::factory()->create(['name' => $this->test_user_role]);
-        $this->beAppAdmin();
         $user = User::factory()->create();
         $user->assignRole($this->test_user_role);
         $response = $this->graphQL(
@@ -128,6 +127,14 @@ class UserPermissionsTest extends ApiTestCase
                                     'id' => '11',
                                     'name' => Permission::UPDATE_SITE_SETTINGS,
                                 ],
+                                10 => [
+                                    'id' => '12',
+                                    'name' => Permission::MODERATE_AVATARS,
+                                ],
+                                11 => [
+                                    'id' => '13',
+                                    'name' => Permission::UPLOAD_AVATAR,
+                                ],
                             ],
                         ],
                     ],
@@ -169,6 +176,10 @@ class UserPermissionsTest extends ApiTestCase
                                     'id' => '10',
                                     'name' => Permission::UNASSIGN_EDITOR,
                                 ],
+                                7 => [
+                                    'id' => '13',
+                                    'name' => Permission::UPLOAD_AVATAR,
+                                ],
                             ],
                         ],
                     ],
@@ -198,6 +209,10 @@ class UserPermissionsTest extends ApiTestCase
                                     'id' => '8',
                                     'name' => Permission::UNASSIGN_REVIEW_COORDINATOR,
                                 ],
+                                4 => [
+                                    'id' => '13',
+                                    'name' => Permission::UPLOAD_AVATAR,
+                                ],
                             ],
                         ],
                     ],
@@ -211,7 +226,12 @@ class UserPermissionsTest extends ApiTestCase
                         0 => [
                             'id' => Role::REVIEW_COORDINATOR_ROLE_ID,
                             'name' => Role::REVIEW_COORDINATOR,
-                            'permissions' => [],
+                            'permissions' => [
+                                0 => [
+                                    'id' => '13',
+                                    'name' => Permission::UPLOAD_AVATAR,
+                                ],
+                            ],
                         ],
                     ],
                 ],
@@ -223,7 +243,12 @@ class UserPermissionsTest extends ApiTestCase
                         0 => [
                             'id' => Role::REVIEWER_ROLE_ID,
                             'name' => Role::REVIEWER,
-                            'permissions' => [],
+                            'permissions' => [
+                                0 => [
+                                    'id' => '13',
+                                    'name' => Permission::UPLOAD_AVATAR,
+                                ],
+                            ],
                         ],
                     ],
                 ],
@@ -235,7 +260,12 @@ class UserPermissionsTest extends ApiTestCase
                         0 => [
                             'id' => Role::SUBMITTER_ROLE_ID,
                             'name' => Role::SUBMITTER,
-                            'permissions' => [],
+                            'permissions' => [
+                                0 => [
+                                    'id' => '13',
+                                    'name' => Permission::UPLOAD_AVATAR,
+                                ],
+                            ],
                         ],
                     ],
                 ],
@@ -268,5 +298,37 @@ class UserPermissionsTest extends ApiTestCase
             ['id' => $user->id]
         );
         $response->assertJsonPath('data.user', $expected_array);
+    }
+
+    /**
+     * Regression lock: User.permissions must include role-inherited
+     * permissions, not just direct user->permission assignments.
+     * Application Administrator inherits `moderate avatars` via the
+     * role; earlier the field used @belongsToMany which returned the
+     * direct-only set and silently hid role permissions from clients.
+     *
+     * @return void
+     */
+    public function testUserPermissionsIncludesRoleInheritedPermissions(): void
+    {
+        $admin = $this->beAppAdmin();
+
+        $response = $this->graphQL(
+            '{ currentUser { id permissions { name } } }'
+        );
+
+        $names = collect($response->json('data.currentUser.permissions'))
+            ->pluck('name')
+            ->all();
+
+        // Role-inherited — if @belongsToMany ever comes back this fails.
+        $this->assertContains(Permission::MODERATE_AVATARS, $names);
+        $this->assertContains(Permission::UPDATE_USERS, $names);
+        $this->assertContains(Permission::UPLOAD_AVATAR, $names);
+        $this->assertEqualsCanonicalizing(
+            $names,
+            $admin->getAllPermissions()->pluck('name')->all(),
+            'GraphQL should expose exactly getAllPermissions()'
+        );
     }
 }

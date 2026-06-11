@@ -21,4 +21,6 @@ class Permission extends ParentModel
     public const ASSIGN_EDITOR = 'assign editor';
     public const UNASSIGN_EDITOR = 'unassign editor';
     public const UPDATE_SITE_SETTINGS = 'update site settings';
+    public const MODERATE_AVATARS = 'moderate avatars';
+    public const UPLOAD_AVATAR = 'upload avatar';
 }

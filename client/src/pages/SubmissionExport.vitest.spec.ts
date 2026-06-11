@@ -34,8 +34,7 @@ const mockExportOptionsResponse: { data: GetExportOptionsQuery } = {
       commenters: [
         {
           id: "100",
-          display_label: "Test User",
-          avatar_color: "purple"
+          display_label: "Test User"
         }
       ]
     }

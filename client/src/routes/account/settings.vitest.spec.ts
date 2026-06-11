@@ -58,6 +58,7 @@ describe("Settings page", () => {
           name: "TestDoe",
           email: "test@example.com",
           avatar_color: "blue",
+          avatar_upload_blocked: false,
           email_verified_at: null,
           roles: [],
           beta: false,

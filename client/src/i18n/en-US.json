@@ -13,7 +13,11 @@
     "username": "Username",
     "password": "Password",
     "empty_name": "No display name",
-    "details_heading": "User Details"
+    "details_heading": "User Details",
+    "staged_corner": {
+      "aria": "Invitation pending",
+      "tooltip": "User has been invited but hasn't signed in yet."
+    }
   },
   "role": {
     "self": "No roles | Role | Roles",
@@ -46,7 +50,8 @@
       "user": "User",
       "publications": "Publications",
       "submissions": "Submissions",
-      "beta_users": "Beta Users"
+      "beta_users": "Beta Users",
+      "avatar_reports": "Avatar Reports"
     }
   },
   "tables": {
@@ -184,7 +189,9 @@
     "logo_alt": "Application Logo",
     "nav_aria_label": "Application Sections",
     "site_title": "Pilcrow",
-    "site_subtitle": "Submission Review System"
+    "site_subtitle": "Submission Review System",
+    "avatar_reports": "Avatar Reports",
+    "admin_needs_attention": "Administration has items needing attention"
   },
   "footer": {
     "site_title": "Pilcrow",
@@ -350,6 +357,20 @@
           }
         }
       }
+    },
+    "avatar": {
+      "heading": "Profile Picture",
+      "description": "Upload a JPEG, PNG, or WebP image. Max 5 MB.",
+      "acceptable_use": "Pictures must not be obscene, impersonate others, or infringe copyright. Administrators may remove pictures that violate these expectations.",
+      "upload_button": "Upload new picture",
+      "change_button": "Change picture",
+      "remove_button": "Remove picture",
+      "upload_success": "Profile picture updated.",
+      "remove_success": "Profile picture removed.",
+      "upload_failure": "Unable to update profile picture.",
+      "remove_failure": "Unable to remove profile picture.",
+      "invalid_type": "Please select a JPEG, PNG, or WebP image.",
+      "too_large": "Image must be 5 MB or smaller."
     }
   },
   "home": {
@@ -1359,6 +1380,24 @@
     },
     "selectIcon": {
       "aria_label": "Select Icon"
+    },
+    "avatarCrop": {
+      "aria_label": "Crop Avatar",
+      "title": "Crop your avatar",
+      "save": "Save",
+      "cancel": "Cancel"
+    },
+    "reportAvatar": {
+      "aria_label": "Report Avatar",
+      "title": "Report this profile picture",
+      "description": "Let an administrator know this picture may violate our guidelines. Administrators will review and decide whether to remove it.",
+      "reason_label": "Reason (optional)",
+      "reason_placeholder": "Briefly describe why this picture is inappropriate.",
+      "submit": "Submit report",
+      "cancel": "Cancel",
+      "success": "Report submitted. Thank you.",
+      "failure": "Something went wrong submitting your report.",
+      "button": "Report this picture"
     }
   },
   "generic": {
@@ -1377,7 +1416,8 @@
     "dashboard": {
       "users_description": "Manage user accounts and permissions.",
       "publications_description": "Manage publications and their settings.",
-      "beta_users_description": "Grant or revoke private beta access for users."
+      "beta_users_description": "Grant or revoke private beta access for users.",
+      "avatar_reports_description": "Review pending reports and remove inappropriate avatars."
     },
     "publication": {
       "headers": {
@@ -1484,7 +1524,15 @@
         "beta_disabled": "Beta features disabled",
         "beta_error": "Could not update beta access. Please try again.",
         "feature_opt_ins": "Labs Features",
-        "no_feature_opt_ins": "No labs features enabled"
+        "no_feature_opt_ins": "No labs features enabled",
+        "avatar_upload": "Avatar Upload",
+        "avatar_upload_allowed": "Allowed",
+        "avatar_upload_blocked": "Revoked",
+        "avatar_revoke": "Revoke",
+        "avatar_reinstate": "Reinstate",
+        "avatar_revoked": "Avatar upload permission revoked.",
+        "avatar_reinstated": "Avatar upload permission reinstated.",
+        "avatar_toggle_failure": "Unable to change avatar upload permission."
       }
     },
     "beta_users": {
@@ -1530,5 +1578,32 @@
       "feedback_lead": "Tried it out? Tell us what works and what's missing.",
       "feedback": "Share feedback"
     }
+  },
+  "admin_avatar_reports": {
+    "page_title": "Avatar Reports",
+    "no_reason": "no reason supplied",
+    "empty_pending": "No pending reports — all clear.",
+    "empty_other": "No reports with this status.",
+    "filter_all": "All",
+    "filter_pending": "Pending",
+    "filter_dismissed": "Dismissed",
+    "filter_removed": "Removed",
+    "headers": {
+      "user": "Reported user",
+      "reporter": "Reporter",
+      "reason": "Reason",
+      "status": "Status",
+      "created_at": "Reported",
+      "actions": ""
+    },
+    "action_dismiss": "Dismiss",
+    "action_remove": "Remove avatar",
+    "cancel": "Cancel",
+    "confirm_remove": "Remove this user's avatar?",
+    "confirm_block_label": "Also revoke upload permission",
+    "confirm_block_help": "Prevent this user from uploading a new avatar. They can be reinstated from the user's admin detail page.",
+    "dismissed_success": "Report dismissed.",
+    "removed_success": "Avatar removed and report closed.",
+    "failure": "Unable to act on this report."
   }
 }

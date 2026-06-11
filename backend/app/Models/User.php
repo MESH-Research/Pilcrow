@@ -16,15 +16,23 @@ use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\HasApiTokens;
 use Laravel\Scout\Attributes\SearchUsingPrefix;
 use Laravel\Scout\Searchable;
+use Spatie\Image\Enums\Fit;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable implements MustVerifyEmail
+class User extends Authenticatable implements MustVerifyEmail, HasMedia
 {
     use HasFactory;
     use Notifiable;
     use HasApiTokens;
     use HasRoles;
     use Searchable;
+    use InteractsWithMedia;
+
+    public const AVATAR_COLLECTION = 'avatar';
+    public const AVATAR_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 
     /**
      * The attributes that are mass assignable.
@@ -91,6 +99,15 @@ class User extends Authenticatable implements MustVerifyEmail
         static::updating(function ($model) {
             if ($model->isDirty('email')) {
                 $model->email_verified_at = null;
+            }
+        });
+
+        // Grant the default `upload avatar` permission directly so that
+        // newly-registered users without any role yet can still upload.
+        // Admins revoke this to block individual users.
+        static::created(function ($model) {
+            if (Permission::where('name', Permission::UPLOAD_AVATAR)->exists()) {
+                $model->givePermissionTo(Permission::UPLOAD_AVATAR);
             }
         });
     }
@@ -435,5 +452,76 @@ class User extends Authenticatable implements MustVerifyEmail
         }
 
         return $colors[abs($hash) % count($colors)];
+    }
+
+    /**
+     * Register media collections for the user.
+     */
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection(self::AVATAR_COLLECTION)
+            ->singleFile()
+            ->acceptsMimeTypes(self::AVATAR_MIME_TYPES);
+    }
+
+    /**
+     * Register media conversions for the user.
+     *
+     * The 'thumb' conversion is used by AvatarImage; 'medium' is available
+     * for larger displays (e.g. account layout).
+     *
+     * @param \Spatie\MediaLibrary\MediaCollections\Models\Media|null $_media
+     *        Required by the Spatie HasMedia contract; unused here because
+     *        the same conversions apply to any media item in this model's
+     *        collections.
+     */
+    public function registerMediaConversions(?Media $_media = null): void
+    {
+        $this->addMediaConversion('thumb')
+            ->fit(Fit::Crop, 96, 96)
+            ->nonQueued();
+
+        $this->addMediaConversion('medium')
+            ->fit(Fit::Crop, 256, 256)
+            ->nonQueued();
+    }
+
+    /**
+     * Return the avatar Media item if set.
+     */
+    public function getAvatarMedia(): ?Media
+    {
+        return $this->getFirstMedia(self::AVATAR_COLLECTION);
+    }
+
+    /**
+     * Resolve the GraphQL `User.avatar` field: URLs for the original plus
+     * the thumb/medium conversions, or null when no avatar is uploaded so
+     * the client can fall back to a generated placeholder.
+     *
+     * @return array<string, string>|null
+     */
+    public function getAvatar(): ?array
+    {
+        $media = $this->getAvatarMedia();
+        if ($media === null) {
+            return null;
+        }
+
+        return [
+            'url' => $media->getFullUrl(),
+            'thumb_url' => $media->getFullUrl('thumb'),
+            'medium_url' => $media->getFullUrl('medium'),
+        ];
+    }
+
+    /**
+     * Resolve the GraphQL `User.avatar_upload_blocked` field. True when the
+     * user lacks the UPLOAD_AVATAR permission — either a moderator revoked
+     * it, or (defensive) it was never granted.
+     */
+    public function getAvatarUploadBlocked(): bool
+    {
+        return !$this->hasPermissionTo(Permission::UPLOAD_AVATAR);
     }
 }

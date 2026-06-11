@@ -1,7 +1,7 @@
 <template>
   <q-item class="q-px-none" role="listitem">
     <q-item-section top avatar>
-      <avatar-image :user="user" rounded />
+      <reportable-avatar :user="user" rounded />
     </q-item-section>
     <q-item-section>
       <q-item-label v-if="user.name">
@@ -47,7 +47,7 @@
 </template>
 
 <script setup lang="ts">
-import AvatarImage from "./AvatarImage.vue"
+import ReportableAvatar from "src/components/molecules/ReportableAvatar.vue"
 import type { User } from "src/graphql/generated/graphql"
 
 export interface UserAction {
