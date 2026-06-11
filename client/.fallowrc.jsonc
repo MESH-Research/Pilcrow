@@ -7,7 +7,11 @@
   "ignoreDependencies": [
     "axe-core",
     "jsonc-eslint-parser",
-    "yaml-eslint-parser"
+    "yaml-eslint-parser",
+    // `src` is our path alias, never an npm package. fallow's audit base
+    // snapshot runs without quasar prepare, so `src/*` imports resolve
+    // resolver-less and surface as a bare `src` unlisted-dependency.
+    "src"
   ],
   // quasar resolves bare src/ paths in sass blocks
   "ignoreUnresolvedImports": ["**/quasar.variables.sass"]
