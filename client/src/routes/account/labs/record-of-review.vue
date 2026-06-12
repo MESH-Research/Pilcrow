@@ -18,7 +18,6 @@
         rel="noopener noreferrer"
         no-caps
         outline
-        color="primary"
         icon="forum"
         icon-right="open_in_new"
         :label="$t('labs.record_of_review.feedback')"
