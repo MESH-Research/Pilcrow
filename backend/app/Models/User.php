@@ -16,14 +16,14 @@ use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\HasApiTokens;
 use Laravel\Scout\Attributes\SearchUsingPrefix;
 use Laravel\Scout\Searchable;
-use Spatie\Permission\Traits\HasRoles;
+use Silber\Bouncer\Database\HasRolesAndAbilities;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
     use HasFactory;
     use Notifiable;
     use HasApiTokens;
-    use HasRoles;
+    use HasRolesAndAbilities;
     use Searchable;
 
     /**
@@ -261,6 +261,33 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
+     * Whether the user holds the global application-administrator role.
+     *
+     * @return bool
+     */
+    public function isApplicationAdministrator(): bool
+    {
+        return $this->isA(Role::SLUG_APPLICATION_ADMIN);
+    }
+
+    /**
+     * Assign a global role by slug or human-readable title.
+     *
+     * Compatibility wrapper over Bouncer's assign() — accepts either a role
+     * slug (e.g. application_admin) or its display title (e.g. "Application
+     * Administrator") and assigns the corresponding Bouncer role.
+     *
+     * @param string $role
+     */
+    public function assignRole(string $role): self
+    {
+        $slug = array_search($role, Role::SLUG_TO_TITLE, true);
+        $this->assign($slug !== false ? $slug : $role);
+
+        return $this;
+    }
+
+    /**
      * Return the highest privileged role slug for the user in the following
      * order: application_admin, publication_admin, editor, review_coordinator,
      * reviewer, submitter.
@@ -269,7 +296,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getHighestPrivilegedRole(): ?string
     {
-        if ($this->hasRole(Role::APPLICATION_ADMINISTRATOR)) {
+        if ($this->isApplicationAdministrator()) {
             return Role::SLUG_APPLICATION_ADMIN;
         }
         if ($this->publications->isNotEmpty()) {

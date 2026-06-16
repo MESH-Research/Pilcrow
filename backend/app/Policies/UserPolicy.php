@@ -83,7 +83,7 @@ class UserPolicy
             return true;
         }
 
-        if ($viewer->hasRole(Role::APPLICATION_ADMINISTRATOR)) {
+        if ($viewer->isApplicationAdministrator()) {
             return true;
         }
 

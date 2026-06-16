@@ -147,7 +147,7 @@ class Publication extends BaseModel
             return null;
         }
 
-        if ($user->hasRole(Role::APPLICATION_ADMINISTRATOR)) {
+        if ($user->isApplicationAdministrator()) {
             return Role::SLUG_PUBLICATION_ADMIN;
         }
 

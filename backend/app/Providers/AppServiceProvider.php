@@ -78,6 +78,10 @@ class AppServiceProvider extends ServiceProvider
             'roles' => 'bouncer_roles',
             'assigned_roles' => 'bouncer_assigned_roles',
         ]);
+
+        // Use the app's Role model (carries the slug constants + titles) as
+        // Bouncer's role model so GraphQL and relations resolve to it.
+        Bouncer::useRoleModel(\App\Models\Role::class);
     }
 
     /**

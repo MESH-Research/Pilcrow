@@ -83,6 +83,13 @@ class AbacSeeder extends Seeder
      */
     public function run(): void
     {
+        // Create each role with its human-readable title (surfaced as
+        // GraphQL Role.name). Bouncer::allow() would otherwise create them
+        // title-less.
+        foreach (Role::SLUG_TO_TITLE as $slug => $title) {
+            Role::firstOrCreate(['name' => $slug], ['title' => $title]);
+        }
+
         Bouncer::allow(Role::SLUG_APPLICATION_ADMIN)->everything();
 
         foreach (self::MATRIX as $role => $abilities) {

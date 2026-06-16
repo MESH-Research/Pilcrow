@@ -477,15 +477,6 @@ type PaginatorInfo {
   total: Int!
 }
 
-"""A permission for roles and users"""
-type Permission {
-  created_at: DateTime
-  guard_name: String!
-  id: ID!
-  name: String!
-  updated_at: DateTime
-}
-
 """Profile metadata of a user"""
 type ProfileMetadata {
   academic_profiles: AcademicProfiles
@@ -577,9 +568,6 @@ type Query {
   currentUser: User
   generalSettings: GeneralSettings
   identityProviders: [IdentityProvider]
-
-  """Return a permission by ID"""
-  permission(id: ID): Permission
 
   """Return a publication by ID"""
   publication(id: ID): Publication
@@ -697,13 +685,13 @@ input ResetPasswordInput {
   token: String!
 }
 
-"""A user role for permissions"""
+"""A user role"""
 type Role {
   created_at: DateTime
-  guard_name: String!
   id: ID!
+
+  """Human-readable role title (e.g. "Application Administrator")."""
   name: String!
-  permissions: [Permission!]
   updated_at: DateTime
 }
 
@@ -1029,7 +1017,6 @@ type User {
     read: Boolean
     unread: Boolean
   ): NotificationPaginator!
-  permissions: [Permission!]
   profile_metadata: ProfileMetadata
   publications(
     """Limits number of fetched items."""

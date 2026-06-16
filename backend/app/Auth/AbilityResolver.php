@@ -70,7 +70,7 @@ class AbilityResolver
     {
         $slugs = [];
 
-        if ($user->hasRole(Role::APPLICATION_ADMINISTRATOR)) {
+        if ($user->isApplicationAdministrator()) {
             $slugs[] = Role::SLUG_APPLICATION_ADMIN;
         }
 

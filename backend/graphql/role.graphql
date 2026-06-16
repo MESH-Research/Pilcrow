@@ -1,11 +1,10 @@
 """
-A user role for permissions
+A user role
 """
 type Role {
     id: ID!
-    name: String!
-    guard_name: String!
+    "Human-readable role title (e.g. \"Application Administrator\")."
+    name: String! @rename(attribute: "title")
     created_at: DateTime
     updated_at: DateTime
-    permissions: [Permission!] @belongsToMany
 }

@@ -145,8 +145,8 @@ class UserPolicyTest extends TestCase
             $this->attachToPublication($target, $publication, (int)Role::EDITOR_ROLE_ID);
         }
 
-        // Prime Spatie role cache so role lookup doesn't pollute the count.
-        $editor->hasRole(Role::APPLICATION_ADMINISTRATOR);
+        // Prime the application-admin role lookup so it doesn't pollute the count.
+        $editor->isApplicationAdministrator();
 
         DB::enableQueryLog();
         foreach ($targets as $target) {

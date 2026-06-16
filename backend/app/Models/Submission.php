@@ -66,7 +66,7 @@ class Submission extends Model implements Auditable
         /** @var \App\Models\User $user */
         $user = Auth::user();
 
-        if ($user->hasRole(Role::APPLICATION_ADMINISTRATOR)) {
+        if ($user->isApplicationAdministrator()) {
             return $query;
         }
 

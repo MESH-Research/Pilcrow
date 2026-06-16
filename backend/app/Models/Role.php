@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Spatie\Permission\Models\Role as ParentModel;
+use Silber\Bouncer\Database\Role as ParentModel;
 
 class Role extends ParentModel
 {
-    use HasFactory;
+    // Human-readable role titles (stored as the Bouncer role `title`; surfaced
+    // as GraphQL Role.name to preserve the client contract).
 
     // Relative to the application
     public const APPLICATION_ADMINISTRATOR = 'Application Administrator';
@@ -70,6 +70,20 @@ class Role extends ParentModel
         self::SLUG_REVIEW_COORDINATOR,
         self::SLUG_REVIEWER,
         self::SLUG_SUBMITTER,
+    ];
+
+    /**
+     * Human-readable title for each role slug, used as the Bouncer role title.
+     *
+     * @var array<string, string>
+     */
+    public const SLUG_TO_TITLE = [
+        self::SLUG_APPLICATION_ADMIN => self::APPLICATION_ADMINISTRATOR,
+        self::SLUG_PUBLICATION_ADMIN => self::PUBLICATION_ADMINISTRATOR,
+        self::SLUG_EDITOR => self::EDITOR,
+        self::SLUG_REVIEW_COORDINATOR => self::REVIEW_COORDINATOR,
+        self::SLUG_REVIEWER => self::REVIEWER,
+        self::SLUG_SUBMITTER => self::SUBMITTER,
     ];
 
     /**

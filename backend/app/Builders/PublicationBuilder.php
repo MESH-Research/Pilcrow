@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Builders;
 
-use App\Models\Role;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 
@@ -62,7 +61,7 @@ class PublicationBuilder extends Builder
     {
         $user = Auth::user();
 
-        if ($user && $user->hasRole(Role::APPLICATION_ADMINISTRATOR)) {
+        if ($user && $user->isApplicationAdministrator()) {
             return $this;
         }
 
