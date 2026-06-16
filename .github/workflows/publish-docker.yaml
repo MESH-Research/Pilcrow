@@ -18,6 +18,9 @@ concurrency:
 jobs:
   publish:
     runs-on: ubuntu-24.04
+    outputs:
+      # Real tag list emitted by docker/metadata-action (not recomputed).
+      tags: ${{ steps.build-image.outputs.tags }}
     steps:
       - name: Checkout App Release Tag
         uses: actions/checkout@v4
@@ -68,3 +71,36 @@ jobs:
             --url-prefix '~/' \
             /tmp/sourcemap-extract
           npx --yes @sentry/cli@^2 releases finalize "$RELEASE"
+
+  dispatch-deploy:
+    # Trigger a staging deploy in the private ops repo after a master build.
+    needs: publish
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-24.04
+    steps:
+      # Mint a short-lived install token for the ops repo. The GitHub App must be
+      # installed on MESH-Research/pilcrow-deploy with Contents: write.
+      - name: Generate ops token
+        id: token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          owner: MESH-Research
+          repositories: pilcrow-deploy
+      - name: Dispatch staging deploy
+        env:
+          GH_TOKEN: ${{ steps.token.outputs.token }}
+          # The exact tags publish actually pushed (one per line, full image refs).
+          TAGS: ${{ needs.publish.outputs.tags }}
+        run: |
+          # Pull the sha-<digest> tag straight from what was pushed — never recompute.
+          TAG=$(printf '%s\n' "$TAGS" | grep -oiE 'sha-[0-9a-f]{7,40}' | head -1)
+          if [ -z "$TAG" ]; then
+            echo "::error::no sha- tag found in pushed tags:"; printf '%s\n' "$TAGS"
+            exit 1
+          fi
+          gh api repos/MESH-Research/pilcrow-deploy/dispatches \
+            -f event_type=deploy \
+            -f "client_payload[tag]=$TAG" \
+            -f "client_payload[environment]=staging"
