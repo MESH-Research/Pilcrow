@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Policies;
 
-use App\Models\Permission;
+use App\Auth\AbilityResolver;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -13,12 +13,19 @@ class UserPolicy
     use HandlesAuthorization;
 
     /**
+     * @param \App\Auth\AbilityResolver $abilities
+     */
+    public function __construct(private AbilityResolver $abilities)
+    {
+    }
+
+    /**
      * Determine whether the viewer can list user accounts via the top-level
      * users query. Restricted to application administrators.
      */
     public function viewAny(User $viewer): bool
     {
-        return $viewer->hasRole(Role::APPLICATION_ADMINISTRATOR);
+        return $this->abilities->allows($viewer, 'user.view-any');
     }
 
     /**
@@ -27,7 +34,7 @@ class UserPolicy
      */
     public function view(User $viewer, User $_target): bool
     {
-        return $viewer->hasRole(Role::APPLICATION_ADMINISTRATOR);
+        return $this->abilities->allows($viewer, 'user.view');
     }
 
     /**
@@ -40,7 +47,7 @@ class UserPolicy
      */
     public function manageBeta(User $viewer, User $_target): bool
     {
-        return $viewer->hasRole(Role::APPLICATION_ADMINISTRATOR);
+        return $this->abilities->allows($viewer, 'user.manage-beta');
     }
 
     /**
@@ -56,14 +63,9 @@ class UserPolicy
         if ($user->id === $model->id) {
             return true;
         }
-        //User has global permission to update users
-        if ($user->can(Permission::UPDATE_USERS)) {
-            return true;
-        }
 
         // TODO: Check if user can update user within own publication
-        // No explicit permission so return false.
-        return false;
+        return $this->abilities->allows($user, 'user.update');
     }
 
     /**
