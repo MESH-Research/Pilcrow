@@ -41,7 +41,7 @@ in many entities at once, and one GraphQL request authorizes many entities.
 Native scopes fight all three. So:
 
 | Layer | Owns | Where |
-|---|---|---|
+| --- | --- | --- |
 | Role assignment (scope) | who is Editor of Pub X / Reviewer of Sub Y | pivots (unchanged) |
 | Ability map (RBAC core) | role → granted abilities | Bouncer tables (seeded data) |
 | Attribute conditions | state / ownership / relationship predicates | Policy guards (thin) |
@@ -52,7 +52,7 @@ accepting submissions"). Ability grant + attribute predicate = ABAC.
 
 ## Ability catalog (namespaced by model)
 
-```
+```text
 publication.view  publication.create  publication.update
 submission.view   submission.create   submission.update
 submission.update-status   submission.update-title
@@ -65,7 +65,7 @@ user.view  user.view-any  user.view-email  user.update  user.manage-beta
 ## Role → ability matrix (the seed)
 
 | Ability | AppAdmin | PubAdmin | Editor | RevCoord | Submitter | Reviewer |
-|---|:-:|:-:|:-:|:-:|:-:|:-:|
+| --- | :-: | :-: | :-: | :-: | :-: | :-: |
 | publication.update | ✓ | ✓ (own) | | | | |
 | publication.view (hidden) | ✓ | ✓ | ✓ | | | |
 | submission.update-submitters | ✓ | ✓ | ✓ | ✓ | ✓ | |
@@ -109,7 +109,7 @@ The slugs match the GraphQL enum names, giving one vocabulary across storage,
 the Bouncer ability registry, and the API:
 
 | role_id | slug |
-|---|---|
+| --- | --- |
 | 1 | application_admin |
 | 2 | publication_admin |
 | 3 | editor |

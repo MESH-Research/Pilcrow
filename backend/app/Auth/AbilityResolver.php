@@ -90,6 +90,8 @@ class AbilityResolver
     }
 
     /**
+     * @param \App\Models\User $user
+     * @param string|int $publicationId
      * @return array<int, string>
      */
     private function publicationRoleSlugs(User $user, $publicationId): array
@@ -102,6 +104,8 @@ class AbilityResolver
     }
 
     /**
+     * @param \App\Models\User $user
+     * @param string|int $submissionId
      * @return array<int, string>
      */
     private function submissionRoleSlugs(User $user, $submissionId): array

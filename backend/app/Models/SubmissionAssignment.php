@@ -63,5 +63,4 @@ class SubmissionAssignment extends Pivot
     {
         return $this->belongsTo(Submission::class, 'submission_id');
     }
-
 }

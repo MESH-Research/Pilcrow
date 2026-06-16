@@ -65,8 +65,9 @@ class AbacSeeder extends Seeder
             'submission.view',
             'submission.update',
             'submission.update-submitters',
-            // gated to DRAFT by a policy predicate:
-            'submission.update-status',
+            // submitters may only change status while DRAFT; the policy gates
+            // this draft-only variant on the submission's status.
+            'submission.update-status-draft',
             'submission.update-title',
         ],
         Role::SLUG_REVIEWER => [
@@ -75,6 +76,11 @@ class AbacSeeder extends Seeder
         ],
     ];
 
+    /**
+     * Seed the role -> ability registry.
+     *
+     * @return void
+     */
     public function run(): void
     {
         Bouncer::allow(Role::SLUG_APPLICATION_ADMIN)->everything();

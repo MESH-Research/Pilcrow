@@ -12,6 +12,9 @@ class PublicationPolicy
 {
     use HandlesAuthorization;
 
+    /**
+     * @param \App\Auth\AbilityResolver $abilities
+     */
     public function __construct(private AbilityResolver $abilities)
     {
     }

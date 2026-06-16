@@ -72,7 +72,7 @@ class Role extends ParentModel
     /**
      * Resolve a pivot role_id to its role slug.
      *
-     * @param int|string|null $roleId
+     * @param string|int|null $roleId
      * @return string|null
      */
     public static function slugForId($roleId): ?string

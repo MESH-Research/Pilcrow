@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace App\Policies;
 
+use App\Auth\AbilityResolver;
 use App\Models\InlineComment;
 use App\Models\OverallComment;
 use App\Models\Publication;
-use App\Models\Role;
 use App\Models\Submission;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -17,33 +17,17 @@ class SubmissionPolicy
     use HandlesAuthorization;
 
     /**
-     * Check admin roles
-     *
-     * @param \App\Models\User $user
-     * @param int $publicationId
-     * @return bool
+     * @param \App\Auth\AbilityResolver $abilities
      */
-    protected function checkAdminRoles(User $user, $publicationId)
+    public function __construct(private AbilityResolver $abilities)
     {
-        if ($user->hasRole(Role::APPLICATION_ADMINISTRATOR)) {
-            return true;
-        }
-
-        //Check if the user has a publication role
-        if (
-            $user->hasPublicationRole(
-                [Role::SLUG_PUBLICATION_ADMIN, Role::SLUG_EDITOR],
-                $publicationId
-            )
-        ) {
-            return true;
-        }
-
-        return false;
     }
 
     /**
-     * Check if a submission can be created
+     * Check if a submission can be created.
+     *
+     * Role-agnostic: a submission may be created whenever the target
+     * publication is accepting submissions.
      *
      * @param \App\Models\User $user
      * @param array $args
@@ -51,73 +35,52 @@ class SubmissionPolicy
      */
     public function create(User $user, $args)
     {
-        //Check if the publication is rejecting submissions
-        $publication_id = $args['publication_id'];
-        $publication = Publication::where('id', $publication_id)->firstOrFail();
+        $publication = Publication::where('id', $args['publication_id'])->firstOrFail();
 
         return $publication->is_accepting_submissions;
     }
 
     /**
-     * updateSubmitters
-     *
      * @param \App\Models\User $user
      * @param \App\Models\Submission $submission
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function updateSubmitters(User $user, Submission $submission)
     {
-        if ($this->checkAdminRoles($user, $submission->publication_id)) {
-            return true;
-        }
-
-        //Check if the user is a submitter or review coordinator
-        if ($user->hasSubmissionRole([Role::SLUG_REVIEW_COORDINATOR, Role::SLUG_SUBMITTER], $submission->id)) {
-            return true;
-        }
-
-        return Response::deny('UNAUTHORIZED');
+        return $this->abilities->allows($user, 'submission.update-submitters', $submission)
+            ? true
+            : Response::deny('UNAUTHORIZED');
     }
 
     /**
-     * update Reviewers policy check
-     *
      * @param \App\Models\User $user
      * @param \App\Models\Submission $submission
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function updateReviewers(User $user, Submission $submission)
     {
-        if ($this->checkAdminRoles($user, $submission->publication_id)) {
-            return true;
-        }
-
-        //Check if the user is a review_coordinator
-        if ($user->hasSubmissionRole([Role::SLUG_REVIEW_COORDINATOR], $submission->id)) {
-            return true;
-        }
-
-        return Response::deny('UNAUTHORIZED');
+        return $this->abilities->allows($user, 'submission.update-reviewers', $submission)
+            ? true
+            : Response::deny('UNAUTHORIZED');
     }
 
     /**
-     * update review_coordinators policy check
-     *
      * @param \App\Models\User $user
      * @param \App\Models\Submission $submission
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function updateReviewCoordinators(User $user, Submission $submission)
     {
-        if ($this->checkAdminRoles($user, $submission->publication_id)) {
-            return true;
-        }
-
-        return Response::deny('UNAUTHORIZED');
+        return $this->abilities->allows($user, 'submission.update-review-coordinators', $submission)
+            ? true
+            : Response::deny('UNAUTHORIZED');
     }
 
     /**
-     * Update submission status policy
+     * Update submission status.
+     *
+     * Admins and review coordinators may change the status unconditionally;
+     * submitters may only do so while the submission is still a DRAFT.
      *
      * @param \App\Models\User $user
      * @param \App\Models\Submission $submission
@@ -125,17 +88,13 @@ class SubmissionPolicy
      */
     public function updateStatus(User $user, Submission $submission)
     {
-        if ($this->checkAdminRoles($user, $submission->publication_id)) {
-            return true;
-        }
-
-        if ($user->hasSubmissionRole([Role::SLUG_REVIEW_COORDINATOR], $submission->id)) {
+        if ($this->abilities->allows($user, 'submission.update-status', $submission)) {
             return true;
         }
 
         if (
-            $user->hasSubmissionRole([Role::SLUG_SUBMITTER], $submission->id) &&
-            ($submission->status == Submission::DRAFT)
+            $submission->status === Submission::DRAFT
+            && $this->abilities->allows($user, 'submission.update-status-draft', $submission)
         ) {
             return true;
         }
@@ -144,73 +103,43 @@ class SubmissionPolicy
     }
 
     /**
-     * Update submission title policy
-     *
      * @param \App\Models\User $user
      * @param \App\Models\Submission $submission
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function updateTitle(User $user, Submission $submission)
     {
-        if ($this->checkAdminRoles($user, $submission->publication_id)) {
-            return true;
-        }
-
-        if ($user->hasSubmissionRole([Role::SLUG_REVIEW_COORDINATOR], $submission->id)) {
-            return true;
-        }
-
-        if ($user->hasSubmissionRole([Role::SLUG_SUBMITTER], $submission->id)) {
-            return true;
-        }
-
-        return Response::deny('UNAUTHORIZED');
+        return $this->abilities->allows($user, 'submission.update-title', $submission)
+            ? true
+            : Response::deny('UNAUTHORIZED');
     }
 
     /**
-     * View submission policy
-     *
      * @param \App\Models\User $user
      * @param \App\Models\Submission $submission
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function view(User $user, Submission $submission)
     {
-        if ($this->checkAdminRoles($user, $submission->publication_id)) {
-            return true;
-        }
-
-        //Check that the user has any role on the submission
-        if ($user->hasSubmissionRole('*', $submission->id)) {
-            return true;
-        }
-
-        return Response::deny('UNAUTHORIZED');
+        return $this->abilities->allows($user, 'submission.view', $submission)
+            ? true
+            : Response::deny('UNAUTHORIZED');
     }
 
     /**
-     * Update Submission Policy
-     *
      * @param \App\Models\User $user
      * @param \App\Models\Submission $submission
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function update(User $user, Submission $submission)
     {
-        if ($this->checkAdminRoles($user, $submission->publication_id)) {
-            return true;
-        }
-
-        //Check that the user has any role on the submission
-        if ($user->hasSubmissionRole('*', $submission->id)) {
-            return true;
-        }
-
-        return Response::deny('UNAUTHORIZED');
+        return $this->abilities->allows($user, 'submission.update', $submission)
+            ? true
+            : Response::deny('UNAUTHORIZED');
     }
 
     /**
-     * Invite users to a submission
+     * Invite users to a submission.
      *
      * @param \App\Models\User $user
      * @param \App\Models\Submission $submission
@@ -218,11 +147,9 @@ class SubmissionPolicy
      */
     public function invite(User $user, Submission $submission)
     {
-        if ($submission->getEffectiveRole() === Role::SLUG_REVIEW_COORDINATOR) {
-            return true;
-        }
-
-        return Response::deny('You do not have permission to invite users to this submission.');
+        return $this->abilities->allows($user, 'submission.invite', $submission)
+            ? true
+            : Response::deny('You do not have permission to invite users to this submission.');
     }
 
     /**
