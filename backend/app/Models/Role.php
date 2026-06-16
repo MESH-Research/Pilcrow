@@ -41,9 +41,12 @@ class Role extends ParentModel
     public const SLUG_SUBMITTER = 'submitter';
 
     /**
-     * Role slugs keyed by the legacy pivot role_id.
+     * Role slugs keyed by the legacy integer pivot role_id.
      *
-     * Used by the role_id -> role (slug) data migration backfill.
+     * LEGACY / MIGRATION ONLY. This map exists solely to back the one-time
+     * role_id -> role (slug) data migration backfill (and the test helpers
+     * that mirror it). The pivots now store the slug directly; do not use this
+     * in new code — reference the SLUG_* constants instead.
      */
     public const ID_TO_SLUG = [
         self::APPLICATION_ADMINISTRATOR_ROLE_ID => self::SLUG_APPLICATION_ADMIN,
@@ -70,7 +73,10 @@ class Role extends ParentModel
     ];
 
     /**
-     * Resolve a pivot role_id to its role slug.
+     * Resolve a legacy integer pivot role_id to its role slug.
+     *
+     * LEGACY / MIGRATION ONLY — backs the data migration backfill and test
+     * helpers. New code should use the slug directly.
      *
      * @param string|int|null $roleId
      * @return string|null
