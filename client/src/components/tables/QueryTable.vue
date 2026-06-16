@@ -163,6 +163,7 @@ type QTableColumn = NonNullable<QTableProps["columns"]>[number]
 // callers union them into the columns array as needed.
 export interface QueryTableColumn extends Omit<QTableColumn, "label"> {
   component?: Component
+  props?: object
 }
 
 export interface QTableBodyCellScope<TCol = QTableColumn> {
