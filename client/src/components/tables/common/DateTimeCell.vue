@@ -1,5 +1,5 @@
 <template>
-  <WithAsideCell :scope="scope">
+  <WithAsideCell :scope="scope" :dark-mode-status="darkModeStatus">
     <template #value>
       {{ absolute }}
     </template>
@@ -18,6 +18,7 @@ import type { QTableBodyCellScope } from "../QueryTable.vue"
 
 interface Props {
   scope: QTableBodyCellScope
+  darkModeStatus?: boolean
 }
 
 const props = defineProps<Props>()

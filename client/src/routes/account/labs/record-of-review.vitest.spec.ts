@@ -68,9 +68,7 @@ describe("Record of Review labs page", () => {
   it("links to the Fider feedback board in a new tab", () => {
     const link = factory().find("[data-cy=ror_feedback_link]")
     expect(link.exists()).toBe(true)
-    expect(link.attributes("href")).toBe(
-      "https://feedback.pilcrow.dev/"
-    )
+    expect(link.attributes("href")).toBe("https://feedback.pilcrow.dev/")
     expect(link.attributes("target")).toBe("_blank")
     expect(link.attributes("rel")).toContain("noopener")
   })

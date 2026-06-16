@@ -142,6 +142,7 @@
         v-if="column.component"
         :scope="scope"
         :dense="effectiveDense"
+        v-bind="column.props?.(scope) ?? {}"
       />
     </template>
   </q-table>
@@ -162,6 +163,7 @@ type QTableColumn = NonNullable<QTableProps["columns"]>[number]
 // callers union them into the columns array as needed.
 export interface QueryTableColumn extends Omit<QTableColumn, "label"> {
   component?: Component
+  props?: object
 }
 
 export interface QTableBodyCellScope<TCol = QTableColumn> {
@@ -428,7 +430,12 @@ const compColumns = computed(() => {
     return []
   }
   return props.columns.filter(
-    (c): c is QueryTableColumn & { component: Component } => !!c.component
+    (
+      c
+    ): c is QueryTableColumn & {
+      component: Component
+      props?: (scope: QTableBodyCellScope) => Record<string, unknown>
+    } => !!c.component
   )
 })
 
