@@ -19,6 +19,8 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -41,7 +43,9 @@ jobs:
           {
             echo "_Updated for [\`${GITHUB_SHA::7}\`](${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/commit/${GITHUB_SHA}) by [run #${GITHUB_RUN_NUMBER}](${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID})._"
             echo
-            npx fallow health --format markdown
+            # fallow exits nonzero when findings breach thresholds; the report
+            # is a status snapshot, so a breach must not fail the workflow
+            npx fallow health --format markdown || true
           } > "${GITHUB_WORKSPACE}/fallow-report.md"
       - name: Upsert health issue
         env:
