@@ -142,6 +142,7 @@
         v-if="column.component"
         :scope="scope"
         :dense="effectiveDense"
+        v-bind="column.props?.(scope) ?? {}"
       />
     </template>
   </q-table>
@@ -428,7 +429,12 @@ const compColumns = computed(() => {
     return []
   }
   return props.columns.filter(
-    (c): c is QueryTableColumn & { component: Component } => !!c.component
+    (
+      c
+    ): c is QueryTableColumn & {
+      component: Component
+      props?: (scope: QTableBodyCellScope) => Record<string, unknown>
+    } => !!c.component
   )
 })
 
