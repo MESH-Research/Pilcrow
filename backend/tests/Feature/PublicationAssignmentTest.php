@@ -33,9 +33,6 @@ class PublicationAssignmentTest extends TestCase
 
         $this->assertTrue($assignment->user->is($user));
         $this->assertTrue($assignment->publication->is($publication));
-        $this->assertEquals(
-            (int)Role::EDITOR_ROLE_ID,
-            (int)$assignment->role->id
-        );
+        $this->assertEquals(Role::SLUG_EDITOR, $assignment->role);
     }
 }

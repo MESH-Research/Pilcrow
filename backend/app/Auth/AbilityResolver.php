@@ -44,9 +44,9 @@ class AbilityResolver
     {
         $roles = $this->effectiveRoles($user, $entity);
 
-        // application-administrator is the global super-role (granted
-        // everything); short-circuit rather than expand the wildcard.
-        if (in_array('application-administrator', $roles, true)) {
+        // application_admin is the global super-role (granted everything);
+        // short-circuit rather than expand the wildcard.
+        if (in_array(Role::SLUG_APPLICATION_ADMIN, $roles, true)) {
             return true;
         }
 
@@ -71,7 +71,7 @@ class AbilityResolver
         $slugs = [];
 
         if ($user->hasRole(Role::APPLICATION_ADMINISTRATOR)) {
-            $slugs[] = 'application-administrator';
+            $slugs[] = Role::SLUG_APPLICATION_ADMIN;
         }
 
         if ($entity instanceof Publication) {
@@ -94,12 +94,11 @@ class AbilityResolver
      */
     private function publicationRoleSlugs(User $user, $publicationId): array
     {
-        $roleIds = PublicationAssignment::query()
+        return PublicationAssignment::query()
             ->where('user_id', $user->id)
             ->where('publication_id', $publicationId)
-            ->pluck('role_id');
-
-        return $roleIds->map(fn($id) => Role::slugForId($id))->all();
+            ->pluck('role')
+            ->all();
     }
 
     /**
@@ -107,12 +106,11 @@ class AbilityResolver
      */
     private function submissionRoleSlugs(User $user, $submissionId): array
     {
-        $roleIds = SubmissionAssignment::query()
+        return SubmissionAssignment::query()
             ->where('user_id', $user->id)
             ->where('submission_id', $submissionId)
-            ->pluck('role_id');
-
-        return $roleIds->map(fn($id) => Role::slugForId($id))->all();
+            ->pluck('role')
+            ->all();
     }
 
     /**

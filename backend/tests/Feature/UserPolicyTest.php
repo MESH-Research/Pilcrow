@@ -17,7 +17,7 @@ class UserPolicyTest extends TestCase
 
     private function attachToPublication(User $user, Publication $publication, int $roleId): void
     {
-        $user->publications()->attach($publication->id, ['role_id' => $roleId]);
+        $user->publications()->attach($publication->id, ['role' => Role::slugForId($roleId)]);
     }
 
     public function testViewEmailAllowsSelf(): void
@@ -159,7 +159,7 @@ class UserPolicyTest extends TestCase
         // pivot exactly once even though the policy was invoked 5 times.
         $viewerPubLookups = $queries->filter(
             fn(string $sql) => str_contains($sql, 'publication_user')
-                && str_contains($sql, 'role_id')
+                && str_contains($sql, 'role')
         );
         $this->assertCount(1, $viewerPubLookups);
     }

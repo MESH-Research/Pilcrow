@@ -26,7 +26,7 @@ class SubmissionInvitation extends Model
         'message',
         'accepted_at',
         'submission_id',
-        'role_id',
+        'role',
         'uuid',
     ];
 
@@ -101,16 +101,6 @@ class SubmissionInvitation extends Model
     public function invitee(): BelongsTo
     {
         return $this->belongsTo(User::class, 'email', 'email');
-    }
-
-    /**
-     * The user role associated with the invitation
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function role(): BelongsTo
-    {
-        return $this->belongsTo(Role::class, 'role_id');
     }
 
     /**
@@ -227,10 +217,10 @@ class SubmissionInvitation extends Model
 
         $this->updateInviteeDetails($details);
 
-        if ((string)$this->role_id === Role::REVIEWER_ROLE_ID) {
+        if ($this->role === Role::SLUG_REVIEWER) {
             ReviewerInvitationAccepted::dispatch($this);
         }
-        if ((string)$this->role_id === Role::REVIEW_COORDINATOR_ROLE_ID) {
+        if ($this->role === Role::SLUG_REVIEW_COORDINATOR) {
             ReviewCoordinatorInvitationAccepted::dispatch($this);
         }
 

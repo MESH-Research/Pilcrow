@@ -188,7 +188,7 @@ A user associated with a submission and a role
 """
 type SubmissionAssignment {
     id: ID!
-    role: SubmissionUserRoles! @rename(attribute: "role_id")
+    role: SubmissionUserRoles!
     user: User! @belongsTo
     submission: Submission! @belongsTo
     created_at: DateTimeUtc!
@@ -317,9 +317,9 @@ input SubmissionAssignmentOrderBy {
 }
 
 enum SubmissionUserRoles {
-    submitter @enum(value: 6)
-    reviewer @enum(value: 5)
-    review_coordinator @enum(value: 4)
+    submitter @enum(value: "submitter")
+    reviewer @enum(value: "reviewer")
+    review_coordinator @enum(value: "review_coordinator")
 }
 
 """

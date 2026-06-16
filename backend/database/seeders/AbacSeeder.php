@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
+use App\Models\Role;
 use Illuminate\Database\Seeder;
 use Silber\Bouncer\BouncerFacade as Bouncer;
 
@@ -27,7 +28,7 @@ class AbacSeeder extends Seeder
      * @var array<string, array<int, string>>
      */
     public const MATRIX = [
-        'publication-administrator' => [
+        Role::SLUG_PUBLICATION_ADMIN => [
             'publication.view',
             'publication.update',
             'submission.view',
@@ -39,7 +40,7 @@ class AbacSeeder extends Seeder
             'submission.update-title',
             'submission.invite',
         ],
-        'editor' => [
+        Role::SLUG_EDITOR => [
             // Same as publication-administrator minus publication.update.
             'publication.view',
             'submission.view',
@@ -51,7 +52,7 @@ class AbacSeeder extends Seeder
             'submission.update-title',
             'submission.invite',
         ],
-        'review-coordinator' => [
+        Role::SLUG_REVIEW_COORDINATOR => [
             'submission.view',
             'submission.update',
             'submission.update-submitters',
@@ -60,7 +61,7 @@ class AbacSeeder extends Seeder
             'submission.update-title',
             'submission.invite',
         ],
-        'submitter' => [
+        Role::SLUG_SUBMITTER => [
             'submission.view',
             'submission.update',
             'submission.update-submitters',
@@ -68,7 +69,7 @@ class AbacSeeder extends Seeder
             'submission.update-status',
             'submission.update-title',
         ],
-        'reviewer' => [
+        Role::SLUG_REVIEWER => [
             'submission.view',
             'submission.update',
         ],
@@ -76,7 +77,7 @@ class AbacSeeder extends Seeder
 
     public function run(): void
     {
-        Bouncer::allow('application-administrator')->everything();
+        Bouncer::allow(Role::SLUG_APPLICATION_ADMIN)->everything();
 
         foreach (self::MATRIX as $role => $abilities) {
             foreach ($abilities as $ability) {

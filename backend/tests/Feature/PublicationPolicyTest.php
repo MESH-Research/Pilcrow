@@ -23,7 +23,7 @@ class PublicationPolicyTest extends TestCase
 
     private function attachToPublication(User $user, Publication $publication, int $roleId): void
     {
-        $user->publications()->attach($publication->id, ['role_id' => $roleId]);
+        $user->publications()->attach($publication->id, ['role' => Role::slugForId($roleId)]);
     }
 
     private function appAdmin(): User

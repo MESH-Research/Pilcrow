@@ -64,7 +64,7 @@ class Publication extends BaseModel
     {
         return $this->belongsToMany(User::class)
             ->withTimestamps()
-            ->withPivot(['id', 'user_id', 'role_id', 'publication_id']);
+            ->withPivot(['id', 'user_id', 'role', 'publication_id']);
     }
 
     /**
@@ -75,7 +75,7 @@ class Publication extends BaseModel
     public function publicationAdmins(): BelongsToMany
     {
         return $this->users()
-            ->withPivotValue('role_id', Role::PUBLICATION_ADMINISTRATOR_ROLE_ID);
+            ->withPivotValue('role', Role::SLUG_PUBLICATION_ADMIN);
     }
 
     /**
@@ -86,7 +86,7 @@ class Publication extends BaseModel
     public function editors(): BelongsToMany
     {
         return $this->users()
-            ->withPivotValue('role_id', Role::EDITOR_ROLE_ID);
+            ->withPivotValue('role', Role::SLUG_EDITOR);
     }
 
     /**
@@ -110,11 +110,11 @@ class Publication extends BaseModel
     }
 
     /**
-     * Return the currently logged in users role
+     * Return the currently logged in user's role slug on this publication.
      *
-     * @return int|null
+     * @return string|null
      */
-    public function getMyRole(): ?int
+    public function getMyRole(): ?string
     {
         /** @var \App\Models\User $user */
         $user = Auth::user();
@@ -130,15 +130,16 @@ class Publication extends BaseModel
             return null;
         }
 
-        return $first->pivot->role_id;
+        return $first->pivot->role;
     }
 
     /**
-     * Return the effective role of a user on a submission taking into account parent roles they may have.
+     * Return the effective role slug of a user on a submission taking into
+     * account parent roles they may have.
      *
-     * @return int|null
+     * @return string|null
      */
-    public function getEffectiveRole(): ?int
+    public function getEffectiveRole(): ?string
     {
         /** @var \App\Models\User $user */
         $user = Auth::user();
@@ -147,7 +148,7 @@ class Publication extends BaseModel
         }
 
         if ($user->hasRole(Role::APPLICATION_ADMINISTRATOR)) {
-            return (int)Role::PUBLICATION_ADMINISTRATOR_ROLE_ID;
+            return Role::SLUG_PUBLICATION_ADMIN;
         }
 
         return $this->getMyRole();

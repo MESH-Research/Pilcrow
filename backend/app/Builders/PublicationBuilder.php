@@ -92,7 +92,7 @@ class PublicationBuilder extends Builder
 
         return $this->whereHas('users', function (Builder $query) use ($user, $roles) {
             $query->where('user_id', $user->id)
-                ->whereIn('role_id', $roles);
+                ->whereIn('role', $roles);
         });
     }
 }

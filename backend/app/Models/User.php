@@ -215,7 +215,7 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->belongsToMany(Submission::class)
             ->withTimestamps()
-            ->withPivot(['id', 'user_id', 'role_id', 'submission_id']);
+            ->withPivot(['id', 'user_id', 'role', 'submission_id']);
     }
 
     /**
@@ -227,7 +227,7 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->belongsToMany(Publication::class)
             ->withTimestamps()
-            ->withPivot('role_id');
+            ->withPivot('role');
     }
 
     /**
@@ -261,26 +261,26 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Return the highest privileged role ID for the user in the following order:
-     * 1. Application Administrator
-     * 2. Publication Administrator
-     * 3. Editor
-     * 4. Review Coordinator
-     * 5. Reviewer
-     * 6. Submitter
+     * Return the highest privileged role slug for the user in the following
+     * order: application_admin, publication_admin, editor, review_coordinator,
+     * reviewer, submitter.
      *
-     * @return int|null
+     * @return string|null
      */
-    public function getHighestPrivilegedRole(): ?int
+    public function getHighestPrivilegedRole(): ?string
     {
         if ($this->hasRole(Role::APPLICATION_ADMINISTRATOR)) {
-            return (int)Role::APPLICATION_ADMINISTRATOR_ROLE_ID;
+            return Role::SLUG_APPLICATION_ADMIN;
         }
         if ($this->publications->isNotEmpty()) {
-            return PublicationUser::where('user_id', $this->id)->min('role_id');
+            return Role::mostPrivileged(
+                PublicationUser::where('user_id', $this->id)->pluck('role')
+            );
         }
         if ($this->submissions->isNotEmpty()) {
-            return SubmissionAssignment::where('user_id', $this->id)->min('role_id');
+            return Role::mostPrivileged(
+                SubmissionAssignment::where('user_id', $this->id)->pluck('role')
+            );
         }
 
         return null;
@@ -289,7 +289,7 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Check if user has a role for a publication
      *
-     * @param array|int $role Role id to check, use * to check for any role.
+     * @param array|string $role Role slug(s) to check, use * to check for any role.
      * @param int $publicationId Publication to check for role on
      * @return bool
      */
@@ -302,16 +302,16 @@ class User extends Authenticatable implements MustVerifyEmail
         }
 
         if (is_array($role)) {
-            return $publications->wherePivotIn('role_id', $role)->exists();
+            return $publications->wherePivotIn('role', $role)->exists();
         } else {
-            return $publications->wherePivot('role_id', $role)->exists();
+            return $publications->wherePivot('role', $role)->exists();
         }
     }
 
     /**
      * Check if user has given submission role
      *
-     * @param array|int $role Role id to check
+     * @param array|string $role Role slug(s) to check
      * @param int $submissionId Submission to check for role on
      * @return bool
      */
@@ -324,9 +324,9 @@ class User extends Authenticatable implements MustVerifyEmail
         }
 
         if (is_array($role)) {
-            return $submissions->wherePivotIn('role_id', $role)->exists();
+            return $submissions->wherePivotIn('role', $role)->exists();
         } else {
-            return $submissions->wherePivot('role_id', null, $role)->exists();
+            return $submissions->wherePivot('role', $role)->exists();
         }
     }
 

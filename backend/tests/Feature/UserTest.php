@@ -25,27 +25,27 @@ class UserTest extends TestCase
         return [
             'admin' => [
                 'role_ids' => [1, 2, 3, 4, 5, 6],
-                'expected' => 1,
+                'expected' => Role::SLUG_APPLICATION_ADMIN,
             ],
             'pub admin' => [
                 'role_ids' => [2, 3, 4, 5, 6],
-                'expected' => 2,
+                'expected' => Role::SLUG_PUBLICATION_ADMIN,
             ],
             'editor' => [
                 'role_ids' => [3, 4, 5, 6],
-                'expected' => 3,
+                'expected' => Role::SLUG_EDITOR,
             ],
             'review coordinator' => [
                 'role_ids' => [4, 5, 6],
-                'expected' => 4,
+                'expected' => Role::SLUG_REVIEW_COORDINATOR,
             ],
             'reviewer' => [
                 'role_ids' => [5, 6],
-                'expected' => 5,
+                'expected' => Role::SLUG_REVIEWER,
             ],
             'submitter' => [
                 'role_ids' => [6],
-                'expected' => 6,
+                'expected' => Role::SLUG_SUBMITTER,
             ],
             'nothing' => [
                 'role_ids' => [],

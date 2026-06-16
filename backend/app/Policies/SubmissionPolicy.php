@@ -32,7 +32,7 @@ class SubmissionPolicy
         //Check if the user has a publication role
         if (
             $user->hasPublicationRole(
-                [Role::PUBLICATION_ADMINISTRATOR_ROLE_ID, Role::EDITOR_ROLE_ID],
+                [Role::SLUG_PUBLICATION_ADMIN, Role::SLUG_EDITOR],
                 $publicationId
             )
         ) {
@@ -72,7 +72,7 @@ class SubmissionPolicy
         }
 
         //Check if the user is a submitter or review coordinator
-        if ($user->hasSubmissionRole([Role::REVIEW_COORDINATOR_ROLE_ID, Role::SUBMITTER_ROLE_ID], $submission->id)) {
+        if ($user->hasSubmissionRole([Role::SLUG_REVIEW_COORDINATOR, Role::SLUG_SUBMITTER], $submission->id)) {
             return true;
         }
 
@@ -93,7 +93,7 @@ class SubmissionPolicy
         }
 
         //Check if the user is a review_coordinator
-        if ($user->hasSubmissionRole([Role::REVIEW_COORDINATOR_ROLE_ID], $submission->id)) {
+        if ($user->hasSubmissionRole([Role::SLUG_REVIEW_COORDINATOR], $submission->id)) {
             return true;
         }
 
@@ -129,12 +129,12 @@ class SubmissionPolicy
             return true;
         }
 
-        if ($user->hasSubmissionRole([Role::REVIEW_COORDINATOR_ROLE_ID], $submission->id)) {
+        if ($user->hasSubmissionRole([Role::SLUG_REVIEW_COORDINATOR], $submission->id)) {
             return true;
         }
 
         if (
-            $user->hasSubmissionRole([Role::SUBMITTER_ROLE_ID], $submission->id) &&
+            $user->hasSubmissionRole([Role::SLUG_SUBMITTER], $submission->id) &&
             ($submission->status == Submission::DRAFT)
         ) {
             return true;
@@ -156,11 +156,11 @@ class SubmissionPolicy
             return true;
         }
 
-        if ($user->hasSubmissionRole([Role::REVIEW_COORDINATOR_ROLE_ID], $submission->id)) {
+        if ($user->hasSubmissionRole([Role::SLUG_REVIEW_COORDINATOR], $submission->id)) {
             return true;
         }
 
-        if ($user->hasSubmissionRole([Role::SUBMITTER_ROLE_ID], $submission->id)) {
+        if ($user->hasSubmissionRole([Role::SLUG_SUBMITTER], $submission->id)) {
             return true;
         }
 
@@ -218,7 +218,7 @@ class SubmissionPolicy
      */
     public function invite(User $user, Submission $submission)
     {
-        if ($submission->getEffectiveRole() == (int)Role::REVIEW_COORDINATOR_ROLE_ID) {
+        if ($submission->getEffectiveRole() === Role::SLUG_REVIEW_COORDINATOR) {
             return true;
         }
 

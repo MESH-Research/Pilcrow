@@ -35,12 +35,12 @@ class SubmissionPolicyTest extends TestCase
 
     private function attachToPublication(User $user, Publication $publication, int $roleId): void
     {
-        $user->publications()->attach($publication->id, ['role_id' => $roleId]);
+        $user->publications()->attach($publication->id, ['role' => Role::slugForId($roleId)]);
     }
 
     private function attachToSubmission(User $user, Submission $submission, int $roleId): void
     {
-        $submission->users()->attach($user->id, ['role_id' => $roleId]);
+        $submission->users()->attach($user->id, ['role' => Role::slugForId($roleId)]);
     }
 
     /**

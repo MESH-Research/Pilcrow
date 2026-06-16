@@ -92,14 +92,39 @@ New capability = add an ability + grant rows in the seed. No code change.
 
 ## Data model
 
-- Add Bouncer tables via its published migration (`abilities`, `permissions`,
-  `roles`, `assigned_roles`).
-- Keep `publication_user` / `submission_user` pivots and `App\Models\Role`
-  constants — still the assignment + role identity.
-- Bouncer roles seeded to mirror the 6 roles (keyed by name); pivot `role_id`
-  maps to a Bouncer role name.
-- No data migration of assignments — pivots stay authoritative. Bouncer holds
-  only the (small, seeded) ability map.
+- Add Bouncer tables via its published migration, namespaced `bouncer_*`
+  (`bouncer_abilities`, `bouncer_permissions`, `bouncer_roles`,
+  `bouncer_assigned_roles`) to coexist with spatie/laravel-permission.
+- Keep `publication_user` / `submission_user` pivots as the assignment source
+  of truth. Bouncer holds only the (small, seeded) ability map.
+
+### Role slugs replace role_id on the pivots
+
+The pivot `role_id` integers (FK to the spatie roles table) were obtuse and
+required a translation step. They are replaced by a human-readable `role` slug
+string column on `publication_user`, `submission_user`, and
+`submission_invitations`; the FK to the spatie roles table is dropped.
+
+The slugs match the GraphQL enum names, giving one vocabulary across storage,
+the Bouncer ability registry, and the API:
+
+| role_id | slug |
+|---|---|
+| 1 | application_admin |
+| 2 | publication_admin |
+| 3 | editor |
+| 4 | review_coordinator |
+| 5 | reviewer |
+| 6 | submitter |
+
+- GraphQL `@enum(value: …)` for `PublicationRole` / `SubmissionUserRoles` /
+  `UserRoles` now map enum name → slug (the enum names are unchanged, so the
+  client contract is untouched).
+- The `highest_privileged_role` UI hint is a display field, not authz; its old
+  `min(role_id)` ordering is replaced by an explicit `Role::SLUG_PRIORITY`
+  list.
+- `Role::ID_TO_SLUG` / `slugForId()` remain only to back the data migration's
+  backfill (and test helpers).
 
 ## The bridge
 

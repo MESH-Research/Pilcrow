@@ -60,14 +60,4 @@ class PublicationAssignment extends Pivot
     {
         return $this->belongsTo(Publication::class, 'publication_id');
     }
-
-    /**
-     * Get the role associated with this assignment.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function role(): BelongsTo
-    {
-        return $this->belongsTo(Role::class, 'role_id');
-    }
 }

@@ -17,7 +17,7 @@ class DeletePublicationUser
     {
         try {
             $publication_user = PublicationUser::where('user_id', $args['user_id'])
-                ->where('role_id', $args['role_id'])
+                ->where('role', $args['role'])
                 ->where('publication_id', $args['publication_id'])->firstOrFail();
             $publication_user->forceDelete();
 

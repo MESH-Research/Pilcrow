@@ -133,7 +133,7 @@ class Submission extends Model implements Auditable
     public function reviewers(): BelongsToMany
     {
         return $this->users()
-            ->withPivotValue('role_id', Role::REVIEWER_ROLE_ID);
+            ->withPivotValue('role', Role::SLUG_REVIEWER);
     }
 
     /**
@@ -144,7 +144,7 @@ class Submission extends Model implements Auditable
     public function reviewCoordinators(): BelongsToMany
     {
         return $this->users()
-            ->withPivotValue('role_id', Role::REVIEW_COORDINATOR_ROLE_ID);
+            ->withPivotValue('role', Role::SLUG_REVIEW_COORDINATOR);
     }
 
     /**
@@ -155,7 +155,7 @@ class Submission extends Model implements Auditable
     public function submitters(): BelongsToMany
     {
         return $this->users()
-            ->withPivotValue('role_id', Role::SUBMITTER_ROLE_ID);
+            ->withPivotValue('role', Role::SLUG_SUBMITTER);
     }
 
     /**
@@ -168,7 +168,7 @@ class Submission extends Model implements Auditable
         return $this->belongsToMany(User::class)
             ->withTimestamps()
             ->using(SubmissionAssignment::class)
-            ->withPivot(['id', 'user_id', 'role_id', 'submission_id']);
+            ->withPivot(['id', 'user_id', 'role', 'submission_id']);
     }
 
     /**
@@ -333,9 +333,9 @@ class Submission extends Model implements Auditable
     /**
      * Get the logged in users assigned role for this submission
      *
-     * @return int|null
+     * @return string|null
      */
-    public function getMyRole(): ?int
+    public function getMyRole(): ?string
     {
         /** @var \App\Models\User $user */
         $user = Auth::user();
@@ -352,15 +352,15 @@ class Submission extends Model implements Auditable
             return null;
         }
 
-        return $first->role_id ?? null;
+        return $first->role ?? null;
     }
 
     /**
      * Get the logged in users role taking into account parent roles granted to the user
      *
-     * @return int|null
+     * @return string|null
      */
-    public function getEffectiveRole(): ?int
+    public function getEffectiveRole(): ?string
     {
         /** @var \App\Models\User $user */
         $user = Auth::user();
@@ -372,7 +372,7 @@ class Submission extends Model implements Auditable
         $publicationRole = $this->publication->getEffectiveRole();
 
         if ($publicationRole !== null) {
-            return (int)Role::REVIEW_COORDINATOR_ROLE_ID;
+            return Role::SLUG_REVIEW_COORDINATOR;
         }
 
         return $this->getMyRole();
