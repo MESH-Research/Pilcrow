@@ -10,6 +10,7 @@ use App\Listeners\AddPaginatorInterface;
 use Nuwave\Lighthouse\Events\ManipulateAST;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Cache;
+use Silber\Bouncer\BouncerFacade as Bouncer;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -68,7 +69,15 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        // Bouncer's default table names (roles, permissions) collide with
+        // spatie/laravel-permission. Namespace Bouncer's tables so both can
+        // coexist during the RBAC -> ABAC migration.
+        Bouncer::tables([
+            'abilities' => 'bouncer_abilities',
+            'permissions' => 'bouncer_permissions',
+            'roles' => 'bouncer_roles',
+            'assigned_roles' => 'bouncer_assigned_roles',
+        ]);
     }
 
     /**

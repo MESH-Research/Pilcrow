@@ -7,11 +7,27 @@ use App\Models\Publication;
 use App\Models\Role;
 use App\Models\Submission;
 use App\Models\User;
+use Database\Seeders\AbacSeeder;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
+use Illuminate\Support\Facades\Schema;
 
 abstract class TestCase extends BaseTestCase
 {
     use CreatesApplication;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        // Spatie roles are seeded on SchemaLoaded (InstallationServiceProvider),
+        // but the Bouncer ability tables are created by a migration that runs
+        // after that event, so the ABAC matrix is seeded here once the database
+        // has been refreshed. Idempotent; rolled back with each test's
+        // transaction and re-seeded.
+        if (Schema::hasTable('bouncer_roles')) {
+            (new AbacSeeder())->run();
+        }
+    }
 
     /**
      * Act as a new user with application administrator role

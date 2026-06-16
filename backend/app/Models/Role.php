@@ -31,6 +31,33 @@ class Role extends ParentModel
     public const SUBMITTER_ROLE_ID = '6';
 
     /**
+     * Stable Bouncer role slugs keyed by pivot role_id.
+     *
+     * The ABAC ability registry (Bouncer) is keyed by these slugs; pivot
+     * assignments (publication_user / submission_user) reference role_id.
+     * This map bridges the two.
+     */
+    public const ID_TO_SLUG = [
+        self::APPLICATION_ADMINISTRATOR_ROLE_ID => 'application-administrator',
+        self::PUBLICATION_ADMINISTRATOR_ROLE_ID => 'publication-administrator',
+        self::EDITOR_ROLE_ID => 'editor',
+        self::REVIEW_COORDINATOR_ROLE_ID => 'review-coordinator',
+        self::REVIEWER_ROLE_ID => 'reviewer',
+        self::SUBMITTER_ROLE_ID => 'submitter',
+    ];
+
+    /**
+     * Resolve a pivot role_id to its Bouncer role slug.
+     *
+     * @param int|string|null $roleId
+     * @return string|null
+     */
+    public static function slugForId($roleId): ?string
+    {
+        return self::ID_TO_SLUG[(string)$roleId] ?? null;
+    }
+
+    /**
      * @return array
      */
     public static function getArrayOfAllRoleNames()
