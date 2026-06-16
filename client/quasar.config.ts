@@ -151,6 +151,12 @@ export default defineConfig(function (/* ctx */) {
           {
             lintOnStart: true,
             fix: false,
+            // Emit lint errors as warnings during local dev so a committed
+            // lint error surfaces in the overlay/console without aborting
+            // Vite startup (PluginContext.error() throws and kills the dev
+            // server -> 502). Lint is still a hard gate in CI via `yarn lint`,
+            // which runs the ESLint CLI independently of this plugin. See #2303.
+            emitErrorAsWarning: true,
           }
         ],
         [
