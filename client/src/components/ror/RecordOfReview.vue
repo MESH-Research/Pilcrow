@@ -139,7 +139,9 @@
             scope="global"
           >
             <template #host>
-              <a :href="siteUrl" class="ror__footer-link text-primary">{{ issuingHost }}</a>
+              <a :href="siteUrl" class="ror__footer-link text-primary">{{
+                issuingHost
+              }}</a>
             </template>
             <template #publication>
               <router-link
