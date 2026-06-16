@@ -99,4 +99,5 @@ jobs:
           gh api repos/MESH-Research/pilcrow-deploy/dispatches \
             -f event_type=deploy \
             -f "client_payload[tag]=$TAG" \
+            -f "client_payload[sha]=$GITHUB_SHA" \
             -f "client_payload[environment]=staging"
