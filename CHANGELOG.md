@@ -3,6 +3,31 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.35.0](https://github.com/MESH-Research/Pilcrow/compare/v0.34.0...v0.35.0) (2026-06-16)
+
+
+### Features
+
+* **client:** toggle source maps per-instance via EXPOSE_SOURCEMAPS ([#2290](https://github.com/MESH-Research/Pilcrow/issues/2290)) ([fe2cae4](https://github.com/MESH-Research/Pilcrow/commit/fe2cae42a1a178de839e2fdef490acf279e89768))
+* **graphiql:** seed dev tabs with login mutations per seeded role ([#2296](https://github.com/MESH-Research/Pilcrow/issues/2296)) ([b0155ba](https://github.com/MESH-Research/Pilcrow/commit/b0155bab27d9deceb1b9fed3c782aacbfe61a90e))
+* improvements to admin interfaces for publications and users. ([#2241](https://github.com/MESH-Research/Pilcrow/issues/2241)) ([85636cf](https://github.com/MESH-Research/Pilcrow/commit/85636cf806fb27d32e91202da61d32be93adfe19))
+* Labs (beta features) opt-in system ([#2304](https://github.com/MESH-Research/Pilcrow/issues/2304)) ([11b2950](https://github.com/MESH-Research/Pilcrow/commit/11b29501c4184522d17098a54acb7ffda881992c))
+* Record of Review ([#2268](https://github.com/MESH-Research/Pilcrow/issues/2268)) ([71e6d64](https://github.com/MESH-Research/Pilcrow/commit/71e6d6430f3967e2c4e77e1925f7ff1d7c4c8f5f))
+* **telemetry:** emit aggregate application metrics via Sentry ([#2295](https://github.com/MESH-Research/Pilcrow/issues/2295)) ([ccef9f5](https://github.com/MESH-Research/Pilcrow/commit/ccef9f5604b27d9a86cb3e1a0bf7b6abecd14d43))
+* **telemetry:** scaffold Sentry-protocol error reporting ([#2288](https://github.com/MESH-Research/Pilcrow/issues/2288)) ([dcf7cf5](https://github.com/MESH-Research/Pilcrow/commit/dcf7cf5306918bb5d35d85ce48c439f449f628cd))
+
+
+### Bug Fixes
+
+* **api:** scope root submissions query to managed publications ([#2294](https://github.com/MESH-Research/Pilcrow/issues/2294)) ([50f888e](https://github.com/MESH-Research/Pilcrow/commit/50f888ec78a08dce021b417534780a02520e1f9e))
+* **ci:** resolve VERSION and bundle layout for sourcemap upload ([#2293](https://github.com/MESH-Research/Pilcrow/issues/2293)) ([9914212](https://github.com/MESH-Research/Pilcrow/commit/9914212716cf2097d43456c1ebea15ea40d7a4cc))
+* **client:** keep dev server up on startup lint error ([#2314](https://github.com/MESH-Research/Pilcrow/issues/2314)) ([2f44b2d](https://github.com/MESH-Research/Pilcrow/commit/2f44b2d9711e199289d61ad3e64a7e44b9d5d5be)), closes [#2303](https://github.com/MESH-Research/Pilcrow/issues/2303)
+* Dark mode for record of review ([#2316](https://github.com/MESH-Research/Pilcrow/issues/2316)) ([a9953ea](https://github.com/MESH-Research/Pilcrow/commit/a9953eaa5dabe1920199580f7584798e499a95e9))
+* **logging:** restore LOG_STACK env support for stack channel ([38af48b](https://github.com/MESH-Research/Pilcrow/commit/38af48b6d7d758f378e73f7f0e4cf17ef7a858f9))
+* **nginx:** force revalidation of hashless entry assets ([e1d89c5](https://github.com/MESH-Research/Pilcrow/commit/e1d89c5d8ecff3b2e6054cbe513c50effb081024))
+* **publication:** scope list query to visible publications ([#2297](https://github.com/MESH-Research/Pilcrow/issues/2297)) ([85977a4](https://github.com/MESH-Research/Pilcrow/commit/85977a4217e68388a3eea3b2b17e01f5610b8b26))
+* **telemetry:** wrap GraphQL errors before Sentry capture ([#2298](https://github.com/MESH-Research/Pilcrow/issues/2298)) ([01be75a](https://github.com/MESH-Research/Pilcrow/commit/01be75a96b94d2d499b78bef0f365169a8e20a71))
+
 ## [0.34.0](https://github.com/MESH-Research/Pilcrow/compare/v0.33.0...v0.34.0) (2026-05-11)
 
 
