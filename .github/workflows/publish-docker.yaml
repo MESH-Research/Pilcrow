@@ -5,9 +5,6 @@ on:
       - master
     tags:
       - "v*"
-    paths-ignore:
-      - "helm/**"
-      - ".release-please-manifest.json"
 permissions:
   packages: write
   contents: write
@@ -16,7 +13,46 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # Gate: only publish when the produced artifact actually changes — i.e. when a
+  # real image input changed. This keeps a 1:1 between "new image/tag" and "real
+  # change", so config-only commits (renovate.json, docs, helm, root manifests)
+  # don't mint a new tag or trigger a redeploy.
+  #
+  # Tags ALWAYS build: a `v*` release bakes VERSION into the images
+  # (config/pilcrow.php, version.json), so the artifact genuinely differs even
+  # though the release commit only touches manifest/CHANGELOG/package.json.
+  changes:
+    runs-on: ubuntu-24.04
+    outputs:
+      build: ${{ steps.decide.outputs.build }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@master
+        id: filter
+        if: ${{ !startsWith(github.ref, 'refs/tags/') }}
+        with:
+          predicate-quantifier: "some"
+          filters: |
+            src:
+              - 'backend/**'
+              - 'client/**'
+              - 'docker-bake.hcl'
+      - id: decide
+        env:
+          IS_TAG: ${{ startsWith(github.ref, 'refs/tags/') }}
+          SRC: ${{ steps.filter.outputs.src }}
+        run: |
+          # Tag push -> always build; branch push -> build iff an image input changed.
+          if [ "$IS_TAG" = "true" ] || [ "$SRC" = "true" ]; then
+            echo "build=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "build=false" >> "$GITHUB_OUTPUT"
+            echo "No image inputs changed — skipping build/publish/deploy."
+          fi
+
   publish:
+    needs: changes
+    if: needs.changes.outputs.build == 'true'
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout App Release Tag
