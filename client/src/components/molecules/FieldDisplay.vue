@@ -3,7 +3,8 @@
     <q-icon v-if="icon" :name="icon" size="xs" class="field-display__icon" />
     <div class="col">
       <div
-        class="field-display__label text-caption text-weight-medium text-grey-7"
+        :class="darkModeStatus ? 'text-grey-5' : 'text-grey-8'"
+        class="field-display__label text-caption text-weight-medium"
       >
         {{ label }}
       </div>
@@ -20,6 +21,7 @@ interface Props {
   value?: string
   icon?: string
   valueClass?: string
+  darkModeStatus?: boolean
 }
 
 withDefaults(defineProps<Props>(), {

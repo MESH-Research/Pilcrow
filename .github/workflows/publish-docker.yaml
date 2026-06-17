@@ -104,3 +104,36 @@ jobs:
             --url-prefix '~/' \
             /tmp/sourcemap-extract
           npx --yes @sentry/cli@^2 releases finalize "$RELEASE"
+
+      # --- Trigger a staging deploy in the private ops repo after a master build.
+      # Kept in the publish job (not a separate one) so it reads the build-image
+      # step output directly: job outputs that look secret-ish get masked/skipped
+      # by GitHub ("Skip output 'tags' since it may contain secret"). Steps abort
+      # on a failed build, so the push is guaranteed to have happened first.
+      - name: Generate ops token
+        if: github.ref == 'refs/heads/master'
+        id: token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          owner: MESH-Research
+          repositories: pilcrow-deploy
+      - name: Dispatch staging deploy
+        if: github.ref == 'refs/heads/master'
+        env:
+          GH_TOKEN: ${{ steps.token.outputs.token }}
+          # The exact tags publish actually pushed (one per line, full image refs).
+          TAGS: ${{ steps.build-image.outputs.tags }}
+        run: |
+          # Pull the sha-<digest> tag straight from what was pushed — never recompute.
+          TAG=$(printf '%s\n' "$TAGS" | grep -oiE 'sha-[0-9a-f]{7,40}' | head -1)
+          if [ -z "$TAG" ]; then
+            echo "::error::no sha- tag found in pushed tags:"; printf '%s\n' "$TAGS"
+            exit 1
+          fi
+          gh api repos/MESH-Research/pilcrow-deploy/dispatches \
+            -f event_type=deploy \
+            -f "client_payload[tag]=$TAG" \
+            -f "client_payload[sha]=$GITHUB_SHA" \
+            -f "client_payload[environment]=staging"

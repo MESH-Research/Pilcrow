@@ -10,7 +10,7 @@
     />
     <div ref="recordContainer" class="ror__document">
       <header class="ror__header">
-        <p class="ror__eyebrow">
+        <p class="ror__eyebrow text-primary">
           {{ $t("record_of_review.eyebrow") }}
         </p>
         <h1 class="text-h2 q-mt-none ror__title" data-cy="page_heading">
@@ -139,7 +139,9 @@
             scope="global"
           >
             <template #host>
-              <a :href="siteUrl" class="ror__footer-link">{{ issuingHost }}</a>
+              <a :href="siteUrl" class="ror__footer-link text-primary">{{
+                issuingHost
+              }}</a>
             </template>
             <template #publication>
               <router-link
@@ -147,7 +149,7 @@
                   name: 'publication:home',
                   params: { id: submission.publication.id }
                 }"
-                class="ror__footer-link"
+                class="ror__footer-link text-primary"
               >
                 {{ submission.publication.name }}
               </router-link>
@@ -311,9 +313,6 @@ defineExpose({
   position: relative
 
 .ror__document
-  background: #fbfbf3
-  color: $dark
-  color-scheme: light
   border: 1px solid $light-grey
   border-radius: 8px
   position: relative
@@ -333,9 +332,8 @@ defineExpose({
   font-size: 0.75rem
   font-weight: 600
   letter-spacing: 0.25em
-  text-transform: uppercase
-  color: $primary
   margin: 0 0 0.5rem
+  text-transform: uppercase
 
 .ror__title
   font-family: 'Georgia', 'Times New Roman', serif
@@ -344,7 +342,6 @@ defineExpose({
 
 .ror__subtitle
   font-style: italic
-  color: $dark-6
   margin: 0
 
 .ror__rule
@@ -365,7 +362,6 @@ defineExpose({
   font-weight: 600
   letter-spacing: 0.05em
   text-transform: uppercase
-  color: $secondary
   border-bottom: 1px solid $light-grey
   padding-bottom: 0.25rem
   margin-bottom: 0.75rem
@@ -379,7 +375,6 @@ defineExpose({
 
   dt
     font-weight: 600
-    color: $dark-6
     text-transform: uppercase
     font-size: 0.75rem
     letter-spacing: 0.08em
@@ -387,7 +382,6 @@ defineExpose({
 
   dd
     margin: 0
-    color: $dark
 
 .ror__footer
   padding: 1.5rem 2rem
@@ -424,16 +418,13 @@ defineExpose({
 
 .ror__footer-line
   font-style: italic
-  color: $dark-6
   margin: 0 0 0.25rem
 
 .ror__footer-link
-  color: $primary
   text-decoration: underline
   font-style: normal
 
 .ror__footer-detail
   font-size: 0.8rem
-  color: $dark-6
   margin: 0
 </style>
