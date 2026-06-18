@@ -155,6 +155,10 @@ export default withMermaid(defineConfig({
                                     link: "/install/recipes/mysql",
                                 },
                                 {
+                                    text: "Backups",
+                                    link: "/install/recipes/backups",
+                                },
+                                {
                                     text: "SSL/Reverse Proxy",
                                     link: "/install/recipes/proxy",
                                 },
