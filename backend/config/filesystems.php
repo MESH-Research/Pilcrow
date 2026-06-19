@@ -1,5 +1,19 @@
 <?php
 
+/*
+| Optional deployment-supplied disks. The application defines the seam; the
+| deployment owns the content. Point FILESYSTEM_DISKS_CONFIG at a PHP file that
+| returns an array of disk definitions and they are merged into the disks below
+| (deployment keys win on conflict). This keeps host-/environment-specific
+| storage choices — an off-host backup bucket, an object store, etc. — out of
+| the application's own config and lets each deployment add disks without a code
+| change here. Inert unless the env var points at a readable file.
+*/
+$deploymentDisks = [];
+if (($deploymentDisksConfig = env('FILESYSTEM_DISKS_CONFIG')) && is_file($deploymentDisksConfig)) {
+    $deploymentDisks = require $deploymentDisksConfig;
+}
+
 return [
 
     /*
@@ -28,7 +42,7 @@ return [
     |
     */
 
-    'disks' => [
+    'disks' => array_merge([
 
         'local' => [
             'driver' => 'local',
@@ -52,7 +66,7 @@ return [
             'endpoint' => env('AWS_ENDPOINT'),
         ],
 
-    ],
+    ], $deploymentDisks),
 
     /*
     |--------------------------------------------------------------------------
