@@ -7,7 +7,7 @@ three cooperating layers:
 | Layer | Answers | Lives in |
 | --- | --- | --- |
 | Role assignment (scope) | *Who* holds *which* role *where* | pivot tables |
-| Ability registry (RBAC core) | *What* each role may do | Bouncer (`bouncer_*` tables) |
+| Ability registry (RBAC core) | *What* each role may do | code matrix (`App\Auth\RoleAbilities`) |
 | Attribute predicates | State / ownership conditions | Laravel policies |
 
 A grant is the conjunction of all three: an ability granted to one of the
@@ -58,7 +58,8 @@ ability check.
 
 Abilities are granular, namespaced capability strings (e.g.
 `publication.update`, `submission.update-status`, `submission.invite`). The
-role → ability map is **data**, seeded by `Database\Seeders\AbacSeeder::MATRIX`:
+scoped role → ability map is **code**, the single source of truth in
+`App\Auth\RoleAbilities::MATRIX`:
 
 ```php
 public const MATRIX = [
@@ -71,20 +72,24 @@ public const MATRIX = [
 ];
 ```
 
-Adding a capability is a data change — add the ability name to the relevant
-role(s) in `MATRIX`; no policy code changes. Roles are seeded with a
-human-readable `title` (e.g. "Application Administrator") used by the GraphQL
-`Role.name` field.
+It is read directly by `AbilityResolver` at request time — there is no DB
+round-trip and nothing to seed. Adding a scoped capability is a code change:
+add the ability name to the relevant role(s) in `MATRIX`; it is live on deploy,
+with no seeding, convergence, or drift. Scoped abilities are intentionally
+**not** runtime-editable.
 
-The Bouncer tables are namespaced `bouncer_*` (`bouncer_abilities`,
-`bouncer_roles`, `bouncer_assigned_roles`, `bouncer_permissions`) — set in
+`application_admin` is the exception — it is a real Bouncer role granted
+`everything()` and short-circuited in the resolver, so it has no `MATRIX` entry.
+Role rows themselves are seeded by `Database\Seeders\AbacSeeder` with a
+human-readable `title` (e.g. "Application Administrator") used by the GraphQL
+`Role.name` field. The Bouncer tables are namespaced `bouncer_*` — set in
 `AppServiceProvider`, which also points Bouncer at `App\Models\Role` via
 `Bouncer::useRoleModel()`.
 
-## The resolver bridge
+## The resolver
 
-`App\Auth\AbilityResolver` joins the pivot-scoped assignment to the Bouncer
-ability map:
+`App\Auth\AbilityResolver` joins the pivot-scoped assignment to the code-owned
+ability matrix:
 
 ```php
 $resolver->allows($user, 'submission.update-status', $submission);
@@ -98,8 +103,8 @@ It resolves the user's **effective role slugs** for the entity:
   admin roles inherited from the parent publication (publication admin /
   editor).
 
-It then asks Bouncer whether any effective role grants the ability. Role →
-ability lookups are memoized per resolver instance.
+It then checks `RoleAbilities::MATRIX` for whether any effective role grants the
+ability — a plain in-memory lookup, no database access.
 
 ## Policies
 
@@ -139,7 +144,8 @@ to show) — not an authorization mechanism. Ordering comes from
 ## Recipes
 
 **Add a capability to a role:** add the ability string to the role's list in
-`AbacSeeder::MATRIX`, then re-seed (`lando artisan db:seed --class=AbacSeeder`).
+`App\Auth\RoleAbilities::MATRIX`. It is live on deploy — no re-seed, no
+migration.
 
 **Authorize in a resolver/policy:** inject `AbilityResolver` and call
 `allows($user, $ability, $entity)`; add any state/ownership predicate inline.
@@ -153,8 +159,9 @@ $submission->users()->attach($user->id, ['role' => Role::SLUG_REVIEWER]);
 ```
 
 **In tests:** the base `Tests\TestCase` seeds `AbacSeeder` after each database
-refresh, so the ability registry is always present. Use `beAppAdmin()` and the
-`attachTo*` helpers to set up actors.
+refresh, so the role rows and the app-admin grant are present. Scoped ability
+resolution needs no seeding — it reads the code matrix. Use `beAppAdmin()` and
+the `attachTo*` helpers to set up actors.
 
 ## History
 

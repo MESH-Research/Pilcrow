@@ -8,76 +8,21 @@ use Illuminate\Database\Seeder;
 use Silber\Bouncer\BouncerFacade as Bouncer;
 
 /**
- * Seeds the ABAC ability registry: the role -> ability map.
+ * Seeds the role rows and the global application-administrator grant.
  *
- * This is the data-driven replacement for the hardcoded role-id lists that
- * used to live inside the policies. Adding a capability = add an ability name
- * to the matrix below. Scoping (who holds which role where) stays in the
- * publication_user / submission_user pivots; this only defines what each role
- * can do.
+ * Scoped (publication / submission) role -> ability resolution does NOT live
+ * here: that matrix is code-owned (App\Auth\RoleAbilities), read directly by
+ * AbilityResolver, and never stored in Bouncer. This seeder only establishes
+ * the role rows (whose titles surface as GraphQL Role.name) and the global
+ * super-role wildcard. Global, runtime-editable abilities are granted via
+ * Bouncer elsewhere.
  *
- * Idempotent — Bouncer::allow() is firstOrCreate under the hood.
+ * Idempotent — firstOrCreate / Bouncer::allow() are safe to re-run.
  */
 class AbacSeeder extends Seeder
 {
     /**
-     * role slug => list of granted ability names.
-     *
-     * application-administrator is granted everything separately (wildcard).
-     *
-     * @var array<string, array<int, string>>
-     */
-    public const MATRIX = [
-        Role::SLUG_PUBLICATION_ADMIN => [
-            'publication.view',
-            'publication.update',
-            'submission.view',
-            'submission.update',
-            'submission.update-submitters',
-            'submission.update-reviewers',
-            'submission.update-review-coordinators',
-            'submission.update-status',
-            'submission.update-title',
-            'submission.invite',
-        ],
-        Role::SLUG_EDITOR => [
-            // Same as publication-administrator minus publication.update.
-            'publication.view',
-            'submission.view',
-            'submission.update',
-            'submission.update-submitters',
-            'submission.update-reviewers',
-            'submission.update-review-coordinators',
-            'submission.update-status',
-            'submission.update-title',
-            'submission.invite',
-        ],
-        Role::SLUG_REVIEW_COORDINATOR => [
-            'submission.view',
-            'submission.update',
-            'submission.update-submitters',
-            'submission.update-reviewers',
-            'submission.update-status',
-            'submission.update-title',
-            'submission.invite',
-        ],
-        Role::SLUG_SUBMITTER => [
-            'submission.view',
-            'submission.update',
-            'submission.update-submitters',
-            // submitters may only change status while DRAFT; the policy gates
-            // this draft-only variant on the submission's status.
-            'submission.update-status-draft',
-            'submission.update-title',
-        ],
-        Role::SLUG_REVIEWER => [
-            'submission.view',
-            'submission.update',
-        ],
-    ];
-
-    /**
-     * Seed the role -> ability registry.
+     * Seed the role rows and the application-administrator wildcard.
      *
      * @return void
      */
@@ -91,12 +36,6 @@ class AbacSeeder extends Seeder
         }
 
         Bouncer::allow(Role::SLUG_APPLICATION_ADMIN)->everything();
-
-        foreach (self::MATRIX as $role => $abilities) {
-            foreach ($abilities as $ability) {
-                Bouncer::allow($role)->to($ability);
-            }
-        }
 
         Bouncer::refresh();
     }

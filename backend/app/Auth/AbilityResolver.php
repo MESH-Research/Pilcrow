@@ -9,30 +9,26 @@ use App\Models\Role;
 use App\Models\Submission;
 use App\Models\SubmissionAssignment;
 use App\Models\User;
-use Silber\Bouncer\Database\Models as BouncerModels;
 
 /**
- * Bridges scoped role assignment (pivots) to the data-driven ability registry
- * (Bouncer).
+ * Resolves scoped (publication / submission) permissions from the code-owned
+ * role -> ability matrix.
  *
  * Scoping — who holds which role on which entity — lives in the
  * publication_user / submission_user pivots. The role -> ability map lives in
- * Bouncer (seeded by AbacSeeder). This service answers "given this user and
- * this entity, is the ability granted?" by resolving the user's effective
- * role(s) for that entity and asking Bouncer whether any of them grants it.
+ * code (App\Auth\RoleAbilities). This service answers "given this user and this
+ * entity, is the ability granted?" by resolving the user's effective role(s)
+ * for that entity and checking whether any of them grants it. No DB round-trip:
+ * the matrix is read directly from code, so scoped permission changes ship in
+ * code and are live on deploy.
  *
- * Attribute predicates (state, ownership) stay in the policies; this only
- * resolves the role -> ability dimension.
+ * Global, runtime-editable abilities are NOT resolved here — those live in
+ * Bouncer and are checked via $user->can(). Attribute predicates (state,
+ * ownership) stay in the policies; this only resolves the role -> ability
+ * dimension.
  */
 class AbilityResolver
 {
-    /**
-     * Memoized [role slug => set of granted ability names].
-     *
-     * @var array<string, array<string, bool>>
-     */
-    private array $abilityCache = [];
-
     /**
      * Is the ability granted to the user for the given entity?
      *
@@ -45,13 +41,13 @@ class AbilityResolver
         $roles = $this->effectiveRoles($user, $entity);
 
         // application_admin is the global super-role (granted everything);
-        // short-circuit rather than expand the wildcard.
+        // short-circuit rather than enumerate every ability.
         if (in_array(Role::SLUG_APPLICATION_ADMIN, $roles, true)) {
             return true;
         }
 
         foreach ($roles as $role) {
-            if (isset($this->abilitiesFor($role)[$ability])) {
+            if (in_array($ability, RoleAbilities::for($role), true)) {
                 return true;
             }
         }
@@ -115,25 +111,5 @@ class AbilityResolver
             ->where('submission_id', $submissionId)
             ->pluck('role')
             ->all();
-    }
-
-    /**
-     * Granted ability names for a role slug, as a name => true lookup.
-     *
-     * @return array<string, bool>
-     */
-    private function abilitiesFor(string $slug): array
-    {
-        if (!isset($this->abilityCache[$slug])) {
-            $role = BouncerModels::role()->where('name', $slug)->first();
-
-            $names = $role
-                ? $role->getAbilities()->pluck('name')->all()
-                : [];
-
-            $this->abilityCache[$slug] = array_fill_keys($names, true);
-        }
-
-        return $this->abilityCache[$slug];
     }
 }

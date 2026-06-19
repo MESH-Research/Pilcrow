@@ -43,10 +43,10 @@ Native scopes fight all three. So:
 | Layer | Owns | Where |
 | --- | --- | --- |
 | Role assignment (scope) | who is Editor of Pub X / Reviewer of Sub Y | pivots (unchanged) |
-| Ability map (RBAC core) | role → granted abilities | Bouncer tables (seeded data) |
+| Ability map (RBAC core) | role → granted abilities | code matrix (`App\Auth\RoleAbilities`) |
 | Attribute conditions | state / ownership / relationship predicates | Policy guards (thin) |
 
-Bouncer answers "can this role do X". Policy adds the attribute predicate
+The matrix answers "can this role do X". Policy adds the attribute predicate
 ("…given the submission is DRAFT / you own the comment / the publication is
 accepting submissions"). Ability grant + attribute predicate = ABAC.
 
@@ -62,7 +62,7 @@ submission.comment.update-own   submission.comment.delete-own
 user.view  user.view-any  user.view-email  user.update  user.manage-beta
 ```
 
-## Role → ability matrix (the seed)
+## Role → ability matrix (code)
 
 | Ability | AppAdmin | PubAdmin | Editor | RevCoord | Submitter | Reviewer |
 | --- | :-: | :-: | :-: | :-: | :-: | :-: |
@@ -79,7 +79,8 @@ user.view  user.view-any  user.view-email  user.update  user.manage-beta
 `*` ability granted but gated to `status == DRAFT` by a policy predicate.
 App Admin = Bouncer global `*` (everything).
 
-New capability = add an ability + grant rows in the seed. No code change.
+New scoped capability = add an ability to the code matrix
+(`App\Auth\RoleAbilities::MATRIX`). Live on deploy; no seed, no migration.
 
 ## Attribute predicates that stay in policy
 
@@ -96,7 +97,8 @@ New capability = add an ability + grant rows in the seed. No code change.
   (`bouncer_abilities`, `bouncer_permissions`, `bouncer_roles`,
   `bouncer_assigned_roles`) to coexist with spatie/laravel-permission.
 - Keep `publication_user` / `submission_user` pivots as the assignment source
-  of truth. Bouncer holds only the (small, seeded) ability map.
+  of truth. The scoped ability map is code (`App\Auth\RoleAbilities`); Bouncer
+  holds only the role rows and the global app-admin grant.
 
 ### Role slugs replace role_id on the pivots
 
@@ -106,7 +108,7 @@ string column on `publication_user`, `submission_user`, and
 `submission_invitations`; the FK to the spatie roles table is dropped.
 
 The slugs match the GraphQL enum names, giving one vocabulary across storage,
-the Bouncer ability registry, and the API:
+the code ability matrix, and the API:
 
 | role_id | slug |
 | --- | --- |
@@ -132,9 +134,9 @@ the Bouncer ability registry, and the API:
 // AbilityResolver: given (user, entity) -> effective role names from pivots
 //   publication: pivot roles on that publication
 //   submission:  pivot roles on that submission + parent-publication admin roles
-// then: does ANY effective role grant $ability in Bouncer?
+// then: does ANY effective role grant $ability in the code matrix?
 $roles = $resolver->effectiveRoles($user, $submission);   // e.g. ['reviewer']
-return Bouncer::role($roles)->can($ability);              // data lookup
+return $this->allows($user, $ability, $submission);       // RoleAbilities lookup
 ```
 
 Policy methods shrink to `bridge.allows(ability, entity) && <predicate>`. The
