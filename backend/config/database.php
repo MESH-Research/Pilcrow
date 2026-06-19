@@ -61,6 +61,13 @@ return [
             'options' => extension_loaded('pdo_mysql') ? array_filter([
                 PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
             ]) : [],
+
+            // Used by spatie/laravel-backup. --single-transaction yields a
+            // consistent, non-locking dump on InnoDB so backups don't block
+            // the live app.
+            'dump' => [
+                'useSingleTransaction' => true,
+            ],
         ],
 
         'testing' => [
