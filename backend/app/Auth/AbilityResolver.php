@@ -46,8 +46,17 @@ class AbilityResolver
             return true;
         }
 
+        $conditional = RoleAbilities::conditionalGrants();
+
         foreach ($roles as $role) {
             if (in_array($ability, RoleAbilities::for($role), true)) {
+                return true;
+            }
+
+            // Conditional grant: allowed only when its attribute predicate
+            // holds for the entity.
+            $predicate = $conditional[$role][$ability] ?? null;
+            if ($predicate !== null && $entity !== null && $predicate($entity)) {
                 return true;
             }
         }

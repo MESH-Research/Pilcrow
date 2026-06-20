@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Auth;
 
 use App\Models\Role;
+use App\Models\Submission;
 
 /**
  * The scoped role -> ability map.
@@ -66,10 +67,9 @@ class RoleAbilities
             'submission.view',
             'submission.update',
             'submission.update-submitters',
-            // submitters may only change status while DRAFT; the policy gates
-            // this draft-only variant on the submission's status.
-            'submission.update-status-draft',
             'submission.update-title',
+            // submission.update-status is granted conditionally — see
+            // conditionalGrants(): submitters may change status only while DRAFT.
         ],
         Role::SLUG_REVIEWER => [
             'submission.view',
@@ -86,5 +86,28 @@ class RoleAbilities
     public static function for(string $slug): array
     {
         return self::MATRIX[$slug] ?? [];
+    }
+
+    /**
+     * Conditional grants: role => [ability => predicate(entity): bool].
+     *
+     * An ability granted here is allowed only when its predicate holds for the
+     * entity — the attribute condition is data attached to the grant, evaluated
+     * by the resolver, rather than a special-cased ability name + policy branch.
+     * Closures cannot live in a const, so this is a method.
+     *
+     * @return array<string, array<string, callable>>
+     */
+    public static function conditionalGrants(): array
+    {
+        return [
+            // Submitters may change status only while the submission is DRAFT.
+            Role::SLUG_SUBMITTER => [
+                'submission.update-status' => static function ($entity): bool {
+                    return $entity instanceof Submission
+                        && $entity->status === Submission::DRAFT;
+                },
+            ],
+        ];
     }
 }

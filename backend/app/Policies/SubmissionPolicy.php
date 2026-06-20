@@ -80,7 +80,9 @@ class SubmissionPolicy
      * Update submission status.
      *
      * Admins and review coordinators may change the status unconditionally;
-     * submitters may only do so while the submission is still a DRAFT.
+     * submitters may only do so while the submission is still a DRAFT. That
+     * draft-only condition is a conditional grant in RoleAbilities, evaluated
+     * by the resolver — so this method is a uniform ability check.
      *
      * @param \App\Models\User $user
      * @param \App\Models\Submission $submission
@@ -88,18 +90,9 @@ class SubmissionPolicy
      */
     public function updateStatus(User $user, Submission $submission)
     {
-        if ($this->abilities->allows($user, 'submission.update-status', $submission)) {
-            return true;
-        }
-
-        if (
-            $submission->status === Submission::DRAFT
-            && $this->abilities->allows($user, 'submission.update-status-draft', $submission)
-        ) {
-            return true;
-        }
-
-        return Response::deny('UNAUTHORIZED');
+        return $this->abilities->allows($user, 'submission.update-status', $submission)
+            ? true
+            : Response::deny('UNAUTHORIZED');
     }
 
     /**

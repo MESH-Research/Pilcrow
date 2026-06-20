@@ -163,3 +163,51 @@ Policy methods shrink to `bridge.allows(ability, entity) && <predicate>`. The
 current behavior, quirks included. They assert today's truth as a regression
 baseline, not ideal behavior; some quirks are flagged above as candidates to
 revisit during migration.
+
+## Where this lands, and the roadmap beyond it
+
+The system is deliberately **hybrid**, which is the best-practice shape for
+real-world authorization rather than a compromise:
+
+- **Global concerns** → RBAC on Bouncer (app-admin today; runtime-editable
+  global abilities like `publication.create` / `avatar.upload` next).
+- **Scoped concerns** → role + relationship (who is Editor of Pub X) resolved
+  from a code matrix, with **attribute conditions as data** on the grant.
+
+"Be more ABAC everywhere" is a non-goal — coarse access via roles/relationships
+is faster, more auditable, and easier to test; fine access via attribute
+predicates layers on top. The combined decision point is the PBAC (policy-based)
+ideal. What actually makes it *better* from here, in priority order:
+
+1. **Unify list-filtering with item-authorization (correctness — highest
+   value).** Query builders (`PublicationBuilder::visible()` / `myRole()`, the
+   submission equivalents) reimplement authorization as SQL, parallel to the
+   resolver/policies. Divergence is a latent security bug (listing what you
+   cannot view, or vice versa). List-scoping and item checks should derive from
+   the same role/relationship resolution. Not folded into the initial migration
+   PR because doing it correctly is sizeable; it is the first follow-up.
+
+2. **Conditions as data, not ability-name hacks (done, in this PR).** The old
+   `submission.update-status-draft` encoded a state condition into an ability
+   name and re-checked it in the policy. It is now a conditional grant in
+   `RoleAbilities::conditionalGrants()` (`submission.update-status` granted to
+   submitter *when* `status == DRAFT`), evaluated by the resolver. The policy
+   method is a uniform ability check. This is the concrete ABAC improvement and
+   the pattern for future state/ownership conditions.
+
+3. **Single decision-point façade.** Authorization currently dispatches across
+   the resolver (scoped), `$user->can` (global), policy predicates, and `@can`.
+   A single `Access::allows($user, $action, $resource)` front door that routes
+   global vs scoped and applies conditions would centralize reasoning, logging,
+   and testing. The resolver is already most of the way there; deferred until
+   global abilities actually exist so it is not speculative scaffolding.
+
+4. **Explainability.** Decisions carry no trace today ("why allowed/denied").
+   A decision log would aid debugging and security review. Nice-to-have.
+
+**Non-goal for now:** a full ReBAC engine (Zanzibar / OpenFGA style). The one
+relationship traversal we have — submissions inheriting parent-publication admin
+roles — is hand-coded in `effectiveRoles` and adequate at one level. A
+relationship-graph engine earns its place only if relationships proliferate
+(teams, delegation, nested orgs, sharing). Named here as the escape hatch, not a
+near-term build.

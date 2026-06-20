@@ -125,7 +125,10 @@ public function updateReviewers(User $user, Submission $submission)
 relationships stay in the policy, layered on the ability check:
 
 - Submitters may change a submission's status only while it is `DRAFT` — modeled
-  with a distinct `submission.update-status-draft` ability gated on status.
+  as a **conditional grant** in `RoleAbilities::conditionalGrants()`
+  (`submission.update-status` for submitter, with a `status == DRAFT` predicate
+  the resolver evaluates). The condition is data on the grant, not a special
+  ability name or a policy branch.
 - Comment edit/delete require `created_by === user.id`.
 - `submission.create` is role-agnostic: allowed when the publication is
   accepting submissions.
