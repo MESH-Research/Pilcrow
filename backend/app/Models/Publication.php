@@ -64,7 +64,7 @@ class Publication extends BaseModel
     {
         return $this->belongsToMany(User::class)
             ->withTimestamps()
-            ->withPivot(['id', 'user_id', 'role', 'publication_id']);
+            ->withPivot(['id', 'user_id', 'role_id', 'publication_id']);
     }
 
     /**
@@ -75,7 +75,7 @@ class Publication extends BaseModel
     public function publicationAdmins(): BelongsToMany
     {
         return $this->users()
-            ->withPivotValue('role', Role::SLUG_PUBLICATION_ADMIN);
+            ->withPivotValue('role_id', Role::PUBLICATION_ADMINISTRATOR_ROLE_ID);
     }
 
     /**
@@ -86,7 +86,7 @@ class Publication extends BaseModel
     public function editors(): BelongsToMany
     {
         return $this->users()
-            ->withPivotValue('role', Role::SLUG_EDITOR);
+            ->withPivotValue('role_id', Role::EDITOR_ROLE_ID);
     }
 
     /**
@@ -110,11 +110,11 @@ class Publication extends BaseModel
     }
 
     /**
-     * Return the currently logged in user's role slug on this publication.
+     * Return the currently logged in user's role_id on this publication.
      *
-     * @return string|null
+     * @return int|null
      */
-    public function getMyRole(): ?string
+    public function getMyRole(): ?int
     {
         /** @var \App\Models\User $user */
         $user = Auth::user();
@@ -130,16 +130,16 @@ class Publication extends BaseModel
             return null;
         }
 
-        return $first->pivot->role;
+        return $first->pivot->role_id;
     }
 
     /**
-     * Return the effective role slug of a user on a submission taking into
+     * Return the effective role_id of a user on a submission taking into
      * account parent roles they may have.
      *
-     * @return string|null
+     * @return int|null
      */
-    public function getEffectiveRole(): ?string
+    public function getEffectiveRole(): ?int
     {
         /** @var \App\Models\User $user */
         $user = Auth::user();
@@ -148,7 +148,7 @@ class Publication extends BaseModel
         }
 
         if ($user->isApplicationAdministrator()) {
-            return Role::SLUG_PUBLICATION_ADMIN;
+            return (int)Role::PUBLICATION_ADMINISTRATOR_ROLE_ID;
         }
 
         return $this->getMyRole();

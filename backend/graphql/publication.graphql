@@ -36,7 +36,7 @@ type Publication {
 
 type PublicationAssignment {
     id: ID!
-    role: PublicationRole!
+    role: PublicationRole! @rename(attribute: "role_id")
     user: User! @belongsTo
     publication: Publication! @belongsTo
     created_at: DateTimeUtc!
@@ -120,6 +120,6 @@ input UpdateStyleCriteriaInput {
 }
 
 enum PublicationRole {
-    publication_admin @enum(value: "publication_admin")
-    editor @enum(value: "editor")
+    publication_admin @enum(value: 2)
+    editor @enum(value: 3)
 }

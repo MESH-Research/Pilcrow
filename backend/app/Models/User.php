@@ -215,7 +215,7 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->belongsToMany(Submission::class)
             ->withTimestamps()
-            ->withPivot(['id', 'user_id', 'role', 'submission_id']);
+            ->withPivot(['id', 'user_id', 'role_id', 'submission_id']);
     }
 
     /**
@@ -227,7 +227,7 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->belongsToMany(Publication::class)
             ->withTimestamps()
-            ->withPivot('role');
+            ->withPivot('role_id');
     }
 
     /**
@@ -288,26 +288,21 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Return the highest privileged role slug for the user in the following
-     * order: application_admin, publication_admin, editor, review_coordinator,
-     * reviewer, submitter.
+     * Return the highest privileged role_id for the user (lowest id ranks
+     * highest: application_admin=1 … submitter=6). A UI hint, not authorization.
      *
-     * @return string|null
+     * @return int|null
      */
-    public function getHighestPrivilegedRole(): ?string
+    public function getHighestPrivilegedRole(): ?int
     {
         if ($this->isApplicationAdministrator()) {
-            return Role::SLUG_APPLICATION_ADMIN;
+            return (int)Role::APPLICATION_ADMINISTRATOR_ROLE_ID;
         }
         if ($this->publications->isNotEmpty()) {
-            return Role::mostPrivileged(
-                PublicationUser::where('user_id', $this->id)->pluck('role')
-            );
+            return PublicationUser::where('user_id', $this->id)->min('role_id');
         }
         if ($this->submissions->isNotEmpty()) {
-            return Role::mostPrivileged(
-                SubmissionAssignment::where('user_id', $this->id)->pluck('role')
-            );
+            return SubmissionAssignment::where('user_id', $this->id)->min('role_id');
         }
 
         return null;

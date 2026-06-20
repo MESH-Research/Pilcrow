@@ -17,7 +17,7 @@ class SubmissionAssignmentBuilder extends Builder
     public function roleFilter(?array $roles): self
     {
         if ($roles) {
-            $this->whereIn('role', $roles);
+            $this->whereIn('role_id', $roles);
         }
 
         return $this;

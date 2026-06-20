@@ -20,8 +20,7 @@ class SubmissionAssignmentTest extends TestCase
     use RefreshDatabase;
 
     /**
-     * The pivot resolves the user and submission it links together and stores
-     * the role slug.
+     * The pivot resolves the user, submission, and role it links together.
      *
      * @return void
      */
@@ -37,7 +36,10 @@ class SubmissionAssignmentTest extends TestCase
 
         $this->assertTrue($assignment->user->is($user));
         $this->assertTrue($assignment->submission->is($submission));
-        $this->assertEquals(Role::SLUG_REVIEWER, $assignment->role);
+        $this->assertEquals(
+            (int)Role::REVIEWER_ROLE_ID,
+            (int)$assignment->role_id
+        );
     }
 
     /**

@@ -95,11 +95,13 @@ class AbilityResolver
      */
     private function publicationRoleSlugs(User $user, $publicationId): array
     {
-        return PublicationAssignment::query()
+        $roleIds = PublicationAssignment::query()
             ->where('user_id', $user->id)
             ->where('publication_id', $publicationId)
-            ->pluck('role')
+            ->pluck('role_id')
             ->all();
+
+        return $this->slugsForIds($roleIds);
     }
 
     /**
@@ -109,10 +111,33 @@ class AbilityResolver
      */
     private function submissionRoleSlugs(User $user, $submissionId): array
     {
-        return SubmissionAssignment::query()
+        $roleIds = SubmissionAssignment::query()
             ->where('user_id', $user->id)
             ->where('submission_id', $submissionId)
-            ->pluck('role')
+            ->pluck('role_id')
             ->all();
+
+        return $this->slugsForIds($roleIds);
+    }
+
+    /**
+     * Map the pivot role_id integers to the slugs the ability matrix is keyed
+     * by. The slug is the auth layer's internal vocabulary; storage still keys
+     * on role_id (the slug column migration is a deferred follow-on).
+     *
+     * @param array<int, int|string> $roleIds
+     * @return array<int, string>
+     */
+    private function slugsForIds(array $roleIds): array
+    {
+        $slugs = [];
+        foreach ($roleIds as $id) {
+            $slug = Role::slugForId($id);
+            if ($slug !== null) {
+                $slugs[] = $slug;
+            }
+        }
+
+        return $slugs;
     }
 }

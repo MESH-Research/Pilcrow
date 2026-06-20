@@ -37,10 +37,10 @@ type User {
 }
 
 enum UserRoles {
-    submitter @enum(value: "submitter")
-    reviewer @enum(value: "reviewer")
-    review_coordinator @enum(value: "review_coordinator")
-    editor @enum(value: "editor")
-    publication_admin @enum(value: "publication_admin")
-    application_admin @enum(value: "application_admin")
+    submitter @enum(value: 6)
+    reviewer @enum(value: 5)
+    review_coordinator @enum(value: 4)
+    editor @enum(value: 3)
+    publication_admin @enum(value: 2)
+    application_admin @enum(value: 1)
 }

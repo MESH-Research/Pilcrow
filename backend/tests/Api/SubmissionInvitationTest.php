@@ -146,7 +146,7 @@ class SubmissionInvitationTest extends ApiTestCase
         $submission = Submission::factory()->create();
         $invite = SubmissionInvitation::create([
             'submission_id' => $submission->id,
-            'role' => Role::SLUG_REVIEWER,
+            'role_id' => Role::REVIEWER_ROLE_ID,
             'email' => 'mesh@msu.edu',
         ]);
         $invite->inviteReviewer();
@@ -249,7 +249,7 @@ class SubmissionInvitationTest extends ApiTestCase
         $submission = Submission::factory()->create();
         $invite = SubmissionInvitation::create([
             'submission_id' => $submission->id,
-            'role' => Role::SLUG_REVIEWER,
+            'role_id' => Role::REVIEWER_ROLE_ID,
             'email' => 'mesh@msu.edu',
         ]);
         $invite->inviteReviewer();

@@ -41,12 +41,11 @@ class Role extends ParentModel
     public const SLUG_SUBMITTER = 'submitter';
 
     /**
-     * Role slugs keyed by the legacy integer pivot role_id.
+     * Role slugs keyed by the integer pivot role_id.
      *
-     * LEGACY / MIGRATION ONLY. This map exists solely to back the one-time
-     * role_id -> role (slug) data migration backfill (and the test helpers
-     * that mirror it). The pivots now store the slug directly; do not use this
-     * in new code — reference the SLUG_* constants instead.
+     * The pivots still store role_id; AbilityResolver maps it through this to
+     * the slug the ability matrix is keyed by. (Replacing role_id with the slug
+     * column is a deferred follow-on; until then this is a live lookup.)
      */
     public const ID_TO_SLUG = [
         self::APPLICATION_ADMINISTRATOR_ROLE_ID => self::SLUG_APPLICATION_ADMIN,
@@ -55,21 +54,6 @@ class Role extends ParentModel
         self::REVIEW_COORDINATOR_ROLE_ID => self::SLUG_REVIEW_COORDINATOR,
         self::REVIEWER_ROLE_ID => self::SLUG_REVIEWER,
         self::SUBMITTER_ROLE_ID => self::SLUG_SUBMITTER,
-    ];
-
-    /**
-     * Role slugs ordered most-privileged first. Backs the
-     * highest-privileged-role UI hint (replaces the old min(role_id) trick).
-     *
-     * @var array<int, string>
-     */
-    public const SLUG_PRIORITY = [
-        self::SLUG_APPLICATION_ADMIN,
-        self::SLUG_PUBLICATION_ADMIN,
-        self::SLUG_EDITOR,
-        self::SLUG_REVIEW_COORDINATOR,
-        self::SLUG_REVIEWER,
-        self::SLUG_SUBMITTER,
     ];
 
     /**
@@ -87,10 +71,8 @@ class Role extends ParentModel
     ];
 
     /**
-     * Resolve a legacy integer pivot role_id to its role slug.
-     *
-     * LEGACY / MIGRATION ONLY — backs the data migration backfill and test
-     * helpers. New code should use the slug directly.
+     * Resolve an integer pivot role_id to its role slug (the vocabulary the
+     * ability matrix is keyed by).
      *
      * @param string|int|null $roleId
      * @return string|null
@@ -98,27 +80,6 @@ class Role extends ParentModel
     public static function slugForId($roleId): ?string
     {
         return self::ID_TO_SLUG[(string)$roleId] ?? null;
-    }
-
-    /**
-     * Return the most-privileged slug from a set, or null if none rank.
-     *
-     * @param iterable<string> $slugs
-     * @return string|null
-     */
-    public static function mostPrivileged(iterable $slugs): ?string
-    {
-        $best = null;
-        $bestRank = PHP_INT_MAX;
-        foreach ($slugs as $slug) {
-            $rank = array_search($slug, self::SLUG_PRIORITY, true);
-            if ($rank !== false && $rank < $bestRank) {
-                $bestRank = $rank;
-                $best = $slug;
-            }
-        }
-
-        return $best;
     }
 
     /**

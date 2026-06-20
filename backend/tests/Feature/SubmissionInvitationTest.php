@@ -25,7 +25,7 @@ class SubmissionInvitationTest extends TestCase
         $invite = SubmissionInvitation::create([
             'email' => $this->faker->email(),
             'submission_id' => $submission->id,
-            'role' => Role::SLUG_REVIEWER,
+            'role_id' => Role::REVIEWER_ROLE_ID,
         ]);
         $this->assertEquals(36, strlen($invite->uuid));
     }

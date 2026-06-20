@@ -25,9 +25,10 @@ class PublicationUserInputValidator extends Validator
                 'numeric',
                 'integer',
             ],
-            'role' => [
+            'role_id' => [
                 'filled',
-                'string',
+                'numeric',
+                'integer',
             ],
         ];
     }

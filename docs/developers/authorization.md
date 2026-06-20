@@ -30,13 +30,20 @@ Six roles span three scopes. They are identified everywhere by a **slug**
 ### Scoped roles (pivots)
 
 Publication and submission roles are stored on the `publication_user` and
-`submission_user` pivots as a `role` slug column (there is no foreign key to a
-roles table). The relations encode the slug:
+`submission_user` pivots as an integer `role_id` column (the foreign key to the
+old spatie roles table has been dropped). The relations encode the role:
 
 ```php
 // App\Models\Publication
-$this->users()->withPivotValue('role', Role::SLUG_EDITOR); // editors()
+$this->users()->withPivotValue('role_id', Role::EDITOR_ROLE_ID); // editors()
 ```
+
+The authorization layer works in **slugs** (the ability matrix is keyed by
+them); `AbilityResolver` maps the pivot `role_id` to a slug via
+`Role::slugForId()` (`Role::ID_TO_SLUG`). Replacing `role_id` with a
+human-readable slug column directly on the pivots is a deliberately deferred
+follow-on PR — it touches every pivot read/write site and is clearer reviewed
+in isolation.
 
 A user can hold many scoped roles across many entities simultaneously, which is
 why scoping lives in pivots rather than a single Bouncer scope.
@@ -101,7 +108,8 @@ ability matrix:
 $resolver->allows($user, 'submission.update-status', $submission);
 ```
 
-It resolves the user's **effective role slugs** for the entity:
+It resolves the user's **effective role slugs** for the entity (reading
+`role_id` from the pivots and mapping each to its slug):
 
 - `application_admin` if the user holds the global role (→ allowed, short-circuit).
 - For a `Publication`: the user's `publication_user` roles on it.
@@ -147,10 +155,10 @@ relationships stay in the policy, layered on the ability check:
 
 ## The `highest_privileged_role` field
 
-`User::getHighestPrivilegedRole()` returns the most-privileged role slug the
-user holds anywhere. It is a **client UI hint** (routing, which dashboard table
-to show) — not an authorization mechanism. Ordering comes from
-`Role::SLUG_PRIORITY`.
+`User::getHighestPrivilegedRole()` returns the most-privileged `role_id` the
+user holds anywhere (lowest id ranks highest: `application_admin`=1 …
+`submitter`=6). It is a **client UI hint** (routing, which dashboard table to
+show) — not an authorization mechanism.
 
 ## Recipes
 
@@ -166,7 +174,7 @@ migration.
 ```php
 $user->assignRole(Role::APPLICATION_ADMINISTRATOR);          // global (Bouncer)
 $publication->editors()->attach($user);                       // scoped (pivot)
-$submission->users()->attach($user->id, ['role' => Role::SLUG_REVIEWER]);
+$submission->users()->attach($user->id, ['role_id' => Role::REVIEWER_ROLE_ID]);
 ```
 
 **In tests:** the base `Tests\TestCase` seeds `AbacSeeder` after each database

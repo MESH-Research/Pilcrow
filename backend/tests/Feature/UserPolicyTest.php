@@ -17,7 +17,7 @@ class UserPolicyTest extends TestCase
 
     private function attachToPublication(User $user, Publication $publication, int $roleId): void
     {
-        $user->publications()->attach($publication->id, ['role' => Role::slugForId($roleId)]);
+        $user->publications()->attach($publication->id, ['role_id' => $roleId]);
     }
 
     public function testViewEmailAllowsSelf(): void

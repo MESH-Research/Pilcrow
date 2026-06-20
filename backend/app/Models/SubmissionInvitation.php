@@ -26,7 +26,7 @@ class SubmissionInvitation extends Model
         'message',
         'accepted_at',
         'submission_id',
-        'role',
+        'role_id',
         'uuid',
     ];
 
@@ -217,10 +217,10 @@ class SubmissionInvitation extends Model
 
         $this->updateInviteeDetails($details);
 
-        if ($this->role === Role::SLUG_REVIEWER) {
+        if ((string)$this->role_id === Role::REVIEWER_ROLE_ID) {
             ReviewerInvitationAccepted::dispatch($this);
         }
-        if ($this->role === Role::SLUG_REVIEW_COORDINATOR) {
+        if ((string)$this->role_id === Role::REVIEW_COORDINATOR_ROLE_ID) {
             ReviewCoordinatorInvitationAccepted::dispatch($this);
         }
 

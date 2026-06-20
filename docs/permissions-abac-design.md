@@ -100,15 +100,11 @@ New scoped capability = add an ability to the code matrix
   of truth. The scoped ability map is code (`App\Auth\RoleAbilities`); Bouncer
   holds only the role rows and the global app-admin grant.
 
-### Role slugs replace role_id on the pivots
+### Pivot storage: role_id retained, FK dropped (slug column deferred)
 
-The pivot `role_id` integers (FK to the spatie roles table) were obtuse and
-required a translation step. They are replaced by a human-readable `role` slug
-string column on `publication_user`, `submission_user`, and
-`submission_invitations`; the FK to the spatie roles table is dropped.
-
-The slugs match the GraphQL enum names, giving one vocabulary across storage,
-the code ability matrix, and the API:
+The pivots keep their integer `role_id` column. This migration only **drops the
+foreign key** to the spatie roles table (so that table can be retired); the
+column itself is untouched. Authorization maps `role_id` to a slug internally:
 
 | role_id | slug |
 | --- | --- |
@@ -119,14 +115,22 @@ the code ability matrix, and the API:
 | 5 | reviewer |
 | 6 | submitter |
 
+- `Role::ID_TO_SLUG` / `slugForId()` are the **live** mapping `AbilityResolver`
+  uses each request to turn the pivot `role_id` into the slug the ability matrix
+  is keyed by. The slug is the auth layer's internal vocabulary.
 - GraphQL `@enum(value: …)` for `PublicationRole` / `SubmissionUserRoles` /
-  `UserRoles` now map enum name → slug (the enum names are unchanged, so the
-  client contract is untouched).
-- The `highest_privileged_role` UI hint is a display field, not authz; its old
-  `min(role_id)` ordering is replaced by an explicit `Role::SLUG_PRIORITY`
-  list.
-- `Role::ID_TO_SLUG` / `slugForId()` remain only to back the data migration's
-  backfill (and test helpers).
+  `UserRoles` still map enum name → integer `role_id` (unchanged from before, so
+  the client contract is untouched).
+- `highest_privileged_role` remains the `min(role_id)` UI hint (a display field,
+  not authz).
+
+**Deferred follow-on:** replacing `role_id` with a human-readable `role` slug
+column directly on `publication_user` / `submission_user` /
+`submission_invitations` — giving one vocabulary across storage, matrix, and API
+— is its own PR. It is a mechanical rename that ripples into every pivot
+read/write site (models, builders, mutations, validators, GraphQL, tests); kept
+out of this PR so the ABAC change stays the reviewable unit and the rename is
+clear in isolation.
 
 ## The bridge
 
