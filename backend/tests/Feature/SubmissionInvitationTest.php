@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
-use App\Models\Role;
+use App\Auth\ScopedRole;
 use App\Models\Submission;
 use App\Models\SubmissionInvitation;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -25,7 +25,7 @@ class SubmissionInvitationTest extends TestCase
         $invite = SubmissionInvitation::create([
             'email' => $this->faker->email(),
             'submission_id' => $submission->id,
-            'role_id' => Role::REVIEWER_ROLE_ID,
+            'role_id' => ScopedRole::REVIEWER_ROLE_ID,
         ]);
         $this->assertEquals(36, strlen($invite->uuid));
     }

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Auth\ScopedRole;
 use App\Builders\SubmissionBuilder;
 use App\Events\SubmissionStatusUpdated;
 use App\Http\Traits\CreatedUpdatedBy;
@@ -133,7 +134,7 @@ class Submission extends Model implements Auditable
     public function reviewers(): BelongsToMany
     {
         return $this->users()
-            ->withPivotValue('role_id', Role::REVIEWER_ROLE_ID);
+            ->withPivotValue('role_id', ScopedRole::REVIEWER_ROLE_ID);
     }
 
     /**
@@ -144,7 +145,7 @@ class Submission extends Model implements Auditable
     public function reviewCoordinators(): BelongsToMany
     {
         return $this->users()
-            ->withPivotValue('role_id', Role::REVIEW_COORDINATOR_ROLE_ID);
+            ->withPivotValue('role_id', ScopedRole::REVIEW_COORDINATOR_ROLE_ID);
     }
 
     /**
@@ -155,7 +156,7 @@ class Submission extends Model implements Auditable
     public function submitters(): BelongsToMany
     {
         return $this->users()
-            ->withPivotValue('role_id', Role::SUBMITTER_ROLE_ID);
+            ->withPivotValue('role_id', ScopedRole::SUBMITTER_ROLE_ID);
     }
 
     /**
@@ -372,7 +373,7 @@ class Submission extends Model implements Auditable
         $publicationRole = $this->publication->getEffectiveRole();
 
         if ($publicationRole !== null) {
-            return (int)Role::REVIEW_COORDINATOR_ROLE_ID;
+            return (int)ScopedRole::REVIEW_COORDINATOR_ROLE_ID;
         }
 
         return $this->getMyRole();

@@ -98,7 +98,15 @@ New scoped capability = add an ability to the code matrix
   `bouncer_assigned_roles`) to coexist with spatie/laravel-permission.
 - Keep `publication_user` / `submission_user` pivots as the assignment source
   of truth. The scoped ability map is code (`App\Auth\RoleAbilities`); Bouncer
-  holds only the role rows and the global app-admin grant.
+  holds only the **global** app-admin role row and its grant. The scoped roles
+  themselves are also code (`App\Auth\ScopedRole`) — a static id/slug/title
+  catalog with no Bouncer rows, kept separate from the Bouncer role model
+  (`App\Models\Role`) so the global and scoped kinds are not conflated.
+- The app-admin Bouncer role + `everything()` grant are created by the
+  `seed_bouncer_application_admin_role` **migration** (not just a seeder), which
+  also ports existing spatie application-administrators onto the Bouncer role
+  before the spatie tables are dropped — so existing instances keep their admins
+  across the cutover. `AbacSeeder` is the idempotent fresh-install/test equivalent.
 
 ### Pivot storage: role_id retained, FK dropped (slug column deferred)
 
@@ -115,9 +123,11 @@ column itself is untouched. Authorization maps `role_id` to a slug internally:
 | 5 | reviewer |
 | 6 | submitter |
 
-- `Role::ID_TO_SLUG` / `slugForId()` are the **live** mapping `AbilityResolver`
-  uses each request to turn the pivot `role_id` into the slug the ability matrix
-  is keyed by. The slug is the auth layer's internal vocabulary.
+- `ScopedRole::ID_TO_SLUG` / `slugForId()` are the **live** mapping
+  `AbilityResolver` uses each request to turn the pivot `role_id` into the slug
+  the ability matrix is keyed by. The slug is the auth layer's internal
+  vocabulary. (These live on `App\Auth\ScopedRole`, not the Bouncer `Role`
+  model.)
 - GraphQL `@enum(value: …)` for `PublicationRole` / `SubmissionUserRoles` /
   `UserRoles` still map enum name → integer `role_id` (unchanged from before, so
   the client contract is untouched).
@@ -150,7 +160,8 @@ Policy methods shrink to `bridge.allows(ability, entity) && <predicate>`. The
 
 1. Install Bouncer, publish migration, add `HasRolesAndAbilities` to `User`
    (coexists with Spatie — different tables).
-2. Seed abilities + the role→ability matrix.
+2. Create the global app-admin Bouncer role + grant via migration and port
+   existing admins; scoped role→ability resolution is code, nothing to seed.
 3. Build `AbilityResolver` + unit-test it against the matrix.
 4. Convert PublicationPolicy (3 methods) to the bridge. Run characterization
    tests.

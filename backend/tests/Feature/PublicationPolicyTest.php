@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
+use App\Auth\ScopedRole;
 use App\Models\Publication;
 use App\Models\Role;
 use App\Models\User;
@@ -44,7 +45,7 @@ class PublicationPolicyTest extends TestCase
     public function testCreateDeniesPublicationAdministrator(): void
     {
         $user = User::factory()->create();
-        $this->attachToPublication($user, Publication::factory()->create(), (int)Role::PUBLICATION_ADMINISTRATOR_ROLE_ID);
+        $this->attachToPublication($user, Publication::factory()->create(), (int)ScopedRole::PUBLICATION_ADMINISTRATOR_ROLE_ID);
 
         $this->assertFalse($user->can('create', Publication::class));
     }
@@ -67,7 +68,7 @@ class PublicationPolicyTest extends TestCase
     {
         $publication = Publication::factory()->create();
         $user = User::factory()->create();
-        $this->attachToPublication($user, $publication, (int)Role::PUBLICATION_ADMINISTRATOR_ROLE_ID);
+        $this->attachToPublication($user, $publication, (int)ScopedRole::PUBLICATION_ADMINISTRATOR_ROLE_ID);
 
         $this->assertTrue($user->can('update', [Publication::class, ['id' => $publication->id]]));
     }
@@ -75,7 +76,7 @@ class PublicationPolicyTest extends TestCase
     public function testUpdateDeniesPublicationAdministratorOfDifferentPublication(): void
     {
         $user = User::factory()->create();
-        $this->attachToPublication($user, Publication::factory()->create(), (int)Role::PUBLICATION_ADMINISTRATOR_ROLE_ID);
+        $this->attachToPublication($user, Publication::factory()->create(), (int)ScopedRole::PUBLICATION_ADMINISTRATOR_ROLE_ID);
 
         $other = Publication::factory()->create();
         $this->assertFalse($user->can('update', [Publication::class, ['id' => $other->id]]));
@@ -85,7 +86,7 @@ class PublicationPolicyTest extends TestCase
     {
         $publication = Publication::factory()->create();
         $user = User::factory()->create();
-        $this->attachToPublication($user, $publication, (int)Role::EDITOR_ROLE_ID);
+        $this->attachToPublication($user, $publication, (int)ScopedRole::EDITOR_ROLE_ID);
 
         $this->assertFalse($user->can('update', [Publication::class, ['id' => $publication->id]]));
     }
@@ -126,7 +127,7 @@ class PublicationPolicyTest extends TestCase
     {
         $publication = Publication::factory()->create(['is_publicly_visible' => false]);
         $editor = User::factory()->create();
-        $this->attachToPublication($editor, $publication, (int)Role::EDITOR_ROLE_ID);
+        $this->attachToPublication($editor, $publication, (int)ScopedRole::EDITOR_ROLE_ID);
 
         $this->assertTrue($editor->can('view', $publication));
     }
@@ -142,7 +143,7 @@ class PublicationPolicyTest extends TestCase
     {
         $hidden = Publication::factory()->create(['is_publicly_visible' => false]);
         $user = User::factory()->create();
-        $this->attachToPublication($user, Publication::factory()->create(), (int)Role::EDITOR_ROLE_ID);
+        $this->attachToPublication($user, Publication::factory()->create(), (int)ScopedRole::EDITOR_ROLE_ID);
 
         $this->assertFalse($user->can('view', $hidden));
     }

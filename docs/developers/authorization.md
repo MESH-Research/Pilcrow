@@ -15,17 +15,23 @@ user's effective roles **and** any attribute predicate on the policy method.
 
 ## Roles
 
-Six roles span three scopes. They are identified everywhere by a **slug**
-(`App\Models\Role::SLUG_*`) that matches the GraphQL enum names:
+Six roles span three scopes, but they are **two different kinds of thing** with
+two homes:
 
-| Slug | Scope | Assigned via |
-| --- | --- | --- |
-| `application_admin` | Application (global) | Bouncer `assigned_roles` |
-| `publication_admin` | Publication | `publication_user` pivot |
-| `editor` | Publication | `publication_user` pivot |
-| `review_coordinator` | Submission | `submission_user` pivot |
-| `reviewer` | Submission | `submission_user` pivot |
-| `submitter` | Submission | `submission_user` pivot |
+| Slug | Scope | Kind | Defined in | Assigned via |
+| --- | --- | --- | --- | --- |
+| `application_admin` | Application (global) | Bouncer role | `App\Models\Role` | Bouncer `assigned_roles` |
+| `publication_admin` | Publication | scoped (code) | `App\Auth\ScopedRole` | `publication_user` pivot |
+| `editor` | Publication | scoped (code) | `App\Auth\ScopedRole` | `publication_user` pivot |
+| `review_coordinator` | Submission | scoped (code) | `App\Auth\ScopedRole` | `submission_user` pivot |
+| `reviewer` | Submission | scoped (code) | `App\Auth\ScopedRole` | `submission_user` pivot |
+| `submitter` | Submission | scoped (code) | `App\Auth\ScopedRole` | `submission_user` pivot |
+
+Only `application_admin` is a real Bouncer role with a row in `bouncer_roles`.
+The five scoped roles are a static code catalog (`App\Auth\ScopedRole`) — they
+have **no** Bouncer rows and are never assigned through Bouncer. Keeping them out
+of the Bouncer role model is deliberate: it stops a scoped role from being
+mistaken for, or assigned as, a global one. Slugs match the GraphQL enum names.
 
 ### Scoped roles (pivots)
 
@@ -35,12 +41,12 @@ old spatie roles table has been dropped). The relations encode the role:
 
 ```php
 // App\Models\Publication
-$this->users()->withPivotValue('role_id', Role::EDITOR_ROLE_ID); // editors()
+$this->users()->withPivotValue('role_id', ScopedRole::EDITOR_ROLE_ID); // editors()
 ```
 
 The authorization layer works in **slugs** (the ability matrix is keyed by
 them); `AbilityResolver` maps the pivot `role_id` to a slug via
-`Role::slugForId()` (`Role::ID_TO_SLUG`). Replacing `role_id` with a
+`ScopedRole::slugForId()` (`ScopedRole::ID_TO_SLUG`). Replacing `role_id` with a
 human-readable slug column directly on the pivots is a deliberately deferred
 follow-on PR — it touches every pivot read/write site and is clearer reviewed
 in isolation.
@@ -74,7 +80,7 @@ only when the predicate holds for the entity):
 public static function matrix(): array
 {
     return [
-        Role::SLUG_SUBMITTER => [
+        ScopedRole::SLUG_SUBMITTER => [
             'submission.view',                 // absolute grant
             'submission.update-title',
             // conditional: allowed only while the submission is DRAFT
@@ -93,11 +99,14 @@ intentionally **not** runtime-editable.
 
 `application_admin` is the exception — it is a real Bouncer role granted
 `everything()` and short-circuited in the resolver, so it has no matrix entry.
-Role rows themselves are seeded by `Database\Seeders\AbacSeeder` with a
-human-readable `title` (e.g. "Application Administrator") used by the GraphQL
-`Role.name` field. The Bouncer tables are namespaced `bouncer_*` — set in
-`AppServiceProvider`, which also points Bouncer at `App\Models\Role` via
-`Bouncer::useRoleModel()`.
+Its Bouncer role row (with the human-readable `title` used by the GraphQL
+`Role.name` field) and `everything()` grant are established on deploy by the
+`seed_bouncer_application_admin_role` **migration**, which also ports any
+existing spatie application-administrators onto the Bouncer role before the
+spatie tables are dropped. `Database\Seeders\AbacSeeder` does the same thing
+idempotently for fresh installs and the test bootstrap. The Bouncer tables are
+namespaced `bouncer_*` — set in `AppServiceProvider`, which also points Bouncer
+at `App\Models\Role` via `Bouncer::useRoleModel()`.
 
 ## The resolver
 
@@ -174,11 +183,11 @@ migration.
 ```php
 $user->assignRole(Role::APPLICATION_ADMINISTRATOR);          // global (Bouncer)
 $publication->editors()->attach($user);                       // scoped (pivot)
-$submission->users()->attach($user->id, ['role_id' => Role::REVIEWER_ROLE_ID]);
+$submission->users()->attach($user->id, ['role_id' => ScopedRole::REVIEWER_ROLE_ID]);
 ```
 
 **In tests:** the base `Tests\TestCase` seeds `AbacSeeder` after each database
-refresh, so the role rows and the app-admin grant are present. Scoped ability
+refresh, so the app-admin role row and its grant are present. Scoped ability
 resolution needs no seeding — it reads the code matrix. Use `beAppAdmin()` and
 the `attachTo*` helpers to set up actors.
 

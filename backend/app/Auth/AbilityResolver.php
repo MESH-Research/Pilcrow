@@ -132,7 +132,7 @@ class AbilityResolver
     {
         $slugs = [];
         foreach ($roleIds as $id) {
-            $slug = Role::slugForId($id);
+            $slug = ScopedRole::slugForId($id);
             if ($slug !== null) {
                 $slugs[] = $slug;
             }

@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Auth;
 
-use App\Models\Role;
 use App\Models\Submission;
 
 /**
@@ -82,11 +81,11 @@ class RoleAbilities
         ];
 
         return [
-            Role::SLUG_PUBLICATION_ADMIN => $publicationAdmin,
-            Role::SLUG_EDITOR => $editor,
-            Role::SLUG_REVIEW_COORDINATOR => $reviewCoordinator,
-            Role::SLUG_SUBMITTER => $submitter,
-            Role::SLUG_REVIEWER => $reviewer,
+            ScopedRole::SLUG_PUBLICATION_ADMIN => $publicationAdmin,
+            ScopedRole::SLUG_EDITOR => $editor,
+            ScopedRole::SLUG_REVIEW_COORDINATOR => $reviewCoordinator,
+            ScopedRole::SLUG_SUBMITTER => $submitter,
+            ScopedRole::SLUG_REVIEWER => $reviewer,
         ];
     }
 

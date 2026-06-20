@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
+use App\Auth\ScopedRole;
 use App\Models\Publication;
 use App\Models\Role;
 use App\Models\Submission;
@@ -41,8 +42,8 @@ class UserPolicyTest extends TestCase
         $admin = User::factory()->create();
         $target = User::factory()->create();
 
-        $this->attachToPublication($admin, $publication, (int)Role::PUBLICATION_ADMINISTRATOR_ROLE_ID);
-        $this->attachToPublication($target, $publication, (int)Role::EDITOR_ROLE_ID);
+        $this->attachToPublication($admin, $publication, (int)ScopedRole::PUBLICATION_ADMINISTRATOR_ROLE_ID);
+        $this->attachToPublication($target, $publication, (int)ScopedRole::EDITOR_ROLE_ID);
 
         $this->assertTrue($admin->can('viewEmail', $target));
     }
@@ -53,8 +54,8 @@ class UserPolicyTest extends TestCase
         $editor = User::factory()->create();
         $target = User::factory()->create();
 
-        $this->attachToPublication($editor, $publication, (int)Role::EDITOR_ROLE_ID);
-        $this->attachToPublication($target, $publication, (int)Role::EDITOR_ROLE_ID);
+        $this->attachToPublication($editor, $publication, (int)ScopedRole::EDITOR_ROLE_ID);
+        $this->attachToPublication($target, $publication, (int)ScopedRole::EDITOR_ROLE_ID);
 
         $this->assertTrue($editor->can('viewEmail', $target));
     }
@@ -63,7 +64,7 @@ class UserPolicyTest extends TestCase
     {
         $publication = Publication::factory()->create();
         $editor = User::factory()->create();
-        $this->attachToPublication($editor, $publication, (int)Role::EDITOR_ROLE_ID);
+        $this->attachToPublication($editor, $publication, (int)ScopedRole::EDITOR_ROLE_ID);
 
         $submitter = User::factory()->create();
         Submission::factory()
@@ -107,10 +108,10 @@ class UserPolicyTest extends TestCase
     public function testViewEmailDeniesEditorOfDifferentPublication(): void
     {
         $editor = User::factory()->create();
-        $this->attachToPublication($editor, Publication::factory()->create(), (int)Role::EDITOR_ROLE_ID);
+        $this->attachToPublication($editor, Publication::factory()->create(), (int)ScopedRole::EDITOR_ROLE_ID);
 
         $other = User::factory()->create();
-        $this->attachToPublication($other, Publication::factory()->create(), (int)Role::EDITOR_ROLE_ID);
+        $this->attachToPublication($other, Publication::factory()->create(), (int)ScopedRole::EDITOR_ROLE_ID);
 
         $this->assertFalse($editor->can('viewEmail', $other));
     }
@@ -138,11 +139,11 @@ class UserPolicyTest extends TestCase
     {
         $publication = Publication::factory()->create();
         $editor = User::factory()->create();
-        $this->attachToPublication($editor, $publication, (int)Role::EDITOR_ROLE_ID);
+        $this->attachToPublication($editor, $publication, (int)ScopedRole::EDITOR_ROLE_ID);
 
         $targets = User::factory()->count(5)->create();
         foreach ($targets as $target) {
-            $this->attachToPublication($target, $publication, (int)Role::EDITOR_ROLE_ID);
+            $this->attachToPublication($target, $publication, (int)ScopedRole::EDITOR_ROLE_ID);
         }
 
         // Prime the application-admin role lookup so it doesn't pollute the count.

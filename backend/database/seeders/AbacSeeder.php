@@ -8,32 +8,30 @@ use Illuminate\Database\Seeder;
 use Silber\Bouncer\BouncerFacade as Bouncer;
 
 /**
- * Seeds the role rows and the global application-administrator grant.
+ * Ensures the global application-administrator Bouncer role exists, for
+ * fresh-install (db:seed) and test bootstraps.
  *
- * Scoped (publication / submission) role -> ability resolution does NOT live
- * here: that matrix is code-owned (App\Auth\RoleAbilities), read directly by
- * AbilityResolver, and never stored in Bouncer. This seeder only establishes
- * the role rows (whose titles surface as GraphQL Role.name) and the global
- * super-role wildcard. Global, runtime-editable abilities are granted via
- * Bouncer elsewhere.
+ * The same role + grant is established for real deploys by the
+ * seed_bouncer_application_admin_role migration (which also ports existing
+ * admins); this seeder is the idempotent fresh-DB equivalent.
  *
- * Idempotent — firstOrCreate / Bouncer::allow() are safe to re-run.
+ * Scoped (publication / submission) roles are NOT seeded: they are not Bouncer
+ * roles. The scoped role -> ability map is code-owned (App\Auth\RoleAbilities),
+ * read directly by AbilityResolver, and never stored in Bouncer.
  */
 class AbacSeeder extends Seeder
 {
     /**
-     * Seed the role rows and the application-administrator wildcard.
+     * Seed the application-administrator role and its global wildcard grant.
      *
      * @return void
      */
     public function run(): void
     {
-        // Create each role with its human-readable title (surfaced as
-        // GraphQL Role.name). Bouncer::allow() would otherwise create them
-        // title-less.
-        foreach (Role::SLUG_TO_TITLE as $slug => $title) {
-            Role::firstOrCreate(['name' => $slug], ['title' => $title]);
-        }
+        Role::firstOrCreate(
+            ['name' => Role::SLUG_APPLICATION_ADMIN],
+            ['title' => Role::APPLICATION_ADMINISTRATOR]
+        );
 
         Bouncer::allow(Role::SLUG_APPLICATION_ADMIN)->everything();
 

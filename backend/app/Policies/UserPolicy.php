@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Policies;
 
 use App\Auth\AbilityResolver;
-use App\Models\Role;
+use App\Auth\ScopedRole;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
@@ -95,8 +95,8 @@ class UserPolicy
                 'privilegedPublicationIds',
                 $viewer->publications()
                     ->wherePivotIn('role_id', [
-                        Role::PUBLICATION_ADMINISTRATOR_ROLE_ID,
-                        Role::EDITOR_ROLE_ID,
+                        ScopedRole::PUBLICATION_ADMINISTRATOR_ROLE_ID,
+                        ScopedRole::EDITOR_ROLE_ID,
                     ])
                     ->pluck('publications.id')
             );

@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
+use App\Auth\ScopedRole;
 use App\Models\Publication;
-use App\Models\Role;
 use App\Models\Submission;
 use App\Models\SubmissionAssignment;
 use App\Models\User;
@@ -37,7 +37,7 @@ class SubmissionAssignmentTest extends TestCase
         $this->assertTrue($assignment->user->is($user));
         $this->assertTrue($assignment->submission->is($submission));
         $this->assertEquals(
-            (int)Role::REVIEWER_ROLE_ID,
+            (int)ScopedRole::REVIEWER_ROLE_ID,
             (int)$assignment->role_id
         );
     }
