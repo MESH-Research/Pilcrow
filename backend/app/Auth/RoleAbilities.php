@@ -39,55 +39,54 @@ class RoleAbilities
      */
     public static function matrix(): array
     {
+        // Roles compose as supersets: each builds on the one below it with the
+        // spread operator, so the "everything from role B, plus X" relationship
+        // is explicit. (array_values is deliberately NOT used — it would strip
+        // the string keys that carry the conditional grants below.)
+        $reviewer = [
+            'submission.view',
+            'submission.update',
+        ];
+
+        $reviewCoordinator = [
+            ...$reviewer,
+            'submission.update-submitters',
+            'submission.update-reviewers',
+            'submission.update-status',
+            'submission.update-title',
+            'submission.invite',
+        ];
+
+        $editor = [
+            ...$reviewCoordinator,
+            'publication.view',
+            'submission.update-review-coordinators',
+        ];
+
+        $publicationAdmin = [
+            ...$editor,
+            'publication.update',
+        ];
+
+        // Submitter is not in the coordinator chain: it adds title/submitter
+        // edits to a reviewer, and may change status only while DRAFT — a
+        // conditional grant (string key => predicate).
+        $submitter = [
+            ...$reviewer,
+            'submission.update-submitters',
+            'submission.update-title',
+            'submission.update-status' => static function ($entity): bool {
+                return $entity instanceof Submission
+                    && $entity->status === Submission::DRAFT;
+            },
+        ];
+
         return [
-            Role::SLUG_PUBLICATION_ADMIN => [
-                'publication.view',
-                'publication.update',
-                'submission.view',
-                'submission.update',
-                'submission.update-submitters',
-                'submission.update-reviewers',
-                'submission.update-review-coordinators',
-                'submission.update-status',
-                'submission.update-title',
-                'submission.invite',
-            ],
-            Role::SLUG_EDITOR => [
-                // Same as publication-administrator minus publication.update.
-                'publication.view',
-                'submission.view',
-                'submission.update',
-                'submission.update-submitters',
-                'submission.update-reviewers',
-                'submission.update-review-coordinators',
-                'submission.update-status',
-                'submission.update-title',
-                'submission.invite',
-            ],
-            Role::SLUG_REVIEW_COORDINATOR => [
-                'submission.view',
-                'submission.update',
-                'submission.update-submitters',
-                'submission.update-reviewers',
-                'submission.update-status',
-                'submission.update-title',
-                'submission.invite',
-            ],
-            Role::SLUG_SUBMITTER => [
-                'submission.view',
-                'submission.update',
-                'submission.update-submitters',
-                'submission.update-title',
-                // Conditional: submitters may change status only while DRAFT.
-                'submission.update-status' => static function ($entity): bool {
-                    return $entity instanceof Submission
-                        && $entity->status === Submission::DRAFT;
-                },
-            ],
-            Role::SLUG_REVIEWER => [
-                'submission.view',
-                'submission.update',
-            ],
+            Role::SLUG_PUBLICATION_ADMIN => $publicationAdmin,
+            Role::SLUG_EDITOR => $editor,
+            Role::SLUG_REVIEW_COORDINATOR => $reviewCoordinator,
+            Role::SLUG_SUBMITTER => $submitter,
+            Role::SLUG_REVIEWER => $reviewer,
         ];
     }
 
