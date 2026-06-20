@@ -46,17 +46,11 @@ class AbilityResolver
             return true;
         }
 
-        $conditional = RoleAbilities::conditionalGrants();
-
+        // A grant in the matrix is either absolute or carries an attribute
+        // predicate evaluated against the entity — RoleAbilities::grants
+        // resolves both shapes.
         foreach ($roles as $role) {
-            if (in_array($ability, RoleAbilities::for($role), true)) {
-                return true;
-            }
-
-            // Conditional grant: allowed only when its attribute predicate
-            // holds for the entity.
-            $predicate = $conditional[$role][$ability] ?? null;
-            if ($predicate !== null && $entity !== null && $predicate($entity)) {
+            if (RoleAbilities::grants($role, $ability, $entity)) {
                 return true;
             }
         }

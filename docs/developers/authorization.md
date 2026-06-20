@@ -59,27 +59,33 @@ ability check.
 Abilities are granular, namespaced capability strings (e.g.
 `publication.update`, `submission.update-status`, `submission.invite`). The
 scoped role → ability map is **code**, the single source of truth in
-`App\Auth\RoleAbilities::MATRIX`:
+`App\Auth\RoleAbilities::matrix()`. Each role maps to a list of grants; a grant
+is either a bare ability string (absolute) or `ability => predicate` (granted
+only when the predicate holds for the entity):
 
 ```php
-public const MATRIX = [
-    Role::SLUG_EDITOR => [
-        'publication.view',
-        'submission.update-reviewers',
+public static function matrix(): array
+{
+    return [
+        Role::SLUG_SUBMITTER => [
+            'submission.view',                 // absolute grant
+            'submission.update-title',
+            // conditional: allowed only while the submission is DRAFT
+            'submission.update-status' => static fn ($s) => $s->status === Submission::DRAFT,
+        ],
         // ...
-    ],
-    // ...
-];
+    ];
+}
 ```
 
 It is read directly by `AbilityResolver` at request time — there is no DB
 round-trip and nothing to seed. Adding a scoped capability is a code change:
-add the ability name to the relevant role(s) in `MATRIX`; it is live on deploy,
-with no seeding, convergence, or drift. Scoped abilities are intentionally
-**not** runtime-editable.
+add the ability name to the relevant role(s) in `matrix()`; it is live on
+deploy, with no seeding, convergence, or drift. Scoped abilities are
+intentionally **not** runtime-editable.
 
 `application_admin` is the exception — it is a real Bouncer role granted
-`everything()` and short-circuited in the resolver, so it has no `MATRIX` entry.
+`everything()` and short-circuited in the resolver, so it has no matrix entry.
 Role rows themselves are seeded by `Database\Seeders\AbacSeeder` with a
 human-readable `title` (e.g. "Application Administrator") used by the GraphQL
 `Role.name` field. The Bouncer tables are namespaced `bouncer_*` — set in
@@ -103,8 +109,10 @@ It resolves the user's **effective role slugs** for the entity:
   admin roles inherited from the parent publication (publication admin /
   editor).
 
-It then checks `RoleAbilities::MATRIX` for whether any effective role grants the
-ability — a plain in-memory lookup, no database access.
+It then asks `RoleAbilities::grants($role, $ability, $entity)` for each
+effective role — a plain in-memory lookup, no database access. `grants`
+resolves both absolute and conditional grants, evaluating any predicate against
+the entity.
 
 ## Policies
 
@@ -125,10 +133,10 @@ public function updateReviewers(User $user, Submission $submission)
 relationships stay in the policy, layered on the ability check:
 
 - Submitters may change a submission's status only while it is `DRAFT` — modeled
-  as a **conditional grant** in `RoleAbilities::conditionalGrants()`
-  (`submission.update-status` for submitter, with a `status == DRAFT` predicate
-  the resolver evaluates). The condition is data on the grant, not a special
-  ability name or a policy branch.
+  as a **conditional grant** in `RoleAbilities::matrix()`
+  (`submission.update-status` for submitter carries a `status == DRAFT`
+  predicate the resolver evaluates). The condition is data on the grant, not a
+  special ability name or a policy branch.
 - Comment edit/delete require `created_by === user.id`.
 - `submission.create` is role-agnostic: allowed when the publication is
   accepting submissions.
@@ -147,7 +155,7 @@ to show) — not an authorization mechanism. Ordering comes from
 ## Recipes
 
 **Add a capability to a role:** add the ability string to the role's list in
-`App\Auth\RoleAbilities::MATRIX`. It is live on deploy — no re-seed, no
+`App\Auth\RoleAbilities::matrix()`. It is live on deploy — no re-seed, no
 migration.
 
 **Authorize in a resolver/policy:** inject `AbilityResolver` and call

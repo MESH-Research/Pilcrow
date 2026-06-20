@@ -80,7 +80,7 @@ user.view  user.view-any  user.view-email  user.update  user.manage-beta
 App Admin = Bouncer global `*` (everything).
 
 New scoped capability = add an ability to the code matrix
-(`App\Auth\RoleAbilities::MATRIX`). Live on deploy; no seed, no migration.
+(`App\Auth\RoleAbilities::matrix()`). Live on deploy; no seed, no migration.
 
 ## Attribute predicates that stay in policy
 
@@ -189,8 +189,9 @@ ideal. What actually makes it *better* from here, in priority order:
 
 2. **Conditions as data, not ability-name hacks (done, in this PR).** The old
    `submission.update-status-draft` encoded a state condition into an ability
-   name and re-checked it in the policy. It is now a conditional grant in
-   `RoleAbilities::conditionalGrants()` (`submission.update-status` granted to
+   name and re-checked it in the policy. It is now a conditional grant in the
+   `RoleAbilities::matrix()` itself — a grant is either a bare ability string
+   (absolute) or `ability => predicate` (`submission.update-status` granted to
    submitter *when* `status == DRAFT`), evaluated by the resolver. The policy
    method is a uniform ability check. This is the concrete ABAC improvement and
    the pattern for future state/ownership conditions.
