@@ -108,6 +108,10 @@ enum ScopedRole: int
      * Does this role grant the ability for the entity / acting user? Resolves
      * both absolute and conditional grants.
      *
+     * The shorthand ability is compared first, so a Grant (and its predicate)
+     * is only instantiated for a definition whose ability actually matches —
+     * predicates for unrelated abilities are never constructed.
+     *
      * @param \App\Auth\Ability $ability
      * @param \Illuminate\Database\Eloquent\Model|null $entity
      * @param \App\Models\User $user
@@ -115,8 +119,13 @@ enum ScopedRole: int
      */
     public function allows(Ability $ability, ?Model $entity, User $user): bool
     {
-        foreach ($this->grants() as $grant) {
-            if ($grant->permits($ability, $entity, $user)) {
+        foreach ($this->grantDefinitions() as $definition) {
+            $grantAbility = $definition instanceof Ability ? $definition : $definition[0];
+            if ($grantAbility !== $ability) {
+                continue;
+            }
+
+            if (self::toGrant($definition)->permits($ability, $entity, $user)) {
                 return true;
             }
         }
