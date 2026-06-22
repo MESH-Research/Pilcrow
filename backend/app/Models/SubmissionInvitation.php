@@ -218,10 +218,10 @@ class SubmissionInvitation extends Model
 
         $this->updateInviteeDetails($details);
 
-        if ((string)$this->role_id === ScopedRole::REVIEWER_ROLE_ID) {
+        if ((int)$this->role_id === ScopedRole::Reviewer->value) {
             ReviewerInvitationAccepted::dispatch($this);
         }
-        if ((string)$this->role_id === ScopedRole::REVIEW_COORDINATOR_ROLE_ID) {
+        if ((int)$this->role_id === ScopedRole::ReviewCoordinator->value) {
             ReviewCoordinatorInvitationAccepted::dispatch($this);
         }
 

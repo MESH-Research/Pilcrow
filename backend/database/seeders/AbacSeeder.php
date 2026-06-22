@@ -16,7 +16,7 @@ use Silber\Bouncer\BouncerFacade as Bouncer;
  * admins); this seeder is the idempotent fresh-DB equivalent.
  *
  * Scoped (publication / submission) roles are NOT seeded: they are not Bouncer
- * roles. The scoped role -> ability map is code-owned (App\Auth\RoleAbilities),
+ * roles. The scoped role -> ability map is code-owned (App\Auth\ScopedRole),
  * read directly by AbilityResolver, and never stored in Bouncer.
  */
 class AbacSeeder extends Seeder

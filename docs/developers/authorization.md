@@ -28,28 +28,29 @@ two homes:
 | `submitter` | Submission | scoped (code) | `App\Auth\ScopedRole` | `submission_user` pivot |
 
 Only `application_admin` is a real Bouncer role with a row in `bouncer_roles`.
-The five scoped roles are a static code catalog (`App\Auth\ScopedRole`) — they
-have **no** Bouncer rows and are never assigned through Bouncer. Keeping them out
-of the Bouncer role model is deliberate: it stops a scoped role from being
-mistaken for, or assigned as, a global one. Slugs match the GraphQL enum names.
+The five scoped roles are a typed code catalog — the `App\Auth\ScopedRole`
+**enum** — with **no** Bouncer rows; they are never assigned through Bouncer.
+Keeping them out of the Bouncer role model is deliberate: it stops a scoped role
+from being mistaken for, or assigned as, a global one.
 
 ### Scoped roles (pivots)
 
 Publication and submission roles are stored on the `publication_user` and
 `submission_user` pivots as an integer `role_id` column (the foreign key to the
-old spatie roles table has been dropped). The relations encode the role:
+old spatie roles table has been dropped). `ScopedRole` is an **int-backed enum
+whose backing value is that `role_id`**, so the pivot value maps straight to a
+case. The relations encode the role:
 
 ```php
 // App\Models\Publication
-$this->users()->withPivotValue('role_id', ScopedRole::EDITOR_ROLE_ID); // editors()
+$this->users()->withPivotValue('role_id', ScopedRole::Editor->value); // editors()
 ```
 
-The authorization layer works in **slugs** (the ability matrix is keyed by
-them); `AbilityResolver` maps the pivot `role_id` to a slug via
-`ScopedRole::slugForId()` (`ScopedRole::ID_TO_SLUG`). Replacing `role_id` with a
-human-readable slug column directly on the pivots is a deliberately deferred
-follow-on PR — it touches every pivot read/write site and is clearer reviewed
-in isolation.
+`AbilityResolver` maps the pivot `role_id` to a case via
+`ScopedRole::tryFrom($roleId)` (unknown ids are skipped). Replacing `role_id`
+with a human-readable slug column directly on the pivots is a deliberately
+deferred follow-on PR — it touches every pivot read/write site and is clearer
+reviewed in isolation.
 
 A user can hold many scoped roles across many entities simultaneously, which is
 why scoping lives in pivots rather than a single Bouncer scope.
@@ -69,33 +70,45 @@ ability check.
 
 ## Ability registry
 
-Abilities are granular, namespaced capability strings (e.g.
-`publication.update`, `submission.update-status`, `submission.invite`). The
-scoped role → ability map is **code**, the single source of truth in
-`App\Auth\RoleAbilities::matrix()`. Each role maps to a list of grants; a grant
-is either a bare ability string (absolute) or `ability => predicate` (granted
-only when the predicate holds for the entity):
+Abilities are a **typed, closed catalog** — the `App\Auth\Ability` enum
+(`Ability::SubmissionUpdateStatus`, `Ability::PublicationUpdate`, …; the backing
+value is the legacy dotted string). Policies reference enum cases, not magic
+strings, so a typo is a compile-time error and "who grants this?" is a
+find-usages.
+
+The scoped role → ability map is **code on the `App\Auth\ScopedRole` enum**:
+each case returns its list of `App\Auth\Grant`s. A `Grant` pairs an `Ability`
+with an optional `Predicate` — the predicate lives on the *grant* (the
+role↔ability pairing), not the ability, because the same ability is absolute for
+one role and conditional for another. No predicate = absolute grant. Roles
+compose as supersets by spreading the role below them:
 
 ```php
-public static function matrix(): array
+public function grants(): array
 {
-    return [
-        ScopedRole::SLUG_SUBMITTER => [
-            'submission.view',                 // absolute grant
-            'submission.update-title',
-            // conditional: allowed only while the submission is DRAFT
-            'submission.update-status' => static fn ($s) => $s->status === Submission::DRAFT,
+    return match ($this) {
+        self::Reviewer => [
+            new Grant(Ability::SubmissionView),          // absolute
+            new Grant(Ability::SubmissionUpdate),
+        ],
+        self::Submitter => [
+            ...self::Reviewer->grants(),                  // everything a reviewer has…
+            new Grant(Ability::SubmissionUpdateTitle),    // …plus these…
+            // …and a conditional grant: status only while DRAFT
+            new Grant(Ability::SubmissionUpdateStatus, new IsDraft()),
         ],
         // ...
-    ];
+    };
 }
 ```
 
-It is read directly by `AbilityResolver` at request time — there is no DB
-round-trip and nothing to seed. Adding a scoped capability is a code change:
-add the ability name to the relevant role(s) in `matrix()`; it is live on
-deploy, with no seeding, convergence, or drift. Scoped abilities are
-intentionally **not** runtime-editable.
+A `Predicate` (e.g. `App\Auth\Predicates\IsDraft`) is a small reusable value
+object — `holds(Model $entity, User $user): bool` — unit-testable in isolation
+and shareable across grants. It is read directly by `AbilityResolver` at request
+time — there is no DB round-trip and nothing to seed. Adding a scoped capability
+is a code change: add a `Grant` to the relevant case(s); live on deploy, no
+seeding, convergence, or drift. Scoped abilities are intentionally **not**
+runtime-editable.
 
 `application_admin` is the exception — it is a real Bouncer role granted
 `everything()` and short-circuited in the resolver, so it has no matrix entry.
@@ -111,25 +124,24 @@ at `App\Models\Role` via `Bouncer::useRoleModel()`.
 ## The resolver
 
 `App\Auth\AbilityResolver` joins the pivot-scoped assignment to the code-owned
-ability matrix:
+role definitions:
 
 ```php
-$resolver->allows($user, 'submission.update-status', $submission);
+$resolver->allows($user, Ability::SubmissionUpdateStatus, $submission);
 ```
 
-It resolves the user's **effective role slugs** for the entity (reading
-`role_id` from the pivots and mapping each to its slug):
+It short-circuits to allowed if the user holds the global `application_admin`
+role, then resolves the user's **effective `ScopedRole`s** for the entity
+(reading `role_id` from the pivots and mapping each via `ScopedRole::tryFrom()`):
 
-- `application_admin` if the user holds the global role (→ allowed, short-circuit).
 - For a `Publication`: the user's `publication_user` roles on it.
 - For a `Submission`: the user's `submission_user` roles on it **plus** the
   admin roles inherited from the parent publication (publication admin /
   editor).
 
-It then asks `RoleAbilities::grants($role, $ability, $entity)` for each
-effective role — a plain in-memory lookup, no database access. `grants`
-resolves both absolute and conditional grants, evaluating any predicate against
-the entity.
+It then asks each effective role `$role->allows($ability, $entity, $user)` — a
+plain in-memory check over that role's `Grant`s, no database access, evaluating
+any predicate against the entity.
 
 ## Policies
 
@@ -140,7 +152,7 @@ policies (`PublicationPolicy`, `SubmissionPolicy`, `UserPolicy`), which inject
 ```php
 public function updateReviewers(User $user, Submission $submission)
 {
-    return $this->abilities->allows($user, 'submission.update-reviewers', $submission)
+    return $this->abilities->allows($user, Ability::SubmissionUpdateReviewers, $submission)
         ? true
         : Response::deny('UNAUTHORIZED');
 }
@@ -150,10 +162,10 @@ public function updateReviewers(User $user, Submission $submission)
 relationships stay in the policy, layered on the ability check:
 
 - Submitters may change a submission's status only while it is `DRAFT` — modeled
-  as a **conditional grant** in `RoleAbilities::matrix()`
-  (`submission.update-status` for submitter carries a `status == DRAFT`
-  predicate the resolver evaluates). The condition is data on the grant, not a
-  special ability name or a policy branch.
+  as a **conditional grant** on `ScopedRole::Submitter`
+  (`new Grant(Ability::SubmissionUpdateStatus, new IsDraft())`). The condition is
+  a `Predicate` object on the grant, not a special ability name or a policy
+  branch.
 - Comment edit/delete require `created_by === user.id`.
 - `submission.create` is role-agnostic: allowed when the publication is
   accepting submissions.
@@ -171,19 +183,20 @@ show) — not an authorization mechanism.
 
 ## Recipes
 
-**Add a capability to a role:** add the ability string to the role's list in
-`App\Auth\RoleAbilities::matrix()`. It is live on deploy — no re-seed, no
-migration.
+**Add a capability to a role:** add a `Grant` (and, if new, an `Ability` enum
+case) to the relevant `ScopedRole` case's `grants()`. It is live on deploy — no
+re-seed, no migration.
 
 **Authorize in a resolver/policy:** inject `AbilityResolver` and call
-`allows($user, $ability, $entity)`; add any state/ownership predicate inline.
+`allows($user, Ability::SomeCase, $entity)`; add any state/ownership predicate
+as a `Predicate` on the grant, or inline in the policy for one-offs.
 
 **Assign roles:**
 
 ```php
 $user->assignRole(Role::APPLICATION_ADMINISTRATOR);          // global (Bouncer)
 $publication->editors()->attach($user);                       // scoped (pivot)
-$submission->users()->attach($user->id, ['role_id' => ScopedRole::REVIEWER_ROLE_ID]);
+$submission->users()->attach($user->id, ['role_id' => ScopedRole::Reviewer->value]);
 ```
 
 **In tests:** the base `Tests\TestCase` seeds `AbacSeeder` after each database

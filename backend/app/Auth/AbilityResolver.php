@@ -5,27 +5,24 @@ namespace App\Auth;
 
 use App\Models\Publication;
 use App\Models\PublicationAssignment;
-use App\Models\Role;
 use App\Models\Submission;
 use App\Models\SubmissionAssignment;
 use App\Models\User;
 
 /**
  * Resolves scoped (publication / submission) permissions from the code-owned
- * role -> ability matrix.
+ * role -> ability definitions on {@see ScopedRole}.
  *
  * Scoping — who holds which role on which entity — lives in the
  * publication_user / submission_user pivots. The role -> ability map lives in
- * code (App\Auth\RoleAbilities). This service answers "given this user and this
- * entity, is the ability granted?" by resolving the user's effective role(s)
- * for that entity and checking whether any of them grants it. No DB round-trip:
- * the matrix is read directly from code, so scoped permission changes ship in
- * code and are live on deploy.
+ * code (each ScopedRole case returns its grants). This service answers "given
+ * this user and this entity, is the ability granted?" by resolving the user's
+ * effective role(s) for that entity and asking each whether it grants the
+ * ability. No DB round-trip beyond reading the pivots.
  *
  * Global, runtime-editable abilities are NOT resolved here — those live in
- * Bouncer and are checked via $user->can(). Attribute predicates (state,
- * ownership) stay in the policies; this only resolves the role -> ability
- * dimension.
+ * Bouncer and are checked via $user->can(). The one global role,
+ * application_admin, is granted everything() and short-circuited below.
  */
 class AbilityResolver
 {
@@ -33,24 +30,19 @@ class AbilityResolver
      * Is the ability granted to the user for the given entity?
      *
      * @param \App\Models\User $user
-     * @param string $ability
+     * @param \App\Auth\Ability $ability
      * @param \App\Models\Publication|\App\Models\Submission|null $entity
      */
-    public function allows(User $user, string $ability, $entity = null): bool
+    public function allows(User $user, Ability $ability, $entity = null): bool
     {
-        $roles = $this->effectiveRoles($user, $entity);
-
         // application_admin is the global super-role (granted everything);
         // short-circuit rather than enumerate every ability.
-        if (in_array(Role::SLUG_APPLICATION_ADMIN, $roles, true)) {
+        if ($user->isApplicationAdministrator()) {
             return true;
         }
 
-        // A grant in the matrix is either absolute or carries an attribute
-        // predicate evaluated against the entity — RoleAbilities::grants
-        // resolves both shapes.
-        foreach ($roles as $role) {
-            if (RoleAbilities::grants($role, $ability, $entity)) {
+        foreach ($this->effectiveRoles($user, $entity) as $role) {
+            if ($role->allows($ability, $entity, $user)) {
                 return true;
             }
         }
@@ -59,41 +51,42 @@ class AbilityResolver
     }
 
     /**
-     * Resolve the user's effective role slugs for an entity.
+     * Resolve the user's effective scoped roles for an entity.
      *
      * @param \App\Models\User $user
      * @param \App\Models\Publication|\App\Models\Submission|null $entity
-     * @return array<int, string>
+     * @return array<int, \App\Auth\ScopedRole>
      */
     public function effectiveRoles(User $user, $entity = null): array
     {
-        $slugs = [];
-
-        if ($user->isApplicationAdministrator()) {
-            $slugs[] = Role::SLUG_APPLICATION_ADMIN;
-        }
+        $roles = [];
 
         if ($entity instanceof Publication) {
-            $slugs = array_merge($slugs, $this->publicationRoleSlugs($user, $entity->id));
+            $roles = $this->publicationRoles($user, $entity->id);
         } elseif ($entity instanceof Submission) {
             // Direct submission roles plus admin roles inherited from the
             // parent publication (publication admin / editor).
-            $slugs = array_merge(
-                $slugs,
-                $this->submissionRoleSlugs($user, $entity->id),
-                $this->publicationRoleSlugs($user, $entity->publication_id)
+            $roles = array_merge(
+                $this->submissionRoles($user, $entity->id),
+                $this->publicationRoles($user, $entity->publication_id)
             );
         }
 
-        return array_values(array_unique(array_filter($slugs)));
+        // Dedupe by backing value (enum instances are not array_unique-able).
+        $unique = [];
+        foreach ($roles as $role) {
+            $unique[$role->value] = $role;
+        }
+
+        return array_values($unique);
     }
 
     /**
      * @param \App\Models\User $user
      * @param string|int $publicationId
-     * @return array<int, string>
+     * @return array<int, \App\Auth\ScopedRole>
      */
-    private function publicationRoleSlugs(User $user, $publicationId): array
+    private function publicationRoles(User $user, $publicationId): array
     {
         $roleIds = PublicationAssignment::query()
             ->where('user_id', $user->id)
@@ -101,15 +94,15 @@ class AbilityResolver
             ->pluck('role_id')
             ->all();
 
-        return $this->slugsForIds($roleIds);
+        return $this->rolesForIds($roleIds);
     }
 
     /**
      * @param \App\Models\User $user
      * @param string|int $submissionId
-     * @return array<int, string>
+     * @return array<int, \App\Auth\ScopedRole>
      */
-    private function submissionRoleSlugs(User $user, $submissionId): array
+    private function submissionRoles(User $user, $submissionId): array
     {
         $roleIds = SubmissionAssignment::query()
             ->where('user_id', $user->id)
@@ -117,27 +110,26 @@ class AbilityResolver
             ->pluck('role_id')
             ->all();
 
-        return $this->slugsForIds($roleIds);
+        return $this->rolesForIds($roleIds);
     }
 
     /**
-     * Map the pivot role_id integers to the slugs the ability matrix is keyed
-     * by. The slug is the auth layer's internal vocabulary; storage still keys
-     * on role_id (the slug column migration is a deferred follow-on).
+     * Map the pivot role_id integers to ScopedRole cases, skipping any that do
+     * not correspond to a known scoped role.
      *
      * @param array<int, int|string> $roleIds
-     * @return array<int, string>
+     * @return array<int, \App\Auth\ScopedRole>
      */
-    private function slugsForIds(array $roleIds): array
+    private function rolesForIds(array $roleIds): array
     {
-        $slugs = [];
+        $roles = [];
         foreach ($roleIds as $id) {
-            $slug = ScopedRole::slugForId($id);
-            if ($slug !== null) {
-                $slugs[] = $slug;
+            $role = ScopedRole::tryFrom((int)$id);
+            if ($role !== null) {
+                $roles[] = $role;
             }
         }
 
-        return $slugs;
+        return $roles;
     }
 }

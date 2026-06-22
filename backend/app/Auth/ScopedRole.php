@@ -3,71 +3,108 @@ declare(strict_types=1);
 
 namespace App\Auth;
 
+use App\Auth\Predicates\IsDraft;
+use App\Models\User;
+use Illuminate\Database\Eloquent\Model;
+
 /**
- * The scoped (publication / submission) roles.
+ * The scoped (publication / submission) roles, as a type.
  *
  * These are deliberately NOT Bouncer roles and have no rows in bouncer_roles.
  * A user holds a scoped role per-entity through the publication_user /
- * submission_user pivots (the integer role_id column); AbilityResolver maps
- * that role_id to a slug and looks the grant up in the code-owned
- * RoleAbilities matrix. Nothing here is stored in, seeded into, or assignable
- * through Bouncer — that is reserved for genuinely global roles
- * (App\Models\Role, e.g. application_admin).
- *
- * This is a static catalog of role identity (id / slug / title), kept separate
- * from the Bouncer role model so the two kinds of role are not conflated.
+ * submission_user pivots (the integer role_id column, which is this enum's
+ * backing value); AbilityResolver maps that role_id to a case via
+ * ScopedRole::tryFrom() and asks it what it grants. The role -> ability map is
+ * code: each case returns its list of {@see Grant}s. Nothing here is stored in,
+ * seeded into, or assignable through Bouncer — that is reserved for genuinely
+ * global roles (App\Models\Role, e.g. application_admin), which is intentionally
+ * NOT a case here.
  */
-final class ScopedRole
+enum ScopedRole: int
 {
-    // Human-readable titles (surfaced as GraphQL Role.name where a scoped role
-    // is exposed by title).
-    public const PUBLICATION_ADMINISTRATOR = 'Publication Administrator';
-    public const EDITOR = 'Editor';
-    public const REVIEW_COORDINATOR = 'Review Coordinator';
-    public const REVIEWER = 'Reviewer';
-    public const SUBMITTER = 'Submitter';
-
-    // Pivot role_id values (strings, matching the historical role_id typing).
-    public const PUBLICATION_ADMINISTRATOR_ROLE_ID = '2';
-    public const EDITOR_ROLE_ID = '3';
-    public const REVIEW_COORDINATOR_ROLE_ID = '4';
-    public const REVIEWER_ROLE_ID = '5';
-    public const SUBMITTER_ROLE_ID = '6';
-
-    // Slugs — the vocabulary the ability matrix is keyed by, matching the
-    // GraphQL enum names.
-    public const SLUG_PUBLICATION_ADMIN = 'publication_admin';
-    public const SLUG_EDITOR = 'editor';
-    public const SLUG_REVIEW_COORDINATOR = 'review_coordinator';
-    public const SLUG_REVIEWER = 'reviewer';
-    public const SLUG_SUBMITTER = 'submitter';
+    case PublicationAdmin = 2;
+    case Editor = 3;
+    case ReviewCoordinator = 4;
+    case Reviewer = 5;
+    case Submitter = 6;
 
     /**
-     * Scoped slugs keyed by the integer pivot role_id.
+     * The grants this role confers.
      *
-     * The pivots store role_id; AbilityResolver maps it through this to the
-     * slug the ability matrix is keyed by. (Replacing role_id with the slug
-     * column directly on the pivots is a deferred follow-on.)
+     * Roles compose as supersets: each builds on the one below it by spreading
+     * its grants, so "everything role B has, plus X" is explicit. The submitter
+     * is not in the coordinator chain — it extends the reviewer with title /
+     * submitter edits and a DRAFT-only status change (a conditional grant).
      *
-     * @var array<string, string>
+     * @return array<int, \App\Auth\Grant>
      */
-    public const ID_TO_SLUG = [
-        self::PUBLICATION_ADMINISTRATOR_ROLE_ID => self::SLUG_PUBLICATION_ADMIN,
-        self::EDITOR_ROLE_ID => self::SLUG_EDITOR,
-        self::REVIEW_COORDINATOR_ROLE_ID => self::SLUG_REVIEW_COORDINATOR,
-        self::REVIEWER_ROLE_ID => self::SLUG_REVIEWER,
-        self::SUBMITTER_ROLE_ID => self::SLUG_SUBMITTER,
-    ];
-
-    /**
-     * Resolve an integer pivot role_id to its scoped role slug (the vocabulary
-     * the ability matrix is keyed by). Returns null for an unknown id.
-     *
-     * @param string|int|null $roleId
-     * @return string|null
-     */
-    public static function slugForId($roleId): ?string
+    public function grants(): array
     {
-        return self::ID_TO_SLUG[(string)$roleId] ?? null;
+        return match ($this) {
+            self::Reviewer => [
+                new Grant(Ability::SubmissionView),
+                new Grant(Ability::SubmissionUpdate),
+            ],
+            self::ReviewCoordinator => [
+                ...self::Reviewer->grants(),
+                new Grant(Ability::SubmissionUpdateSubmitters),
+                new Grant(Ability::SubmissionUpdateReviewers),
+                new Grant(Ability::SubmissionUpdateStatus),
+                new Grant(Ability::SubmissionUpdateTitle),
+                new Grant(Ability::SubmissionInvite),
+            ],
+            self::Editor => [
+                ...self::ReviewCoordinator->grants(),
+                new Grant(Ability::PublicationView),
+                new Grant(Ability::SubmissionUpdateReviewCoordinators),
+            ],
+            self::PublicationAdmin => [
+                ...self::Editor->grants(),
+                new Grant(Ability::PublicationUpdate),
+            ],
+            self::Submitter => [
+                ...self::Reviewer->grants(),
+                new Grant(Ability::SubmissionUpdateSubmitters),
+                new Grant(Ability::SubmissionUpdateTitle),
+                new Grant(Ability::SubmissionUpdateStatus, new IsDraft()),
+            ],
+        };
+    }
+
+    /**
+     * Does this role grant the ability for the entity / acting user? Resolves
+     * both absolute and conditional grants.
+     *
+     * @param \App\Auth\Ability $ability
+     * @param \Illuminate\Database\Eloquent\Model|null $entity
+     * @param \App\Models\User $user
+     * @return bool
+     */
+    public function allows(Ability $ability, ?Model $entity, User $user): bool
+    {
+        foreach ($this->grants() as $grant) {
+            if ($grant->permits($ability, $entity, $user)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Human-readable title (the Bouncer-era display name), used where a scoped
+     * role is surfaced by title rather than id.
+     *
+     * @return string
+     */
+    public function title(): string
+    {
+        return match ($this) {
+            self::PublicationAdmin => 'Publication Administrator',
+            self::Editor => 'Editor',
+            self::ReviewCoordinator => 'Review Coordinator',
+            self::Reviewer => 'Reviewer',
+            self::Submitter => 'Submitter',
+        };
     }
 }

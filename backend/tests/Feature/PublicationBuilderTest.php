@@ -167,7 +167,7 @@ class PublicationBuilderTest extends TestCase
         Publication::factory()->create();
 
         $results = Publication::query()
-            ->myRole([ScopedRole::EDITOR_ROLE_ID])
+            ->myRole([ScopedRole::Editor->value])
             ->get();
 
         $this->assertEquals([$editing->id], $results->pluck('id')->all());
@@ -184,7 +184,7 @@ class PublicationBuilderTest extends TestCase
         Publication::factory()->count(3)->create();
 
         $results = Publication::query()
-            ->myRole([ScopedRole::EDITOR_ROLE_ID])
+            ->myRole([ScopedRole::Editor->value])
             ->get();
 
         $this->assertCount(0, $results);
@@ -211,8 +211,8 @@ class PublicationBuilderTest extends TestCase
 
         $results = Publication::query()
             ->myRole([
-                ScopedRole::EDITOR_ROLE_ID,
-                ScopedRole::PUBLICATION_ADMINISTRATOR_ROLE_ID,
+                ScopedRole::Editor->value,
+                ScopedRole::PublicationAdmin->value,
             ])
             ->get();
 

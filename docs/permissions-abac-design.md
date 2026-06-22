@@ -43,7 +43,7 @@ Native scopes fight all three. So:
 | Layer | Owns | Where |
 | --- | --- | --- |
 | Role assignment (scope) | who is Editor of Pub X / Reviewer of Sub Y | pivots (unchanged) |
-| Ability map (RBAC core) | role → granted abilities | code matrix (`App\Auth\RoleAbilities`) |
+| Ability map (RBAC core) | role → granted abilities | code (`App\Auth\ScopedRole` enum: each case returns its `Grant`s) |
 | Attribute conditions | state / ownership / relationship predicates | Policy guards (thin) |
 
 The matrix answers "can this role do X". Policy adds the attribute predicate
@@ -79,8 +79,9 @@ user.view  user.view-any  user.view-email  user.update  user.manage-beta
 `*` ability granted but gated to `status == DRAFT` by a policy predicate.
 App Admin = Bouncer global `*` (everything).
 
-New scoped capability = add an ability to the code matrix
-(`App\Auth\RoleAbilities::matrix()`). Live on deploy; no seed, no migration.
+New scoped capability = add a `Grant` to the relevant `App\Auth\ScopedRole`
+case (and an `App\Auth\Ability` enum case if the ability is new). Live on
+deploy; no seed, no migration.
 
 ## Attribute predicates that stay in policy
 
@@ -97,7 +98,7 @@ New scoped capability = add an ability to the code matrix
   (`bouncer_abilities`, `bouncer_permissions`, `bouncer_roles`,
   `bouncer_assigned_roles`) to coexist with spatie/laravel-permission.
 - Keep `publication_user` / `submission_user` pivots as the assignment source
-  of truth. The scoped ability map is code (`App\Auth\RoleAbilities`); Bouncer
+  of truth. The scoped ability map is code (`App\Auth\ScopedRole`); Bouncer
   holds only the **global** app-admin role row and its grant. The scoped roles
   themselves are also code (`App\Auth\ScopedRole`) — a static id/slug/title
   catalog with no Bouncer rows, kept separate from the Bouncer role model
@@ -123,11 +124,10 @@ column itself is untouched. Authorization maps `role_id` to a slug internally:
 | 5 | reviewer |
 | 6 | submitter |
 
-- `ScopedRole::ID_TO_SLUG` / `slugForId()` are the **live** mapping
-  `AbilityResolver` uses each request to turn the pivot `role_id` into the slug
-  the ability matrix is keyed by. The slug is the auth layer's internal
-  vocabulary. (These live on `App\Auth\ScopedRole`, not the Bouncer `Role`
-  model.)
+- `ScopedRole::tryFrom($roleId)` is the **live** mapping `AbilityResolver` uses
+  each request to turn the pivot `role_id` into a role case — `ScopedRole` is an
+  int-backed enum whose backing value *is* the `role_id`. (This lives on
+  `App\Auth\ScopedRole`, not the Bouncer `Role` model.)
 - GraphQL `@enum(value: …)` for `PublicationRole` / `SubmissionUserRoles` /
   `UserRoles` still map enum name → integer `role_id` (unchanged from before, so
   the client contract is untouched).
@@ -145,12 +145,12 @@ clear in isolation.
 ## The bridge
 
 ```php
-// AbilityResolver: given (user, entity) -> effective role names from pivots
+// AbilityResolver: given (user, entity) -> effective ScopedRoles from pivots
 //   publication: pivot roles on that publication
 //   submission:  pivot roles on that submission + parent-publication admin roles
-// then: does ANY effective role grant $ability in the code matrix?
-$roles = $resolver->effectiveRoles($user, $submission);   // e.g. ['reviewer']
-return $this->allows($user, $ability, $submission);       // RoleAbilities lookup
+// then: does ANY effective role grant $ability (an Ability enum case)?
+$roles = $resolver->effectiveRoles($user, $submission);   // e.g. [ScopedRole::Reviewer]
+return $this->allows($user, $ability, $submission);       // $role->allows(...) over its Grants
 ```
 
 Policy methods shrink to `bridge.allows(ability, entity) && <predicate>`. The
@@ -204,12 +204,14 @@ ideal. What actually makes it *better* from here, in priority order:
 
 2. **Conditions as data, not ability-name hacks (done, in this PR).** The old
    `submission.update-status-draft` encoded a state condition into an ability
-   name and re-checked it in the policy. It is now a conditional grant in the
-   `RoleAbilities::matrix()` itself — a grant is either a bare ability string
-   (absolute) or `ability => predicate` (`submission.update-status` granted to
-   submitter *when* `status == DRAFT`), evaluated by the resolver. The policy
-   method is a uniform ability check. This is the concrete ABAC improvement and
-   the pattern for future state/ownership conditions.
+   name and re-checked it in the policy. It is now a conditional `Grant` on
+   `ScopedRole::Submitter` — `new Grant(Ability::SubmissionUpdateStatus, new
+   IsDraft())`, where a grant is an `Ability` plus an optional `Predicate`
+   (absolute when there is none), evaluated by the resolver. The policy method
+   is a uniform ability check. This is the concrete ABAC improvement and the
+   pattern for future state/ownership conditions. Abilities are a typed enum
+   (`App\Auth\Ability`), so call sites are typo-proof and the catalog is
+   greppable.
 
 3. **Single decision-point façade.** Authorization currently dispatches across
    the resolver (scoped), `$user->can` (global), policy predicates, and `@can`.

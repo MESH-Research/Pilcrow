@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Policies;
 
+use App\Auth\Ability;
 use App\Auth\AbilityResolver;
 use App\Models\InlineComment;
 use App\Models\OverallComment;
@@ -47,7 +48,7 @@ class SubmissionPolicy
      */
     public function updateSubmitters(User $user, Submission $submission)
     {
-        return $this->abilities->allows($user, 'submission.update-submitters', $submission)
+        return $this->abilities->allows($user, Ability::SubmissionUpdateSubmitters, $submission)
             ? true
             : Response::deny('UNAUTHORIZED');
     }
@@ -59,7 +60,7 @@ class SubmissionPolicy
      */
     public function updateReviewers(User $user, Submission $submission)
     {
-        return $this->abilities->allows($user, 'submission.update-reviewers', $submission)
+        return $this->abilities->allows($user, Ability::SubmissionUpdateReviewers, $submission)
             ? true
             : Response::deny('UNAUTHORIZED');
     }
@@ -71,7 +72,7 @@ class SubmissionPolicy
      */
     public function updateReviewCoordinators(User $user, Submission $submission)
     {
-        return $this->abilities->allows($user, 'submission.update-review-coordinators', $submission)
+        return $this->abilities->allows($user, Ability::SubmissionUpdateReviewCoordinators, $submission)
             ? true
             : Response::deny('UNAUTHORIZED');
     }
@@ -81,7 +82,7 @@ class SubmissionPolicy
      *
      * Admins and review coordinators may change the status unconditionally;
      * submitters may only do so while the submission is still a DRAFT. That
-     * draft-only condition is a conditional grant in RoleAbilities, evaluated
+     * draft-only condition is a conditional grant in ScopedRole, evaluated
      * by the resolver — so this method is a uniform ability check.
      *
      * @param \App\Models\User $user
@@ -90,7 +91,7 @@ class SubmissionPolicy
      */
     public function updateStatus(User $user, Submission $submission)
     {
-        return $this->abilities->allows($user, 'submission.update-status', $submission)
+        return $this->abilities->allows($user, Ability::SubmissionUpdateStatus, $submission)
             ? true
             : Response::deny('UNAUTHORIZED');
     }
@@ -102,7 +103,7 @@ class SubmissionPolicy
      */
     public function updateTitle(User $user, Submission $submission)
     {
-        return $this->abilities->allows($user, 'submission.update-title', $submission)
+        return $this->abilities->allows($user, Ability::SubmissionUpdateTitle, $submission)
             ? true
             : Response::deny('UNAUTHORIZED');
     }
@@ -114,7 +115,7 @@ class SubmissionPolicy
      */
     public function view(User $user, Submission $submission)
     {
-        return $this->abilities->allows($user, 'submission.view', $submission)
+        return $this->abilities->allows($user, Ability::SubmissionView, $submission)
             ? true
             : Response::deny('UNAUTHORIZED');
     }
@@ -126,7 +127,7 @@ class SubmissionPolicy
      */
     public function update(User $user, Submission $submission)
     {
-        return $this->abilities->allows($user, 'submission.update', $submission)
+        return $this->abilities->allows($user, Ability::SubmissionUpdate, $submission)
             ? true
             : Response::deny('UNAUTHORIZED');
     }
@@ -140,7 +141,7 @@ class SubmissionPolicy
      */
     public function invite(User $user, Submission $submission)
     {
-        return $this->abilities->allows($user, 'submission.invite', $submission)
+        return $this->abilities->allows($user, Ability::SubmissionInvite, $submission)
             ? true
             : Response::deny('You do not have permission to invite users to this submission.');
     }

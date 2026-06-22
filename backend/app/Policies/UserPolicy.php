@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Policies;
 
+use App\Auth\Ability;
 use App\Auth\AbilityResolver;
 use App\Auth\ScopedRole;
 use App\Models\User;
@@ -25,7 +26,7 @@ class UserPolicy
      */
     public function viewAny(User $viewer): bool
     {
-        return $this->abilities->allows($viewer, 'user.view-any');
+        return $this->abilities->allows($viewer, Ability::UserViewAny);
     }
 
     /**
@@ -34,7 +35,7 @@ class UserPolicy
      */
     public function view(User $viewer, User $_target): bool
     {
-        return $this->abilities->allows($viewer, 'user.view');
+        return $this->abilities->allows($viewer, Ability::UserView);
     }
 
     /**
@@ -47,7 +48,7 @@ class UserPolicy
      */
     public function manageBeta(User $viewer, User $_target): bool
     {
-        return $this->abilities->allows($viewer, 'user.manage-beta');
+        return $this->abilities->allows($viewer, Ability::UserManageBeta);
     }
 
     /**
@@ -65,7 +66,7 @@ class UserPolicy
         }
 
         // TODO: Check if user can update user within own publication
-        return $this->abilities->allows($user, 'user.update');
+        return $this->abilities->allows($user, Ability::UserUpdate);
     }
 
     /**
@@ -95,8 +96,8 @@ class UserPolicy
                 'privilegedPublicationIds',
                 $viewer->publications()
                     ->wherePivotIn('role_id', [
-                        ScopedRole::PUBLICATION_ADMINISTRATOR_ROLE_ID,
-                        ScopedRole::EDITOR_ROLE_ID,
+                        ScopedRole::PublicationAdmin->value,
+                        ScopedRole::Editor->value,
                     ])
                     ->pluck('publications.id')
             );

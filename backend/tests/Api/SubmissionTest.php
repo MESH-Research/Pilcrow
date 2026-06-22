@@ -105,7 +105,7 @@ class SubmissionTest extends ApiTestCase
         $this->actingAs($publicationAdmin);
 
         $publication = Publication::factory()
-            ->hasAttached($publicationAdmin, ['role_id' => ScopedRole::PUBLICATION_ADMINISTRATOR_ROLE_ID])
+            ->hasAttached($publicationAdmin, ['role_id' => ScopedRole::PublicationAdmin->value])
             ->create();
 
         $submission = Submission::factory()
@@ -515,7 +515,7 @@ class SubmissionTest extends ApiTestCase
         $this->actingAs($publicationAdmin);
 
         Publication::factory()
-            ->hasAttached($publicationAdmin, ['role_id' => ScopedRole::PUBLICATION_ADMINISTRATOR_ROLE_ID])
+            ->hasAttached($publicationAdmin, ['role_id' => ScopedRole::PublicationAdmin->value])
             ->create();
 
         $submission = Submission::factory()
@@ -971,28 +971,28 @@ class SubmissionTest extends ApiTestCase
                 'message' => 'validation',
             ],
             'As A Submitter' => [
-                'role' => ScopedRole::SUBMITTER,
+                'role' => ScopedRole::Submitter->title(),
                 'title' => 'My Newly Updated Submission Title',
                 'passes' => true,
             ],
             'As A Reviewer' => [
-                'role' => ScopedRole::REVIEWER,
+                'role' => ScopedRole::Reviewer->title(),
                 'title' => 'My Newly Updated Submission Title',
                 'passes' => false,
                 'message' => 'UNAUTHORIZED',
             ],
             'As A Review Coordinator' => [
-                'role' => ScopedRole::REVIEW_COORDINATOR,
+                'role' => ScopedRole::ReviewCoordinator->title(),
                 'title' => 'My Newly Updated Submission Title',
                 'passes' => true,
             ],
             'As An Editor' => [
-                'role' => ScopedRole::EDITOR,
+                'role' => ScopedRole::Editor->title(),
                 'title' => 'My Newly Updated Submission Title',
                 'passes' => true,
             ],
             'As A Publication Admin' => [
-                'role' => ScopedRole::PUBLICATION_ADMINISTRATOR,
+                'role' => ScopedRole::PublicationAdmin->title(),
                 'title' => 'My Newly Updated Submission Title',
                 'passes' => true,
             ],
@@ -1073,23 +1073,23 @@ class SubmissionTest extends ApiTestCase
     public function testSubmissionTitleUpdateByRole(string $role, string $title, bool $passes, ?string $message = null)
     {
         switch ($role) {
-            case ScopedRole::SUBMITTER:
+            case ScopedRole::Submitter->title():
                 $user = $this->beSubmitter();
                 $submission = $user->submissions->first();
                 break;
-            case ScopedRole::REVIEWER:
+            case ScopedRole::Reviewer->title():
                 $user = $this->beReviewer();
                 $submission = $user->submissions->first();
                 break;
-            case ScopedRole::REVIEW_COORDINATOR:
+            case ScopedRole::ReviewCoordinator->title():
                 $user = $this->beReviewCoordinator();
                 $submission = $user->submissions->first();
                 break;
-            case ScopedRole::EDITOR:
+            case ScopedRole::Editor->title():
                 $user = $this->beEditor();
                 $submission = $user->publications->first()->submissions->first();
                 break;
-            case ScopedRole::PUBLICATION_ADMINISTRATOR:
+            case ScopedRole::PublicationAdmin->title():
                 $user = $this->bePubAdmin();
                 $submission = $user->publications->first()->submissions->first();
                 break;

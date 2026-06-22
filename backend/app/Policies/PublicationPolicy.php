@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Policies;
 
+use App\Auth\Ability;
 use App\Auth\AbilityResolver;
 use App\Models\Publication;
 use App\Models\User;
@@ -27,7 +28,7 @@ class PublicationPolicy
      */
     public function create(User $user)
     {
-        return $this->abilities->allows($user, 'publication.create');
+        return $this->abilities->allows($user, Ability::PublicationCreate);
     }
 
     /**
@@ -41,7 +42,7 @@ class PublicationPolicy
     {
         $publication = Publication::find($args['id']);
 
-        return $this->abilities->allows($user, 'publication.update', $publication);
+        return $this->abilities->allows($user, Ability::PublicationUpdate, $publication);
     }
 
     /**
@@ -63,6 +64,6 @@ class PublicationPolicy
             return false;
         }
 
-        return $this->abilities->allows($user, 'publication.view', $publication);
+        return $this->abilities->allows($user, Ability::PublicationView, $publication);
     }
 }
