@@ -204,10 +204,11 @@ ideal. What actually makes it *better* from here, in priority order:
 
 2. **Conditions as data, not ability-name hacks (done, in this PR).** The old
    `submission.update-status-draft` encoded a state condition into an ability
-   name and re-checked it in the policy. It is now a conditional `Grant` on
-   `ScopedRole::Submitter` — `new Grant(Ability::SubmissionUpdateStatus, new
-   IsDraft())`, where a grant is an `Ability` plus an optional `Predicate`
-   (absolute when there is none), evaluated by the resolver. The policy method
+   name and re-checked it in the policy. It is now a conditional grant on
+   `ScopedRole::Submitter` — `[Ability::SubmissionUpdateStatus,
+   SubmissionIsDraft::class]`, normalized to a `Grant` (an `Ability` plus an
+   optional `Predicate`, absolute when there is none) and evaluated by the
+   resolver. The policy method
    is a uniform ability check. This is the concrete ABAC improvement and the
    pattern for future state/ownership conditions. Abilities are a typed enum
    (`App\Auth\Ability`), so call sites are typo-proof and the catalog is

@@ -31,44 +31,77 @@ enum ScopedRole: int
     /**
      * The grants this role confers.
      *
-     * Roles compose as supersets: each builds on the one below it by spreading
-     * its grants, so "everything role B has, plus X" is explicit. The submitter
-     * is not in the coordinator chain — it extends the reviewer with title /
-     * submitter edits and a DRAFT-only status change (a conditional grant).
+     * Authored in shorthand by {@see grantDefinitions} — a bare Ability is an
+     * absolute grant, an [Ability, PredicateClass] pair a conditional one — and
+     * normalized to {@see Grant} objects here.
      *
      * @return array<int, \App\Auth\Grant>
      */
     public function grants(): array
     {
+        return array_map([self::class, 'toGrant'], $this->grantDefinitions());
+    }
+
+    /**
+     * The role's grants in shorthand. Each entry is either an Ability (absolute
+     * grant) or an [Ability, Predicate class-string] pair (conditional grant).
+     *
+     * Roles compose as supersets: each spreads the one below it, so "everything
+     * role B has, plus X" is explicit. The submitter is not in the coordinator
+     * chain — it extends the reviewer with title / submitter edits and a
+     * DRAFT-only status change (a conditional grant).
+     *
+     * @return array<int, \App\Auth\Ability|array{0: \App\Auth\Ability, 1: class-string<\App\Auth\Predicate>}>
+     */
+    private function grantDefinitions(): array
+    {
         return match ($this) {
             self::Reviewer => [
-                new Grant(Ability::SubmissionView),
-                new Grant(Ability::SubmissionUpdate),
+                Ability::SubmissionView,
+                Ability::SubmissionUpdate,
             ],
             self::ReviewCoordinator => [
-                ...self::Reviewer->grants(),
-                new Grant(Ability::SubmissionUpdateSubmitters),
-                new Grant(Ability::SubmissionUpdateReviewers),
-                new Grant(Ability::SubmissionUpdateStatus),
-                new Grant(Ability::SubmissionUpdateTitle),
-                new Grant(Ability::SubmissionInvite),
+                ...self::Reviewer->grantDefinitions(),
+                Ability::SubmissionUpdateSubmitters,
+                Ability::SubmissionUpdateReviewers,
+                Ability::SubmissionUpdateStatus,
+                Ability::SubmissionUpdateTitle,
+                Ability::SubmissionInvite,
             ],
             self::Editor => [
-                ...self::ReviewCoordinator->grants(),
-                new Grant(Ability::PublicationView),
-                new Grant(Ability::SubmissionUpdateReviewCoordinators),
+                ...self::ReviewCoordinator->grantDefinitions(),
+                Ability::PublicationView,
+                Ability::SubmissionUpdateReviewCoordinators,
             ],
             self::PublicationAdmin => [
-                ...self::Editor->grants(),
-                new Grant(Ability::PublicationUpdate),
+                ...self::Editor->grantDefinitions(),
+                Ability::PublicationUpdate,
             ],
             self::Submitter => [
-                ...self::Reviewer->grants(),
-                new Grant(Ability::SubmissionUpdateSubmitters),
-                new Grant(Ability::SubmissionUpdateTitle),
-                new Grant(Ability::SubmissionUpdateStatus, new SubmissionIsDraft()),
+                ...self::Reviewer->grantDefinitions(),
+                Ability::SubmissionUpdateSubmitters,
+                Ability::SubmissionUpdateTitle,
+                [Ability::SubmissionUpdateStatus, SubmissionIsDraft::class],
             ],
         };
+    }
+
+    /**
+     * Normalize a shorthand grant definition into a {@see Grant}, instantiating
+     * the predicate class for conditional grants.
+     *
+     * @param \App\Auth\Ability|array{0: \App\Auth\Ability, 1: class-string<\App\Auth\Predicate>} $definition
+     * @return \App\Auth\Grant
+     */
+    private static function toGrant(Ability|array $definition): Grant
+    {
+        if ($definition instanceof Ability) {
+            return new Grant($definition);
+        }
+
+        [$ability, $predicateClass] = $definition;
+
+        return new Grant($ability, new $predicateClass());
     }
 
     /**

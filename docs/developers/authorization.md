@@ -77,37 +77,40 @@ strings, so a typo is a compile-time error and "who grants this?" is a
 find-usages.
 
 The scoped role → ability map is **code on the `App\Auth\ScopedRole` enum**:
-each case returns its list of `App\Auth\Grant`s. A `Grant` pairs an `Ability`
-with an optional `Predicate` — the predicate lives on the *grant* (the
-role↔ability pairing), not the ability, because the same ability is absolute for
-one role and conditional for another. No predicate = absolute grant. Roles
-compose as supersets by spreading the role below them:
+each case lists its grants in shorthand — a bare `Ability` is an absolute grant,
+an `[Ability, PredicateClass]` pair a conditional one — which `grants()`
+normalizes to `App\Auth\Grant` objects. A `Grant` pairs an `Ability` with an
+optional `Predicate`; the predicate lives on the *grant* (the role↔ability
+pairing), not the ability, because the same ability is absolute for one role and
+conditional for another. No predicate = absolute grant. Roles compose as
+supersets by spreading the role below them:
 
 ```php
-public function grants(): array
+private function grantDefinitions(): array
 {
     return match ($this) {
         self::Reviewer => [
-            new Grant(Ability::SubmissionView),          // absolute
-            new Grant(Ability::SubmissionUpdate),
+            Ability::SubmissionView,                       // absolute
+            Ability::SubmissionUpdate,
         ],
         self::Submitter => [
-            ...self::Reviewer->grants(),                  // everything a reviewer has…
-            new Grant(Ability::SubmissionUpdateTitle),    // …plus these…
+            ...self::Reviewer->grantDefinitions(),         // everything a reviewer has…
+            Ability::SubmissionUpdateTitle,                // …plus these…
             // …and a conditional grant: status only while DRAFT
-            new Grant(Ability::SubmissionUpdateStatus, new IsDraft()),
+            [Ability::SubmissionUpdateStatus, SubmissionIsDraft::class],
         ],
         // ...
     };
 }
 ```
 
-A `Predicate` (e.g. `App\Auth\Predicates\IsDraft`) is a small reusable value
-object — `holds(Model $entity, User $user): bool` — unit-testable in isolation
-and shareable across grants. It is read directly by `AbilityResolver` at request
-time — there is no DB round-trip and nothing to seed. Adding a scoped capability
-is a code change: add a `Grant` to the relevant case(s); live on deploy, no
-seeding, convergence, or drift. Scoped abilities are intentionally **not**
+A `Predicate` (e.g. `App\Auth\Predicates\SubmissionIsDraft`) is a small reusable
+value object — `holds(Model $entity, User $user): bool` — unit-testable in
+isolation and shareable across grants; `grants()` instantiates it from the
+class-string. It is read directly by `AbilityResolver` at request time — there
+is no DB round-trip and nothing to seed. Adding a scoped capability is a code
+change: add an entry to the relevant case(s); live on deploy, no seeding,
+convergence, or drift. Scoped abilities are intentionally **not**
 runtime-editable.
 
 `application_admin` is the exception — it is a real Bouncer role granted
@@ -163,8 +166,8 @@ relationships stay in the policy, layered on the ability check:
 
 - Submitters may change a submission's status only while it is `DRAFT` — modeled
   as a **conditional grant** on `ScopedRole::Submitter`
-  (`new Grant(Ability::SubmissionUpdateStatus, new IsDraft())`). The condition is
-  a `Predicate` object on the grant, not a special ability name or a policy
+  (`[Ability::SubmissionUpdateStatus, SubmissionIsDraft::class]`). The condition
+  is a `Predicate` object on the grant, not a special ability name or a policy
   branch.
 - Comment edit/delete require `created_by === user.id`.
 - `submission.create` is role-agnostic: allowed when the publication is
