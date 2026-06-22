@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Policies;
 
-use App\Auth\Ability;
-use App\Auth\AbilityResolver;
+use App\Auth\ScopedAbility;
+use App\Auth\ScopedAbilityResolver;
 use App\Models\InlineComment;
 use App\Models\OverallComment;
 use App\Models\Publication;
@@ -18,9 +18,9 @@ class SubmissionPolicy
     use HandlesAuthorization;
 
     /**
-     * @param \App\Auth\AbilityResolver $abilities
+     * @param \App\Auth\ScopedAbilityResolver $scoped
      */
-    public function __construct(private AbilityResolver $abilities)
+    public function __construct(private ScopedAbilityResolver $scoped)
     {
     }
 
@@ -48,7 +48,7 @@ class SubmissionPolicy
      */
     public function updateSubmitters(User $user, Submission $submission)
     {
-        return $this->abilities->allows($user, Ability::SubmissionUpdateSubmitters, $submission)
+        return $this->scoped->allows($user, ScopedAbility::SubmissionUpdateSubmitters, $submission)
             ? true
             : Response::deny('UNAUTHORIZED');
     }
@@ -60,7 +60,7 @@ class SubmissionPolicy
      */
     public function updateReviewers(User $user, Submission $submission)
     {
-        return $this->abilities->allows($user, Ability::SubmissionUpdateReviewers, $submission)
+        return $this->scoped->allows($user, ScopedAbility::SubmissionUpdateReviewers, $submission)
             ? true
             : Response::deny('UNAUTHORIZED');
     }
@@ -72,7 +72,7 @@ class SubmissionPolicy
      */
     public function updateReviewCoordinators(User $user, Submission $submission)
     {
-        return $this->abilities->allows($user, Ability::SubmissionUpdateReviewCoordinators, $submission)
+        return $this->scoped->allows($user, ScopedAbility::SubmissionUpdateReviewCoordinators, $submission)
             ? true
             : Response::deny('UNAUTHORIZED');
     }
@@ -91,7 +91,7 @@ class SubmissionPolicy
      */
     public function updateStatus(User $user, Submission $submission)
     {
-        return $this->abilities->allows($user, Ability::SubmissionUpdateStatus, $submission)
+        return $this->scoped->allows($user, ScopedAbility::SubmissionUpdateStatus, $submission)
             ? true
             : Response::deny('UNAUTHORIZED');
     }
@@ -103,7 +103,7 @@ class SubmissionPolicy
      */
     public function updateTitle(User $user, Submission $submission)
     {
-        return $this->abilities->allows($user, Ability::SubmissionUpdateTitle, $submission)
+        return $this->scoped->allows($user, ScopedAbility::SubmissionUpdateTitle, $submission)
             ? true
             : Response::deny('UNAUTHORIZED');
     }
@@ -115,7 +115,7 @@ class SubmissionPolicy
      */
     public function view(User $user, Submission $submission)
     {
-        return $this->abilities->allows($user, Ability::SubmissionView, $submission)
+        return $this->scoped->allows($user, ScopedAbility::SubmissionView, $submission)
             ? true
             : Response::deny('UNAUTHORIZED');
     }
@@ -127,7 +127,7 @@ class SubmissionPolicy
      */
     public function update(User $user, Submission $submission)
     {
-        return $this->abilities->allows($user, Ability::SubmissionUpdate, $submission)
+        return $this->scoped->allows($user, ScopedAbility::SubmissionUpdate, $submission)
             ? true
             : Response::deny('UNAUTHORIZED');
     }
@@ -141,7 +141,7 @@ class SubmissionPolicy
      */
     public function invite(User $user, Submission $submission)
     {
-        return $this->abilities->allows($user, Ability::SubmissionInvite, $submission)
+        return $this->scoped->allows($user, ScopedAbility::SubmissionInvite, $submission)
             ? true
             : Response::deny('You do not have permission to invite users to this submission.');
     }

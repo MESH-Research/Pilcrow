@@ -3,9 +3,10 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
-use App\Models\Role;
+use App\Auth\GlobalRole;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Silber\Bouncer\BouncerFacade as Bouncer;
 use Tests\TestCase;
 
 /**
@@ -22,8 +23,8 @@ class UserPermissionsTest extends TestCase
      */
     public function testAllRoleSlugsAreSeededWithTitles()
     {
-        foreach (Role::SLUG_TO_TITLE as $slug => $title) {
-            $role = Role::where('name', $slug)->first();
+        foreach (GlobalRole::SLUG_TO_TITLE as $slug => $title) {
+            $role = Bouncer::role()->where('name', $slug)->first();
             $this->assertNotNull($role, $slug);
             $this->assertEquals($title, $role->title);
         }
@@ -35,7 +36,7 @@ class UserPermissionsTest extends TestCase
     public function testAssignmentOfApplicationAdministratorRoleToUser()
     {
         $user = User::factory()->create();
-        $user->assignRole(Role::APPLICATION_ADMINISTRATOR);
+        $user->assignRole(GlobalRole::APPLICATION_ADMINISTRATOR);
 
         $this->assertTrue($user->isApplicationAdministrator());
     }

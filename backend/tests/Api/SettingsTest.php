@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Tests\Api;
 
-use App\Models\Role;
+use App\Auth\GlobalRole;
 use App\Models\User;
 use App\Settings\GeneralSettings;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -30,7 +30,7 @@ class SettingsTest extends ApiTestCase
     {
         /** @var User $user */
         $user = User::factory()->create();
-        $user->assignRole(Role::APPLICATION_ADMINISTRATOR);
+        $user->assignRole(GlobalRole::APPLICATION_ADMINISTRATOR);
         $this->actingAs($user);
 
         $this->graphQL('

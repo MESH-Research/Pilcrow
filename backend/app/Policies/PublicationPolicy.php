@@ -3,8 +3,9 @@ declare(strict_types=1);
 
 namespace App\Policies;
 
-use App\Auth\Ability;
-use App\Auth\AbilityResolver;
+use App\Auth\GlobalAbility;
+use App\Auth\ScopedAbility;
+use App\Auth\ScopedAbilityResolver;
 use App\Models\Publication;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -14,9 +15,9 @@ class PublicationPolicy
     use HandlesAuthorization;
 
     /**
-     * @param \App\Auth\AbilityResolver $abilities
+     * @param \App\Auth\ScopedAbilityResolver $scoped
      */
-    public function __construct(private AbilityResolver $abilities)
+    public function __construct(private ScopedAbilityResolver $scoped)
     {
     }
 
@@ -28,7 +29,7 @@ class PublicationPolicy
      */
     public function create(User $user)
     {
-        return $this->abilities->allows($user, Ability::PublicationCreate);
+        return $user->can(GlobalAbility::PublicationCreate);
     }
 
     /**
@@ -42,7 +43,7 @@ class PublicationPolicy
     {
         $publication = Publication::find($args['id']);
 
-        return $this->abilities->allows($user, Ability::PublicationUpdate, $publication);
+        return $this->scoped->allows($user, ScopedAbility::PublicationUpdate, $publication);
     }
 
     /**
@@ -64,6 +65,6 @@ class PublicationPolicy
             return false;
         }
 
-        return $this->abilities->allows($user, Ability::PublicationView, $publication);
+        return $this->scoped->allows($user, ScopedAbility::PublicationView, $publication);
     }
 }

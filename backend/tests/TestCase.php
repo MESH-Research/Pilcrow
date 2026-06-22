@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace Tests;
 
+use App\Auth\GlobalRole;
 use App\Models\Publication;
-use App\Models\Role;
 use App\Models\Submission;
 use App\Models\User;
 use Database\Seeders\AbacSeeder;
@@ -38,7 +38,7 @@ abstract class TestCase extends BaseTestCase
     {
         /** @var User $user */
         $user = User::factory()->create();
-        $user->assignRole(Role::APPLICATION_ADMINISTRATOR);
+        $user->assignRole(GlobalRole::APPLICATION_ADMINISTRATOR);
         $this->actingAs($user);
 
         return $user;

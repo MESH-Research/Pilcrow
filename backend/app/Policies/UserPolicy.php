@@ -3,22 +3,24 @@ declare(strict_types=1);
 
 namespace App\Policies;
 
-use App\Auth\Ability;
-use App\Auth\AbilityResolver;
+use App\Auth\GlobalAbility;
 use App\Auth\ScopedRole;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
+/**
+ * User authorization.
+ *
+ * The user-management abilities here are GLOBAL, not scoped — no publication or
+ * submission is involved, so they go straight to Bouncer via $user->can() and
+ * never touch the ScopedAbilityResolver. They are application-administrator-only
+ * today (via Bouncer's everything() grant) and could be granted to other roles
+ * at the Bouncer layer later. viewEmail is a relationship predicate (see below),
+ * resolved in-policy.
+ */
 class UserPolicy
 {
     use HandlesAuthorization;
-
-    /**
-     * @param \App\Auth\AbilityResolver $abilities
-     */
-    public function __construct(private AbilityResolver $abilities)
-    {
-    }
 
     /**
      * Determine whether the viewer can list user accounts via the top-level
@@ -26,7 +28,7 @@ class UserPolicy
      */
     public function viewAny(User $viewer): bool
     {
-        return $this->abilities->allows($viewer, Ability::UserViewAny);
+        return $viewer->can(GlobalAbility::UserViewAny);
     }
 
     /**
@@ -35,7 +37,7 @@ class UserPolicy
      */
     public function view(User $viewer, User $_target): bool
     {
-        return $this->abilities->allows($viewer, Ability::UserView);
+        return $viewer->can(GlobalAbility::UserView);
     }
 
     /**
@@ -48,7 +50,7 @@ class UserPolicy
      */
     public function manageBeta(User $viewer, User $_target): bool
     {
-        return $this->abilities->allows($viewer, Ability::UserManageBeta);
+        return $viewer->can(GlobalAbility::UserManageBeta);
     }
 
     /**
@@ -66,7 +68,7 @@ class UserPolicy
         }
 
         // TODO: Check if user can update user within own publication
-        return $this->abilities->allows($user, Ability::UserUpdate);
+        return $user->can(GlobalAbility::UserUpdate);
     }
 
     /**

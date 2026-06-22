@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Auth\GlobalRole;
 use App\Builders\UserBuilder;
 use Carbon\Carbon;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -267,7 +268,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function isApplicationAdministrator(): bool
     {
-        return $this->isA(Role::SLUG_APPLICATION_ADMIN);
+        return $this->isA(GlobalRole::SLUG_APPLICATION_ADMIN);
     }
 
     /**
@@ -281,7 +282,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function assignRole(string $role): self
     {
-        $slug = array_search($role, Role::SLUG_TO_TITLE, true);
+        $slug = array_search($role, GlobalRole::SLUG_TO_TITLE, true);
         $this->assign($slug !== false ? $slug : $role);
 
         return $this;
@@ -296,7 +297,7 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getHighestPrivilegedRole(): ?int
     {
         if ($this->isApplicationAdministrator()) {
-            return (int)Role::APPLICATION_ADMINISTRATOR_ROLE_ID;
+            return GlobalRole::PRIVILEGE_RANK;
         }
         if ($this->publications->isNotEmpty()) {
             return PublicationUser::where('user_id', $this->id)->min('role_id');

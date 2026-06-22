@@ -1,7 +1,7 @@
 """
 A user role
 """
-type Role {
+type Role @model(class: "Silber\\Bouncer\\Database\\Role") {
     id: ID!
     "Human-readable role title (e.g. \"Application Administrator\")."
     name: String! @rename(attribute: "title")

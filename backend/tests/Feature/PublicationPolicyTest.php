@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
+use App\Auth\GlobalRole;
 use App\Auth\ScopedRole;
 use App\Models\Publication;
-use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Gate;
@@ -30,7 +30,7 @@ class PublicationPolicyTest extends TestCase
     private function appAdmin(): User
     {
         $admin = User::factory()->create();
-        $admin->assignRole(Role::APPLICATION_ADMINISTRATOR);
+        $admin->assignRole(GlobalRole::APPLICATION_ADMINISTRATOR);
 
         return $admin;
     }

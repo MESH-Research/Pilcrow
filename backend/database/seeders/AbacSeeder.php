@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
-use App\Models\Role;
+use App\Auth\GlobalRole;
 use Illuminate\Database\Seeder;
 use Silber\Bouncer\BouncerFacade as Bouncer;
 
@@ -17,7 +17,7 @@ use Silber\Bouncer\BouncerFacade as Bouncer;
  *
  * Scoped (publication / submission) roles are NOT seeded: they are not Bouncer
  * roles. The scoped role -> ability map is code-owned (App\Auth\ScopedRole),
- * read directly by AbilityResolver, and never stored in Bouncer.
+ * read directly by ScopedAbilityResolver, and never stored in Bouncer.
  */
 class AbacSeeder extends Seeder
 {
@@ -28,12 +28,12 @@ class AbacSeeder extends Seeder
      */
     public function run(): void
     {
-        Role::firstOrCreate(
-            ['name' => Role::SLUG_APPLICATION_ADMIN],
-            ['title' => Role::APPLICATION_ADMINISTRATOR]
+        Bouncer::role()->firstOrCreate(
+            ['name' => GlobalRole::SLUG_APPLICATION_ADMIN],
+            ['title' => GlobalRole::APPLICATION_ADMINISTRATOR]
         );
 
-        Bouncer::allow(Role::SLUG_APPLICATION_ADMIN)->everything();
+        Bouncer::allow(GlobalRole::SLUG_APPLICATION_ADMIN)->everything();
 
         Bouncer::refresh();
     }

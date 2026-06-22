@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace Tests\Api;
 
+use App\Auth\GlobalRole;
 use App\Auth\ScopedRole;
 use App\Models\Publication;
-use App\Models\Role;
 use App\Models\Submission;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -959,13 +959,13 @@ class SubmissionTest extends ApiTestCase
     {
         return [
             'Empty Title' => [
-                'role' => Role::APPLICATION_ADMINISTRATOR,
+                'role' => GlobalRole::APPLICATION_ADMINISTRATOR,
                 'title' => '',
                 'passes' => false,
                 'message' => 'validation',
             ],
             'Title That Is Too Long ' => [
-                'role' => Role::APPLICATION_ADMINISTRATOR,
+                'role' => GlobalRole::APPLICATION_ADMINISTRATOR,
                 'title' => str_repeat('1234567890', 520),
                 'passes' => false,
                 'message' => 'validation',
@@ -997,7 +997,7 @@ class SubmissionTest extends ApiTestCase
                 'passes' => true,
             ],
             'As An Application Admin' => [
-                'role' => Role::APPLICATION_ADMINISTRATOR,
+                'role' => GlobalRole::APPLICATION_ADMINISTRATOR,
                 'title' => 'My Newly Updated Submission Title',
                 'passes' => true,
             ],
@@ -1093,7 +1093,7 @@ class SubmissionTest extends ApiTestCase
                 $user = $this->bePubAdmin();
                 $submission = $user->publications->first()->submissions->first();
                 break;
-            case Role::APPLICATION_ADMINISTRATOR:
+            case GlobalRole::APPLICATION_ADMINISTRATOR:
                 $this->beAppAdmin();
                 $submission = Submission::factory()->create();
                 break;

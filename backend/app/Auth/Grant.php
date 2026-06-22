@@ -18,11 +18,11 @@ use Illuminate\Database\Eloquent\Model;
 final class Grant
 {
     /**
-     * @param \App\Auth\Ability $ability
+     * @param \App\Auth\ScopedAbility $ability
      * @param \App\Auth\Predicate|null $predicate
      */
     public function __construct(
-        public readonly Ability $ability,
+        public readonly ScopedAbility $ability,
         public readonly ?Predicate $predicate = null,
     ) {
     }
@@ -30,12 +30,12 @@ final class Grant
     /**
      * Does this grant permit the requested ability for the entity / user?
      *
-     * @param \App\Auth\Ability $ability
+     * @param \App\Auth\ScopedAbility $ability
      * @param \Illuminate\Database\Eloquent\Model|null $entity
      * @param \App\Models\User $user
      * @return bool
      */
-    public function permits(Ability $ability, ?Model $entity, User $user): bool
+    public function permits(ScopedAbility $ability, ?Model $entity, User $user): bool
     {
         if ($this->ability !== $ability) {
             return false;

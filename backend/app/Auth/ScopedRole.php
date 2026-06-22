@@ -13,11 +13,11 @@ use Illuminate\Database\Eloquent\Model;
  * These are deliberately NOT Bouncer roles and have no rows in bouncer_roles.
  * A user holds a scoped role per-entity through the publication_user /
  * submission_user pivots (the integer role_id column, which is this enum's
- * backing value); AbilityResolver maps that role_id to a case via
+ * backing value); ScopedAbilityResolver maps that role_id to a case via
  * ScopedRole::tryFrom() and asks it what it grants. The role -> ability map is
  * code: each case returns its list of {@see Grant}s. Nothing here is stored in,
  * seeded into, or assignable through Bouncer — that is reserved for genuinely
- * global roles (App\Models\Role, e.g. application_admin), which is intentionally
+ * global roles (App\Auth\GlobalRole, e.g. application_admin), which is intentionally
  * NOT a case here.
  */
 enum ScopedRole: int
@@ -31,8 +31,8 @@ enum ScopedRole: int
     /**
      * The grants this role confers.
      *
-     * Authored in shorthand by {@see grantDefinitions} — a bare Ability is an
-     * absolute grant, an [Ability, PredicateClass] pair a conditional one — and
+     * Authored in shorthand by {@see grantDefinitions} — a bare ScopedAbility is an
+     * absolute grant, an [ScopedAbility, PredicateClass] pair a conditional one — and
      * normalized to {@see Grant} objects here.
      *
      * @return array<int, \App\Auth\Grant>
@@ -43,45 +43,45 @@ enum ScopedRole: int
     }
 
     /**
-     * The role's grants in shorthand. Each entry is either an Ability (absolute
-     * grant) or an [Ability, Predicate class-string] pair (conditional grant).
+     * The role's grants in shorthand. Each entry is either a ScopedAbility (absolute
+     * grant) or an [ScopedAbility, Predicate class-string] pair (conditional grant).
      *
      * Roles compose as supersets: each spreads the one below it, so "everything
      * role B has, plus X" is explicit. The submitter is not in the coordinator
      * chain — it extends the reviewer with title / submitter edits and a
      * DRAFT-only status change (a conditional grant).
      *
-     * @return array<int, \App\Auth\Ability|array{0: \App\Auth\Ability, 1: class-string<\App\Auth\Predicate>}>
+     * @return array<int, \App\Auth\ScopedAbility|array{0: \App\Auth\ScopedAbility, 1: class-string<\App\Auth\Predicate>}>
      */
     private function grantDefinitions(): array
     {
         return match ($this) {
             self::Reviewer => [
-                Ability::SubmissionView,
-                Ability::SubmissionUpdate,
+                ScopedAbility::SubmissionView,
+                ScopedAbility::SubmissionUpdate,
             ],
             self::ReviewCoordinator => [
                 ...self::Reviewer->grantDefinitions(),
-                Ability::SubmissionUpdateSubmitters,
-                Ability::SubmissionUpdateReviewers,
-                Ability::SubmissionUpdateStatus,
-                Ability::SubmissionUpdateTitle,
-                Ability::SubmissionInvite,
+                ScopedAbility::SubmissionUpdateSubmitters,
+                ScopedAbility::SubmissionUpdateReviewers,
+                ScopedAbility::SubmissionUpdateStatus,
+                ScopedAbility::SubmissionUpdateTitle,
+                ScopedAbility::SubmissionInvite,
             ],
             self::Editor => [
                 ...self::ReviewCoordinator->grantDefinitions(),
-                Ability::PublicationView,
-                Ability::SubmissionUpdateReviewCoordinators,
+                ScopedAbility::PublicationView,
+                ScopedAbility::SubmissionUpdateReviewCoordinators,
             ],
             self::PublicationAdmin => [
                 ...self::Editor->grantDefinitions(),
-                Ability::PublicationUpdate,
+                ScopedAbility::PublicationUpdate,
             ],
             self::Submitter => [
                 ...self::Reviewer->grantDefinitions(),
-                Ability::SubmissionUpdateSubmitters,
-                Ability::SubmissionUpdateTitle,
-                [Ability::SubmissionUpdateStatus, SubmissionIsDraft::class],
+                ScopedAbility::SubmissionUpdateSubmitters,
+                ScopedAbility::SubmissionUpdateTitle,
+                [ScopedAbility::SubmissionUpdateStatus, SubmissionIsDraft::class],
             ],
         };
     }
@@ -90,12 +90,12 @@ enum ScopedRole: int
      * Normalize a shorthand grant definition into a {@see Grant}, instantiating
      * the predicate class for conditional grants.
      *
-     * @param \App\Auth\Ability|array{0: \App\Auth\Ability, 1: class-string<\App\Auth\Predicate>} $definition
+     * @param \App\Auth\ScopedAbility|array{0: \App\Auth\ScopedAbility, 1: class-string<\App\Auth\Predicate>} $definition
      * @return \App\Auth\Grant
      */
-    private static function toGrant(Ability|array $definition): Grant
+    private static function toGrant(ScopedAbility|array $definition): Grant
     {
-        if ($definition instanceof Ability) {
+        if ($definition instanceof ScopedAbility) {
             return new Grant($definition);
         }
 
@@ -112,15 +112,15 @@ enum ScopedRole: int
      * is only instantiated for a definition whose ability actually matches —
      * predicates for unrelated abilities are never constructed.
      *
-     * @param \App\Auth\Ability $ability
+     * @param \App\Auth\ScopedAbility $ability
      * @param \Illuminate\Database\Eloquent\Model|null $entity
      * @param \App\Models\User $user
      * @return bool
      */
-    public function allows(Ability $ability, ?Model $entity, User $user): bool
+    public function allows(ScopedAbility $ability, ?Model $entity, User $user): bool
     {
         foreach ($this->grantDefinitions() as $definition) {
-            $grantAbility = $definition instanceof Ability ? $definition : $definition[0];
+            $grantAbility = $definition instanceof ScopedAbility ? $definition : $definition[0];
             if ($grantAbility !== $ability) {
                 continue;
             }

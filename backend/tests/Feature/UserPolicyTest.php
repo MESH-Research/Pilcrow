@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
+use App\Auth\GlobalRole;
 use App\Auth\ScopedRole;
 use App\Models\Publication;
-use App\Models\Role;
 use App\Models\Submission;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -30,7 +30,7 @@ class UserPolicyTest extends TestCase
     public function testViewEmailAllowsApplicationAdministrator(): void
     {
         $admin = User::factory()->create();
-        $admin->assignRole(Role::APPLICATION_ADMINISTRATOR);
+        $admin->assignRole(GlobalRole::APPLICATION_ADMINISTRATOR);
         $target = User::factory()->create();
 
         $this->assertTrue($admin->can('viewEmail', $target));
@@ -119,7 +119,7 @@ class UserPolicyTest extends TestCase
     public function testViewAllowsOnlyApplicationAdministrator(): void
     {
         $admin = User::factory()->create();
-        $admin->assignRole(Role::APPLICATION_ADMINISTRATOR);
+        $admin->assignRole(GlobalRole::APPLICATION_ADMINISTRATOR);
         $other = User::factory()->create();
 
         $this->assertTrue($admin->can('view', $other));

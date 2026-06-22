@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Tests\Api;
 
-use App\Models\Role;
+use App\Auth\GlobalRole;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Auth\Notifications\VerifyEmail;
@@ -164,7 +164,7 @@ class VerifyEmailTest extends ApiTestCase
     {
         Notification::fake();
         $testUser = User::factory()->create(['email' => 'mesh@msu.edu', 'email_verified_at' => null]);
-        $adminUser = User::factory()->create(['email' => 'mesh2@msu.edu'])->assignRole(Role::APPLICATION_ADMINISTRATOR);
+        $adminUser = User::factory()->create(['email' => 'mesh2@msu.edu'])->assignRole(GlobalRole::APPLICATION_ADMINISTRATOR);
 
         $this->actingAs($adminUser);
         $response = $this->callSendVerifyEmailEndpoint(['id' => $testUser->id]);

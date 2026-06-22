@@ -80,7 +80,7 @@ user.view  user.view-any  user.view-email  user.update  user.manage-beta
 App Admin = Bouncer global `*` (everything).
 
 New scoped capability = add a `Grant` to the relevant `App\Auth\ScopedRole`
-case (and an `App\Auth\Ability` enum case if the ability is new). Live on
+case (and an `App\Auth\ScopedAbility` enum case if the ability is new). Live on
 deploy; no seed, no migration.
 
 ## Attribute predicates that stay in policy
@@ -98,11 +98,12 @@ deploy; no seed, no migration.
   (`bouncer_abilities`, `bouncer_permissions`, `bouncer_roles`,
   `bouncer_assigned_roles`) to coexist with spatie/laravel-permission.
 - Keep `publication_user` / `submission_user` pivots as the assignment source
-  of truth. The scoped ability map is code (`App\Auth\ScopedRole`); Bouncer
-  holds only the **global** app-admin role row and its grant. The scoped roles
-  themselves are also code (`App\Auth\ScopedRole`) — a static id/slug/title
-  catalog with no Bouncer rows, kept separate from the Bouncer role model
-  (`App\Models\Role`) so the global and scoped kinds are not conflated.
+  of truth. The scoped roles and their ability map are code (`App\Auth\ScopedRole`,
+  an int-backed enum) with no Bouncer rows. Bouncer holds only the **global**
+  app-admin role row and its grant, using its own role model (we don't subclass
+  it); app code names the global slug via the `App\Auth\GlobalRole` constants
+  holder. Keeping scoped roles out of Bouncer means the global and scoped kinds
+  are never conflated.
 - The app-admin Bouncer role + `everything()` grant are created by the
   `seed_bouncer_application_admin_role` **migration** (not just a seeder), which
   also ports existing spatie application-administrators onto the Bouncer role
@@ -124,7 +125,7 @@ column itself is untouched. Authorization maps `role_id` to a slug internally:
 | 5 | reviewer |
 | 6 | submitter |
 
-- `ScopedRole::tryFrom($roleId)` is the **live** mapping `AbilityResolver` uses
+- `ScopedRole::tryFrom($roleId)` is the **live** mapping `ScopedAbilityResolver` uses
   each request to turn the pivot `role_id` into a role case — `ScopedRole` is an
   int-backed enum whose backing value *is* the `role_id`. (This lives on
   `App\Auth\ScopedRole`, not the Bouncer `Role` model.)
@@ -145,10 +146,10 @@ clear in isolation.
 ## The bridge
 
 ```php
-// AbilityResolver: given (user, entity) -> effective ScopedRoles from pivots
+// ScopedAbilityResolver: given (user, entity) -> effective ScopedRoles from pivots
 //   publication: pivot roles on that publication
 //   submission:  pivot roles on that submission + parent-publication admin roles
-// then: does ANY effective role grant $ability (an Ability enum case)?
+// then: does ANY effective role grant $ability (a ScopedAbility)?
 $roles = $resolver->effectiveRoles($user, $submission);   // e.g. [ScopedRole::Reviewer]
 return $this->allows($user, $ability, $submission);       // $role->allows(...) over its Grants
 ```
@@ -162,7 +163,7 @@ Policy methods shrink to `bridge.allows(ability, entity) && <predicate>`. The
    (coexists with Spatie — different tables).
 2. Create the global app-admin Bouncer role + grant via migration and port
    existing admins; scoped role→ability resolution is code, nothing to seed.
-3. Build `AbilityResolver` + unit-test it against the matrix.
+3. Build `ScopedAbilityResolver` + unit-test it against the matrix.
 4. Convert PublicationPolicy (3 methods) to the bridge. Run characterization
    tests.
 5. Convert SubmissionPolicy, then UserPolicy.
@@ -205,21 +206,23 @@ ideal. What actually makes it *better* from here, in priority order:
 2. **Conditions as data, not ability-name hacks (done, in this PR).** The old
    `submission.update-status-draft` encoded a state condition into an ability
    name and re-checked it in the policy. It is now a conditional grant on
-   `ScopedRole::Submitter` — `[Ability::SubmissionUpdateStatus,
-   SubmissionIsDraft::class]`, normalized to a `Grant` (an `Ability` plus an
+   `ScopedRole::Submitter` — `[ScopedAbility::SubmissionUpdateStatus,
+   SubmissionIsDraft::class]`, normalized to a `Grant` (a `ScopedAbility` plus an
    optional `Predicate`, absolute when there is none) and evaluated by the
    resolver. The policy method
    is a uniform ability check. This is the concrete ABAC improvement and the
    pattern for future state/ownership conditions. Abilities are a typed enum
-   (`App\Auth\Ability`), so call sites are typo-proof and the catalog is
+   (`App\Auth\ScopedAbility`), so call sites are typo-proof and the catalog is
    greppable.
 
-3. **Single decision-point façade.** Authorization currently dispatches across
-   the resolver (scoped), `$user->can` (global), policy predicates, and `@can`.
-   A single `Access::allows($user, $action, $resource)` front door that routes
-   global vs scoped and applies conditions would centralize reasoning, logging,
-   and testing. The resolver is already most of the way there; deferred until
-   global abilities actually exist so it is not speculative scaffolding.
+3. **Decision engines by ability type (done).** There is intentionally no single
+   front door: the ability's *type* selects the engine. `GlobalAbility` →
+   Bouncer (`$user->can()`, entity forwarded) at the call site; `ScopedAbility` →
+   `ScopedAbilityResolver` (code-owned role/grant map, app-admin role
+   short-circuit). The resolver's `allows()` is typed to `ScopedAbility`, so a
+   global ability can never enter it. What remains is folding the in-policy
+   attribute predicates and `@can` wiring behind a shared façade, plus decision
+   logging.
 
 4. **Explainability.** Decisions carry no trace today ("why allowed/denied").
    A decision log would aid debugging and security review. Nice-to-have.

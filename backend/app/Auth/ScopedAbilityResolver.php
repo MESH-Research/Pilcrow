@@ -10,33 +10,37 @@ use App\Models\SubmissionAssignment;
 use App\Models\User;
 
 /**
- * Resolves scoped (publication / submission) permissions from the code-owned
+ * Resolves SCOPED (publication / submission) permissions from the code-owned
  * role -> ability definitions on {@see ScopedRole}.
+ *
+ * This resolver only gets involved when a publication or submission is in play.
+ * Global, application-wide abilities ({@see GlobalAbility}) are NOT its concern —
+ * those are checked directly against Bouncer with `$user->can(...)` at the call
+ * site; they never pass through here, so Bouncer can never short-circuit a
+ * scoped decision.
  *
  * Scoping — who holds which role on which entity — lives in the
  * publication_user / submission_user pivots. The role -> ability map lives in
  * code (each ScopedRole case returns its grants). This service answers "given
- * this user and this entity, is the ability granted?" by resolving the user's
- * effective role(s) for that entity and asking each whether it grants the
- * ability. No DB round-trip beyond reading the pivots.
- *
- * Global, runtime-editable abilities are NOT resolved here — those live in
- * Bouncer and are checked via $user->can(). The one global role,
- * application_admin, is granted everything() and short-circuited below.
+ * this user and this entity, is the scoped ability granted?" by resolving the
+ * user's effective role(s) for that entity and asking each whether it grants the
+ * ability. No DB round-trip beyond reading the pivots. The one global role,
+ * application_admin, short-circuits by ROLE (never a Bouncer ability).
  */
-class AbilityResolver
+class ScopedAbilityResolver
 {
     /**
-     * Is the ability granted to the user for the given entity?
+     * Is the scoped ability granted to the user for the given entity?
+     *
+     * Only the app-admin ROLE short-circuits (never a Bouncer ability); then the
+     * user's effective scoped roles for the entity decide.
      *
      * @param \App\Models\User $user
-     * @param \App\Auth\Ability $ability
+     * @param \App\Auth\ScopedAbility $ability
      * @param \App\Models\Publication|\App\Models\Submission|null $entity
      */
-    public function allows(User $user, Ability $ability, $entity = null): bool
+    public function allows(User $user, ScopedAbility $ability, $entity = null): bool
     {
-        // application_admin is the global super-role (granted everything);
-        // short-circuit rather than enumerate every ability.
         if ($user->isApplicationAdministrator()) {
             return true;
         }

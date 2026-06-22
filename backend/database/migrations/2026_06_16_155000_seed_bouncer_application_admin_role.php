@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-use App\Models\Role;
+use App\Auth\GlobalRole;
 use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\Schema;
@@ -16,8 +16,9 @@ use Silber\Bouncer\BouncerFacade as Bouncer;
  * tables are dropped (drop_spatie_permission_tables) — the spatie assignment
  * rows are read here to re-establish each admin in Bouncer.
  *
- * Scoped (publication / submission) roles are intentionally NOT created here:
- * they are not Bouncer roles (see App\Auth\ScopedRole).
+ * The role row and its id are owned by Bouncer; app code only names the slug
+ * (App\Auth\GlobalRole). Scoped (publication / submission) roles are
+ * intentionally NOT created here: they are not Bouncer roles (see ScopedRole).
  */
 return new class extends Migration
 {
@@ -25,19 +26,19 @@ return new class extends Migration
     {
         // Ensure the Bouncer app-admin role exists with its display title, then
         // grant it the global wildcard. Idempotent.
-        $role = Role::firstOrCreate(
-            ['name' => Role::SLUG_APPLICATION_ADMIN],
-            ['title' => Role::APPLICATION_ADMINISTRATOR]
+        Bouncer::role()->firstOrCreate(
+            ['name' => GlobalRole::SLUG_APPLICATION_ADMIN],
+            ['title' => GlobalRole::APPLICATION_ADMINISTRATOR]
         );
-        Bouncer::allow($role)->everything();
+        Bouncer::allow(GlobalRole::SLUG_APPLICATION_ADMIN)->everything();
         Bouncer::refresh();
 
-        $this->portExistingAdministrators($role);
+        $this->portExistingAdministrators();
     }
 
     public function down(): void
     {
-        $role = Role::where('name', Role::SLUG_APPLICATION_ADMIN)->first();
+        $role = Bouncer::role()->where('name', GlobalRole::SLUG_APPLICATION_ADMIN)->first();
         if ($role !== null) {
             Bouncer::disallow($role)->everything();
             $role->delete();
@@ -50,17 +51,16 @@ return new class extends Migration
      * Re-assign every user who held the old spatie application-administrator
      * role to the Bouncer app-admin role, before the spatie tables are dropped.
      *
-     * @param \App\Models\Role $role
      * @return void
      */
-    private function portExistingAdministrators(Role $role): void
+    private function portExistingAdministrators(): void
     {
         if (!Schema::hasTable('roles') || !Schema::hasTable('model_has_roles')) {
             return;
         }
 
         $spatieRoleId = \DB::table('roles')
-            ->where('name', Role::APPLICATION_ADMINISTRATOR)
+            ->where('name', GlobalRole::APPLICATION_ADMINISTRATOR)
             ->value('id');
         if ($spatieRoleId === null) {
             return;
@@ -74,7 +74,7 @@ return new class extends Migration
         foreach ($userIds as $userId) {
             $user = User::find($userId);
             if ($user !== null) {
-                $user->assign($role);
+                $user->assign(GlobalRole::SLUG_APPLICATION_ADMIN);
             }
         }
     }

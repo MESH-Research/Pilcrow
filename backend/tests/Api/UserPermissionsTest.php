@@ -3,10 +3,11 @@ declare(strict_types=1);
 
 namespace Tests\Api;
 
-use App\Models\Role;
+use App\Auth\GlobalRole;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Nuwave\Lighthouse\Testing\MakesGraphQLRequests;
+use Silber\Bouncer\BouncerFacade as Bouncer;
 use Tests\ApiTestCase;
 
 class UserPermissionsTest extends ApiTestCase
@@ -24,9 +25,9 @@ class UserPermissionsTest extends ApiTestCase
     {
         $this->beAppAdmin();
         $user = User::factory()->create();
-        $user->assignRole(Role::APPLICATION_ADMINISTRATOR);
+        $user->assignRole(GlobalRole::APPLICATION_ADMINISTRATOR);
 
-        $adminRole = Role::where('name', Role::SLUG_APPLICATION_ADMIN)->firstOrFail();
+        $adminRole = Bouncer::role()->where('name', GlobalRole::SLUG_APPLICATION_ADMIN)->firstOrFail();
 
         $response = $this->graphQL(
             'query getUser($id: ID) {
@@ -45,7 +46,7 @@ class UserPermissionsTest extends ApiTestCase
         $response->assertJsonPath('data.user.roles', [
             [
                 'id' => (string)$adminRole->id,
-                'name' => Role::APPLICATION_ADMINISTRATOR,
+                'name' => GlobalRole::APPLICATION_ADMINISTRATOR,
             ],
         ]);
     }

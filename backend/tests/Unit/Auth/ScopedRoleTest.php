@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Auth;
 
-use App\Auth\Ability;
+use App\Auth\ScopedAbility;
 use App\Auth\ScopedRole;
 use App\Models\Submission;
 use App\Models\User;
@@ -45,27 +45,27 @@ class ScopedRoleTest extends TestCase
     public function testReviewerHasViewAndUpdateButNotStatus(): void
     {
         $user = new User();
-        $this->assertTrue(ScopedRole::Reviewer->allows(Ability::SubmissionView, $this->submitted(), $user));
-        $this->assertTrue(ScopedRole::Reviewer->allows(Ability::SubmissionUpdate, $this->submitted(), $user));
-        $this->assertFalse(ScopedRole::Reviewer->allows(Ability::SubmissionUpdateStatus, $this->submitted(), $user));
+        $this->assertTrue(ScopedRole::Reviewer->allows(ScopedAbility::SubmissionView, $this->submitted(), $user));
+        $this->assertTrue(ScopedRole::Reviewer->allows(ScopedAbility::SubmissionUpdate, $this->submitted(), $user));
+        $this->assertFalse(ScopedRole::Reviewer->allows(ScopedAbility::SubmissionUpdateStatus, $this->submitted(), $user));
     }
 
     public function testReviewCoordinatorGetsStatusUnconditionally(): void
     {
         $user = new User();
         // Absolute grant: allowed regardless of draft state.
-        $this->assertTrue(ScopedRole::ReviewCoordinator->allows(Ability::SubmissionUpdateStatus, $this->submitted(), $user));
-        $this->assertTrue(ScopedRole::ReviewCoordinator->allows(Ability::SubmissionUpdateStatus, $this->draft(), $user));
+        $this->assertTrue(ScopedRole::ReviewCoordinator->allows(ScopedAbility::SubmissionUpdateStatus, $this->submitted(), $user));
+        $this->assertTrue(ScopedRole::ReviewCoordinator->allows(ScopedAbility::SubmissionUpdateStatus, $this->draft(), $user));
     }
 
     public function testSubmitterStatusIsDraftOnly(): void
     {
         $user = new User();
         // Conditional grant: status only while DRAFT.
-        $this->assertTrue(ScopedRole::Submitter->allows(Ability::SubmissionUpdateStatus, $this->draft(), $user));
-        $this->assertFalse(ScopedRole::Submitter->allows(Ability::SubmissionUpdateStatus, $this->submitted(), $user));
+        $this->assertTrue(ScopedRole::Submitter->allows(ScopedAbility::SubmissionUpdateStatus, $this->draft(), $user));
+        $this->assertFalse(ScopedRole::Submitter->allows(ScopedAbility::SubmissionUpdateStatus, $this->submitted(), $user));
         // Title edit is absolute for a submitter.
-        $this->assertTrue(ScopedRole::Submitter->allows(Ability::SubmissionUpdateTitle, $this->submitted(), $user));
+        $this->assertTrue(ScopedRole::Submitter->allows(ScopedAbility::SubmissionUpdateTitle, $this->submitted(), $user));
     }
 
     public function testPublicationAdminIsASupersetOfEditor(): void
@@ -79,13 +79,13 @@ class ScopedRoleTest extends TestCase
             );
         }
         // ...plus its own.
-        $this->assertTrue(ScopedRole::PublicationAdmin->allows(Ability::PublicationUpdate, $entity, $user));
-        $this->assertFalse(ScopedRole::Editor->allows(Ability::PublicationUpdate, $entity, $user));
+        $this->assertTrue(ScopedRole::PublicationAdmin->allows(ScopedAbility::PublicationUpdate, $entity, $user));
+        $this->assertFalse(ScopedRole::Editor->allows(ScopedAbility::PublicationUpdate, $entity, $user));
     }
 
     public function testEditorInheritsReviewerSubmissionView(): void
     {
         $user = new User();
-        $this->assertTrue(ScopedRole::Editor->allows(Ability::SubmissionView, $this->submitted(), $user));
+        $this->assertTrue(ScopedRole::Editor->allows(ScopedAbility::SubmissionView, $this->submitted(), $user));
     }
 }
