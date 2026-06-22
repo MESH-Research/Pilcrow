@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Policies;
 
 use App\Auth\GlobalAbility;
-use App\Auth\ScopedAbility;
+use App\Auth\PublicationAbility;
 use App\Auth\ScopedAbilityResolver;
 use App\Models\Publication;
 use App\Models\User;
@@ -43,7 +43,7 @@ class PublicationPolicy
     {
         $publication = Publication::find($args['id']);
 
-        return $this->scoped->allows($user, ScopedAbility::PublicationUpdate, $publication);
+        return $this->scoped->allows($user, PublicationAbility::Update, $publication);
     }
 
     /**
@@ -65,6 +65,6 @@ class PublicationPolicy
             return false;
         }
 
-        return $this->scoped->allows($user, ScopedAbility::PublicationView, $publication);
+        return $this->scoped->allows($user, PublicationAbility::View, $publication);
     }
 }

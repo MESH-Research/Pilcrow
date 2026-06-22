@@ -80,8 +80,8 @@ user.view  user.view-any  user.view-email  user.update  user.manage-beta
 App Admin = Bouncer global `*` (everything).
 
 New scoped capability = add a `Grant` to the relevant `App\Auth\ScopedRole`
-case (and an `App\Auth\ScopedAbility` enum case if the ability is new). Live on
-deploy; no seed, no migration.
+case (and an `App\Auth\SubmissionAbility` / `App\Auth\PublicationAbility` enum
+case if the ability is new). Live on deploy; no seed, no migration.
 
 ## Attribute predicates that stay in policy
 
@@ -206,14 +206,15 @@ ideal. What actually makes it *better* from here, in priority order:
 2. **Conditions as data, not ability-name hacks (done, in this PR).** The old
    `submission.update-status-draft` encoded a state condition into an ability
    name and re-checked it in the policy. It is now a conditional grant on
-   `ScopedRole::Submitter` — `[ScopedAbility::SubmissionUpdateStatus,
+   `ScopedRole::Submitter` — `[SubmissionAbility::UpdateStatus,
    SubmissionIsDraft::class]`, normalized to a `Grant` (a `ScopedAbility` plus an
    optional `Predicate`, absolute when there is none) and evaluated by the
    resolver. The policy method
    is a uniform ability check. This is the concrete ABAC improvement and the
-   pattern for future state/ownership conditions. Abilities are a typed enum
-   (`App\Auth\ScopedAbility`), so call sites are typo-proof and the catalog is
-   greppable.
+   pattern for future state/ownership conditions. Abilities are typed enums
+   (`App\Auth\SubmissionAbility` / `App\Auth\PublicationAbility`, both
+   implementing the `App\Auth\ScopedAbility` marker), so call sites are typo-proof
+   and the catalog is greppable.
 
 3. **Decision engines by ability type (done).** There is intentionally no single
    front door: the ability's *type* selects the engine. `GlobalAbility` →

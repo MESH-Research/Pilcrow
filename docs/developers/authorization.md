@@ -73,12 +73,18 @@ as a role, short-circuits every **scoped** check.
 
 ## Ability registry
 
-Abilities are **typed, closed catalogs**, split into two enums so the type alone
-says which engine answers:
+Abilities are **typed, closed catalogs**. The first split is by *engine*:
+**scoped** vs **global** — the type alone says which engine answers. Scoped
+abilities are then split again by the *model* they act on, purely for
+organization:
 
-- **`App\Auth\ScopedAbility`** — abilities resolved against a publication /
-  submission by the code-owned role/grant map, via `ScopedAbilityResolver`
-  (`ScopedAbility::SubmissionUpdateStatus`, `ScopedAbility::PublicationUpdate`, …).
+- **`App\Auth\ScopedAbility`** — a marker interface for abilities resolved
+  against a publication / submission by the code-owned role/grant map, via
+  `ScopedAbilityResolver`. Its cases live on two enums that implement it, split
+  by model: **`App\Auth\SubmissionAbility`** (`SubmissionAbility::UpdateStatus`,
+  `SubmissionAbility::View`, …) and **`App\Auth\PublicationAbility`**
+  (`PublicationAbility::Update`, `PublicationAbility::View`). Either enum's case
+  is a valid scoped ability; the interface is the type everything accepts.
 - **`App\Auth\GlobalAbility`** — application-wide abilities resolved by Bouncer
   via `$user->can()` (`GlobalAbility::PublicationCreate`,
   `GlobalAbility::UserViewAny`, …).
@@ -104,14 +110,14 @@ private function grantDefinitions(): array
 {
     return match ($this) {
         self::Reviewer => [
-            ScopedAbility::SubmissionView,                       // absolute
-            ScopedAbility::SubmissionUpdate,
+            SubmissionAbility::View,                       // absolute
+            SubmissionAbility::Update,
         ],
         self::Submitter => [
             ...self::Reviewer->grantDefinitions(),         // everything a reviewer has…
-            ScopedAbility::SubmissionUpdateTitle,                // …plus these…
+            SubmissionAbility::UpdateTitle,                // …plus these…
             // …and a conditional grant: status only while DRAFT
-            [ScopedAbility::SubmissionUpdateStatus, SubmissionIsDraft::class],
+            [SubmissionAbility::UpdateStatus, SubmissionIsDraft::class],
         ],
         // ...
     };
@@ -148,7 +154,7 @@ engine that owns it:
   its `everything()` wildcard; others only if granted at the Bouncer layer. This
   never touches the scoped resolver.
 - **`ScopedAbility`** → `App\Auth\ScopedAbilityResolver`, injected into the
-  policy: `$this->scoped->allows($user, ScopedAbility::SubmissionUpdateStatus, $submission)`.
+  policy: `$this->scoped->allows($user, SubmissionAbility::UpdateStatus, $submission)`.
 
 `ScopedAbilityResolver` only gets involved when a publication or submission is in
 play. Its `allows()` is typed `ScopedAbility` — passing anything else (a
@@ -176,7 +182,7 @@ check:
 ```php
 public function updateReviewers(User $user, Submission $submission)
 {
-    return $this->scoped->allows($user, ScopedAbility::SubmissionUpdateReviewers, $submission)
+    return $this->scoped->allows($user, SubmissionAbility::UpdateReviewers, $submission)
         ? true
         : Response::deny('UNAUTHORIZED');
 }
@@ -196,7 +202,7 @@ relationships stay in the policy, layered on the ability check:
 
 - Submitters may change a submission's status only while it is `DRAFT` — modeled
   as a **conditional grant** on `ScopedRole::Submitter`
-  (`[ScopedAbility::SubmissionUpdateStatus, SubmissionIsDraft::class]`). The condition
+  (`[SubmissionAbility::UpdateStatus, SubmissionIsDraft::class]`). The condition
   is a `Predicate` object on the grant, not a special ability name or a policy
   branch.
 - Comment edit/delete require `created_by === user.id`.
@@ -217,16 +223,17 @@ show) — not an authorization mechanism.
 ## Recipes
 
 **Add a scoped capability to a role:** add a `Grant` (and, if new, a
-`ScopedAbility` enum case) to the relevant `ScopedRole` case's `grants()`. It is
-live on deploy — no re-seed, no migration.
+`SubmissionAbility` / `PublicationAbility` enum case) to the relevant
+`ScopedRole` case's `grants()`. It is live on deploy — no re-seed, no migration.
 
 **Add a global capability:** add a `GlobalAbility` enum case and check it with
 `allows($user, GlobalAbility::X)`; grant it to roles/users at the Bouncer layer.
 (Today the app administrator holds all of them via `everything()`.)
 
 **Authorize in a resolver/policy:** inject `ScopedAbilityResolver` and call
-`allows($user, ScopedAbility::SomeCase, $entity)`; add any state/ownership predicate
-as a `Predicate` on the grant, or inline in the policy for one-offs.
+`allows($user, SubmissionAbility::View, $entity)` (or a `PublicationAbility`
+case); add any state/ownership predicate as a `Predicate` on the grant, or inline
+in the policy for one-offs.
 
 **Assign roles:**
 

@@ -57,31 +57,31 @@ enum ScopedRole: int
     {
         return match ($this) {
             self::Reviewer => [
-                ScopedAbility::SubmissionView,
-                ScopedAbility::SubmissionUpdate,
+                SubmissionAbility::View,
+                SubmissionAbility::Update,
             ],
             self::ReviewCoordinator => [
                 ...self::Reviewer->grantDefinitions(),
-                ScopedAbility::SubmissionUpdateSubmitters,
-                ScopedAbility::SubmissionUpdateReviewers,
-                ScopedAbility::SubmissionUpdateStatus,
-                ScopedAbility::SubmissionUpdateTitle,
-                ScopedAbility::SubmissionInvite,
+                SubmissionAbility::UpdateSubmitters,
+                SubmissionAbility::UpdateReviewers,
+                SubmissionAbility::UpdateStatus,
+                SubmissionAbility::UpdateTitle,
+                SubmissionAbility::Invite,
             ],
             self::Editor => [
                 ...self::ReviewCoordinator->grantDefinitions(),
-                ScopedAbility::PublicationView,
-                ScopedAbility::SubmissionUpdateReviewCoordinators,
+                PublicationAbility::View,
+                SubmissionAbility::UpdateReviewCoordinators,
             ],
             self::PublicationAdmin => [
                 ...self::Editor->grantDefinitions(),
-                ScopedAbility::PublicationUpdate,
+                PublicationAbility::Update,
             ],
             self::Submitter => [
                 ...self::Reviewer->grantDefinitions(),
-                ScopedAbility::SubmissionUpdateSubmitters,
-                ScopedAbility::SubmissionUpdateTitle,
-                [ScopedAbility::SubmissionUpdateStatus, SubmissionIsDraft::class],
+                SubmissionAbility::UpdateSubmitters,
+                SubmissionAbility::UpdateTitle,
+                [SubmissionAbility::UpdateStatus, SubmissionIsDraft::class],
             ],
         };
     }
