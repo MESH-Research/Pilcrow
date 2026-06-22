@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Model;
  * Holds when the entity is a submission still in DRAFT. Backs the submitter's
  * conditional grant on submission.update-status.
  */
-final class IsDraft implements Predicate
+final class SubmissionIsDraft implements Predicate
 {
     /**
      * @param \Illuminate\Database\Eloquent\Model $entity

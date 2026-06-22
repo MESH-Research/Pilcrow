@@ -32,7 +32,7 @@ class InvitationsTest extends TestCase
             ->create();
         $invite = SubmissionInvitation::create([
             'submission_id' => $submission->id,
-            'role_id' => ScopedRole::Reviewer->value,
+            'role_id' => ScopedRole::Reviewer->pivotValue(),
             'email' => 'bob1@msu.edu',
         ]);
         $invite->inviteReviewer();
@@ -63,7 +63,7 @@ class InvitationsTest extends TestCase
             ->create();
         $invite = SubmissionInvitation::create([
             'submission_id' => $submission->id,
-            'role_id' => ScopedRole::ReviewCoordinator->value,
+            'role_id' => ScopedRole::ReviewCoordinator->pivotValue(),
             'email' => 'bob2@msu.edu',
         ]);
         $invite->inviteReviewCoordinator();

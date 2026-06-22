@@ -25,7 +25,7 @@ class SubmissionInvitationTest extends TestCase
         $invite = SubmissionInvitation::create([
             'email' => $this->faker->email(),
             'submission_id' => $submission->id,
-            'role_id' => ScopedRole::Reviewer->value,
+            'role_id' => ScopedRole::Reviewer->pivotValue(),
         ]);
         $this->assertEquals(36, strlen($invite->uuid));
     }

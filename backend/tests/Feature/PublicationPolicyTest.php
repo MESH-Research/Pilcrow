@@ -45,7 +45,7 @@ class PublicationPolicyTest extends TestCase
     public function testCreateDeniesPublicationAdministrator(): void
     {
         $user = User::factory()->create();
-        $this->attachToPublication($user, Publication::factory()->create(), (int)ScopedRole::PublicationAdmin->value);
+        $this->attachToPublication($user, Publication::factory()->create(), (int)ScopedRole::PublicationAdmin->pivotValue());
 
         $this->assertFalse($user->can('create', Publication::class));
     }
@@ -68,7 +68,7 @@ class PublicationPolicyTest extends TestCase
     {
         $publication = Publication::factory()->create();
         $user = User::factory()->create();
-        $this->attachToPublication($user, $publication, (int)ScopedRole::PublicationAdmin->value);
+        $this->attachToPublication($user, $publication, (int)ScopedRole::PublicationAdmin->pivotValue());
 
         $this->assertTrue($user->can('update', [Publication::class, ['id' => $publication->id]]));
     }
@@ -76,7 +76,7 @@ class PublicationPolicyTest extends TestCase
     public function testUpdateDeniesPublicationAdministratorOfDifferentPublication(): void
     {
         $user = User::factory()->create();
-        $this->attachToPublication($user, Publication::factory()->create(), (int)ScopedRole::PublicationAdmin->value);
+        $this->attachToPublication($user, Publication::factory()->create(), (int)ScopedRole::PublicationAdmin->pivotValue());
 
         $other = Publication::factory()->create();
         $this->assertFalse($user->can('update', [Publication::class, ['id' => $other->id]]));
@@ -86,7 +86,7 @@ class PublicationPolicyTest extends TestCase
     {
         $publication = Publication::factory()->create();
         $user = User::factory()->create();
-        $this->attachToPublication($user, $publication, (int)ScopedRole::Editor->value);
+        $this->attachToPublication($user, $publication, (int)ScopedRole::Editor->pivotValue());
 
         $this->assertFalse($user->can('update', [Publication::class, ['id' => $publication->id]]));
     }
@@ -127,7 +127,7 @@ class PublicationPolicyTest extends TestCase
     {
         $publication = Publication::factory()->create(['is_publicly_visible' => false]);
         $editor = User::factory()->create();
-        $this->attachToPublication($editor, $publication, (int)ScopedRole::Editor->value);
+        $this->attachToPublication($editor, $publication, (int)ScopedRole::Editor->pivotValue());
 
         $this->assertTrue($editor->can('view', $publication));
     }
@@ -143,7 +143,7 @@ class PublicationPolicyTest extends TestCase
     {
         $hidden = Publication::factory()->create(['is_publicly_visible' => false]);
         $user = User::factory()->create();
-        $this->attachToPublication($user, Publication::factory()->create(), (int)ScopedRole::Editor->value);
+        $this->attachToPublication($user, Publication::factory()->create(), (int)ScopedRole::Editor->pivotValue());
 
         $this->assertFalse($user->can('view', $hidden));
     }

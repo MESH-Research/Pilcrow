@@ -134,7 +134,7 @@ class Submission extends Model implements Auditable
     public function reviewers(): BelongsToMany
     {
         return $this->users()
-            ->withPivotValue('role_id', ScopedRole::Reviewer->value);
+            ->withPivotValue('role_id', ScopedRole::Reviewer->pivotValue());
     }
 
     /**
@@ -145,7 +145,7 @@ class Submission extends Model implements Auditable
     public function reviewCoordinators(): BelongsToMany
     {
         return $this->users()
-            ->withPivotValue('role_id', ScopedRole::ReviewCoordinator->value);
+            ->withPivotValue('role_id', ScopedRole::ReviewCoordinator->pivotValue());
     }
 
     /**
@@ -156,7 +156,7 @@ class Submission extends Model implements Auditable
     public function submitters(): BelongsToMany
     {
         return $this->users()
-            ->withPivotValue('role_id', ScopedRole::Submitter->value);
+            ->withPivotValue('role_id', ScopedRole::Submitter->pivotValue());
     }
 
     /**
@@ -373,7 +373,7 @@ class Submission extends Model implements Auditable
         $publicationRole = $this->publication->getEffectiveRole();
 
         if ($publicationRole !== null) {
-            return (int)ScopedRole::ReviewCoordinator->value;
+            return (int)ScopedRole::ReviewCoordinator->pivotValue();
         }
 
         return $this->getMyRole();

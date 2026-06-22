@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Model;
  * submission is a draft, or the user owns the comment.
  *
  * Predicates are small, reusable, unit-testable value objects rather than
- * inline closures so the same condition (IsDraft, IsOwner, ...) can be shared
+ * inline closures so the same condition (SubmissionIsDraft, IsOwner, ...) can be shared
  * across grants and asserted in isolation.
  */
 interface Predicate

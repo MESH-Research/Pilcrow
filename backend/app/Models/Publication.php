@@ -76,7 +76,7 @@ class Publication extends BaseModel
     public function publicationAdmins(): BelongsToMany
     {
         return $this->users()
-            ->withPivotValue('role_id', ScopedRole::PublicationAdmin->value);
+            ->withPivotValue('role_id', ScopedRole::PublicationAdmin->pivotValue());
     }
 
     /**
@@ -87,7 +87,7 @@ class Publication extends BaseModel
     public function editors(): BelongsToMany
     {
         return $this->users()
-            ->withPivotValue('role_id', ScopedRole::Editor->value);
+            ->withPivotValue('role_id', ScopedRole::Editor->pivotValue());
     }
 
     /**
@@ -149,7 +149,7 @@ class Publication extends BaseModel
         }
 
         if ($user->isApplicationAdministrator()) {
-            return (int)ScopedRole::PublicationAdmin->value;
+            return (int)ScopedRole::PublicationAdmin->pivotValue();
         }
 
         return $this->getMyRole();

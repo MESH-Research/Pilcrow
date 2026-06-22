@@ -96,8 +96,8 @@ class UserPolicy
                 'privilegedPublicationIds',
                 $viewer->publications()
                     ->wherePivotIn('role_id', [
-                        ScopedRole::PublicationAdmin->value,
-                        ScopedRole::Editor->value,
+                        ScopedRole::PublicationAdmin->pivotValue(),
+                        ScopedRole::Editor->pivotValue(),
                     ])
                     ->pluck('publications.id')
             );

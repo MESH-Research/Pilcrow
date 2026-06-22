@@ -75,7 +75,7 @@ class AbilityResolver
         // Dedupe by backing value (enum instances are not array_unique-able).
         $unique = [];
         foreach ($roles as $role) {
-            $unique[$role->value] = $role;
+            $unique[$role->pivotValue()] = $role;
         }
 
         return array_values($unique);

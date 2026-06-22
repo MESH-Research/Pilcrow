@@ -105,7 +105,7 @@ class SubmissionTest extends ApiTestCase
         $this->actingAs($publicationAdmin);
 
         $publication = Publication::factory()
-            ->hasAttached($publicationAdmin, ['role_id' => ScopedRole::PublicationAdmin->value])
+            ->hasAttached($publicationAdmin, ['role_id' => ScopedRole::PublicationAdmin->pivotValue()])
             ->create();
 
         $submission = Submission::factory()
@@ -515,7 +515,7 @@ class SubmissionTest extends ApiTestCase
         $this->actingAs($publicationAdmin);
 
         Publication::factory()
-            ->hasAttached($publicationAdmin, ['role_id' => ScopedRole::PublicationAdmin->value])
+            ->hasAttached($publicationAdmin, ['role_id' => ScopedRole::PublicationAdmin->pivotValue()])
             ->create();
 
         $submission = Submission::factory()

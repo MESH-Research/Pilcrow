@@ -23,7 +23,7 @@ final class ReinviteSubmissionUser
         $submission = Submission::where('id', $args['submission_id'])->firstOrFail();
         $invite = SubmissionInvitation::create([
             'submission_id' => $submission->id,
-            'role_id' => ScopedRole::Reviewer->value,
+            'role_id' => ScopedRole::Reviewer->pivotValue(),
             'email' => $args['email'],
             'message' => $args['message'] ?? null,
         ]);
@@ -45,7 +45,7 @@ final class ReinviteSubmissionUser
         $submission = Submission::where('id', $args['submission_id'])->firstOrFail();
         $invite = SubmissionInvitation::create([
             'submission_id' => $submission->id,
-            'role_id' => ScopedRole::ReviewCoordinator->value,
+            'role_id' => ScopedRole::ReviewCoordinator->pivotValue(),
             'email' => $args['email'],
             'message' => $args['message'] ?? null,
         ]);

@@ -218,10 +218,10 @@ class SubmissionInvitation extends Model
 
         $this->updateInviteeDetails($details);
 
-        if ((int)$this->role_id === ScopedRole::Reviewer->value) {
+        if ((int)$this->role_id === ScopedRole::Reviewer->pivotValue()) {
             ReviewerInvitationAccepted::dispatch($this);
         }
-        if ((int)$this->role_id === ScopedRole::ReviewCoordinator->value) {
+        if ((int)$this->role_id === ScopedRole::ReviewCoordinator->pivotValue()) {
             ReviewCoordinatorInvitationAccepted::dispatch($this);
         }
 

@@ -42,7 +42,7 @@ class SubmissionBuilderTest extends TestCase
             ->create();
 
         $results = Submission::query()
-            ->roleFilter([ScopedRole::Reviewer->value])
+            ->roleFilter([ScopedRole::Reviewer->pivotValue()])
             ->get();
 
         $this->assertEquals([$reviewed->id], $results->pluck('id')->all());
@@ -75,8 +75,8 @@ class SubmissionBuilderTest extends TestCase
 
         $results = Submission::query()
             ->roleFilter([
-                ScopedRole::Reviewer->value,
-                ScopedRole::ReviewCoordinator->value,
+                ScopedRole::Reviewer->pivotValue(),
+                ScopedRole::ReviewCoordinator->pivotValue(),
             ])
             ->get();
 

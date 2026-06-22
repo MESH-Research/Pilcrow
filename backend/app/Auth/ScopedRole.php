@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Auth;
 
-use App\Auth\Predicates\IsDraft;
+use App\Auth\Predicates\SubmissionIsDraft;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 
@@ -66,7 +66,7 @@ enum ScopedRole: int
                 ...self::Reviewer->grants(),
                 new Grant(Ability::SubmissionUpdateSubmitters),
                 new Grant(Ability::SubmissionUpdateTitle),
-                new Grant(Ability::SubmissionUpdateStatus, new IsDraft()),
+                new Grant(Ability::SubmissionUpdateStatus, new SubmissionIsDraft()),
             ],
         };
     }
@@ -89,6 +89,18 @@ enum ScopedRole: int
         }
 
         return false;
+    }
+
+    /**
+     * The value stored in the pivot `role_id` column for this role. This is the
+     * enum's backing value, surfaced through an intent-revealing method so pivot
+     * reads/writes and queries don't reach for the raw ->value.
+     *
+     * @return int
+     */
+    public function pivotValue(): int
+    {
+        return $this->value;
     }
 
     /**
