@@ -23,10 +23,10 @@ class UserPermissionsTest extends TestCase
      */
     public function testAllRoleSlugsAreSeededWithTitles()
     {
-        foreach (GlobalRole::SLUG_TO_TITLE as $slug => $title) {
-            $role = Bouncer::role()->where('name', $slug)->first();
-            $this->assertNotNull($role, $slug);
-            $this->assertEquals($title, $role->title);
+        foreach (GlobalRole::cases() as $globalRole) {
+            $role = Bouncer::role()->where('name', $globalRole->toSlug())->first();
+            $this->assertNotNull($role, $globalRole->toSlug());
+            $this->assertEquals($globalRole->title(), $role->title);
         }
     }
 
@@ -36,7 +36,7 @@ class UserPermissionsTest extends TestCase
     public function testAssignmentOfApplicationAdministratorRoleToUser()
     {
         $user = User::factory()->create();
-        $user->assignRole(GlobalRole::APPLICATION_ADMINISTRATOR);
+        $user->assignRole(GlobalRole::ApplicationAdministrator);
 
         $this->assertTrue($user->isApplicationAdministrator());
     }

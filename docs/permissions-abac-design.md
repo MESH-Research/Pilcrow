@@ -99,10 +99,10 @@ case if the ability is new). Live on deploy; no seed, no migration.
   `bouncer_assigned_roles`) to coexist with spatie/laravel-permission.
 - Keep `publication_user` / `submission_user` pivots as the assignment source
   of truth. The scoped roles and their ability map are code (`App\Auth\ScopedRole`,
-  an int-backed enum) with no Bouncer rows. Bouncer holds only the **global**
+  a slug-backed enum) with no Bouncer rows. Bouncer holds only the **global**
   app-admin role row and its grant, using its own role model (we don't subclass
-  it); app code names the global slug via the `App\Auth\GlobalRole` constants
-  holder. Keeping scoped roles out of Bouncer means the global and scoped kinds
+  it); app code names the global slug via the `App\Auth\GlobalRole` slug-backed
+  enum. Keeping scoped roles out of Bouncer means the global and scoped kinds
   are never conflated.
 - The app-admin Bouncer role + `everything()` grant are created by the
   `seed_bouncer_application_admin_role` **migration** (not just a seeder), which
@@ -110,13 +110,14 @@ case if the ability is new). Live on deploy; no seed, no migration.
   before the spatie tables are dropped — so existing instances keep their admins
   across the cutover. `AbacSeeder` is the idempotent fresh-install/test equivalent.
 
-### Pivot storage: role_id retained, FK dropped (slug column deferred)
+### Pivot storage: role slug column added, legacy role_id retained (frozen)
 
-The pivots keep their integer `role_id` column. This migration only **drops the
-foreign key** to the spatie roles table (so that table can be retired); the
-column itself is untouched. Authorization maps `role_id` to a slug internally:
+The pivots now carry a human-readable `role` **slug** column — one vocabulary
+across storage, the ability matrix, and the API. The
+`add_role_slug_to_pivots` migration adds `role`, backfills it from the legacy
+`role_id` via the map below, and makes `role_id` nullable:
 
-| role_id | slug |
+| role_id (legacy) | role (slug) |
 | --- | --- |
 | 1 | application_admin |
 | 2 | publication_admin |
@@ -125,23 +126,22 @@ column itself is untouched. Authorization maps `role_id` to a slug internally:
 | 5 | reviewer |
 | 6 | submitter |
 
-- `ScopedRole::tryFrom($roleId)` is the **live** mapping `ScopedAbilityResolver` uses
-  each request to turn the pivot `role_id` into a role case — `ScopedRole` is an
-  int-backed enum whose backing value *is* the `role_id`. (This lives on
+- `ScopedRole::tryFrom($slug)` is the **live** mapping `ScopedAbilityResolver`
+  uses each request to turn the pivot `role` slug into a role case — `ScopedRole`
+  is a slug-backed enum whose backing value *is* the slug. (This lives on
   `App\Auth\ScopedRole`, not the Bouncer `Role` model.)
-- GraphQL `@enum(value: …)` for `PublicationRole` / `SubmissionUserRoles` /
-  `UserRoles` still map enum name → integer `role_id` (unchanged from before, so
-  the client contract is untouched).
-- `highest_privileged_role` remains the `min(role_id)` UI hint (a display field,
-  not authz).
+- GraphQL `@enum(value: …)` for `PublicationRole` / `SubmissionUserRoles` maps
+  enum name → slug; the wire representation is the enum **name** (e.g. `editor`),
+  so the client contract is untouched. `UserRoles` keeps integer values — it is
+  the `highest_privileged_role` **rank** scale, not a stored identifier.
+- `highest_privileged_role` is the min rank (`GlobalRole::rank()` /
+  `ScopedRole::rank()`) the user holds — a display hint, not authz.
 
-**Deferred follow-on:** replacing `role_id` with a human-readable `role` slug
-column directly on `publication_user` / `submission_user` /
-`submission_invitations` — giving one vocabulary across storage, matrix, and API
-— is its own PR. It is a mechanical rename that ripples into every pivot
-read/write site (models, builders, mutations, validators, GraphQL, tests); kept
-out of this PR so the ABAC change stays the reviewable unit and the rename is
-clear in isolation.
+**`role_id` retained, not dropped:** the legacy integer column stays (FK to the
+spatie roles table dropped, column made nullable) as the historical record, so
+the cutover is recoverable if the slug backfill goes wrong. New writes set `role`
+only and leave `role_id` null. Dropping `role_id` is a deliberately separate,
+later PR once the slug column is proven in production.
 
 ## The bridge
 

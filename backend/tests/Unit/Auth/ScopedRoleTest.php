@@ -36,11 +36,11 @@ class ScopedRoleTest extends TestCase
 
     public function testPivotRoleIdMapsToCaseAndExcludesAppAdmin(): void
     {
-        $this->assertSame(ScopedRole::Editor, ScopedRole::tryFrom(3));
-        $this->assertSame(ScopedRole::Submitter, ScopedRole::tryFrom(6));
-        // application_admin (id 1) is a global Bouncer role, not a scoped role.
-        $this->assertNull(ScopedRole::tryFrom(1));
-        $this->assertNull(ScopedRole::tryFrom(99));
+        $this->assertSame(ScopedRole::Editor, ScopedRole::tryFrom('editor'));
+        $this->assertSame(ScopedRole::Submitter, ScopedRole::tryFrom('submitter'));
+        // application_admin is a global Bouncer role, not a scoped role.
+        $this->assertNull(ScopedRole::tryFrom('application_admin'));
+        $this->assertNull(ScopedRole::tryFrom('not-a-role'));
     }
 
     public function testReviewerHasViewAndUpdateButNotStatus(): void

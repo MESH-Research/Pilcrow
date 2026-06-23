@@ -164,7 +164,7 @@ class VerifyEmailTest extends ApiTestCase
     {
         Notification::fake();
         $testUser = User::factory()->create(['email' => 'mesh@msu.edu', 'email_verified_at' => null]);
-        $adminUser = User::factory()->create(['email' => 'mesh2@msu.edu'])->assignRole(GlobalRole::APPLICATION_ADMINISTRATOR);
+        $adminUser = User::factory()->create(['email' => 'mesh2@msu.edu'])->assignRole(GlobalRole::ApplicationAdministrator);
 
         $this->actingAs($adminUser);
         $response = $this->callSendVerifyEmailEndpoint(['id' => $testUser->id]);

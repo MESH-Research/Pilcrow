@@ -34,8 +34,8 @@ class PublicationAssignmentTest extends TestCase
         $this->assertTrue($assignment->user->is($user));
         $this->assertTrue($assignment->publication->is($publication));
         $this->assertEquals(
-            (int)ScopedRole::Editor->pivotValue(),
-            (int)$assignment->role_id
+            ScopedRole::Editor->pivotValue(),
+            $assignment->role
         );
     }
 }

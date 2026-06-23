@@ -105,7 +105,7 @@ class SubmissionTest extends ApiTestCase
         $this->actingAs($publicationAdmin);
 
         $publication = Publication::factory()
-            ->hasAttached($publicationAdmin, ['role_id' => ScopedRole::PublicationAdmin->pivotValue()])
+            ->hasAttached($publicationAdmin, ['role' => ScopedRole::PublicationAdmin->pivotValue()])
             ->create();
 
         $submission = Submission::factory()
@@ -515,7 +515,7 @@ class SubmissionTest extends ApiTestCase
         $this->actingAs($publicationAdmin);
 
         Publication::factory()
-            ->hasAttached($publicationAdmin, ['role_id' => ScopedRole::PublicationAdmin->pivotValue()])
+            ->hasAttached($publicationAdmin, ['role' => ScopedRole::PublicationAdmin->pivotValue()])
             ->create();
 
         $submission = Submission::factory()
@@ -959,13 +959,13 @@ class SubmissionTest extends ApiTestCase
     {
         return [
             'Empty Title' => [
-                'role' => GlobalRole::APPLICATION_ADMINISTRATOR,
+                'role' => GlobalRole::ApplicationAdministrator->title(),
                 'title' => '',
                 'passes' => false,
                 'message' => 'validation',
             ],
             'Title That Is Too Long ' => [
-                'role' => GlobalRole::APPLICATION_ADMINISTRATOR,
+                'role' => GlobalRole::ApplicationAdministrator->title(),
                 'title' => str_repeat('1234567890', 520),
                 'passes' => false,
                 'message' => 'validation',
@@ -997,7 +997,7 @@ class SubmissionTest extends ApiTestCase
                 'passes' => true,
             ],
             'As An Application Admin' => [
-                'role' => GlobalRole::APPLICATION_ADMINISTRATOR,
+                'role' => GlobalRole::ApplicationAdministrator->title(),
                 'title' => 'My Newly Updated Submission Title',
                 'passes' => true,
             ],
@@ -1093,7 +1093,7 @@ class SubmissionTest extends ApiTestCase
                 $user = $this->bePubAdmin();
                 $submission = $user->publications->first()->submissions->first();
                 break;
-            case GlobalRole::APPLICATION_ADMINISTRATOR:
+            case GlobalRole::ApplicationAdministrator->title():
                 $this->beAppAdmin();
                 $submission = Submission::factory()->create();
                 break;

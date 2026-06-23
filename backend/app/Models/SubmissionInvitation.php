@@ -27,7 +27,7 @@ class SubmissionInvitation extends Model
         'message',
         'accepted_at',
         'submission_id',
-        'role_id',
+        'role',
         'uuid',
     ];
 
@@ -218,10 +218,10 @@ class SubmissionInvitation extends Model
 
         $this->updateInviteeDetails($details);
 
-        if ((int)$this->role_id === ScopedRole::Reviewer->pivotValue()) {
+        if ($this->role === ScopedRole::Reviewer->pivotValue()) {
             ReviewerInvitationAccepted::dispatch($this);
         }
-        if ((int)$this->role_id === ScopedRole::ReviewCoordinator->pivotValue()) {
+        if ($this->role === ScopedRole::ReviewCoordinator->pivotValue()) {
             ReviewCoordinatorInvitationAccepted::dispatch($this);
         }
 

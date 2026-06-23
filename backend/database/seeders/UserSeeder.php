@@ -27,7 +27,7 @@ class UserSeeder extends Seeder
             'name' => 'Application Administrator',
             'password' => Hash::make('adminPassword!@#'),
             'profile_metadata' => $orcid('0000-0002-1825-0097'),
-        ])->assignRole(GlobalRole::APPLICATION_ADMINISTRATOR);
+        ])->assignRole(GlobalRole::ApplicationAdministrator);
 
         User::factory()->create([
             'username' => 'publicationAdministrator',

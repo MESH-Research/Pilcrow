@@ -27,10 +27,10 @@ return new class extends Migration
         // Ensure the Bouncer app-admin role exists with its display title, then
         // grant it the global wildcard. Idempotent.
         Bouncer::role()->firstOrCreate(
-            ['name' => GlobalRole::SLUG_APPLICATION_ADMIN],
-            ['title' => GlobalRole::APPLICATION_ADMINISTRATOR]
+            ['name' => GlobalRole::ApplicationAdministrator->toSlug()],
+            ['title' => GlobalRole::ApplicationAdministrator->title()]
         );
-        Bouncer::allow(GlobalRole::SLUG_APPLICATION_ADMIN)->everything();
+        Bouncer::allow(GlobalRole::ApplicationAdministrator->toSlug())->everything();
         Bouncer::refresh();
 
         $this->portExistingAdministrators();
@@ -38,7 +38,7 @@ return new class extends Migration
 
     public function down(): void
     {
-        $role = Bouncer::role()->where('name', GlobalRole::SLUG_APPLICATION_ADMIN)->first();
+        $role = Bouncer::role()->where('name', GlobalRole::ApplicationAdministrator->toSlug())->first();
         if ($role !== null) {
             Bouncer::disallow($role)->everything();
             $role->delete();
@@ -60,7 +60,7 @@ return new class extends Migration
         }
 
         $spatieRoleId = \DB::table('roles')
-            ->where('name', GlobalRole::APPLICATION_ADMINISTRATOR)
+            ->where('name', GlobalRole::ApplicationAdministrator->title())
             ->value('id');
         if ($spatieRoleId === null) {
             return;
@@ -74,7 +74,7 @@ return new class extends Migration
         foreach ($userIds as $userId) {
             $user = User::find($userId);
             if ($user !== null) {
-                $user->assign(GlobalRole::SLUG_APPLICATION_ADMIN);
+                $user->assign(GlobalRole::ApplicationAdministrator->toSlug());
             }
         }
     }

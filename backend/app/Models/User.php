@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Auth\GlobalRole;
+use App\Auth\ScopedRole;
 use App\Builders\UserBuilder;
 use Carbon\Carbon;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -216,7 +217,7 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->belongsToMany(Submission::class)
             ->withTimestamps()
-            ->withPivot(['id', 'user_id', 'role_id', 'submission_id']);
+            ->withPivot(['id', 'user_id', 'role', 'submission_id']);
     }
 
     /**
@@ -228,7 +229,7 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->belongsToMany(Publication::class)
             ->withTimestamps()
-            ->withPivot('role_id');
+            ->withPivot('role');
     }
 
     /**
@@ -268,45 +269,44 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function isApplicationAdministrator(): bool
     {
-        return $this->isA(GlobalRole::SLUG_APPLICATION_ADMIN);
+        return $this->isA(GlobalRole::ApplicationAdministrator->toSlug());
     }
 
     /**
-     * Assign a global role by slug or human-readable title.
+     * Assign a global role to the user (Bouncer assignment by slug).
      *
-     * Compatibility wrapper over Bouncer's assign() — accepts either a role
-     * slug (e.g. application_admin) or its display title (e.g. "Application
-     * Administrator") and assigns the corresponding Bouncer role.
-     *
-     * @param string $role
+     * @param \App\Auth\GlobalRole $role
      */
-    public function assignRole(string $role): self
+    public function assignRole(GlobalRole $role): self
     {
-        $slug = array_search($role, GlobalRole::SLUG_TO_TITLE, true);
-        $this->assign($slug !== false ? $slug : $role);
+        $this->assign($role->toSlug());
 
         return $this;
     }
 
     /**
-     * Return the highest privileged role_id for the user (lowest id ranks
-     * highest: application_admin=1 … submitter=6). A UI hint, not authorization.
+     * Return the highest privileged role rank for the user (lower ranks higher:
+     * application_admin=1 … submitter=6). A UI hint, not authorization.
      *
      * @return int|null
      */
     public function getHighestPrivilegedRole(): ?int
     {
         if ($this->isApplicationAdministrator()) {
-            return GlobalRole::PRIVILEGE_RANK;
-        }
-        if ($this->publications->isNotEmpty()) {
-            return PublicationUser::where('user_id', $this->id)->min('role_id');
-        }
-        if ($this->submissions->isNotEmpty()) {
-            return SubmissionAssignment::where('user_id', $this->id)->min('role_id');
+            return GlobalRole::ApplicationAdministrator->rank();
         }
 
-        return null;
+        $ranks = [];
+        $slugs = PublicationUser::where('user_id', $this->id)->pluck('role')
+            ->merge(SubmissionAssignment::where('user_id', $this->id)->pluck('role'));
+        foreach ($slugs as $slug) {
+            $role = $slug === null ? null : ScopedRole::tryFrom((string)$slug);
+            if ($role !== null) {
+                $ranks[] = $role->rank();
+            }
+        }
+
+        return $ranks === [] ? null : min($ranks);
     }
 
     /**

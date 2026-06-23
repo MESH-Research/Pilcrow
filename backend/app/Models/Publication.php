@@ -65,7 +65,7 @@ class Publication extends BaseModel
     {
         return $this->belongsToMany(User::class)
             ->withTimestamps()
-            ->withPivot(['id', 'user_id', 'role_id', 'publication_id']);
+            ->withPivot(['id', 'user_id', 'role', 'publication_id']);
     }
 
     /**
@@ -76,7 +76,7 @@ class Publication extends BaseModel
     public function publicationAdmins(): BelongsToMany
     {
         return $this->users()
-            ->withPivotValue('role_id', ScopedRole::PublicationAdmin->pivotValue());
+            ->withPivotValue('role', ScopedRole::PublicationAdmin->pivotValue());
     }
 
     /**
@@ -87,7 +87,7 @@ class Publication extends BaseModel
     public function editors(): BelongsToMany
     {
         return $this->users()
-            ->withPivotValue('role_id', ScopedRole::Editor->pivotValue());
+            ->withPivotValue('role', ScopedRole::Editor->pivotValue());
     }
 
     /**
@@ -111,11 +111,11 @@ class Publication extends BaseModel
     }
 
     /**
-     * Return the currently logged in user's role_id on this publication.
+     * Return the currently logged in user's role slug on this publication.
      *
-     * @return int|null
+     * @return string|null
      */
-    public function getMyRole(): ?int
+    public function getMyRole(): ?string
     {
         /** @var \App\Models\User $user */
         $user = Auth::user();
@@ -131,16 +131,16 @@ class Publication extends BaseModel
             return null;
         }
 
-        return $first->pivot->role_id;
+        return $first->pivot->role;
     }
 
     /**
-     * Return the effective role_id of a user on a submission taking into
+     * Return the effective role slug of a user on this publication taking into
      * account parent roles they may have.
      *
-     * @return int|null
+     * @return string|null
      */
-    public function getEffectiveRole(): ?int
+    public function getEffectiveRole(): ?string
     {
         /** @var \App\Models\User $user */
         $user = Auth::user();
@@ -149,7 +149,7 @@ class Publication extends BaseModel
         }
 
         if ($user->isApplicationAdministrator()) {
-            return (int)ScopedRole::PublicationAdmin->pivotValue();
+            return ScopedRole::PublicationAdmin->pivotValue();
         }
 
         return $this->getMyRole();

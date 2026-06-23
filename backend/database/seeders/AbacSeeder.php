@@ -29,11 +29,11 @@ class AbacSeeder extends Seeder
     public function run(): void
     {
         Bouncer::role()->firstOrCreate(
-            ['name' => GlobalRole::SLUG_APPLICATION_ADMIN],
-            ['title' => GlobalRole::APPLICATION_ADMINISTRATOR]
+            ['name' => GlobalRole::ApplicationAdministrator->toSlug()],
+            ['title' => GlobalRole::ApplicationAdministrator->title()]
         );
 
-        Bouncer::allow(GlobalRole::SLUG_APPLICATION_ADMIN)->everything();
+        Bouncer::allow(GlobalRole::ApplicationAdministrator->toSlug())->everything();
 
         Bouncer::refresh();
     }

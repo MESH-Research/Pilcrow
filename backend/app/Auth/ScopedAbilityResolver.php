@@ -69,20 +69,16 @@ class ScopedAbilityResolver
             $roles = $this->publicationRoles($user, $entity->id);
         } elseif ($entity instanceof Submission) {
             // Direct submission roles plus admin roles inherited from the
-            // parent publication (publication admin / editor).
+            // parent publication (publication admin / editor). The pivots are
+            // unique on (user, entity) and publication vs submission role slugs
+            // are disjoint, so this merge can never yield a duplicate role.
             $roles = array_merge(
                 $this->submissionRoles($user, $entity->id),
                 $this->publicationRoles($user, $entity->publication_id)
             );
         }
 
-        // Dedupe by backing value (enum instances are not array_unique-able).
-        $unique = [];
-        foreach ($roles as $role) {
-            $unique[$role->pivotValue()] = $role;
-        }
-
-        return array_values($unique);
+        return $roles;
     }
 
     /**
@@ -92,13 +88,13 @@ class ScopedAbilityResolver
      */
     private function publicationRoles(User $user, $publicationId): array
     {
-        $roleIds = PublicationAssignment::query()
+        $roleSlugs = PublicationAssignment::query()
             ->where('user_id', $user->id)
             ->where('publication_id', $publicationId)
-            ->pluck('role_id')
+            ->pluck('role')
             ->all();
 
-        return $this->rolesForIds($roleIds);
+        return $this->rolesForSlugs($roleSlugs);
     }
 
     /**
@@ -108,27 +104,27 @@ class ScopedAbilityResolver
      */
     private function submissionRoles(User $user, $submissionId): array
     {
-        $roleIds = SubmissionAssignment::query()
+        $roleSlugs = SubmissionAssignment::query()
             ->where('user_id', $user->id)
             ->where('submission_id', $submissionId)
-            ->pluck('role_id')
+            ->pluck('role')
             ->all();
 
-        return $this->rolesForIds($roleIds);
+        return $this->rolesForSlugs($roleSlugs);
     }
 
     /**
-     * Map the pivot role_id integers to ScopedRole cases, skipping any that do
-     * not correspond to a known scoped role.
+     * Map the pivot `role` slugs to ScopedRole cases, skipping any that do not
+     * correspond to a known scoped role.
      *
-     * @param array<int, int|string> $roleIds
+     * @param array<int, string|null> $roleSlugs
      * @return array<int, \App\Auth\ScopedRole>
      */
-    private function rolesForIds(array $roleIds): array
+    private function rolesForSlugs(array $roleSlugs): array
     {
         $roles = [];
-        foreach ($roleIds as $id) {
-            $role = ScopedRole::tryFrom((int)$id);
+        foreach ($roleSlugs as $slug) {
+            $role = $slug === null ? null : ScopedRole::tryFrom((string)$slug);
             if ($role !== null) {
                 $roles[] = $role;
             }

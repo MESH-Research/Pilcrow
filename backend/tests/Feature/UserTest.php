@@ -94,7 +94,7 @@ class UserTest extends TestCase
         $user = User::factory()->create();
 
         if (in_array(1, $role_ids)) {
-            $user->assignRole(GlobalRole::APPLICATION_ADMINISTRATOR);
+            $user->assignRole(GlobalRole::ApplicationAdministrator);
         }
         if (in_array(2, $role_ids)) {
             $this->assignPublicationRole($user, 'publicationAdmins');

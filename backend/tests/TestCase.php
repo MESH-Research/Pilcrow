@@ -38,7 +38,7 @@ abstract class TestCase extends BaseTestCase
     {
         /** @var User $user */
         $user = User::factory()->create();
-        $user->assignRole(GlobalRole::APPLICATION_ADMINISTRATOR);
+        $user->assignRole(GlobalRole::ApplicationAdministrator);
         $this->actingAs($user);
 
         return $user;

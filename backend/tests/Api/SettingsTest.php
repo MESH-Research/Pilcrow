@@ -30,7 +30,7 @@ class SettingsTest extends ApiTestCase
     {
         /** @var User $user */
         $user = User::factory()->create();
-        $user->assignRole(GlobalRole::APPLICATION_ADMINISTRATOR);
+        $user->assignRole(GlobalRole::ApplicationAdministrator);
         $this->actingAs($user);
 
         $this->graphQL('

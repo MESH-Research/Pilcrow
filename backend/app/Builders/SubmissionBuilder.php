@@ -21,7 +21,7 @@ class SubmissionBuilder extends Builder
         return $this->whereHas('submissionAssignments', function ($query) use ($roles, $user) {
             $query
                 ->where('user_id', $user->id)
-                ->whereIn('role_id', $roles);
+                ->whereIn('role', $roles);
         });
     }
 
@@ -36,7 +36,7 @@ class SubmissionBuilder extends Builder
     public function roleFilter(?array $roles): self
     {
         return $this->whereHas('submissionAssignments', function ($query) use ($roles) {
-            $query->whereIn('role_id', $roles);
+            $query->whereIn('role', $roles);
         });
     }
 

@@ -97,7 +97,7 @@ class UserPolicy
             $viewer->setRelation(
                 'privilegedPublicationIds',
                 $viewer->publications()
-                    ->wherePivotIn('role_id', [
+                    ->wherePivotIn('role', [
                         ScopedRole::PublicationAdmin->pivotValue(),
                         ScopedRole::Editor->pivotValue(),
                     ])

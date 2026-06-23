@@ -25,9 +25,9 @@ class UserPermissionsTest extends ApiTestCase
     {
         $this->beAppAdmin();
         $user = User::factory()->create();
-        $user->assignRole(GlobalRole::APPLICATION_ADMINISTRATOR);
+        $user->assignRole(GlobalRole::ApplicationAdministrator);
 
-        $adminRole = Bouncer::role()->where('name', GlobalRole::SLUG_APPLICATION_ADMIN)->firstOrFail();
+        $adminRole = Bouncer::role()->where('name', GlobalRole::ApplicationAdministrator->toSlug())->firstOrFail();
 
         $response = $this->graphQL(
             'query getUser($id: ID) {
@@ -46,7 +46,7 @@ class UserPermissionsTest extends ApiTestCase
         $response->assertJsonPath('data.user.roles', [
             [
                 'id' => (string)$adminRole->id,
-                'name' => GlobalRole::APPLICATION_ADMINISTRATOR,
+                'name' => GlobalRole::ApplicationAdministrator->title(),
             ],
         ]);
     }

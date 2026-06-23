@@ -20,7 +20,7 @@ two homes:
 
 | Slug | Scope | Kind | Defined in | Assigned via |
 | --- | --- | --- | --- | --- |
-| `application_admin` | Application (global) | Bouncer role | Bouncer's `Role` model (slug const in `App\Auth\GlobalRole`) | Bouncer `assigned_roles` |
+| `application_admin` | Application (global) | Bouncer role | Bouncer's `Role` model (slug in the `App\Auth\GlobalRole` enum) | Bouncer `assigned_roles` |
 | `publication_admin` | Publication | scoped (code) | `App\Auth\ScopedRole` | `publication_user` pivot |
 | `editor` | Publication | scoped (code) | `App\Auth\ScopedRole` | `publication_user` pivot |
 | `review_coordinator` | Submission | scoped (code) | `App\Auth\ScopedRole` | `submission_user` pivot |
@@ -36,21 +36,25 @@ from being mistaken for, or assigned as, a global one.
 ### Scoped roles (pivots)
 
 Publication and submission roles are stored on the `publication_user` and
-`submission_user` pivots as an integer `role_id` column (the foreign key to the
-old spatie roles table has been dropped). `ScopedRole` is an **int-backed enum
-whose backing value is that `role_id`**, so the pivot value maps straight to a
-case. The relations encode the role:
+`submission_user` pivots in a `role` **slug** column. `ScopedRole` is a
+**string-backed enum whose backing value is that slug** (`publication_admin`,
+`editor`, …), so the pivot value maps straight to a case. The relations encode
+the role:
 
 ```php
 // App\Models\Publication
-$this->users()->withPivotValue('role_id', ScopedRole::Editor->value); // editors()
+$this->users()->withPivotValue('role', ScopedRole::Editor->pivotValue()); // editors()
 ```
 
-`ScopedAbilityResolver` maps the pivot `role_id` to a case via
-`ScopedRole::tryFrom($roleId)` (unknown ids are skipped). Replacing `role_id`
-with a human-readable slug column directly on the pivots is a deliberately
-deferred follow-on PR — it touches every pivot read/write site and is clearer
-reviewed in isolation.
+`ScopedAbilityResolver` maps the pivot `role` slug to a case via
+`ScopedRole::tryFrom($slug)` (unknown slugs are skipped). The slug is the one
+vocabulary shared across storage, the ability matrix, and the API.
+
+The legacy integer `role_id` column is **retained but frozen**: its foreign key
+to the old spatie roles table is dropped, it is made nullable, and the `role`
+slug is backfilled from it. New writes set `role` only and leave `role_id` null;
+`role_id` is kept solely as the historical record so the cutover is recoverable.
+Dropping it is a later PR once the slug column is proven in production.
 
 A user can hold many scoped roles across many entities simultaneously, which is
 why scoping lives in pivots rather than a single Bouncer scope.
@@ -62,12 +66,14 @@ through `assigned_roles`; `User` uses Bouncer's `HasRolesAndAbilities` trait.
 Check it with:
 
 ```php
-$user->isApplicationAdministrator(); // === $user->isA(GlobalRole::SLUG_APPLICATION_ADMIN)
+$user->isApplicationAdministrator(); // === $user->isA(GlobalRole::ApplicationAdministrator->toSlug())
 ```
 
 The role row, its id, and assignments are owned entirely by Bouncer (its own
 `Silber\Bouncer\Database\Role` model — we do **not** subclass it). App code only
-names the slug via the `App\Auth\GlobalRole` constants holder. `application_admin`
+names the slug via the `App\Auth\GlobalRole` **slug-backed enum** (`toSlug()` is
+the backing value; `title()` is `@deprecated` in favour of i18n from the slug).
+`application_admin`
 is granted `everything()`, so it satisfies every **global** ability check and,
 as a role, short-circuits every **scoped** check.
 
@@ -163,7 +169,7 @@ answering a global question. It:
 
 1. short-circuits on the app-admin **role** (never a Bouncer ability), then
 2. resolves the user's **effective `ScopedRole`s** for the entity (reading
-   `role_id` from the pivots, mapping each via `ScopedRole::tryFrom()`):
+   the `role` slug from the pivots, mapping each via `ScopedRole::tryFrom()`):
    - For a `Publication`: the user's `publication_user` roles on it.
    - For a `Submission`: the user's `submission_user` roles on it **plus** the
      admin roles inherited from the parent publication (publication admin /
@@ -215,10 +221,11 @@ relationships stay in the policy, layered on the ability check:
 
 ## The `highest_privileged_role` field
 
-`User::getHighestPrivilegedRole()` returns the most-privileged `role_id` the
-user holds anywhere (lowest id ranks highest: `application_admin`=1 …
-`submitter`=6). It is a **client UI hint** (routing, which dashboard table to
-show) — not an authorization mechanism.
+`User::getHighestPrivilegedRole()` returns the most-privileged **rank** the
+user holds anywhere (lower ranks higher: `application_admin`=1 … `submitter`=6),
+computed from `GlobalRole::rank()` / `ScopedRole::rank()`. The rank ints are the
+GraphQL `UserRoles` enum values. It is a **client UI hint** (routing, which
+dashboard table to show) — not an authorization mechanism.
 
 ## Recipes
 
@@ -238,9 +245,9 @@ in the policy for one-offs.
 **Assign roles:**
 
 ```php
-$user->assignRole(Role::APPLICATION_ADMINISTRATOR);          // global (Bouncer)
+$user->assignRole(GlobalRole::ApplicationAdministrator);      // global (Bouncer)
 $publication->editors()->attach($user);                       // scoped (pivot)
-$submission->users()->attach($user->id, ['role_id' => ScopedRole::Reviewer->value]);
+$submission->users()->attach($user->id, ['role' => ScopedRole::Reviewer->pivotValue()]);
 ```
 
 **In tests:** the base `Tests\TestCase` seeds `AbacSeeder` after each database

@@ -12,21 +12,21 @@ use Illuminate\Database\Eloquent\Model;
  *
  * These are deliberately NOT Bouncer roles and have no rows in bouncer_roles.
  * A user holds a scoped role per-entity through the publication_user /
- * submission_user pivots (the integer role_id column, which is this enum's
- * backing value); ScopedAbilityResolver maps that role_id to a case via
+ * submission_user pivots (the `role` slug column, which is this enum's backing
+ * value); ScopedAbilityResolver maps that slug to a case via
  * ScopedRole::tryFrom() and asks it what it grants. The role -> ability map is
  * code: each case returns its list of {@see Grant}s. Nothing here is stored in,
  * seeded into, or assignable through Bouncer — that is reserved for genuinely
  * global roles (App\Auth\GlobalRole, e.g. application_admin), which is intentionally
  * NOT a case here.
  */
-enum ScopedRole: int
+enum ScopedRole: string
 {
-    case PublicationAdmin = 2;
-    case Editor = 3;
-    case ReviewCoordinator = 4;
-    case Reviewer = 5;
-    case Submitter = 6;
+    case PublicationAdmin = 'publication_admin';
+    case Editor = 'editor';
+    case ReviewCoordinator = 'review_coordinator';
+    case Reviewer = 'reviewer';
+    case Submitter = 'submitter';
 
     /**
      * The grants this role confers.
@@ -134,15 +134,35 @@ enum ScopedRole: int
     }
 
     /**
-     * The value stored in the pivot `role_id` column for this role. This is the
-     * enum's backing value, surfaced through an intent-revealing method so pivot
-     * reads/writes and queries don't reach for the raw ->value.
+     * The value stored in the pivot `role` column for this role — the role slug.
+     * This is the enum's backing value, surfaced through an intent-revealing
+     * method so pivot reads/writes and queries don't reach for the raw ->value.
      *
-     * @return int
+     * @return string
      */
-    public function pivotValue(): int
+    public function pivotValue(): string
     {
         return $this->value;
+    }
+
+    /**
+     * Privilege rank for the `highest_privileged_role` UI hint (lower ranks
+     * higher), continuing the scale below the global administrator. These are the
+     * legacy role ids, retained only as the GraphQL `UserRoles` display values —
+     * a UI hint, not authorization and not a stored identifier.
+     *
+     * @see \App\Auth\GlobalRole::rank()
+     * @return int
+     */
+    public function rank(): int
+    {
+        return match ($this) {
+            self::PublicationAdmin => 2,
+            self::Editor => 3,
+            self::ReviewCoordinator => 4,
+            self::Reviewer => 5,
+            self::Submitter => 6,
+        };
     }
 
     /**
