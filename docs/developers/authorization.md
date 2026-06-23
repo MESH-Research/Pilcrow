@@ -178,6 +178,28 @@ answering a global question. It:
    in-memory check over that role's `Grant`s, no database access, evaluating any
    predicate against the entity.
 
+## List filtering
+
+Listing endpoints can't loop the resolver per row, so they need the same
+decision expressed as SQL. Rather than hand-roll a parallel rule set, the
+builders derive their WHERE clause from the **same matrix**:
+
+- `ScopedRole::rolesGranting($ability)` inverts the matrix — the roles that grant
+  an ability — and `grantingSlugsFor($ability, $pivot)` narrows that to the role
+  slugs on one pivot. `ScopedRole::pivot()` says which pivot a role lives on.
+- `PublicationBuilder::whereCan($ability)` / `SubmissionBuilder::whereCan($ability)`
+  build the membership filter from those slugs, with the same app-admin bypass
+  and (for submissions) the same parent-publication inheritance the resolver
+  applies. `Builder::visible()` delegates to `whereCan(...View)`.
+
+Because both the resolver and the builders read `rolesGranting()`, item checks
+and list scoping cannot diverge — `ScopedAbilityListParityTest` asserts the
+listed set equals the per-item resolver verdict. List-filtering is limited to
+**unconditional** abilities: a `Predicate` has no SQL form, so `rolesGranting()`
+throws on a conditional grant rather than filter incorrectly (the conditions
+that are list-filterable in SQL are a later, Tier 2 addition giving `Predicate` a
+`scope()` form).
+
 ## Policies
 
 Lighthouse `@can` directives are the entry point and resolve to Laravel

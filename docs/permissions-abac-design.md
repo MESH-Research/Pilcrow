@@ -195,13 +195,22 @@ is faster, more auditable, and easier to test; fine access via attribute
 predicates layers on top. The combined decision point is the PBAC (policy-based)
 ideal. What actually makes it *better* from here, in priority order:
 
-1. **Unify list-filtering with item-authorization (correctness — highest
-   value).** Query builders (`PublicationBuilder::visible()` / `myRole()`, the
-   submission equivalents) reimplement authorization as SQL, parallel to the
-   resolver/policies. Divergence is a latent security bug (listing what you
-   cannot view, or vice versa). List-scoping and item checks should derive from
-   the same role/relationship resolution. Not folded into the initial migration
-   PR because doing it correctly is sizeable; it is the first follow-up.
+1. **Unify list-filtering with item-authorization (correctness — Tier 1 done).**
+   Query builders used to reimplement authorization as SQL, parallel to the
+   resolver/policies — a latent security bug (listing what you cannot view, or
+   vice versa). **Tier 1** closes the gap for unconditional abilities: the matrix
+   is inverted once (`ScopedRole::rolesGranting()` / `pivot()` /
+   `grantingSlugsFor()`), and `PublicationBuilder::whereCan()` /
+   `SubmissionBuilder::whereCan()` build the WHERE from it — the *same* source the
+   resolver reads, including the parent-publication inheritance and the app-admin
+   bypass. `visible()` now delegates to `whereCan()`, and a parity test
+   (`ScopedAbilityListParityTest`) asserts the listed set equals the
+   per-item resolver verdict, so the two cannot drift. Conditional abilities (a
+   predicate has no SQL form) throw rather than filter wrongly. **Remaining:**
+   Tier 2 — give `Predicate` a SQL form (`scope(Builder)`) so conditional grants
+   are list-filterable; Tier 3 — fold the remaining role-array filters
+   (`myRole` / `myRoleFilter`) and `managedPublicationSubmissions` fully onto
+   `whereCan`.
 
 2. **Conditions as data, not ability-name hacks (done, in this PR).** The old
    `submission.update-status-draft` encoded a state condition into an ability

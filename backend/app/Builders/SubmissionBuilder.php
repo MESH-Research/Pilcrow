@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 namespace App\Builders;
 
+use App\Auth\ScopedAbility;
+use App\Auth\ScopedRole;
+use App\Auth\SubmissionAbility;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 
@@ -69,16 +72,48 @@ class SubmissionBuilder extends Builder
      */
     public function visible(): self
     {
+        return $this->whereCan(SubmissionAbility::View);
+    }
+
+    /**
+     * Scope to submissions on which the current user is granted a scoped
+     * ability, resolved from the {@see ScopedRole} matrix — the same source as
+     * {@see \App\Auth\ScopedAbilityResolver}, including the parent-publication
+     * role inheritance — so list-filtering and item authorization cannot
+     * diverge. Application administrators match everything; a guest or a user
+     * with no granting role matches nothing.
+     *
+     * @param \App\Auth\ScopedAbility $ability
+     * @return self
+     */
+    public function whereCan(ScopedAbility $ability): self
+    {
         $user = Auth::user();
 
-        return $this->where(function ($query) use ($user) {
-            $query->whereHas('publication', function ($query) use ($user) {
-                $query->whereHas('users', function ($query) use ($user) {
-                    $query->where('user_id', $user->id);
+        if ($user && $user->isApplicationAdministrator()) {
+            return $this;
+        }
+
+        $submissionSlugs = ScopedRole::grantingSlugsFor($ability, ScopedRole::PIVOT_SUBMISSION);
+        $publicationSlugs = ScopedRole::grantingSlugsFor($ability, ScopedRole::PIVOT_PUBLICATION);
+
+        if (!$user || ($submissionSlugs === [] && $publicationSlugs === [])) {
+            return $this->whereRaw('1 = 0');
+        }
+
+        return $this->where(function (Builder $query) use ($user, $submissionSlugs, $publicationSlugs) {
+            if ($submissionSlugs !== []) {
+                $query->whereHas('submissionAssignments', function (Builder $sub) use ($user, $submissionSlugs) {
+                    $sub->where('user_id', $user->id)->whereIn('role', $submissionSlugs);
                 });
-            })->orWhereHas('submissionAssignments', function ($query) use ($user) {
-                $query->where('user_id', $user->id);
-            });
+            }
+            if ($publicationSlugs !== []) {
+                $query->orWhereHas('publication', function (Builder $pub) use ($user, $publicationSlugs) {
+                    $pub->whereHas('users', function (Builder $u) use ($user, $publicationSlugs) {
+                        $u->where('user_id', $user->id)->whereIn('role', $publicationSlugs);
+                    });
+                });
+            }
         });
     }
 }

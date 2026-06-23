@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Auth\PublicationAbility;
 use App\Auth\ScopedRole;
 use App\Builders\SubmissionBuilder;
 use App\Events\SubmissionStatusUpdated;
@@ -54,9 +55,9 @@ class Submission extends Model implements Auditable
      * Restrict the query to submissions in publications managed by the
      * authenticated user:
      *  - Application administrators manage all publications, so see all submissions.
-     *  - Users with any publication role (currently administrator or editor —
-     *    the only roles attached at the publication level) see submissions in
-     *    those publications.
+     *  - Users holding a publication role that grants publication.view (publication
+     *    administrator or editor) see submissions in those publications. The role
+     *    set is derived from the ScopedRole matrix so it tracks authorization.
      *  - Anyone else sees nothing.
      *
      * Relies on the @guard directive to reject unauthenticated requests before
@@ -71,7 +72,12 @@ class Submission extends Model implements Auditable
             return $query;
         }
 
-        return $query->whereIn('publication_id', $user->publications()->pluck('publications.id'));
+        $slugs = ScopedRole::grantingSlugsFor(PublicationAbility::View, ScopedRole::PIVOT_PUBLICATION);
+
+        return $query->whereIn(
+            'publication_id',
+            $user->publications()->wherePivotIn('role', $slugs)->pluck('publications.id')
+        );
     }
 
     /**

@@ -6,6 +6,8 @@ namespace App\Auth;
 use App\Auth\Predicates\SubmissionIsDraft;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
+use LogicException;
+use UnitEnum;
 
 /**
  * The scoped (publication / submission) roles, as a type.
@@ -22,6 +24,12 @@ use Illuminate\Database\Eloquent\Model;
  */
 enum ScopedRole: string
 {
+    /** Roles assigned through the `publication_user` pivot. */
+    public const PIVOT_PUBLICATION = 'publication';
+
+    /** Roles assigned through the `submission_user` pivot. */
+    public const PIVOT_SUBMISSION = 'submission';
+
     case PublicationAdmin = 'publication_admin';
     case Editor = 'editor';
     case ReviewCoordinator = 'review_coordinator';
@@ -40,6 +48,78 @@ enum ScopedRole: string
     public function grants(): array
     {
         return array_map([self::class, 'toGrant'], $this->grantDefinitions());
+    }
+
+    /**
+     * The pivot a role is assigned through — the inverse of the resolver's
+     * per-entity lookup, used by list-filtering to know which membership table
+     * to join. {@see self::PIVOT_PUBLICATION} / {@see self::PIVOT_SUBMISSION}.
+     *
+     * @return string
+     */
+    public function pivot(): string
+    {
+        return match ($this) {
+            self::PublicationAdmin, self::Editor => self::PIVOT_PUBLICATION,
+            self::ReviewCoordinator, self::Reviewer, self::Submitter => self::PIVOT_SUBMISSION,
+        };
+    }
+
+    /**
+     * The roles that grant the ability **absolutely** (no predicate) — the
+     * matrix inverted by ability. This is the single source of truth shared
+     * between item authorization ({@see ScopedAbilityResolver}) and SQL
+     * list-filtering, so the two cannot drift.
+     *
+     * Tier 1 list-filtering only supports unconditional abilities: a predicate
+     * lives in PHP and has no SQL form, so a conditional grant for the requested
+     * ability throws rather than silently filtering incorrectly.
+     *
+     * @param \App\Auth\ScopedAbility $ability
+     * @return array<int, \App\Auth\ScopedRole>
+     * @throws \LogicException if any role grants the ability conditionally
+     */
+    public static function rolesGranting(ScopedAbility $ability): array
+    {
+        $roles = [];
+        foreach (self::cases() as $role) {
+            foreach ($role->grantDefinitions() as $definition) {
+                if ($definition instanceof ScopedAbility) {
+                    if ($definition === $ability) {
+                        $roles[] = $role;
+                    }
+                    continue;
+                }
+                if ($definition[0] === $ability) {
+                    $label = $ability instanceof UnitEnum ? $ability->name : 'ability';
+                    throw new LogicException(
+                        "Scoped ability {$label} has a conditional grant on {$role->name}; "
+                        . 'it is not list-filterable (Tier 1 supports unconditional abilities only).'
+                    );
+                }
+            }
+        }
+
+        return $roles;
+    }
+
+    /**
+     * The pivot `role` slugs that grant the ability, restricted to one pivot.
+     *
+     * @param \App\Auth\ScopedAbility $ability
+     * @param string $pivot one of the PIVOT_* constants
+     * @return array<int, string>
+     */
+    public static function grantingSlugsFor(ScopedAbility $ability, string $pivot): array
+    {
+        $slugs = [];
+        foreach (self::rolesGranting($ability) as $role) {
+            if ($role->pivot() === $pivot) {
+                $slugs[] = $role->pivotValue();
+            }
+        }
+
+        return $slugs;
     }
 
     /**

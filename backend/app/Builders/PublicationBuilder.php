@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 namespace App\Builders;
 
+use App\Auth\PublicationAbility;
+use App\Auth\ScopedAbility;
+use App\Auth\ScopedRole;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 
@@ -65,13 +68,46 @@ class PublicationBuilder extends Builder
             return $this;
         }
 
-        return $this->where(function (Builder $query) use ($user) {
+        // Membership branch derives from the same matrix the resolver uses:
+        // the publication-pivot roles that grant publication.view.
+        $slugs = ScopedRole::grantingSlugsFor(PublicationAbility::View, ScopedRole::PIVOT_PUBLICATION);
+
+        return $this->where(function (Builder $query) use ($user, $slugs) {
             $query->where('is_publicly_visible', true);
-            if ($user) {
-                $query->orWhereHas('users', function (Builder $sub) use ($user) {
-                    $sub->where('user_id', $user->id);
+            if ($user && $slugs !== []) {
+                $query->orWhereHas('users', function (Builder $sub) use ($user, $slugs) {
+                    $sub->where('user_id', $user->id)->whereIn('role', $slugs);
                 });
             }
+        });
+    }
+
+    /**
+     * Scope to publications on which the current user is granted a scoped
+     * ability, resolved from the {@see ScopedRole} matrix (the same source as
+     * {@see \App\Auth\ScopedAbilityResolver}) so list-filtering and item
+     * authorization cannot diverge. Application administrators match everything;
+     * a guest or a user with no granting role matches nothing.
+     *
+     * @param \App\Auth\ScopedAbility $ability
+     * @return self
+     */
+    public function whereCan(ScopedAbility $ability): self
+    {
+        $user = Auth::user();
+
+        if ($user && $user->isApplicationAdministrator()) {
+            return $this;
+        }
+
+        $slugs = ScopedRole::grantingSlugsFor($ability, ScopedRole::PIVOT_PUBLICATION);
+
+        if (!$user || $slugs === []) {
+            return $this->whereRaw('1 = 0');
+        }
+
+        return $this->whereHas('users', function (Builder $query) use ($user, $slugs) {
+            $query->where('user_id', $user->id)->whereIn('role', $slugs);
         });
     }
 
