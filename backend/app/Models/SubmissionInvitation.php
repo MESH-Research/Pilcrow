@@ -28,6 +28,7 @@ class SubmissionInvitation extends Model
         'accepted_at',
         'submission_id',
         'role',
+        'role_id',
         'uuid',
     ];
 

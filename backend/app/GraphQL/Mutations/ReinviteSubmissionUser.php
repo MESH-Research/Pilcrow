@@ -24,6 +24,7 @@ final class ReinviteSubmissionUser
         $invite = SubmissionInvitation::create([
             'submission_id' => $submission->id,
             'role' => ScopedRole::Reviewer->pivotValue(),
+            'role_id' => ScopedRole::Reviewer->legacyId(),
             'email' => $args['email'],
             'message' => $args['message'] ?? null,
         ]);
@@ -46,6 +47,7 @@ final class ReinviteSubmissionUser
         $invite = SubmissionInvitation::create([
             'submission_id' => $submission->id,
             'role' => ScopedRole::ReviewCoordinator->pivotValue(),
+            'role_id' => ScopedRole::ReviewCoordinator->legacyId(),
             'email' => $args['email'],
             'message' => $args['message'] ?? null,
         ]);

@@ -226,15 +226,13 @@ enum ScopedRole: string
     }
 
     /**
-     * Privilege rank for the `highest_privileged_role` UI hint (lower ranks
-     * higher), continuing the scale below the global administrator. These are the
-     * legacy role ids, retained only as the GraphQL `UserRoles` display values —
-     * a UI hint, not authorization and not a stored identifier.
+     * The legacy integer `role_id` for this role. The slug is now the source of
+     * truth, but the integer is still written alongside it into the retained
+     * `role_id` pivot column so a rollback to the pre-slug code finds valid data.
      *
-     * @see \App\Auth\GlobalRole::rank()
      * @return int
      */
-    public function rank(): int
+    public function legacyId(): int
     {
         return match ($this) {
             self::PublicationAdmin => 2,
@@ -243,6 +241,19 @@ enum ScopedRole: string
             self::Reviewer => 5,
             self::Submitter => 6,
         };
+    }
+
+    /**
+     * Privilege rank for the `highest_privileged_role` UI hint (lower ranks
+     * higher), continuing the scale below the global administrator. By
+     * construction this is the legacy role id — a UI hint, not authorization.
+     *
+     * @see \App\Auth\GlobalRole::rank()
+     * @return int
+     */
+    public function rank(): int
+    {
+        return $this->legacyId();
     }
 
     /**

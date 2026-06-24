@@ -76,7 +76,8 @@ class Publication extends BaseModel
     public function publicationAdmins(): BelongsToMany
     {
         return $this->users()
-            ->withPivotValue('role', ScopedRole::PublicationAdmin->pivotValue());
+            ->withPivotValue('role', ScopedRole::PublicationAdmin->pivotValue())
+            ->withPivotValue('role_id', ScopedRole::PublicationAdmin->legacyId());
     }
 
     /**
@@ -87,7 +88,8 @@ class Publication extends BaseModel
     public function editors(): BelongsToMany
     {
         return $this->users()
-            ->withPivotValue('role', ScopedRole::Editor->pivotValue());
+            ->withPivotValue('role', ScopedRole::Editor->pivotValue())
+            ->withPivotValue('role_id', ScopedRole::Editor->legacyId());
     }
 
     /**

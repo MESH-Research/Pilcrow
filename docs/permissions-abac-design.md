@@ -137,11 +137,13 @@ across storage, the ability matrix, and the API. The
 - `highest_privileged_role` is the min rank (`GlobalRole::rank()` /
   `ScopedRole::rank()`) the user holds — a display hint, not authz.
 
-**`role_id` retained, not dropped:** the legacy integer column stays (FK to the
-spatie roles table dropped, column made nullable) as the historical record, so
-the cutover is recoverable if the slug backfill goes wrong. New writes set `role`
-only and leave `role_id` null. Dropping `role_id` is a deliberately separate,
-later PR once the slug column is proven in production.
+**`role_id` retained and dual-written, not dropped:** the legacy integer column
+stays (FK to the spatie roles table dropped, column made nullable) as the
+recovery safety net. The role relations and invite mutations write `role` and
+`role_id` together (`ScopedRole::pivotValue()` + `ScopedRole::legacyId()`), so a
+rollback to the pre-slug code finds valid `role_id` data on rows created after the
+deploy — not just on backfilled ones. Dropping `role_id` is a deliberately
+separate, later PR once the slug column is proven in production.
 
 ## The bridge
 

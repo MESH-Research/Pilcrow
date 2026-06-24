@@ -46,17 +46,29 @@ enum GlobalRole: string
     }
 
     /**
+     * The legacy integer role id for the global role, mirroring
+     * {@see ScopedRole::legacyId()}. The global role lives in Bouncer (not a
+     * pivot), so this is only the privilege-rank / GraphQL `UserRoles` value.
+     *
+     * @return int
+     */
+    public function legacyId(): int
+    {
+        return match ($this) {
+            self::ApplicationAdministrator => 1,
+        };
+    }
+
+    /**
      * Privilege rank for the `highest_privileged_role` UI hint (lower ranks
-     * higher). The global administrator outranks every scoped role. This is the
-     * GraphQL `UserRoles` enum value — a display hint, not a Bouncer id.
+     * higher). The global administrator outranks every scoped role. By
+     * construction this is the legacy role id — a display hint, not a Bouncer id.
      *
      * @see ScopedRole::rank()
      * @return int
      */
     public function rank(): int
     {
-        return match ($this) {
-            self::ApplicationAdministrator => 1,
-        };
+        return $this->legacyId();
     }
 }

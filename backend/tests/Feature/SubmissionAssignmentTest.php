@@ -40,6 +40,11 @@ class SubmissionAssignmentTest extends TestCase
             ScopedRole::Reviewer->pivotValue(),
             $assignment->role
         );
+        // role_id is dual-written for rollback safety.
+        $this->assertEquals(
+            ScopedRole::Reviewer->legacyId(),
+            (int)$assignment->role_id
+        );
     }
 
     /**

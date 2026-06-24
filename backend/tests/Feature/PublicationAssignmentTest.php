@@ -37,5 +37,10 @@ class PublicationAssignmentTest extends TestCase
             ScopedRole::Editor->pivotValue(),
             $assignment->role
         );
+        // role_id is dual-written for rollback safety.
+        $this->assertEquals(
+            ScopedRole::Editor->legacyId(),
+            (int)$assignment->role_id
+        );
     }
 }

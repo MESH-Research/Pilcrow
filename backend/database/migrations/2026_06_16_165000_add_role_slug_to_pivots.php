@@ -14,9 +14,10 @@ use Illuminate\Support\Facades\Schema;
  *
  * The legacy `role_id` column is deliberately RETAINED (not dropped) so the
  * original data survives this cutover and can repair the slug column if anything
- * goes wrong. Dropping `role_id` is a separate, later PR once the slug column is
- * proven in production. New writes set `role` only; `role_id` is frozen as the
- * historical record.
+ * goes wrong. It is made nullable here and kept **dual-written** by the role
+ * relations / invite mutations (role slug + role_id together), so a rollback to
+ * the pre-slug code finds valid role_id data on rows created after this deploy.
+ * Dropping `role_id` is a separate, later PR once the slug column is proven.
  */
 return new class extends Migration
 {

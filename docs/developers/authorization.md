@@ -50,11 +50,13 @@ $this->users()->withPivotValue('role', ScopedRole::Editor->pivotValue()); // edi
 `ScopedRole::tryFrom($slug)` (unknown slugs are skipped). The slug is the one
 vocabulary shared across storage, the ability matrix, and the API.
 
-The legacy integer `role_id` column is **retained but frozen**: its foreign key
-to the old spatie roles table is dropped, it is made nullable, and the `role`
-slug is backfilled from it. New writes set `role` only and leave `role_id` null;
-`role_id` is kept solely as the historical record so the cutover is recoverable.
-Dropping it is a later PR once the slug column is proven in production.
+The legacy integer `role_id` column is **retained and dual-written**: its foreign
+key to the old spatie roles table is dropped, it is made nullable, and the `role`
+slug is backfilled from it. The role relations and invite mutations write `role`
+and `role_id` together (`ScopedRole::pivotValue()` + `ScopedRole::legacyId()`),
+so `role_id` stays valid on new rows — a rollback to the pre-slug code still finds
+usable data. `role_id` is kept solely as that safety net; dropping it is a later
+PR once the slug column is proven in production.
 
 A user can hold many scoped roles across many entities simultaneously, which is
 why scoping lives in pivots rather than a single Bouncer scope.
