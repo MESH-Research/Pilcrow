@@ -29,7 +29,7 @@ class PublicationPolicy
      */
     public function create(User $user)
     {
-        return $user->can(GlobalAbility::CreatePublication);
+        return $user->can(GlobalAbility::PublicationCreate);
     }
 
     /**

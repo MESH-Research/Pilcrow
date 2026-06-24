@@ -28,7 +28,7 @@ class UserPolicy
      */
     public function viewAny(User $viewer): bool
     {
-        return $viewer->can(GlobalAbility::ViewAnyUser);
+        return $viewer->can(GlobalAbility::UserViewAny);
     }
 
     /**
@@ -37,7 +37,7 @@ class UserPolicy
      */
     public function view(User $viewer, User $_target): bool
     {
-        return $viewer->can(GlobalAbility::ViewUser);
+        return $viewer->can(GlobalAbility::UserView);
     }
 
     /**
@@ -50,7 +50,7 @@ class UserPolicy
      */
     public function manageBeta(User $viewer, User $_target): bool
     {
-        return $viewer->can(GlobalAbility::ManageUserBeta);
+        return $viewer->can(GlobalAbility::UserManageBeta);
     }
 
     /**
@@ -68,7 +68,7 @@ class UserPolicy
         }
 
         // TODO: Check if user can update user within own publication
-        return $user->can(GlobalAbility::UpdateUser);
+        return $user->can(GlobalAbility::UserUpdate);
     }
 
     /**
