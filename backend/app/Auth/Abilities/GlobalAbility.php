@@ -16,14 +16,20 @@ namespace App\Auth\Abilities;
  * submission scoped abilities — so Bouncer can never short-circuit a scoped
  * check.
  *
- * The backing value is the Bouncer ability name.
+ * Naming convention — global abilities are **verb-first** (Action + Model:
+ * `CreatePublication`, `ViewUser`). This is deliberately distinct from the
+ * scoped enums, whose cases are action-only on a model-named enum
+ * (`PublicationAbility::View`, `SubmissionAbility::UpdateStatus`). The shape of
+ * the name therefore tells you which it is: `CreatePublication` is an
+ * application capability and could never be mistaken for a `PublicationAbility`
+ * case. The backing value remains the dotted Bouncer ability name.
  */
 enum GlobalAbility: string
 {
-    case PublicationCreate = 'publication.create';
+    case CreatePublication = 'publication.create';
 
-    case UserView = 'user.view';
-    case UserViewAny = 'user.view-any';
-    case UserUpdate = 'user.update';
-    case UserManageBeta = 'user.manage-beta';
+    case ViewUser = 'user.view';
+    case ViewAnyUser = 'user.view-any';
+    case UpdateUser = 'user.update';
+    case ManageUserBeta = 'user.manage-beta';
 }

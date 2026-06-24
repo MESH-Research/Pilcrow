@@ -94,8 +94,13 @@ organization:
   (`PublicationAbility::Update`, `PublicationAbility::View`). Either enum's case
   is a valid scoped ability; the interface is the type everything accepts.
 - **`App\Auth\Abilities\GlobalAbility`** — application-wide abilities resolved by Bouncer
-  via `$user->can()` (`GlobalAbility::PublicationCreate`,
-  `GlobalAbility::UserViewAny`, …).
+  via `$user->can()` (`GlobalAbility::CreatePublication`,
+  `GlobalAbility::ViewAnyUser`, …).
+
+**Naming tells you which is which.** Scoped cases are action-only on a
+model-named enum (`PublicationAbility::View`); global cases are **verb-first**
+(`GlobalAbility::CreatePublication`). So `CreatePublication` is unmistakably an
+application capability — it can never be read as a `PublicationAbility::Create`.
 
 Both back onto the legacy dotted string. Policies reference enum cases, not magic
 strings, so a typo is a compile-time error and "who grants this?" is a
@@ -158,7 +163,7 @@ There is no single front door, by design. Each ability kind is checked by the
 engine that owns it:
 
 - **`GlobalAbility`** → Bouncer, called directly at the policy:
-  `$viewer->can(GlobalAbility::UserViewAny)`. The app administrator passes via
+  `$viewer->can(GlobalAbility::ViewAnyUser)`. The app administrator passes via
   its `everything()` wildcard; others only if granted at the Bouncer layer. This
   never touches the scoped resolver.
 - **`ScopedAbility`** → `App\Auth\ScopedAbilityResolver`, injected into the
@@ -223,7 +228,7 @@ A global method skips the resolver and asks Bouncer directly:
 ```php
 public function viewAny(User $viewer): bool
 {
-    return $viewer->can(GlobalAbility::UserViewAny);
+    return $viewer->can(GlobalAbility::ViewAnyUser);
 }
 ```
 
