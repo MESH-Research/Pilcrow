@@ -190,8 +190,7 @@ describe("RecordOfReviewTable selection reset", () => {
 
   it("does not emit a redundant reset when nothing is selected", async () => {
     const wrapper = await mountTable()
-    const updates = () =>
-      wrapper.emitted("update:selected")?.length ?? 0
+    const updates = () => wrapper.emitted("update:selected")?.length ?? 0
     const before = updates()
     panel(wrapper).vm.$emit("update:publicationFilter", "12")
     await flushPromises()

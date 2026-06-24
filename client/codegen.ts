@@ -14,25 +14,25 @@ const config: CodegenConfig = {
     "src/pages/**/*.vue",
     "src/layouts/**/*.vue",
     "src/components/**/*.vue",
-    "src/routes/**/*.vue",
+    "src/routes/**/*.vue"
   ],
   generates: {
     "src/graphql/generated/": {
       preset: "client",
       presetConfig: {
-        fragmentMasking: false,
+        fragmentMasking: false
       },
       config: {
         namingConvention: "keep",
-        maybeValue: "T | null | undefined",
-      },
+        maybeValue: "T | null | undefined"
+      }
     },
     "src/graphql/generated/possibleTypes.ts": {
       plugins: ["fragment-matcher"],
       config: {
         apolloClientVersion: 3,
-        useExplicitTyping: true,
-      },
+        useExplicitTyping: true
+      }
     },
     // Always emit a normalized schema.graphql via schema-ast so the
     // committed snapshot uses graphql-js's printer regardless of source
@@ -42,10 +42,10 @@ const config: CodegenConfig = {
     "src/graphql/schema.graphql": {
       plugins: ["schema-ast"],
       config: {
-        sort: true,
-      },
-    },
-  },
+        sort: true
+      }
+    }
+  }
 }
 
 export default config

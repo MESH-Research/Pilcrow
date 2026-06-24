@@ -6,7 +6,11 @@
           {{ scope.value }}
         </slot>
       </div>
-      <div class="text-caption text-grey-8">
+      <div
+        :dark-mode-status="darkModeStatus"
+        :class="darkModeStatus ? 'text-grey-5' : 'text-grey-8'"
+        class="text-caption"
+      >
         <slot name="aside" v-bind="scope">
           {{ asideLabel }}: {{ asideValue }}
         </slot>
@@ -29,9 +33,12 @@ import { computed } from "vue"
 
 interface Props {
   scope: QTableBodyCellScope<WithAsideColumn>
+  darkModeStatus?: boolean
 }
 
 const props = defineProps<Props>()
+
+const darkModeStatus = computed(() => props.darkModeStatus)
 
 const asideValue = computed(() => {
   const aside = props.scope.col.aside

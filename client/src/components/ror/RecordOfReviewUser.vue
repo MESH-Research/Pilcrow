@@ -4,12 +4,17 @@
       <h3 class="text-h4 text-bold rorr-user__name">
         {{ user.display_label }}
       </h3>
-      <p class="rorr-user__role">{{ role }}</p>
+      <p
+        :class="darkModeStatus ? 'text-grey-5' : 'text-grey-8'"
+        class="rorr-user__role"
+      >
+        {{ role }}
+      </p>
       <dl
         v-if="user.profile_metadata?.academic_profiles?.orcid_id"
         class="rorr-user__dl"
       >
-        <dt>
+        <dt :class="darkModeStatus ? 'text-grey-5' : 'text-grey-8'">
           {{
             $t(
               "account.profile.fields.profile_metadata.academic_profiles.orcid_id.label"
@@ -40,6 +45,8 @@ graphql(`
 
 <script setup lang="ts">
 import type { recordOfReviewUserFragment } from "src/graphql/generated/graphql"
+import { useDarkMode } from "src/use/guiElements"
+const { darkModeStatus } = useDarkMode()
 interface Props {
   user: recordOfReviewUserFragment
   role: string
@@ -53,7 +60,6 @@ defineProps<Props>()
 .rorr-user
   width: 220px
   background: transparent
-  color: $dark
   border: 1px solid $light-grey
 
 .rorr-user__inner
@@ -72,7 +78,6 @@ defineProps<Props>()
   font-size: 0.7rem
   letter-spacing: 0.1em
   text-transform: uppercase
-  color: $primary
   font-weight: 600
   margin: 0 0 0.75rem
 
@@ -84,7 +89,6 @@ defineProps<Props>()
     font-size: 0.65rem
     text-transform: uppercase
     letter-spacing: 0.08em
-    color: $dark-6
     margin-top: 0.25rem
 
   dd
