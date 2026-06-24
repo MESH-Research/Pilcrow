@@ -109,7 +109,10 @@ class ScopedAbilityListParityTest extends TestCase
 
         $outsider = User::factory()->create();
 
-        foreach ([$editor, $admin, $outsider] as $user) {
+        $appAdmin = User::factory()->create();
+        $appAdmin->assignRole(GlobalRole::ApplicationAdministrator);
+
+        foreach ([$editor, $admin, $outsider, $appAdmin] as $user) {
             $this->actingAs($user);
             $listed = Publication::query()->whereCan(PublicationAbility::View)
                 ->pluck('id')->sort()->values()->all();
@@ -119,6 +122,31 @@ class ScopedAbilityListParityTest extends TestCase
 
             $this->assertEquals($expected, $listed, "publication whereCan must match resolver for user {$user->id}");
         }
+    }
+
+    /**
+     * whereCan must deny-all for an unauthenticated viewer (the `1 = 0` branch),
+     * for both builders — a guest must never leak a private list.
+     */
+    public function testWhereCanListsNothingForGuest(): void
+    {
+        $pub = Publication::factory()->create(['is_publicly_visible' => false]);
+        Submission::factory()->for($pub)->create();
+
+        // No actingAs: guest.
+        $this->assertSame([], Publication::query()->whereCan(PublicationAbility::View)->pluck('id')->all());
+        $this->assertSame([], Submission::query()->whereCan(SubmissionAbility::View)->pluck('id')->all());
+    }
+
+    /**
+     * The resolver resolves no effective roles when there is no entity in play —
+     * the null-entity guard, so a scoped check without an entity denies.
+     */
+    public function testEffectiveRolesIsEmptyWithoutEntity(): void
+    {
+        $user = User::factory()->create();
+
+        $this->assertSame([], $this->resolver->effectiveRoles($user, null));
     }
 
     /**
