@@ -19,9 +19,9 @@ abstract class TestCase extends BaseTestCase
     {
         parent::setUp();
 
-        // Spatie roles are seeded on SchemaLoaded (InstallationServiceProvider),
-        // but the Bouncer ability tables are created by a migration that runs
-        // after that event, so the ABAC matrix is seeded here once the database
+        // InstallationServiceProvider seeds the ABAC role/ability registry on
+        // SchemaLoaded, but the Bouncer tables are created by a migration that
+        // runs after that event, so the matrix is seeded here once the database
         // has been refreshed. Idempotent; rolled back with each test's
         // transaction and re-seeded.
         if (Schema::hasTable('bouncer_roles')) {

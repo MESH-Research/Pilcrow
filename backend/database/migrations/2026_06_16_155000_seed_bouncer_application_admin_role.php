@@ -22,6 +22,14 @@ use Silber\Bouncer\BouncerFacade as Bouncer;
  */
 return new class extends Migration
 {
+    /**
+     * The legacy spatie `roles.name` of the application administrator, pinned as
+     * a literal so porting can never be silently broken by a later edit to the
+     * @deprecated GlobalRole::title() (which happens to return the same string
+     * today). This value is frozen historical data, not a live label.
+     */
+    private const LEGACY_SPATIE_ADMIN_NAME = 'Application Administrator';
+
     public function up(): void
     {
         // Ensure the Bouncer app-admin role exists with its display title, then
@@ -60,7 +68,7 @@ return new class extends Migration
         }
 
         $spatieRoleId = \DB::table('roles')
-            ->where('name', GlobalRole::ApplicationAdministrator->title())
+            ->where('name', self::LEGACY_SPATIE_ADMIN_NAME)
             ->value('id');
         if ($spatieRoleId === null) {
             return;

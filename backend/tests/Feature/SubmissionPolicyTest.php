@@ -217,7 +217,7 @@ class SubmissionPolicyTest extends TestCase
         $this->assertFalse($reviewer->can('updateTitle', $submission));
     }
 
-    // ---- view / update (any submission role passes via '*') -----------------
+    // ---- view / update (any submission role grants both, via the matrix) ----
 
     public function testViewAllowsAdminAndAnySubmissionRole(): void
     {

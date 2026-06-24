@@ -32,6 +32,19 @@ use App\Models\User;
 class ScopedAbilityResolver
 {
     /**
+     * Per-instance memo of resolved effective roles, keyed by user + entity.
+     *
+     * The client-facing `abilities()` resolvers ask this service for every
+     * ability case on the same entity, so without memoization a single
+     * submission node re-runs the pivot lookups N times. The cache is scoped to
+     * the resolver instance (not a request-wide singleton) so it cannot serve a
+     * stale verdict across a role-mutating request.
+     *
+     * @var array<string, array<int, \App\Auth\Roles\ScopedRole>>
+     */
+    private array $effectiveRoleCache = [];
+
+    /**
      * Is the scoped ability granted to the user for the given entity?
      *
      * Only the app-admin ROLE short-circuits (never a Bouncer ability); then the
@@ -65,6 +78,15 @@ class ScopedAbilityResolver
      */
     public function effectiveRoles(User $user, $entity = null): array
     {
+        if ($entity === null) {
+            return [];
+        }
+
+        $cacheKey = $user->id . ':' . $entity::class . ':' . $entity->getKey();
+        if (isset($this->effectiveRoleCache[$cacheKey])) {
+            return $this->effectiveRoleCache[$cacheKey];
+        }
+
         $roles = [];
 
         if ($entity instanceof Publication) {
@@ -80,7 +102,7 @@ class ScopedAbilityResolver
             );
         }
 
-        return $roles;
+        return $this->effectiveRoleCache[$cacheKey] = $roles;
     }
 
     /**
