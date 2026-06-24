@@ -261,9 +261,11 @@ enum ScopedRole: string
     }
 
     /**
-     * Human-readable title (the Bouncer-era display name), used where a scoped
-     * role is surfaced by title rather than id.
+     * Human-readable display title.
      *
+     * @deprecated Titles should be resolved from the slug via i18n, not hard
+     *   coded here. Retained only while a scoped role is surfaced by display
+     *   title rather than slug (e.g. the legacy GraphQL role name).
      * @return string
      */
     public function title(): string
