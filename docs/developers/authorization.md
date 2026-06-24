@@ -251,6 +251,45 @@ computed from `GlobalRole::rank()` / `ScopedRole::rank()`. The rank ints are the
 GraphQL `UserRoles` enum values. It is a **client UI hint** (routing, which
 dashboard table to show) — not an authorization mechanism.
 
+## Exposing abilities to the client
+
+The client should gate navigation/UI on **decisions, not rules** — it must not
+re-implement the role matrix. Each GraphQL type carries an `abilities` field
+resolved through the **same engines** as the policies, so the flags can never
+drift from real authorization:
+
+| Type          | Field       | Resolver method      | Engine                     |
+| ------------- | ----------- | -------------------- | -------------------------- |
+| `User`        | `abilities` | `globalAbilities()`  | Bouncer (`$user->can`)     |
+| `Publication` | `abilities` | `abilities()`        | `ScopedAbilityResolver`    |
+| `Submission`  | `abilities` | `abilities()`        | `ScopedAbilityResolver`    |
+
+Each returns an object of `snake_case ability => Boolean!`, one field per enum
+case (`GlobalAbility` / `PublicationAbility` / `SubmissionAbility`). The PHP
+methods build the map by iterating `Ability::cases()` and `Str::snake()`-ing the
+case name, so a new enum case only needs its matching GraphQL field added.
+
+```graphql
+query {
+  currentUser { abilities { publication_create user_view_any } }
+  submission(id: 1) {
+    abilities { view update update_status update_reviewers }
+  }
+}
+```
+
+Semantics:
+
+- `User.abilities` is that user's global abilities; fetched via `currentUser`
+  it is the **viewer's** own. Scoped `abilities` are always the **authenticated
+  viewer's** abilities on that entity (guests get all-`false`).
+- Scoped flags honor **conditional grants**: a submitter's `update_status` is
+  `true` only while the submission is a draft, because the resolver evaluates the
+  predicate against the entity. A role-string flag (the deprecated
+  `effective_role`) cannot express this — these flags replace that gating.
+- **UI hints only.** The server still enforces every mutation with `@can`;
+  hiding a control is not a security boundary.
+
 ## Recipes
 
 **Add a scoped capability to a role:** add a `Grant` (and, if new, a

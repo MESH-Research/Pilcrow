@@ -20,7 +20,7 @@ use Tests\TestCase;
  * RBAC -> ABAC / Bouncer migration cannot silently change authorization.
  * They assert what the code does today, including its quirks (e.g. submitters
  * can only update status while DRAFT, `create` ignores the caller's role,
- * `invite` is driven by Submission::getEffectiveRole / Auth).
+ * `invite` is granted to review coordinators and up via the ScopedRole matrix).
  */
 class SubmissionPolicyTest extends TestCase
 {
@@ -244,7 +244,7 @@ class SubmissionPolicyTest extends TestCase
         $this->assertFalse(User::factory()->create()->can('update', $this->makeSubmission()));
     }
 
-    // ---- invite (driven by Submission::getEffectiveRole via Auth) -----------
+    // ---- invite (review coordinator and up, via the ScopedRole matrix) ------
 
     public function testInviteAllowsApplicationAdministrator(): void
     {

@@ -4,7 +4,9 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Auth\Abilities\PublicationAbility;
+use App\Auth\Abilities\SubmissionAbility;
 use App\Auth\Roles\ScopedRole;
+use App\Auth\ScopedAbilityResolver;
 use App\Builders\SubmissionBuilder;
 use App\Events\SubmissionStatusUpdated;
 use App\Http\Traits\CreatedUpdatedBy;
@@ -15,6 +17,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use OwenIt\Auditing\Auditable as AuditableTrait;
 use OwenIt\Auditing\Contracts\Auditable;
 
@@ -368,6 +371,11 @@ class Submission extends Model implements Auditable
     /**
      * Get the logged in users role slug taking into account parent roles granted to the user
      *
+     * @deprecated Display-only UI hint, NOT authorization — surfaced as the
+     *   GraphQL `effective_role` field for the client, and it lossily collapses
+     *   any parent-publication role to review_coordinator. Slated for
+     *   replacement by per-entity capability flags. For authorization use
+     *   {@see \App\Auth\ScopedAbilityResolver} / `$user->can()`, never this.
      * @return string|null
      */
     public function getEffectiveRole(): ?string
@@ -386,5 +394,35 @@ class Submission extends Model implements Auditable
         }
 
         return $this->getMyRole();
+    }
+
+    /**
+     * The authenticated viewer's SCOPED abilities on this submission as a map of
+     * snake_case ability name => bool, e.g. ['view' => true, 'update' => false].
+     *
+     * Resolved through {@see ScopedAbilityResolver} — the same engine the
+     * policies use — so these client-facing flags can never drift from real
+     * authorization. The resolver evaluates each ability against THIS submission
+     * (and inherits the parent publication's admin roles), so conditional grants
+     * such as draft-only status changes are reflected correctly. The keys are
+     * derived from {@see SubmissionAbility} cases. Guests get all-false.
+     *
+     * UI hints only: the server still enforces every mutation with @can.
+     *
+     * @return array<string, bool>
+     */
+    public function abilities(): array
+    {
+        /** @var \App\Models\User|null $user */
+        $user = Auth::user();
+        $resolver = app(ScopedAbilityResolver::class);
+
+        $abilities = [];
+        foreach (SubmissionAbility::cases() as $ability) {
+            $abilities[Str::snake($ability->name)] =
+                $user !== null && $resolver->allows($user, $ability, $this);
+        }
+
+        return $abilities;
     }
 }

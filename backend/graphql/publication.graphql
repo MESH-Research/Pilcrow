@@ -32,6 +32,17 @@ type Publication {
     style_criterias: [StyleCriteria!]! @hasMany(relation: "styleCriterias")
     my_role: PublicationRole @method(name: "getMyRole")
     effective_role: PublicationRole @method(name: "getEffectiveRole")
+    "The authenticated viewer's scoped abilities on this publication (UI hints; server still enforces)."
+    abilities: PublicationAbilities! @method(name: "abilities")
+}
+
+"""
+The authenticated viewer's scoped abilities on a publication. Each flag mirrors a
+PublicationAbility case, resolved through the same engine as the policies.
+"""
+type PublicationAbilities {
+    view: Boolean!
+    update: Boolean!
 }
 
 type PublicationAssignment {

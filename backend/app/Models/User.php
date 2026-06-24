@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Auth\Abilities\GlobalAbility;
 use App\Auth\Roles\GlobalRole;
 use App\Auth\Roles\ScopedRole;
 use App\Builders\UserBuilder;
@@ -15,6 +16,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Laravel\Sanctum\HasApiTokens;
 use Laravel\Scout\Attributes\SearchUsingPrefix;
 use Laravel\Scout\Searchable;
@@ -307,6 +309,30 @@ class User extends Authenticatable implements MustVerifyEmail
         }
 
         return $ranks === [] ? null : min($ranks);
+    }
+
+    /**
+     * This user's GLOBAL (application-wide) abilities as a map of snake_case
+     * ability name => bool, e.g. ['publication_create' => true, ...].
+     *
+     * Resolved through Bouncer ($this->can) — the same engine the policies use —
+     * so these client-facing flags can never drift from real authorization. The
+     * keys are derived from {@see GlobalAbility} cases, so adding an ability case
+     * (plus its schema field) is all it takes to expose it.
+     *
+     * Fetched via `currentUser` this is the viewer's own capabilities. These are
+     * UI hints only: the server still enforces every mutation with @can.
+     *
+     * @return array<string, bool>
+     */
+    public function globalAbilities(): array
+    {
+        $abilities = [];
+        foreach (GlobalAbility::cases() as $ability) {
+            $abilities[Str::snake($ability->name)] = $this->can($ability);
+        }
+
+        return $abilities;
     }
 
     /**
