@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
-use App\Auth\GlobalRole;
-use App\Auth\ScopedRole;
+use App\Auth\Roles\GlobalRole;
+use App\Auth\Roles\ScopedRole;
 use App\Models\Publication;
 use App\Models\Submission;
 use App\Models\User;
@@ -42,8 +42,8 @@ class UserPolicyTest extends TestCase
         $admin = User::factory()->create();
         $target = User::factory()->create();
 
-        $this->attachToPublication($admin, $publication, ScopedRole::PublicationAdmin->pivotValue());
-        $this->attachToPublication($target, $publication, ScopedRole::Editor->pivotValue());
+        $this->attachToPublication($admin, $publication, ScopedRole::PublicationAdmin->toSlug());
+        $this->attachToPublication($target, $publication, ScopedRole::Editor->toSlug());
 
         $this->assertTrue($admin->can('viewEmail', $target));
     }
@@ -54,8 +54,8 @@ class UserPolicyTest extends TestCase
         $editor = User::factory()->create();
         $target = User::factory()->create();
 
-        $this->attachToPublication($editor, $publication, ScopedRole::Editor->pivotValue());
-        $this->attachToPublication($target, $publication, ScopedRole::Editor->pivotValue());
+        $this->attachToPublication($editor, $publication, ScopedRole::Editor->toSlug());
+        $this->attachToPublication($target, $publication, ScopedRole::Editor->toSlug());
 
         $this->assertTrue($editor->can('viewEmail', $target));
     }
@@ -64,7 +64,7 @@ class UserPolicyTest extends TestCase
     {
         $publication = Publication::factory()->create();
         $editor = User::factory()->create();
-        $this->attachToPublication($editor, $publication, ScopedRole::Editor->pivotValue());
+        $this->attachToPublication($editor, $publication, ScopedRole::Editor->toSlug());
 
         $submitter = User::factory()->create();
         Submission::factory()
@@ -108,10 +108,10 @@ class UserPolicyTest extends TestCase
     public function testViewEmailDeniesEditorOfDifferentPublication(): void
     {
         $editor = User::factory()->create();
-        $this->attachToPublication($editor, Publication::factory()->create(), ScopedRole::Editor->pivotValue());
+        $this->attachToPublication($editor, Publication::factory()->create(), ScopedRole::Editor->toSlug());
 
         $other = User::factory()->create();
-        $this->attachToPublication($other, Publication::factory()->create(), ScopedRole::Editor->pivotValue());
+        $this->attachToPublication($other, Publication::factory()->create(), ScopedRole::Editor->toSlug());
 
         $this->assertFalse($editor->can('viewEmail', $other));
     }
@@ -139,11 +139,11 @@ class UserPolicyTest extends TestCase
     {
         $publication = Publication::factory()->create();
         $editor = User::factory()->create();
-        $this->attachToPublication($editor, $publication, ScopedRole::Editor->pivotValue());
+        $this->attachToPublication($editor, $publication, ScopedRole::Editor->toSlug());
 
         $targets = User::factory()->count(5)->create();
         foreach ($targets as $target) {
-            $this->attachToPublication($target, $publication, ScopedRole::Editor->pivotValue());
+            $this->attachToPublication($target, $publication, ScopedRole::Editor->toSlug());
         }
 
         // Prime the application-admin role lookup so it doesn't pollute the count.

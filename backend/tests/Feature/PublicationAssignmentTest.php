@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
-use App\Auth\ScopedRole;
+use App\Auth\Roles\ScopedRole;
 use App\Models\Publication;
 use App\Models\PublicationAssignment;
 use App\Models\User;
@@ -34,7 +34,7 @@ class PublicationAssignmentTest extends TestCase
         $this->assertTrue($assignment->user->is($user));
         $this->assertTrue($assignment->publication->is($publication));
         $this->assertEquals(
-            ScopedRole::Editor->pivotValue(),
+            ScopedRole::Editor->toSlug(),
             $assignment->role
         );
         // role_id is dual-written for rollback safety.

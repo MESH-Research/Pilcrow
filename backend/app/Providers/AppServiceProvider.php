@@ -81,7 +81,7 @@ class AppServiceProvider extends ServiceProvider
 
         // Bouncer owns the role model (Silber\Bouncer\Database\Role) and its
         // rows / ids; we do not subclass it. Role identity in app code is just
-        // the slug constant in App\Auth\GlobalRole.
+        // the slug constant in App\Auth\Roles\GlobalRole.
     }
 
     /**

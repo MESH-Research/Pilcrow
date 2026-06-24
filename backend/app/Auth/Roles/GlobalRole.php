@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Auth;
+namespace App\Auth\Roles;
 
 /**
  * The global (application-wide) role(s), as a slug-backed type.

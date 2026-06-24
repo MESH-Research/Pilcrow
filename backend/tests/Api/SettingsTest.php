@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Tests\Api;
 
-use App\Auth\GlobalRole;
+use App\Auth\Roles\GlobalRole;
 use App\Models\User;
 use App\Settings\GeneralSettings;
 use Illuminate\Foundation\Testing\RefreshDatabase;

@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace App\Builders;
 
-use App\Auth\PublicationAbility;
-use App\Auth\ScopedAbility;
-use App\Auth\ScopedRole;
+use App\Auth\Abilities\PublicationAbility;
+use App\Auth\Abilities\ScopedAbility;
+use App\Auth\Roles\ScopedRole;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 
@@ -89,7 +89,7 @@ class PublicationBuilder extends Builder
      * authorization cannot diverge. Application administrators match everything;
      * a guest or a user with no granting role matches nothing.
      *
-     * @param \App\Auth\ScopedAbility $ability
+     * @param \App\Auth\Abilities\ScopedAbility $ability
      * @return self
      */
     public function whereCan(ScopedAbility $ability): self

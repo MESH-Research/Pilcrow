@@ -43,7 +43,7 @@ Native scopes fight all three. So:
 | Layer | Owns | Where |
 | --- | --- | --- |
 | Role assignment (scope) | who is Editor of Pub X / Reviewer of Sub Y | pivots (unchanged) |
-| Ability map (RBAC core) | role → granted abilities | code (`App\Auth\ScopedRole` enum: each case returns its `Grant`s) |
+| Ability map (RBAC core) | role → granted abilities | code (`App\Auth\Roles\ScopedRole` enum: each case returns its `Grant`s) |
 | Attribute conditions | state / ownership / relationship predicates | Policy guards (thin) |
 
 The matrix answers "can this role do X". Policy adds the attribute predicate
@@ -79,8 +79,8 @@ user.view  user.view-any  user.view-email  user.update  user.manage-beta
 `*` ability granted but gated to `status == DRAFT` by a policy predicate.
 App Admin = Bouncer global `*` (everything).
 
-New scoped capability = add a `Grant` to the relevant `App\Auth\ScopedRole`
-case (and an `App\Auth\SubmissionAbility` / `App\Auth\PublicationAbility` enum
+New scoped capability = add a `Grant` to the relevant `App\Auth\Roles\ScopedRole`
+case (and an `App\Auth\Abilities\SubmissionAbility` / `App\Auth\Abilities\PublicationAbility` enum
 case if the ability is new). Live on deploy; no seed, no migration.
 
 ## Attribute predicates that stay in policy
@@ -98,10 +98,10 @@ case if the ability is new). Live on deploy; no seed, no migration.
   (`bouncer_abilities`, `bouncer_permissions`, `bouncer_roles`,
   `bouncer_assigned_roles`) to coexist with spatie/laravel-permission.
 - Keep `publication_user` / `submission_user` pivots as the assignment source
-  of truth. The scoped roles and their ability map are code (`App\Auth\ScopedRole`,
+  of truth. The scoped roles and their ability map are code (`App\Auth\Roles\ScopedRole`,
   a slug-backed enum) with no Bouncer rows. Bouncer holds only the **global**
   app-admin role row and its grant, using its own role model (we don't subclass
-  it); app code names the global slug via the `App\Auth\GlobalRole` slug-backed
+  it); app code names the global slug via the `App\Auth\Roles\GlobalRole` slug-backed
   enum. Keeping scoped roles out of Bouncer means the global and scoped kinds
   are never conflated.
 - The app-admin Bouncer role + `everything()` grant are created by the
@@ -129,7 +129,7 @@ across storage, the ability matrix, and the API. The
 - `ScopedRole::tryFrom($slug)` is the **live** mapping `ScopedAbilityResolver`
   uses each request to turn the pivot `role` slug into a role case — `ScopedRole`
   is a slug-backed enum whose backing value *is* the slug. (This lives on
-  `App\Auth\ScopedRole`, not the Bouncer `Role` model.)
+  `App\Auth\Roles\ScopedRole`, not the Bouncer `Role` model.)
 - GraphQL `@enum(value: …)` for `PublicationRole` / `SubmissionUserRoles` maps
   enum name → slug; the wire representation is the enum **name** (e.g. `editor`),
   so the client contract is untouched. `UserRoles` keeps integer values — it is
@@ -140,7 +140,7 @@ across storage, the ability matrix, and the API. The
 **`role_id` retained and dual-written, not dropped:** the legacy integer column
 stays (FK to the spatie roles table dropped, column made nullable) as the
 recovery safety net. The role relations and invite mutations write `role` and
-`role_id` together (`ScopedRole::pivotValue()` + `ScopedRole::legacyId()`), so a
+`role_id` together (`ScopedRole::toSlug()` + `ScopedRole::legacyId()`), so a
 rollback to the pre-slug code finds valid `role_id` data on rows created after the
 deploy — not just on backfilled ones. Dropping `role_id` is a deliberately
 separate, later PR once the slug column is proven in production.
@@ -223,8 +223,8 @@ ideal. What actually makes it *better* from here, in priority order:
    resolver. The policy method
    is a uniform ability check. This is the concrete ABAC improvement and the
    pattern for future state/ownership conditions. Abilities are typed enums
-   (`App\Auth\SubmissionAbility` / `App\Auth\PublicationAbility`, both
-   implementing the `App\Auth\ScopedAbility` marker), so call sites are typo-proof
+   (`App\Auth\Abilities\SubmissionAbility` / `App\Auth\Abilities\PublicationAbility`, both
+   implementing the `App\Auth\Abilities\ScopedAbility` marker), so call sites are typo-proof
    and the catalog is greppable.
 
 3. **Decision engines by ability type (done).** There is intentionally no single

@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace Tests\Api;
 
-use App\Auth\GlobalRole;
-use App\Auth\ScopedRole;
+use App\Auth\Roles\GlobalRole;
+use App\Auth\Roles\ScopedRole;
 use App\Models\Publication;
 use App\Models\Submission;
 use App\Models\User;
@@ -105,7 +105,7 @@ class SubmissionTest extends ApiTestCase
         $this->actingAs($publicationAdmin);
 
         $publication = Publication::factory()
-            ->hasAttached($publicationAdmin, ['role' => ScopedRole::PublicationAdmin->pivotValue()])
+            ->hasAttached($publicationAdmin, ['role' => ScopedRole::PublicationAdmin->toSlug()])
             ->create();
 
         $submission = Submission::factory()
@@ -515,7 +515,7 @@ class SubmissionTest extends ApiTestCase
         $this->actingAs($publicationAdmin);
 
         Publication::factory()
-            ->hasAttached($publicationAdmin, ['role' => ScopedRole::PublicationAdmin->pivotValue()])
+            ->hasAttached($publicationAdmin, ['role' => ScopedRole::PublicationAdmin->toSlug()])
             ->create();
 
         $submission = Submission::factory()

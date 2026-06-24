@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Schema;
  * table so that table can be dropped when spatie/laravel-permission is retired.
  *
  * The integer role_id column is retained; authorization now resolves it through
- * Bouncer + the code ability matrix (App\Auth\ScopedRole) rather than the FK.
+ * Bouncer + the code ability matrix (App\Auth\Roles\ScopedRole) rather than the FK.
  * Replacing role_id with a human-readable slug is deliberately deferred to a
  * follow-on PR focused on that vocabulary change in isolation.
  */

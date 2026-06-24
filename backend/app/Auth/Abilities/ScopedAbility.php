@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Auth;
+namespace App\Auth\Abilities;
 
 /**
  * Marker type for the closed catalog of SCOPED abilities — those resolved

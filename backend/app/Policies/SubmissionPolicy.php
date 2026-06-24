@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Policies;
 
+use App\Auth\Abilities\SubmissionAbility;
 use App\Auth\ScopedAbilityResolver;
-use App\Auth\SubmissionAbility;
 use App\Models\InlineComment;
 use App\Models\OverallComment;
 use App\Models\Publication;

@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Schema;
 /**
  * Add a human-readable `role` slug column to the role-assignment pivots and
  * backfill it from the legacy integer `role_id`. Authorization now keys on the
- * slug (App\Auth\ScopedRole is slug-backed); the slug is the vocabulary shared
+ * slug (App\Auth\Roles\ScopedRole is slug-backed); the slug is the vocabulary shared
  * across storage, the ability matrix, and the API.
  *
  * The legacy `role_id` column is deliberately RETAINED (not dropped) so the

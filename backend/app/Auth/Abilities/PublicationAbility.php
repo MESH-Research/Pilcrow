@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Auth;
+namespace App\Auth\Abilities;
 
 /**
  * Scoped abilities acting on a {@see \App\Models\Publication}.

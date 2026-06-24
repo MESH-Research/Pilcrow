@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
-use App\Auth\GlobalRole;
+use App\Auth\Roles\GlobalRole;
 use Illuminate\Database\Seeder;
 use Silber\Bouncer\BouncerFacade as Bouncer;
 
@@ -16,7 +16,7 @@ use Silber\Bouncer\BouncerFacade as Bouncer;
  * admins); this seeder is the idempotent fresh-DB equivalent.
  *
  * Scoped (publication / submission) roles are NOT seeded: they are not Bouncer
- * roles. The scoped role -> ability map is code-owned (App\Auth\ScopedRole),
+ * roles. The scoped role -> ability map is code-owned (App\Auth\Roles\ScopedRole),
  * read directly by ScopedAbilityResolver, and never stored in Bouncer.
  */
 class AbacSeeder extends Seeder

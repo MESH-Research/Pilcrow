@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Policies;
 
-use App\Auth\GlobalAbility;
-use App\Auth\PublicationAbility;
+use App\Auth\Abilities\GlobalAbility;
+use App\Auth\Abilities\PublicationAbility;
 use App\Auth\ScopedAbilityResolver;
 use App\Models\Publication;
 use App\Models\User;

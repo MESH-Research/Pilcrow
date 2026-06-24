@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Auth;
 
-use App\Auth\PublicationAbility;
-use App\Auth\ScopedRole;
-use App\Auth\SubmissionAbility;
+use App\Auth\Abilities\PublicationAbility;
+use App\Auth\Abilities\SubmissionAbility;
+use App\Auth\Roles\ScopedRole;
 use App\Models\Submission;
 use App\Models\User;
 use Tests\TestCase;

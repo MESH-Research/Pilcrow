@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Auth\ScopedRole;
+use App\Auth\Roles\ScopedRole;
 use App\Events\ReviewCoordinatorInvitationAccepted;
 use App\Events\ReviewCoordinatorInvited;
 use App\Events\ReviewerInvitationAccepted;
@@ -219,10 +219,10 @@ class SubmissionInvitation extends Model
 
         $this->updateInviteeDetails($details);
 
-        if ($this->role === ScopedRole::Reviewer->pivotValue()) {
+        if ($this->role === ScopedRole::Reviewer->toSlug()) {
             ReviewerInvitationAccepted::dispatch($this);
         }
-        if ($this->role === ScopedRole::ReviewCoordinator->pivotValue()) {
+        if ($this->role === ScopedRole::ReviewCoordinator->toSlug()) {
             ReviewCoordinatorInvitationAccepted::dispatch($this);
         }
 

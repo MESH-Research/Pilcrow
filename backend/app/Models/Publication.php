@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Auth\ScopedRole;
+use App\Auth\Roles\ScopedRole;
 use App\Builders\PublicationBuilder;
 use App\Models\Casts\CleanAdminHtml;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -76,7 +76,7 @@ class Publication extends BaseModel
     public function publicationAdmins(): BelongsToMany
     {
         return $this->users()
-            ->withPivotValue('role', ScopedRole::PublicationAdmin->pivotValue())
+            ->withPivotValue('role', ScopedRole::PublicationAdmin->toSlug())
             ->withPivotValue('role_id', ScopedRole::PublicationAdmin->legacyId());
     }
 
@@ -88,7 +88,7 @@ class Publication extends BaseModel
     public function editors(): BelongsToMany
     {
         return $this->users()
-            ->withPivotValue('role', ScopedRole::Editor->pivotValue())
+            ->withPivotValue('role', ScopedRole::Editor->toSlug())
             ->withPivotValue('role_id', ScopedRole::Editor->legacyId());
     }
 
@@ -151,7 +151,7 @@ class Publication extends BaseModel
         }
 
         if ($user->isApplicationAdministrator()) {
-            return ScopedRole::PublicationAdmin->pivotValue();
+            return ScopedRole::PublicationAdmin->toSlug();
         }
 
         return $this->getMyRole();

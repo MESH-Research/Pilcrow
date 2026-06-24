@@ -1,9 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Auth;
+namespace App\Auth\Roles;
 
-use App\Auth\Predicates\SubmissionIsDraft;
+use App\Auth\Abilities\PublicationAbility;
+use App\Auth\Abilities\ScopedAbility;
+use App\Auth\Abilities\SubmissionAbility;
+use App\Auth\Grants\Grant;
+use App\Auth\Grants\Predicates\SubmissionIsDraft;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use LogicException;
@@ -19,7 +23,7 @@ use UnitEnum;
  * ScopedRole::tryFrom() and asks it what it grants. The role -> ability map is
  * code: each case returns its list of {@see Grant}s. Nothing here is stored in,
  * seeded into, or assignable through Bouncer — that is reserved for genuinely
- * global roles (App\Auth\GlobalRole, e.g. application_admin), which is intentionally
+ * global roles (App\Auth\Roles\GlobalRole, e.g. application_admin), which is intentionally
  * NOT a case here.
  */
 enum ScopedRole: string
@@ -43,7 +47,7 @@ enum ScopedRole: string
      * absolute grant, an [ScopedAbility, PredicateClass] pair a conditional one — and
      * normalized to {@see Grant} objects here.
      *
-     * @return array<int, \App\Auth\Grant>
+     * @return array<int, \App\Auth\Grants\Grant>
      */
     public function grants(): array
     {
@@ -57,7 +61,7 @@ enum ScopedRole: string
      *
      * @return string
      */
-    public function pivot(): string
+    public function pivotName(): string
     {
         return match ($this) {
             self::PublicationAdmin, self::Editor => self::PIVOT_PUBLICATION,
@@ -75,8 +79,8 @@ enum ScopedRole: string
      * lives in PHP and has no SQL form, so a conditional grant for the requested
      * ability throws rather than silently filtering incorrectly.
      *
-     * @param \App\Auth\ScopedAbility $ability
-     * @return array<int, \App\Auth\ScopedRole>
+     * @param \App\Auth\Abilities\ScopedAbility $ability
+     * @return array<int, \App\Auth\Roles\ScopedRole>
      * @throws \LogicException if any role grants the ability conditionally
      */
     public static function rolesGranting(ScopedAbility $ability): array
@@ -106,7 +110,7 @@ enum ScopedRole: string
     /**
      * The pivot `role` slugs that grant the ability, restricted to one pivot.
      *
-     * @param \App\Auth\ScopedAbility $ability
+     * @param \App\Auth\Abilities\ScopedAbility $ability
      * @param string $pivot one of the PIVOT_* constants
      * @return array<int, string>
      */
@@ -114,8 +118,8 @@ enum ScopedRole: string
     {
         $slugs = [];
         foreach (self::rolesGranting($ability) as $role) {
-            if ($role->pivot() === $pivot) {
-                $slugs[] = $role->pivotValue();
+            if ($role->pivotName() === $pivot) {
+                $slugs[] = $role->toSlug();
             }
         }
 
@@ -131,7 +135,7 @@ enum ScopedRole: string
      * chain — it extends the reviewer with title / submitter edits and a
      * DRAFT-only status change (a conditional grant).
      *
-     * @return array<int, \App\Auth\ScopedAbility|array{0: \App\Auth\ScopedAbility, 1: class-string<\App\Auth\Predicate>}>
+     * @return array<int, \App\Auth\Abilities\ScopedAbility|array{0: \App\Auth\Abilities\ScopedAbility, 1: class-string<\App\Auth\Grants\Predicate>}>
      */
     private function grantDefinitions(): array
     {
@@ -170,8 +174,8 @@ enum ScopedRole: string
      * Normalize a shorthand grant definition into a {@see Grant}, instantiating
      * the predicate class for conditional grants.
      *
-     * @param \App\Auth\ScopedAbility|array{0: \App\Auth\ScopedAbility, 1: class-string<\App\Auth\Predicate>} $definition
-     * @return \App\Auth\Grant
+     * @param \App\Auth\Abilities\ScopedAbility|array{0: \App\Auth\Abilities\ScopedAbility, 1: class-string<\App\Auth\Grants\Predicate>} $definition
+     * @return \App\Auth\Grants\Grant
      */
     private static function toGrant(ScopedAbility|array $definition): Grant
     {
@@ -192,7 +196,7 @@ enum ScopedRole: string
      * is only instantiated for a definition whose ability actually matches —
      * predicates for unrelated abilities are never constructed.
      *
-     * @param \App\Auth\ScopedAbility $ability
+     * @param \App\Auth\Abilities\ScopedAbility $ability
      * @param \Illuminate\Database\Eloquent\Model|null $entity
      * @param \App\Models\User $user
      * @return bool
@@ -214,13 +218,13 @@ enum ScopedRole: string
     }
 
     /**
-     * The value stored in the pivot `role` column for this role — the role slug.
-     * This is the enum's backing value, surfaced through an intent-revealing
-     * method so pivot reads/writes and queries don't reach for the raw ->value.
+     * The role slug — the value stored in the pivot `role` column and the
+     * backing value of this enum. An intent-revealing alias for ->value, named
+     * to match {@see \App\Auth\Roles\GlobalRole::toSlug()}.
      *
      * @return string
      */
-    public function pivotValue(): string
+    public function toSlug(): string
     {
         return $this->value;
     }
@@ -248,7 +252,7 @@ enum ScopedRole: string
      * higher), continuing the scale below the global administrator. By
      * construction this is the legacy role id — a UI hint, not authorization.
      *
-     * @see \App\Auth\GlobalRole::rank()
+     * @see \App\Auth\Roles\GlobalRole::rank()
      * @return int
      */
     public function rank(): int

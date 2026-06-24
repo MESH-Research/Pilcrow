@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Policies;
 
-use App\Auth\GlobalAbility;
-use App\Auth\ScopedRole;
+use App\Auth\Abilities\GlobalAbility;
+use App\Auth\Roles\ScopedRole;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
@@ -98,8 +98,8 @@ class UserPolicy
                 'privilegedPublicationIds',
                 $viewer->publications()
                     ->wherePivotIn('role', [
-                        ScopedRole::PublicationAdmin->pivotValue(),
-                        ScopedRole::Editor->pivotValue(),
+                        ScopedRole::PublicationAdmin->toSlug(),
+                        ScopedRole::Editor->toSlug(),
                     ])
                     ->pluck('publications.id')
             );

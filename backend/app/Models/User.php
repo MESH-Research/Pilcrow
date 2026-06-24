@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Auth\GlobalRole;
-use App\Auth\ScopedRole;
+use App\Auth\Roles\GlobalRole;
+use App\Auth\Roles\ScopedRole;
 use App\Builders\UserBuilder;
 use Carbon\Carbon;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -275,7 +275,7 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Assign a global role to the user (Bouncer assignment by slug).
      *
-     * @param \App\Auth\GlobalRole $role
+     * @param \App\Auth\Roles\GlobalRole $role
      */
     public function assignRole(GlobalRole $role): self
     {

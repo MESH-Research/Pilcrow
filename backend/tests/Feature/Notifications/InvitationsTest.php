@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Notifications;
 
-use App\Auth\ScopedRole;
+use App\Auth\Roles\ScopedRole;
 use App\Models\Submission;
 use App\Models\SubmissionInvitation;
 use App\Models\User;
@@ -32,7 +32,7 @@ class InvitationsTest extends TestCase
             ->create();
         $invite = SubmissionInvitation::create([
             'submission_id' => $submission->id,
-            'role' => ScopedRole::Reviewer->pivotValue(),
+            'role' => ScopedRole::Reviewer->toSlug(),
             'email' => 'bob1@msu.edu',
         ]);
         $invite->inviteReviewer();
@@ -63,7 +63,7 @@ class InvitationsTest extends TestCase
             ->create();
         $invite = SubmissionInvitation::create([
             'submission_id' => $submission->id,
-            'role' => ScopedRole::ReviewCoordinator->pivotValue(),
+            'role' => ScopedRole::ReviewCoordinator->toSlug(),
             'email' => 'bob2@msu.edu',
         ]);
         $invite->inviteReviewCoordinator();

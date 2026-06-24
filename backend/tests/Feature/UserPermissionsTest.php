@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
-use App\Auth\GlobalRole;
+use App\Auth\Roles\GlobalRole;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Silber\Bouncer\BouncerFacade as Bouncer;

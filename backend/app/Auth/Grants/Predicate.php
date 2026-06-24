@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Auth;
+namespace App\Auth\Grants;
 
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;

@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Auth;
 
+use App\Auth\Abilities\ScopedAbility;
+use App\Auth\Roles\ScopedRole;
 use App\Models\Publication;
 use App\Models\PublicationAssignment;
 use App\Models\Submission;
@@ -36,7 +38,7 @@ class ScopedAbilityResolver
      * user's effective scoped roles for the entity decide.
      *
      * @param \App\Models\User $user
-     * @param \App\Auth\ScopedAbility $ability
+     * @param \App\Auth\Abilities\ScopedAbility $ability
      * @param \App\Models\Publication|\App\Models\Submission|null $entity
      */
     public function allows(User $user, ScopedAbility $ability, $entity = null): bool
@@ -59,7 +61,7 @@ class ScopedAbilityResolver
      *
      * @param \App\Models\User $user
      * @param \App\Models\Publication|\App\Models\Submission|null $entity
-     * @return array<int, \App\Auth\ScopedRole>
+     * @return array<int, \App\Auth\Roles\ScopedRole>
      */
     public function effectiveRoles(User $user, $entity = null): array
     {
@@ -84,7 +86,7 @@ class ScopedAbilityResolver
     /**
      * @param \App\Models\User $user
      * @param string|int $publicationId
-     * @return array<int, \App\Auth\ScopedRole>
+     * @return array<int, \App\Auth\Roles\ScopedRole>
      */
     private function publicationRoles(User $user, $publicationId): array
     {
@@ -100,7 +102,7 @@ class ScopedAbilityResolver
     /**
      * @param \App\Models\User $user
      * @param string|int $submissionId
-     * @return array<int, \App\Auth\ScopedRole>
+     * @return array<int, \App\Auth\Roles\ScopedRole>
      */
     private function submissionRoles(User $user, $submissionId): array
     {
@@ -118,7 +120,7 @@ class ScopedAbilityResolver
      * correspond to a known scoped role.
      *
      * @param array<int, string|null> $roleSlugs
-     * @return array<int, \App\Auth\ScopedRole>
+     * @return array<int, \App\Auth\Roles\ScopedRole>
      */
     private function rolesForSlugs(array $roleSlugs): array
     {

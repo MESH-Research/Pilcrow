@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
-use App\Auth\ScopedRole;
+use App\Auth\Roles\ScopedRole;
 use App\Models\Publication;
 use App\Models\Submission;
 use App\Models\User;
@@ -42,7 +42,7 @@ class SubmissionBuilderTest extends TestCase
             ->create();
 
         $results = Submission::query()
-            ->roleFilter([ScopedRole::Reviewer->pivotValue()])
+            ->roleFilter([ScopedRole::Reviewer->toSlug()])
             ->get();
 
         $this->assertEquals([$reviewed->id], $results->pluck('id')->all());
@@ -75,8 +75,8 @@ class SubmissionBuilderTest extends TestCase
 
         $results = Submission::query()
             ->roleFilter([
-                ScopedRole::Reviewer->pivotValue(),
-                ScopedRole::ReviewCoordinator->pivotValue(),
+                ScopedRole::Reviewer->toSlug(),
+                ScopedRole::ReviewCoordinator->toSlug(),
             ])
             ->get();
 

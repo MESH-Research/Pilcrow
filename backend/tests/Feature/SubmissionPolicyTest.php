@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
-use App\Auth\GlobalRole;
-use App\Auth\ScopedRole;
+use App\Auth\Roles\GlobalRole;
+use App\Auth\Roles\ScopedRole;
 use App\Models\InlineComment;
 use App\Models\OverallComment;
 use App\Models\Publication;
@@ -83,7 +83,7 @@ class SubmissionPolicyTest extends TestCase
 
     public function testUpdateSubmittersAllowsPublicationAdminAndEditor(): void
     {
-        foreach ([ScopedRole::PublicationAdmin->pivotValue(), ScopedRole::Editor->pivotValue()] as $roleId) {
+        foreach ([ScopedRole::PublicationAdmin->toSlug(), ScopedRole::Editor->toSlug()] as $roleId) {
             $submission = $this->makeSubmission();
             $user = User::factory()->create();
             $this->attachToPublication($user, $submission->publication, $roleId);
@@ -94,7 +94,7 @@ class SubmissionPolicyTest extends TestCase
 
     public function testUpdateSubmittersAllowsSubmitterAndReviewCoordinator(): void
     {
-        foreach ([ScopedRole::Submitter->pivotValue(), ScopedRole::ReviewCoordinator->pivotValue()] as $roleId) {
+        foreach ([ScopedRole::Submitter->toSlug(), ScopedRole::ReviewCoordinator->toSlug()] as $roleId) {
             $submission = $this->makeSubmission();
             $user = User::factory()->create();
             $this->attachToSubmission($user, $submission, $roleId);
@@ -107,7 +107,7 @@ class SubmissionPolicyTest extends TestCase
     {
         $submission = $this->makeSubmission();
         $reviewer = User::factory()->create();
-        $this->attachToSubmission($reviewer, $submission, ScopedRole::Reviewer->pivotValue());
+        $this->attachToSubmission($reviewer, $submission, ScopedRole::Reviewer->toSlug());
 
         $this->assertFalse($reviewer->can('updateSubmitters', $submission));
     }
@@ -125,13 +125,13 @@ class SubmissionPolicyTest extends TestCase
 
         $submission = $this->makeSubmission();
         $coordinator = User::factory()->create();
-        $this->attachToSubmission($coordinator, $submission, ScopedRole::ReviewCoordinator->pivotValue());
+        $this->attachToSubmission($coordinator, $submission, ScopedRole::ReviewCoordinator->toSlug());
         $this->assertTrue($coordinator->can('updateReviewers', $submission));
     }
 
     public function testUpdateReviewersDeniesSubmitterAndReviewer(): void
     {
-        foreach ([ScopedRole::Submitter->pivotValue(), ScopedRole::Reviewer->pivotValue()] as $roleId) {
+        foreach ([ScopedRole::Submitter->toSlug(), ScopedRole::Reviewer->toSlug()] as $roleId) {
             $submission = $this->makeSubmission();
             $user = User::factory()->create();
             $this->attachToSubmission($user, $submission, $roleId);
@@ -148,7 +148,7 @@ class SubmissionPolicyTest extends TestCase
 
         $submission = $this->makeSubmission();
         $editor = User::factory()->create();
-        $this->attachToPublication($editor, $submission->publication, ScopedRole::Editor->pivotValue());
+        $this->attachToPublication($editor, $submission->publication, ScopedRole::Editor->toSlug());
         $this->assertTrue($editor->can('updateReviewCoordinators', $submission));
     }
 
@@ -156,7 +156,7 @@ class SubmissionPolicyTest extends TestCase
     {
         $submission = $this->makeSubmission();
         $coordinator = User::factory()->create();
-        $this->attachToSubmission($coordinator, $submission, ScopedRole::ReviewCoordinator->pivotValue());
+        $this->attachToSubmission($coordinator, $submission, ScopedRole::ReviewCoordinator->toSlug());
 
         $this->assertFalse($coordinator->can('updateReviewCoordinators', $submission));
     }
@@ -169,7 +169,7 @@ class SubmissionPolicyTest extends TestCase
 
         $submission = $this->makeSubmission();
         $coordinator = User::factory()->create();
-        $this->attachToSubmission($coordinator, $submission, ScopedRole::ReviewCoordinator->pivotValue());
+        $this->attachToSubmission($coordinator, $submission, ScopedRole::ReviewCoordinator->toSlug());
         $this->assertTrue($coordinator->can('updateStatus', $submission));
     }
 
@@ -177,12 +177,12 @@ class SubmissionPolicyTest extends TestCase
     {
         $draft = $this->makeSubmission(Submission::DRAFT);
         $submitterDraft = User::factory()->create();
-        $this->attachToSubmission($submitterDraft, $draft, ScopedRole::Submitter->pivotValue());
+        $this->attachToSubmission($submitterDraft, $draft, ScopedRole::Submitter->toSlug());
         $this->assertTrue($submitterDraft->can('updateStatus', $draft));
 
         $submitted = $this->makeSubmission(Submission::INITIALLY_SUBMITTED);
         $submitterSubmitted = User::factory()->create();
-        $this->attachToSubmission($submitterSubmitted, $submitted, ScopedRole::Submitter->pivotValue());
+        $this->attachToSubmission($submitterSubmitted, $submitted, ScopedRole::Submitter->toSlug());
         $this->assertFalse($submitterSubmitted->can('updateStatus', $submitted));
     }
 
@@ -190,7 +190,7 @@ class SubmissionPolicyTest extends TestCase
     {
         $submission = $this->makeSubmission();
         $reviewer = User::factory()->create();
-        $this->attachToSubmission($reviewer, $submission, ScopedRole::Reviewer->pivotValue());
+        $this->attachToSubmission($reviewer, $submission, ScopedRole::Reviewer->toSlug());
 
         $this->assertFalse($reviewer->can('updateStatus', $submission));
     }
@@ -199,7 +199,7 @@ class SubmissionPolicyTest extends TestCase
 
     public function testUpdateTitleAllowsReviewCoordinatorAndSubmitter(): void
     {
-        foreach ([ScopedRole::ReviewCoordinator->pivotValue(), ScopedRole::Submitter->pivotValue()] as $roleId) {
+        foreach ([ScopedRole::ReviewCoordinator->toSlug(), ScopedRole::Submitter->toSlug()] as $roleId) {
             $submission = $this->makeSubmission(Submission::INITIALLY_SUBMITTED);
             $user = User::factory()->create();
             $this->attachToSubmission($user, $submission, $roleId);
@@ -212,7 +212,7 @@ class SubmissionPolicyTest extends TestCase
     {
         $submission = $this->makeSubmission();
         $reviewer = User::factory()->create();
-        $this->attachToSubmission($reviewer, $submission, ScopedRole::Reviewer->pivotValue());
+        $this->attachToSubmission($reviewer, $submission, ScopedRole::Reviewer->toSlug());
 
         $this->assertFalse($reviewer->can('updateTitle', $submission));
     }
@@ -225,7 +225,7 @@ class SubmissionPolicyTest extends TestCase
 
         $submission = $this->makeSubmission();
         $reviewer = User::factory()->create();
-        $this->attachToSubmission($reviewer, $submission, ScopedRole::Reviewer->pivotValue());
+        $this->attachToSubmission($reviewer, $submission, ScopedRole::Reviewer->toSlug());
         $this->assertTrue($reviewer->can('view', $submission));
     }
 
@@ -238,7 +238,7 @@ class SubmissionPolicyTest extends TestCase
     {
         $submission = $this->makeSubmission();
         $reviewer = User::factory()->create();
-        $this->attachToSubmission($reviewer, $submission, ScopedRole::Reviewer->pivotValue());
+        $this->attachToSubmission($reviewer, $submission, ScopedRole::Reviewer->toSlug());
         $this->assertTrue($reviewer->can('update', $submission));
 
         $this->assertFalse(User::factory()->create()->can('update', $this->makeSubmission()));
@@ -258,7 +258,7 @@ class SubmissionPolicyTest extends TestCase
     {
         $submission = $this->makeSubmission();
         $coordinator = User::factory()->create();
-        $this->attachToSubmission($coordinator, $submission, ScopedRole::ReviewCoordinator->pivotValue());
+        $this->attachToSubmission($coordinator, $submission, ScopedRole::ReviewCoordinator->toSlug());
         $this->actingAs($coordinator);
 
         $this->assertTrue($coordinator->can('invite', $submission->fresh()));
@@ -268,7 +268,7 @@ class SubmissionPolicyTest extends TestCase
     {
         $submission = $this->makeSubmission();
         $reviewer = User::factory()->create();
-        $this->attachToSubmission($reviewer, $submission, ScopedRole::Reviewer->pivotValue());
+        $this->attachToSubmission($reviewer, $submission, ScopedRole::Reviewer->toSlug());
         $this->actingAs($reviewer);
 
         $this->assertFalse($reviewer->can('invite', $submission->fresh()));

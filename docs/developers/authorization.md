@@ -7,7 +7,7 @@ three cooperating layers:
 | Layer | Answers | Lives in |
 | --- | --- | --- |
 | Role assignment (scope) | *Who* holds *which* role *where* | pivot tables (scoped) / Bouncer (global) |
-| Ability registry (RBAC core) | *What* each role may do | code (`App\Auth\ScopedRole` grants) + Bouncer (global) |
+| Ability registry (RBAC core) | *What* each role may do | code (`App\Auth\Roles\ScopedRole` grants) + Bouncer (global) |
 | Attribute predicates | State / ownership conditions | Laravel policies |
 
 A grant is the conjunction of all three: an ability granted to one of the
@@ -20,15 +20,15 @@ two homes:
 
 | Slug | Scope | Kind | Defined in | Assigned via |
 | --- | --- | --- | --- | --- |
-| `application_admin` | Application (global) | Bouncer role | Bouncer's `Role` model (slug in the `App\Auth\GlobalRole` enum) | Bouncer `assigned_roles` |
-| `publication_admin` | Publication | scoped (code) | `App\Auth\ScopedRole` | `publication_user` pivot |
-| `editor` | Publication | scoped (code) | `App\Auth\ScopedRole` | `publication_user` pivot |
-| `review_coordinator` | Submission | scoped (code) | `App\Auth\ScopedRole` | `submission_user` pivot |
-| `reviewer` | Submission | scoped (code) | `App\Auth\ScopedRole` | `submission_user` pivot |
-| `submitter` | Submission | scoped (code) | `App\Auth\ScopedRole` | `submission_user` pivot |
+| `application_admin` | Application (global) | Bouncer role | Bouncer's `Role` model (slug in the `App\Auth\Roles\GlobalRole` enum) | Bouncer `assigned_roles` |
+| `publication_admin` | Publication | scoped (code) | `App\Auth\Roles\ScopedRole` | `publication_user` pivot |
+| `editor` | Publication | scoped (code) | `App\Auth\Roles\ScopedRole` | `publication_user` pivot |
+| `review_coordinator` | Submission | scoped (code) | `App\Auth\Roles\ScopedRole` | `submission_user` pivot |
+| `reviewer` | Submission | scoped (code) | `App\Auth\Roles\ScopedRole` | `submission_user` pivot |
+| `submitter` | Submission | scoped (code) | `App\Auth\Roles\ScopedRole` | `submission_user` pivot |
 
 Only `application_admin` is a real Bouncer role with a row in `bouncer_roles`.
-The five scoped roles are a typed code catalog — the `App\Auth\ScopedRole`
+The five scoped roles are a typed code catalog — the `App\Auth\Roles\ScopedRole`
 **enum** — with **no** Bouncer rows; they are never assigned through Bouncer.
 Keeping them out of the Bouncer role model is deliberate: it stops a scoped role
 from being mistaken for, or assigned as, a global one.
@@ -43,7 +43,7 @@ the role:
 
 ```php
 // App\Models\Publication
-$this->users()->withPivotValue('role', ScopedRole::Editor->pivotValue()); // editors()
+$this->users()->withPivotValue('role', ScopedRole::Editor->toSlug()); // editors()
 ```
 
 `ScopedAbilityResolver` maps the pivot `role` slug to a case via
@@ -53,7 +53,7 @@ vocabulary shared across storage, the ability matrix, and the API.
 The legacy integer `role_id` column is **retained and dual-written**: its foreign
 key to the old spatie roles table is dropped, it is made nullable, and the `role`
 slug is backfilled from it. The role relations and invite mutations write `role`
-and `role_id` together (`ScopedRole::pivotValue()` + `ScopedRole::legacyId()`),
+and `role_id` together (`ScopedRole::toSlug()` + `ScopedRole::legacyId()`),
 so `role_id` stays valid on new rows — a rollback to the pre-slug code still finds
 usable data. `role_id` is kept solely as that safety net; dropping it is a later
 PR once the slug column is proven in production.
@@ -73,7 +73,7 @@ $user->isApplicationAdministrator(); // === $user->isA(GlobalRole::ApplicationAd
 
 The role row, its id, and assignments are owned entirely by Bouncer (its own
 `Silber\Bouncer\Database\Role` model — we do **not** subclass it). App code only
-names the slug via the `App\Auth\GlobalRole` **slug-backed enum** (`toSlug()` is
+names the slug via the `App\Auth\Roles\GlobalRole` **slug-backed enum** (`toSlug()` is
 the backing value; `title()` is `@deprecated` in favour of i18n from the slug).
 `application_admin`
 is granted `everything()`, so it satisfies every **global** ability check and,
@@ -86,14 +86,14 @@ Abilities are **typed, closed catalogs**. The first split is by *engine*:
 abilities are then split again by the *model* they act on, purely for
 organization:
 
-- **`App\Auth\ScopedAbility`** — a marker interface for abilities resolved
+- **`App\Auth\Abilities\ScopedAbility`** — a marker interface for abilities resolved
   against a publication / submission by the code-owned role/grant map, via
   `ScopedAbilityResolver`. Its cases live on two enums that implement it, split
-  by model: **`App\Auth\SubmissionAbility`** (`SubmissionAbility::UpdateStatus`,
-  `SubmissionAbility::View`, …) and **`App\Auth\PublicationAbility`**
+  by model: **`App\Auth\Abilities\SubmissionAbility`** (`SubmissionAbility::UpdateStatus`,
+  `SubmissionAbility::View`, …) and **`App\Auth\Abilities\PublicationAbility`**
   (`PublicationAbility::Update`, `PublicationAbility::View`). Either enum's case
   is a valid scoped ability; the interface is the type everything accepts.
-- **`App\Auth\GlobalAbility`** — application-wide abilities resolved by Bouncer
+- **`App\Auth\Abilities\GlobalAbility`** — application-wide abilities resolved by Bouncer
   via `$user->can()` (`GlobalAbility::PublicationCreate`,
   `GlobalAbility::UserViewAny`, …).
 
@@ -104,10 +104,10 @@ is typed to `ScopedAbility` and throws on anything else, and global checks never
 enter it — so a Bouncer grant can never short-circuit a scoped check. Only the
 app-admin role does that, explicitly.
 
-The scoped role → ability map is **code on the `App\Auth\ScopedRole` enum**:
+The scoped role → ability map is **code on the `App\Auth\Roles\ScopedRole` enum**:
 each case lists its grants in shorthand — a bare `Ability` is an absolute grant,
 an `[Ability, PredicateClass]` pair a conditional one — which `grants()`
-normalizes to `App\Auth\Grant` objects. A `Grant` pairs an `Ability` with an
+normalizes to `App\Auth\Grants\Grant` objects. A `Grant` pairs an `Ability` with an
 optional `Predicate`; the predicate lives on the *grant* (the role↔ability
 pairing), not the ability, because the same ability is absolute for one role and
 conditional for another. No predicate = absolute grant. Roles compose as
@@ -132,7 +132,7 @@ private function grantDefinitions(): array
 }
 ```
 
-A `Predicate` (e.g. `App\Auth\Predicates\SubmissionIsDraft`) is a small reusable
+A `Predicate` (e.g. `App\Auth\Grants\Predicates\SubmissionIsDraft`) is a small reusable
 value object — `holds(Model $entity, User $user): bool` — unit-testable in
 isolation and shareable across grants; `grants()` instantiates it from the
 class-string. It is read directly by `ScopedAbilityResolver` at request time — there
@@ -271,7 +271,7 @@ in the policy for one-offs.
 ```php
 $user->assignRole(GlobalRole::ApplicationAdministrator);      // global (Bouncer)
 $publication->editors()->attach($user);                       // scoped (pivot)
-$submission->users()->attach($user->id, ['role' => ScopedRole::Reviewer->pivotValue()]);
+$submission->users()->attach($user->id, ['role' => ScopedRole::Reviewer->toSlug()]);
 ```
 
 **In tests:** the base `Tests\TestCase` seeds `AbacSeeder` after each database

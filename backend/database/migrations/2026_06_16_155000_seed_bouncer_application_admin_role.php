@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-use App\Auth\GlobalRole;
+use App\Auth\Roles\GlobalRole;
 use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\Schema;
@@ -17,7 +17,7 @@ use Silber\Bouncer\BouncerFacade as Bouncer;
  * rows are read here to re-establish each admin in Bouncer.
  *
  * The role row and its id are owned by Bouncer; app code only names the slug
- * (App\Auth\GlobalRole). Scoped (publication / submission) roles are
+ * (App\Auth\Roles\GlobalRole). Scoped (publication / submission) roles are
  * intentionally NOT created here: they are not Bouncer roles (see ScopedRole).
  */
 return new class extends Migration

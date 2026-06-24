@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Tests\Api;
 
-use App\Auth\ScopedRole;
+use App\Auth\Roles\ScopedRole;
 use App\Models\Submission;
 use App\Models\SubmissionInvitation;
 use Carbon\Carbon;
@@ -146,7 +146,7 @@ class SubmissionInvitationTest extends ApiTestCase
         $submission = Submission::factory()->create();
         $invite = SubmissionInvitation::create([
             'submission_id' => $submission->id,
-            'role' => ScopedRole::Reviewer->pivotValue(),
+            'role' => ScopedRole::Reviewer->toSlug(),
             'email' => 'mesh@msu.edu',
         ]);
         $invite->inviteReviewer();
@@ -249,7 +249,7 @@ class SubmissionInvitationTest extends ApiTestCase
         $submission = Submission::factory()->create();
         $invite = SubmissionInvitation::create([
             'submission_id' => $submission->id,
-            'role' => ScopedRole::Reviewer->pivotValue(),
+            'role' => ScopedRole::Reviewer->toSlug(),
             'email' => 'mesh@msu.edu',
         ]);
         $invite->inviteReviewer();

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
-use App\Auth\GlobalRole;
+use App\Auth\Roles\GlobalRole;
 use App\Models\Publication;
 use App\Models\Submission;
 use App\Models\User;

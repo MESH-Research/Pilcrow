@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
-use App\Auth\GlobalRole;
-use App\Auth\PublicationAbility;
-use App\Auth\ScopedAbility;
+use App\Auth\Abilities\PublicationAbility;
+use App\Auth\Abilities\ScopedAbility;
+use App\Auth\Abilities\SubmissionAbility;
+use App\Auth\Roles\GlobalRole;
+use App\Auth\Roles\ScopedRole;
 use App\Auth\ScopedAbilityResolver;
-use App\Auth\ScopedRole;
-use App\Auth\SubmissionAbility;
 use App\Models\Publication;
 use App\Models\Submission;
 use App\Models\User;
@@ -123,7 +123,7 @@ class ScopedAbilityListParityTest extends TestCase
 
     /**
      * @param \App\Models\User $user
-     * @param \App\Auth\ScopedAbility $ability
+     * @param \App\Auth\Abilities\ScopedAbility $ability
      * @param array<int, \App\Models\Submission> $all
      * @return void
      */

@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Auth\PublicationAbility;
-use App\Auth\ScopedRole;
+use App\Auth\Abilities\PublicationAbility;
+use App\Auth\Roles\ScopedRole;
 use App\Builders\SubmissionBuilder;
 use App\Events\SubmissionStatusUpdated;
 use App\Http\Traits\CreatedUpdatedBy;
@@ -140,7 +140,7 @@ class Submission extends Model implements Auditable
     public function reviewers(): BelongsToMany
     {
         return $this->users()
-            ->withPivotValue('role', ScopedRole::Reviewer->pivotValue())
+            ->withPivotValue('role', ScopedRole::Reviewer->toSlug())
             ->withPivotValue('role_id', ScopedRole::Reviewer->legacyId());
     }
 
@@ -152,7 +152,7 @@ class Submission extends Model implements Auditable
     public function reviewCoordinators(): BelongsToMany
     {
         return $this->users()
-            ->withPivotValue('role', ScopedRole::ReviewCoordinator->pivotValue())
+            ->withPivotValue('role', ScopedRole::ReviewCoordinator->toSlug())
             ->withPivotValue('role_id', ScopedRole::ReviewCoordinator->legacyId());
     }
 
@@ -164,7 +164,7 @@ class Submission extends Model implements Auditable
     public function submitters(): BelongsToMany
     {
         return $this->users()
-            ->withPivotValue('role', ScopedRole::Submitter->pivotValue())
+            ->withPivotValue('role', ScopedRole::Submitter->toSlug())
             ->withPivotValue('role_id', ScopedRole::Submitter->legacyId());
     }
 
@@ -382,7 +382,7 @@ class Submission extends Model implements Auditable
         $publicationRole = $this->publication->getEffectiveRole();
 
         if ($publicationRole !== null) {
-            return ScopedRole::ReviewCoordinator->pivotValue();
+            return ScopedRole::ReviewCoordinator->toSlug();
         }
 
         return $this->getMyRole();

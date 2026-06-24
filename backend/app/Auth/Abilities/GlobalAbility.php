@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Auth;
+namespace App\Auth\Abilities;
 
 /**
  * The catalog of GLOBAL (application-wide) abilities — those NOT tied to a

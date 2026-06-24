@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Auth\Predicates;
+namespace App\Auth\Grants\Predicates;
 
-use App\Auth\Predicate;
+use App\Auth\Grants\Predicate;
 use App\Models\Submission;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;

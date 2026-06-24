@@ -1,8 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Auth;
+namespace App\Auth\Grants;
 
+use App\Auth\Abilities\ScopedAbility;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 
@@ -18,8 +19,8 @@ use Illuminate\Database\Eloquent\Model;
 final class Grant
 {
     /**
-     * @param \App\Auth\ScopedAbility $ability
-     * @param \App\Auth\Predicate|null $predicate
+     * @param \App\Auth\Abilities\ScopedAbility $ability
+     * @param \App\Auth\Grants\Predicate|null $predicate
      */
     public function __construct(
         public readonly ScopedAbility $ability,
@@ -30,7 +31,7 @@ final class Grant
     /**
      * Does this grant permit the requested ability for the entity / user?
      *
-     * @param \App\Auth\ScopedAbility $ability
+     * @param \App\Auth\Abilities\ScopedAbility $ability
      * @param \Illuminate\Database\Eloquent\Model|null $entity
      * @param \App\Models\User $user
      * @return bool

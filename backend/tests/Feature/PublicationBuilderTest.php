@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
-use App\Auth\ScopedRole;
+use App\Auth\Roles\ScopedRole;
 use App\Models\Publication;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -167,7 +167,7 @@ class PublicationBuilderTest extends TestCase
         Publication::factory()->create();
 
         $results = Publication::query()
-            ->myRole([ScopedRole::Editor->pivotValue()])
+            ->myRole([ScopedRole::Editor->toSlug()])
             ->get();
 
         $this->assertEquals([$editing->id], $results->pluck('id')->all());
@@ -184,7 +184,7 @@ class PublicationBuilderTest extends TestCase
         Publication::factory()->count(3)->create();
 
         $results = Publication::query()
-            ->myRole([ScopedRole::Editor->pivotValue()])
+            ->myRole([ScopedRole::Editor->toSlug()])
             ->get();
 
         $this->assertCount(0, $results);
@@ -211,8 +211,8 @@ class PublicationBuilderTest extends TestCase
 
         $results = Publication::query()
             ->myRole([
-                ScopedRole::Editor->pivotValue(),
-                ScopedRole::PublicationAdmin->pivotValue(),
+                ScopedRole::Editor->toSlug(),
+                ScopedRole::PublicationAdmin->toSlug(),
             ])
             ->get();
 
