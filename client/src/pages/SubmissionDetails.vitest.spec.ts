@@ -110,6 +110,17 @@ describe("submissions details page mount", () => {
           title: "This Submission",
           status: SubmissionStatus.INITIALLY_SUBMITTED,
           effective_role: SubmissionUserRoles.review_coordinator,
+          abilities: {
+            view: true,
+            update: true,
+            update_status: true,
+            update_title: true,
+            update_submitters: true,
+            update_reviewers: true,
+            update_review_coordinators: false,
+            invite: true,
+            export: true
+          },
           content: {
             data: ""
           },
@@ -119,6 +130,10 @@ describe("submissions details page mount", () => {
             name: "Jest Publication",
             my_role: null,
             style_criterias: [],
+            abilities: {
+              view: false,
+              update: false
+            },
             editors: [],
             publication_admins: []
           },

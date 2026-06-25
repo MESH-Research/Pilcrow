@@ -153,7 +153,7 @@ enum ScopedRole: string
      *
      * Roles compose as supersets: each spreads the one below it, so "everything
      * role B has, plus X" is explicit. The submitter is not in the coordinator
-     * chain — it extends the reviewer with title / submitter edits and a
+     * chain — it extends the reviewer with title / submitter edits, export, and a
      * DRAFT-only status change (a conditional grant).
      *
      * @return array<int, \App\Auth\Abilities\ScopedAbility|array{0: \App\Auth\Abilities\ScopedAbility, 1: class-string<\App\Auth\Grants\Predicate>}>
@@ -172,6 +172,7 @@ enum ScopedRole: string
                 SubmissionAbility::UpdateStatus,
                 SubmissionAbility::UpdateTitle,
                 SubmissionAbility::Invite,
+                SubmissionAbility::Export,
             ],
             self::Editor => [
                 ...self::ReviewCoordinator->grantDefinitions(),
@@ -186,6 +187,7 @@ enum ScopedRole: string
                 ...self::Reviewer->grantDefinitions(),
                 SubmissionAbility::UpdateSubmitters,
                 SubmissionAbility::UpdateTitle,
+                SubmissionAbility::Export,
                 [SubmissionAbility::UpdateStatus, SubmissionIsDraft::class],
             ],
         };

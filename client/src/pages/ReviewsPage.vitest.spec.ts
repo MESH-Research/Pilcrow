@@ -90,6 +90,10 @@ describe("Reviews Page", () => {
       status: SubmissionStatus.UNDER_REVIEW,
       my_role: submission_my_role[role_name],
       effective_role: submission_effective_role[role_name],
+      abilities: {
+        view: true,
+        export: role_name !== "reviewer"
+      },
       publication: {
         id: `${id}-pub`,
         name: "Jest Publication",
@@ -161,6 +165,7 @@ describe("Reviews Page", () => {
             role_name == "application_admin"
               ? [{ name: "Application Administrator" }]
               : [],
+          abilities: { access_admin: role_name == "application_admin" },
           submissions: submissions_data[role_name]
         }
       }

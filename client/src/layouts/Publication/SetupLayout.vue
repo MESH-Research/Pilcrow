@@ -94,7 +94,9 @@ const items = computed(() => [
 ])
 watchEffect(() => {
   if (publication.value) {
-    if (publication.value.effective_role !== "publication_admin") {
+    // Publication setup is gated on the scoped `update` ability (UI hint; the
+    // server still enforces). Only publication admins hold it.
+    if (!publication.value.abilities?.update) {
       replace("/error403")
     }
   }

@@ -16,7 +16,7 @@
       <h2 class="col-sm-12" data-cy="publication_details_heading">
         {{ publication.name }}
         <q-btn
-          v-if="isPublicationAdmin"
+          v-if="canManagePublication"
           data-cy="configure_button"
           icon="settings"
           class="float-right"
@@ -59,7 +59,9 @@ const publication = computed(() => {
   return result.value?.publication ?? null
 })
 
-const isPublicationAdmin = computed(() => {
-  return publication.value?.effective_role === "publication_admin"
+// Gates the publication-setup controls on the scoped `update` ability (UI hint;
+// the server still enforces). Publication admins hold it; editors do not.
+const canManagePublication = computed(() => {
+  return publication.value?.abilities?.update === true
 })
 </script>

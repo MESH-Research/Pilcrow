@@ -77,6 +77,9 @@ export const CURRENT_USER_SUBMISSIONS = gql`
       roles {
         name
       }
+      abilities {
+        access_admin
+      }
       submissions: raw_submissions {
         id
         title
@@ -85,6 +88,10 @@ export const CURRENT_USER_SUBMISSIONS = gql`
         submitted_at
         my_role
         effective_role
+        abilities {
+          view
+          export
+        }
         review_coordinators {
           ...relatedUserFields
         }
@@ -291,6 +298,17 @@ export const GET_SUBMISSION = gql`
       title
       status
       effective_role
+      abilities {
+        view
+        update
+        update_status
+        update_title
+        update_submitters
+        update_reviewers
+        update_review_coordinators
+        invite
+        export
+      }
       content {
         data
       }
@@ -327,6 +345,10 @@ export const GET_SUBMISSION = gql`
           icon
         }
         my_role
+        abilities {
+          view
+          update
+        }
         editors {
           ...relatedUserFields
         }
@@ -455,6 +477,10 @@ export const GET_PUBLICATION = gql`
         id
         icon
         description
+      }
+      abilities {
+        view
+        update
       }
       publication_admins {
         ...relatedUserFields

@@ -40,6 +40,7 @@ class AbilitiesTest extends ApiTestCase
                         user_view_any
                         user_update
                         user_manage_beta
+                        access_admin
                     }
                 }
             }'
@@ -50,6 +51,7 @@ class AbilitiesTest extends ApiTestCase
             'user_view_any' => true,
             'user_update' => true,
             'user_manage_beta' => true,
+            'access_admin' => true,
         ]);
     }
 
@@ -70,6 +72,7 @@ class AbilitiesTest extends ApiTestCase
                     abilities {
                         publication_create
                         user_view_any
+                        access_admin
                     }
                 }
             }'
@@ -78,6 +81,7 @@ class AbilitiesTest extends ApiTestCase
         $response->assertJsonPath('data.currentUser.abilities', [
             'publication_create' => false,
             'user_view_any' => false,
+            'access_admin' => false,
         ]);
     }
 
@@ -177,5 +181,69 @@ class AbilitiesTest extends ApiTestCase
         );
 
         $response->assertJsonPath('data.submission.abilities.update_status', false);
+    }
+
+    /**
+     * Export is granted to the review coordinator (and up the superset chain to
+     * editor / publication admin) but withheld from the reviewer — mirroring the
+     * role logic the client export gate used to hard-code. It is an unconditional
+     * grant, so it holds regardless of submission status.
+     *
+     * @return void
+     */
+    public function testSubmissionExportGrantedToReviewCoordinatorNotReviewer(): void
+    {
+        $publication = Publication::factory()->create();
+
+        $coordinator = User::factory()->create();
+        $coordinatorSubmission = Submission::factory()
+            ->for($publication)
+            ->hasAttached($coordinator, [], 'reviewCoordinators')
+            ->create(['status' => Submission::UNDER_REVIEW]);
+
+        $this->actingAs($coordinator);
+        $this->graphQL(
+            'query getSubmission($id: ID!) {
+                submission(id: $id) { abilities { export } }
+            }',
+            ['id' => $coordinatorSubmission->id]
+        )->assertJsonPath('data.submission.abilities.export', true);
+
+        $reviewer = User::factory()->create();
+        $reviewerSubmission = Submission::factory()
+            ->for($publication)
+            ->hasAttached($reviewer, [], 'reviewers')
+            ->create(['status' => Submission::UNDER_REVIEW]);
+
+        $this->actingAs($reviewer);
+        $this->graphQL(
+            'query getSubmission($id: ID!) {
+                submission(id: $id) { abilities { export } }
+            }',
+            ['id' => $reviewerSubmission->id]
+        )->assertJsonPath('data.submission.abilities.export', false);
+    }
+
+    /**
+     * The submitter holds export unconditionally — unlike its draft-only status
+     * grant, export does not flip when the submission leaves draft.
+     *
+     * @return void
+     */
+    public function testSubmissionExportGrantedToSubmitterRegardlessOfStatus(): void
+    {
+        $submitter = User::factory()->create();
+        $this->actingAs($submitter);
+        $submission = Submission::factory()
+            ->for(Publication::factory()->create())
+            ->hasAttached($submitter, [], 'submitters')
+            ->create(['status' => Submission::ARCHIVED]);
+
+        $this->graphQL(
+            'query getSubmission($id: ID!) {
+                submission(id: $id) { abilities { export } }
+            }',
+            ['id' => $submission->id]
+        )->assertJsonPath('data.submission.abilities.export', true);
     }
 }

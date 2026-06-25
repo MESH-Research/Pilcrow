@@ -199,6 +199,7 @@ type SubmissionAbilities {
     update_reviewers: Boolean!
     update_review_coordinators: Boolean!
     invite: Boolean!
+    export: Boolean!
 }
 
 """

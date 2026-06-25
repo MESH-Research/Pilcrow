@@ -157,10 +157,13 @@ const users = computed(() => {
 })
 
 const acceptMore = computed(() => {
+  // Inviting users to a submission is gated on the scoped `invite` ability (UI
+  // hint; the mutation stays @can-enforced). Held by review coordinators and up
+  // (editors, publication admins, application admin) — never plain reviewers.
   return (
     props.mutable &&
     (props.maxUsers === false || users.value.length < props.maxUsers) &&
-    props.container.effective_role === `review_coordinator`
+    props.container.abilities?.invite === true
   )
 })
 

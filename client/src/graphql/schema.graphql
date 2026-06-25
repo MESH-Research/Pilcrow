@@ -781,6 +781,7 @@ SubmissionAbility case, resolved through the same engine as the policies — so
 conditional grants (e.g. draft-only status changes) are reflected correctly.
 """
 type SubmissionAbilities {
+  export: Boolean!
   invite: Boolean!
   update: Boolean!
   update_review_coordinators: Boolean!
@@ -1087,6 +1088,7 @@ A user's global (application-wide) abilities. Each flag mirrors a GlobalAbility
 case, resolved directly against Bouncer — the same engine as the policies.
 """
 type UserAbilities {
+  access_admin: Boolean!
   publication_create: Boolean!
   user_manage_beta: Boolean!
   user_update: Boolean!

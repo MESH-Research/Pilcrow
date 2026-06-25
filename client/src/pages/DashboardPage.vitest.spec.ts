@@ -78,6 +78,10 @@ describe("Dashboard Page", () => {
       status: status,
       my_role: submission_my_role[role],
       effective_role: submission_effective_role[role],
+      abilities: {
+        view: true,
+        export: role !== "reviewer"
+      },
       publication: {
         id: "1",
         name: "Pilcrow Test Publication 1",
@@ -101,6 +105,7 @@ describe("Dashboard Page", () => {
         currentUser: {
           id: "5",
           roles: [],
+          abilities: { access_admin: false },
           submissions: [] as SubmissionData[]
         }
       }
@@ -202,6 +207,7 @@ describe("Dashboard Page", () => {
             role_name == "application_admin"
               ? [{ name: "Application Administrator" }]
               : [],
+          abilities: { access_admin: role_name == "application_admin" },
           submissions: [
             mockSubmission("1000", SubmissionStatus.UNDER_REVIEW, role_name)
           ]

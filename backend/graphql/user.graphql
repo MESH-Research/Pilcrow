@@ -48,6 +48,7 @@ type UserAbilities {
     user_view_any: Boolean!
     user_update: Boolean!
     user_manage_beta: Boolean!
+    access_admin: Boolean!
 }
 
 enum UserRoles {

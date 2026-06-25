@@ -89,7 +89,7 @@ describe("requiresAppAdmin router hook", () => {
       data: {
         currentUser: {
           id: 1,
-          highest_privileged_role: "application_admin"
+          abilities: { access_admin: true }
         }
       }
     })
@@ -112,7 +112,7 @@ describe("requiresAppAdmin router hook", () => {
       data: {
         currentUser: {
           id: 1,
-          highest_privileged_role: null
+          abilities: { access_admin: false }
         }
       }
     })

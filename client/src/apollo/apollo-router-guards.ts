@@ -1,26 +1,31 @@
 import { SessionStorage } from "quasar"
-import { checkRole } from "src/use/user"
 import {
   CURRENT_USER,
   GET_SUBMISSION,
   CURRENT_USER_SUBMISSIONS
 } from "src/graphql/queries"
 
-const { isEditor, isPublicationAdmin } = checkRole()
-
-async function isPubAdminOrEditor(apolloClient, submissionId) {
-  const submission = await apolloClient
-    .query({
-      query: GET_SUBMISSION,
-      variables: { id: submissionId }
-    })
-    .then(({ data: { submission } }) => submission)
-
-  await submission
-  return (
-    isPublicationAdmin(submission.publication) ||
-    isEditor(submission.publication)
-  )
+/**
+ * Resolve a submission's authorization flags for the viewer. Used as the
+ * fallback for users who are not directly assigned to a submission but may still
+ * reach it through a publication role (publication admin / editor) or as the
+ * application administrator — every such party holds the relevant scoped
+ * ability, resolved by the server through the same engine as the policies.
+ *
+ * Returns null when the submission cannot be fetched (no access), which the
+ * callers treat as "denied".
+ */
+async function fetchSubmission(apolloClient, submissionId) {
+  try {
+    return await apolloClient
+      .query({
+        query: GET_SUBMISSION,
+        variables: { id: submissionId }
+      })
+      .then(({ data: { submission } }) => submission)
+  } catch (error) {
+    return null
+  }
 }
 
 export async function beforeEachRequiresAuth(apolloClient, to, _, next) {
@@ -69,34 +74,15 @@ export async function beforeEachRequiresSubmissionAccess(
         return false
       }
 
-      // Allow those who are assigned to the submission
-      if (
-        ["review_coordinator", "reviewer", "submitter"].some(
-          (role) => role === s.my_role
-        )
-      ) {
-        access = true
-      }
+      // Anyone assigned to the submission holds `view`.
+      access = !!s.abilities?.view
     }
 
-    // Allow Publication Administrators and Editors
+    // Allow Publication Administrators, Editors and Application Administrators,
+    // who hold the publication's `view` ability even when unassigned.
     if (!access) {
-      try {
-        access = await isPubAdminOrEditor(apolloClient, submissionId).then(
-          (result) => result
-        )
-      } catch (error) {
-        access = false
-      }
-    }
-
-    // Allow Application Administrators
-    if (!access && user.roles.length > 0) {
-      if (
-        user.roles.some((role) => role.name === "Application Administrator")
-      ) {
-        access = true
-      }
+      const fetched = await fetchSubmission(apolloClient, submissionId)
+      access = !!fetched?.publication?.abilities?.view
     }
 
     if (!access) {
@@ -127,7 +113,7 @@ export async function beforeEachRequiresDraftAccess(apolloClient, to, _, next) {
     if (submission.length) {
       const s = submission[0]
 
-      // Only allow submitters access
+      // The draft is the author's editing surface — only submitters reach it.
       if (["submitter"].some((role) => role === s.my_role)) {
         access = true
       }
@@ -170,7 +156,10 @@ export async function beforeEachRequiresPreviewAccess(
         return false
       }
 
-      // Allow Submitters and Review Coordinators
+      // The draft preview is for the authoring side — submitters and review
+      // coordinators only. Reviewers are excluded even though they can view the
+      // submission, so this stays keyed on the assignment, not the `view`
+      // ability (which editors and publication admins also hold).
       if (
         ["submitter", "review_coordinator"].some((role) => role === s.my_role)
       ) {
@@ -184,12 +173,8 @@ export async function beforeEachRequiresPreviewAccess(
     }
 
     // Allow Application Administrators
-    if (!access && user.roles.length > 0) {
-      if (
-        user.roles.some((role) => role.name === "Application Administrator")
-      ) {
-        access = true
-      }
+    if (!access && user.abilities?.access_admin) {
+      access = true
     }
 
     if (!access) {
@@ -231,16 +216,12 @@ export async function beforeEachRequiresViewAccess(apolloClient, to, _, next) {
         return false
       }
 
-      // Allow those who are assigned to the submission
-      if (
-        ["review_coordinator", "reviewer", "submitter"].some(
-          (role) => role === s.my_role
-        )
-      ) {
-        access = true
-      }
+      // Anyone assigned to the submission holds `view`.
+      access = !!s.abilities?.view
 
-      // Deny Reviewers when the submission is in a nonreviewable state
+      // Deny Reviewers when the submission is in a nonreviewable state — the
+      // `view` ability is unconditional for them, so this stays keyed on the
+      // assignment and status.
       const nonreviewableStates = new Set([
         "REJECTED",
         "RESUBMISSION_REQUESTED"
@@ -250,24 +231,12 @@ export async function beforeEachRequiresViewAccess(apolloClient, to, _, next) {
       }
     }
 
-    // Allow Publication Administrators and Editors
+    // Allow Publication Administrators, Editors and Application Administrators
+    // (they hold the publication's `view` ability; reviewers do not, so this
+    // cannot re-grant a reviewer denied above).
     if (!access) {
-      try {
-        access = await isPubAdminOrEditor(apolloClient, submissionId).then(
-          (result) => result
-        )
-      } catch (error) {
-        access = false
-      }
-    }
-
-    // Allow Application Administrators
-    if (!access && user.roles.length > 0) {
-      if (
-        user.roles.some((role) => role.name === "Application Administrator")
-      ) {
-        access = true
-      }
+      const fetched = await fetchSubmission(apolloClient, submissionId)
+      access = !!fetched?.publication?.abilities?.view
     }
 
     if (!access) {
@@ -315,16 +284,12 @@ export async function beforeEachRequiresReviewAccess(
         return false
       }
 
-      // Allow those who are assigned to the submission
-      if (
-        ["review_coordinator", "reviewer", "submitter"].some(
-          (role) => role === s.my_role
-        )
-      ) {
-        access = true
-      }
+      // Anyone assigned to the submission holds `view`.
+      access = !!s.abilities?.view
 
-      // Deny Reviewers when the submission is in a nonreviewable state
+      // Deny Reviewers when the submission is in a nonreviewable state — the
+      // `view` ability is unconditional for them, so this stays keyed on the
+      // assignment and status.
       const nonreviewableStates = new Set([
         "REJECTED",
         "RESUBMISSION_REQUESTED"
@@ -334,24 +299,12 @@ export async function beforeEachRequiresReviewAccess(
       }
     }
 
-    // Allow Publication Administrators and Editors
+    // Allow Publication Administrators, Editors and Application Administrators
+    // (they hold the publication's `view` ability; reviewers do not, so this
+    // cannot re-grant a reviewer denied above).
     if (!access) {
-      try {
-        access = await isPubAdminOrEditor(apolloClient, submissionId).then(
-          (result) => result
-        )
-      } catch (error) {
-        access = false
-      }
-    }
-
-    // Allow Application Administrators
-    if (!access && user.roles.length > 0) {
-      if (
-        user.roles.some((role) => role.name === "Application Administrator")
-      ) {
-        access = true
-      }
+      const fetched = await fetchSubmission(apolloClient, submissionId)
+      access = !!fetched?.publication?.abilities?.view
     }
 
     if (!access) {
@@ -383,52 +336,33 @@ export async function beforeEachRequiresExportAccess(
       return submission.id == submissionId
     })
 
+    // Export is gated on the scoped `export` ability, which the resolver grants
+    // to submitters, review coordinators, editors, publication admins and the
+    // application administrator — never plain reviewers.
+    const exportableStates = new Set([
+      "REJECTED",
+      "RESUBMISSION_REQUESTED",
+      "ACCEPTED_AS_FINAL",
+      "ARCHIVED",
+      "EXPIRED"
+    ])
+
     if (submission.length) {
       const s = submission[0]
 
-      // Allow those who are assigned to the submission
-      if (
-        ["review_coordinator", "submitter"].some((role) => role === s.my_role)
-      ) {
-        access = true
-      }
-
-      // Deny Reviewers
-      if ("reviewer" === s.my_role) {
-        access = false
-      }
+      access = !!s.abilities?.export
 
       // Deny when the submission is not in an exportable state
-      const exportableStates = new Set([
-        "REJECTED",
-        "RESUBMISSION_REQUESTED",
-        "ACCEPTED_AS_FINAL",
-        "ARCHIVED",
-        "EXPIRED"
-      ])
       if (!exportableStates.has(s.status)) {
         access = false
       }
     }
 
-    // Allow Publication Administrators and Editors
+    // Allow unassigned publication admins / editors / application admins, who
+    // hold the publication's `view` ability (and `export` with it).
     if (!access) {
-      try {
-        access = await isPubAdminOrEditor(apolloClient, submissionId).then(
-          (result) => result
-        )
-      } catch (error) {
-        access = false
-      }
-    }
-
-    // Allow Application Administrators
-    if (!access && user.roles.length > 0) {
-      if (
-        user.roles.some((role) => role.name === "Application Administrator")
-      ) {
-        access = true
-      }
+      const fetched = await fetchSubmission(apolloClient, submissionId)
+      access = !!fetched?.publication?.abilities?.view
     }
 
     if (!access) {
@@ -443,16 +377,11 @@ export async function beforeEachRequiresExportAccess(
 
 export async function beforeEachRequiresAppAdmin(apolloClient, to, _, next) {
   if (to.matched.some((record) => record.meta.requiresAppAdmin)) {
-    let access = false
-    const highest_privileged_role = await apolloClient
+    const access = await apolloClient
       .query({
         query: CURRENT_USER
       })
-      .then(({ data: { currentUser } }) => currentUser.highest_privileged_role)
-
-    if (highest_privileged_role == "application_admin") {
-      access = true
-    }
+      .then(({ data: { currentUser } }) => !!currentUser?.abilities?.access_admin)
 
     if (!access) {
       next({ name: "error403" })

@@ -51,6 +51,7 @@ describe("AssignedSubmissionUsers", () => {
         __typename: "Submission",
         id: "1",
         effective_role: SubmissionUserRoles.review_coordinator,
+        abilities: { invite: true },
         reviewers: [
           { id: "1", email: "test@example.com", name: "TestUser" } as User,
           { id: "2", email: "test2@example.com", name: "TestUser2" } as User
@@ -68,6 +69,7 @@ describe("AssignedSubmissionUsers", () => {
         __typename: "Submission",
         id: "1",
         effective_role: SubmissionUserRoles.review_coordinator,
+        abilities: { invite: true },
         reviewers: []
       } as Submission
     })
@@ -79,6 +81,7 @@ describe("AssignedSubmissionUsers", () => {
         __typename: "Submission",
         id: "1",
         effective_role: SubmissionUserRoles.review_coordinator,
+        abilities: { invite: true },
         reviewers: [
           { id: "1", email: "test@example.com", name: "TestUser" } as User
         ]
@@ -95,6 +98,7 @@ describe("AssignedSubmissionUsers", () => {
         __typename: "Submission",
         id: "1",
         effective_role: SubmissionUserRoles.review_coordinator,
+        abilities: { invite: true },
         reviewers: [
           { id: "1", email: "test@example.com", name: "Test" } as User
         ]
@@ -111,6 +115,7 @@ describe("AssignedSubmissionUsers", () => {
         __typename: "Submission",
         id: "1",
         effective_role: SubmissionUserRoles.review_coordinator,
+        abilities: { invite: true },
         reviewers: [
           { id: "1", email: "test@example.com", name: "Test" } as User
         ]
@@ -130,6 +135,7 @@ describe("AssignedSubmissionUsers", () => {
         __typename: "Submission",
         id: "1",
         effective_role: SubmissionUserRoles.review_coordinator,
+        abilities: { invite: true },
         reviewers: [
           { id: "1", email: "test@example.com", name: "Test" } as User
         ]
@@ -146,6 +152,7 @@ describe("AssignedSubmissionUsers", () => {
         __typename: "Submission",
         id: "1",
         effective_role: SubmissionUserRoles.review_coordinator,
+        abilities: { invite: true },
         reviewers: [
           { id: "1", email: "test@example.com", name: "Test" } as User
         ]
@@ -161,6 +168,7 @@ describe("AssignedSubmissionUsers", () => {
         __typename: "Submission",
         id: "1",
         effective_role: SubmissionUserRoles.review_coordinator,
+        abilities: { invite: true },
         reviewers: [
           { id: "1", email: "test@example.com", name: "Test" } as User
         ]
@@ -183,6 +191,7 @@ describe("AssignedSubmissionUsers", () => {
         __typename: "Submission",
         id: "1",
         effective_role: SubmissionUserRoles.review_coordinator,
+        abilities: { invite: true },
         reviewers: [
           { id: "1", email: "test@example.com", name: "Test" } as User
         ]
@@ -207,6 +216,7 @@ describe("AssignedSubmissionUsers", () => {
         __typename: "Submission",
         id: "1",
         effective_role: SubmissionUserRoles.review_coordinator,
+        abilities: { invite: true },
         reviewers: [
           { id: "1", email: "test@example.com", name: "Test" } as User
         ]
@@ -229,6 +239,7 @@ describe("AssignedSubmissionUsers", () => {
     const container = {
       id: "1",
       effective_role: SubmissionUserRoles.review_coordinator,
+      abilities: { invite: true },
       __typename: "Submission"
     } as Submission
     ;(container as Record<string, unknown>)[roleGroup as string] = [

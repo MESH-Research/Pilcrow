@@ -1,16 +1,12 @@
 import { useQuery, useMutation, useApolloClient } from "@vue/apollo-composable"
-import { computed, reactive, type ComputedRef } from "vue"
+import { computed, reactive } from "vue"
 import { CURRENT_USER } from "src/graphql/queries"
 import { LOGIN, LOGOUT } from "src/graphql/mutations"
 import { SessionStorage } from "quasar"
 import { useVuelidate } from "@vuelidate/core"
 import { required, email } from "@vuelidate/validators"
 import { useRouter } from "vue-router"
-import type {
-  Submission,
-  Publication,
-  User
-} from "src/graphql/generated/graphql"
+import type { UserAbilities } from "src/graphql/generated/graphql"
 
 /**
  * Returns an object of useful current user properties and helper methods:
@@ -20,8 +16,9 @@ import type {
  * State:
  *   currentUser<ref>: The currently logged in user.  Null if not logged in.
  *   isLoggedIn<ref>: Boolean true if a user is currently logged in.
- *   can<computed>: computed with signature can(ability) returns Boolean true if current user has ability
- *   hasRole<computed>: computed with signature hasRole(role) returns Boolean true if current user has role
+ *   abilities<computed>: the viewer's server-resolved global ability flags.
+ *   can(ability): Boolean true if the viewer holds the given global ability.
+ *   canAccessAdmin<computed>: Boolean true if the viewer may access the admin area.
  *
  * @returns
  */
@@ -36,123 +33,30 @@ export function useCurrentUser() {
     return !!query.result.value?.currentUser?.id
   })
 
-  const isAppAdmin = computed(() => {
-    return !!roles.value.includes("Application Administrator")
-  })
-
   const abilities = computed(() => {
-    return query.result.value?.currentUser.abilities ?? []
+    return query.result.value?.currentUser?.abilities
   })
 
-  const roles = computed(() => {
-    return query.result.value?.currentUser.roles.map(({ name }) => name) ?? []
-  })
+  /**
+   * Does the viewer hold the given GLOBAL ability? Reads the server-resolved
+   * `currentUser.abilities` flags (UI hints only — the server still enforces
+   * every mutation). False until the query resolves and for guests (all-false).
+   *
+   * @param ability snake_case global ability key (a {@see UserAbilities} field)
+   */
+  const can = (ability: keyof UserAbilities): boolean => {
+    return abilities.value?.[ability] === true
+  }
 
-  const isSubmitter = (submission: Submission) => {
-    return submission?.submitters?.some((o) => {
-      return o.id == currentUser.value.id
-    })
-  }
-  const isReviewer = (submission: Submission) => {
-    return submission?.reviewers?.some((o) => {
-      return o.id == currentUser.value.id
-    })
-  }
-  const isReviewCoordinator = (submission: Submission) => {
-    return submission?.review_coordinators?.some((o) => {
-      return o.id == currentUser.value.id
-    })
-  }
-  const isEditor = (publication: Publication) => {
-    const byList = publication?.editors?.some((o) => {
-      return o.id == currentUser.value.id
-    })
-    if (byList) {
-      return true
-    }
-    return publication?.my_role == "editor"
-  }
-  const isPublicationAdmin = (publication: Publication) => {
-    const byList = publication?.publication_admins?.some((o) => {
-      return o.id == currentUser.value.id
-    })
-    if (byList) {
-      return true
-    }
-    return publication?.my_role == "publication_admin"
-  }
+  const canAccessAdmin = computed(() => can("access_admin"))
 
   return {
     currentUser,
     currentUserQuery: query,
     isLoggedIn,
-    roles,
     abilities,
-    isAppAdmin,
-    isSubmitter,
-    isReviewer,
-    isReviewCoordinator,
-    isEditor,
-    isPublicationAdmin
-  }
-}
-
-export function checkRole(
-  currentUser: ComputedRef<User | null | undefined> | null = null
-) {
-  const isSubmitter = (submission: Submission) => {
-    return submission?.submitters?.some((o) => {
-      return o.id == currentUser?.value?.id
-    })
-  }
-  const isReviewer = (submission: Submission) => {
-    return submission?.reviewers?.some((o) => {
-      return o.id == currentUser?.value?.id
-    })
-  }
-  const isReviewCoordinator = (submission: Submission) => {
-    return submission?.review_coordinators?.some((o) => {
-      return o.id == currentUser?.value?.id
-    })
-  }
-  const isEditor = (publication: Publication) => {
-    if (currentUser) {
-      const byList = publication?.editors?.some((o) => {
-        return o.id == currentUser.value?.id
-      })
-      if (byList) {
-        return true
-      }
-    }
-    return publication?.my_role == "editor"
-  }
-  const isPublicationAdmin = (publication: Publication) => {
-    if (currentUser) {
-      const byList = publication?.publication_admins?.some((o) => {
-        return o.id == currentUser.value?.id
-      })
-      if (byList) {
-        return true
-      }
-    }
-    return (
-      publication?.my_role == "publication_admin" ||
-      publication?.effective_role == "publication_admin"
-    )
-  }
-
-  const isApplicationAdmin = (user: User) => {
-    const roles = user.roles.map(({ name }) => name) ?? []
-    return !!roles.includes("Application Administrator")
-  }
-
-  return {
-    isSubmitter,
-    isReviewer,
-    isReviewCoordinator,
-    isEditor,
-    isPublicationAdmin,
-    isApplicationAdmin
+    can,
+    canAccessAdmin
   }
 }
 
