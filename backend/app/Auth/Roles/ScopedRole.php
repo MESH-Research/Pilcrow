@@ -85,6 +85,19 @@ enum ScopedRole: string
      */
     public static function rolesGranting(ScopedAbility $ability): array
     {
+        // The role -> ability matrix is code constants, so the inversion is a
+        // pure function of $ability and never changes at runtime. Memoize it for
+        // the process lifetime — the builders call this on every list query.
+        // Keyed by class + case name so SubmissionAbility::View and
+        // PublicationAbility::View (same name, different enum) never collide. A
+        // conditional ability throws before reaching the cache, so it is never
+        // memoized and keeps throwing.
+        static $cache = [];
+        $key = $ability::class . '::' . $ability->name;
+        if (isset($cache[$key])) {
+            return $cache[$key];
+        }
+
         $roles = [];
         foreach (self::cases() as $role) {
             foreach ($role->grantDefinitions() as $definition) {
@@ -104,7 +117,7 @@ enum ScopedRole: string
             }
         }
 
-        return $roles;
+        return $cache[$key] = $roles;
     }
 
     /**
@@ -116,6 +129,14 @@ enum ScopedRole: string
      */
     public static function grantingSlugsFor(ScopedAbility $ability, string $pivot): array
     {
+        // Same rationale as rolesGranting(): pure over (ability, pivot), so
+        // memoize for the process lifetime.
+        static $cache = [];
+        $key = $ability::class . '::' . $ability->name . '|' . $pivot;
+        if (isset($cache[$key])) {
+            return $cache[$key];
+        }
+
         $slugs = [];
         foreach (self::rolesGranting($ability) as $role) {
             if ($role->pivotName() === $pivot) {
@@ -123,7 +144,7 @@ enum ScopedRole: string
             }
         }
 
-        return $slugs;
+        return $cache[$key] = $slugs;
     }
 
     /**
