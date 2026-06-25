@@ -470,6 +470,11 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
      * The 'thumb' conversion is used by AvatarImage; 'medium' is available
      * for larger displays (e.g. account layout).
      *
+     * Conversions are left queueable so they run on a queue worker when one
+     * is configured (QUEUE_CONNECTION + media-library's
+     * queue_conversions_by_default), and fall back to running inline under
+     * the sync driver when no worker is present.
+     *
      * @param \Spatie\MediaLibrary\MediaCollections\Models\Media|null $_media
      *        Required by the Spatie HasMedia contract; unused here because
      *        the same conversions apply to any media item in this model's
@@ -478,12 +483,10 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
     public function registerMediaConversions(?Media $_media = null): void
     {
         $this->addMediaConversion('thumb')
-            ->fit(Fit::Crop, 96, 96)
-            ->nonQueued();
+            ->fit(Fit::Crop, 96, 96);
 
         $this->addMediaConversion('medium')
-            ->fit(Fit::Crop, 256, 256)
-            ->nonQueued();
+            ->fit(Fit::Crop, 256, 256);
     }
 
     /**
@@ -510,9 +513,25 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
 
         return [
             'url' => $media->getFullUrl(),
-            'thumb_url' => $media->getFullUrl('thumb'),
-            'medium_url' => $media->getFullUrl('medium'),
+            'thumb_url' => $this->conversionUrl($media, 'thumb'),
+            'medium_url' => $this->conversionUrl($media, 'medium'),
         ];
+    }
+
+    /**
+     * URL for a media conversion, falling back to the original file's URL
+     * while the conversion has not been generated yet. Conversions may be
+     * queued (see registerMediaConversions), so right after upload the
+     * thumb/medium derivatives can be momentarily absent; serving the
+     * original avoids a broken image until the queue worker catches up.
+     */
+    private function conversionUrl(Media $media, string $conversion): string
+    {
+        if (!$media->hasGeneratedConversion($conversion)) {
+            return $media->getFullUrl();
+        }
+
+        return $media->getFullUrl($conversion);
     }
 
     /**
