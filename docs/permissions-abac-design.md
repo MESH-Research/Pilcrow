@@ -106,9 +106,15 @@ case if the ability is new). Live on deploy; no seed, no migration.
   are never conflated.
 - The app-admin Bouncer role + `everything()` grant are created by the
   `seed_bouncer_application_admin_role` **migration** (not just a seeder), which
-  also ports existing spatie application-administrators onto the Bouncer role
-  before the spatie tables are dropped — so existing instances keep their admins
-  across the cutover. `AbacSeeder` is the idempotent fresh-install/test equivalent.
+  also ports existing spatie application-administrators onto the Bouncer role —
+  so existing instances keep their admins across the cutover. `AbacSeeder` is the
+  idempotent fresh-install/test equivalent.
+- This cutover is **expand-only**: the spatie tables are **not** dropped. They
+  are left intact (admins still present in both systems) so a revert by
+  redeploying the pre-slug code works without a snapshot — old code finds its
+  spatie app-admin rows and the retained, dual-written pivot `role_id`. Dropping
+  the spatie tables is deferred to a later **contract** PR (with the `role_id`
+  drop) once the cutover is proven in production.
 
 ### Pivot storage: role slug column added, legacy role_id retained (frozen)
 
@@ -171,8 +177,10 @@ Policy methods shrink to `bridge.allows(ability, entity) && <predicate>`. The
 5. Convert SubmissionPolicy, then UserPolicy.
 6. Delete `User::hasPublicationRole`/`hasSubmissionRole` (and the dead
    single-int bug) once unreferenced.
-7. Optional: retire Spatie — App Admin becomes a Bouncer global role; drop
-   `spatie/laravel-permission`.
+7. Retire the Spatie **package** — App Admin becomes a Bouncer global role; the
+   `spatie/laravel-permission` composer dependency is removed. The spatie
+   **tables** are left in place (expand-only); dropping them is a later contract
+   PR so this cutover stays revertible by code redeploy.
 
 ## Test safety net
 

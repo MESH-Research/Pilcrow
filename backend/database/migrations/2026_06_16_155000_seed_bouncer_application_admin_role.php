@@ -12,9 +12,15 @@ use Silber\Bouncer\BouncerFacade as Bouncer;
  *
  * This runs on `php artisan migrate` (unlike a seeder), so existing instances
  * get the Bouncer app-admin role and keep their administrators. It must run
- * AFTER the Bouncer tables exist (create_bouncer_tables) and BEFORE the spatie
- * tables are dropped (drop_spatie_permission_tables) — the spatie assignment
+ * AFTER the Bouncer tables exist (create_bouncer_tables); the spatie assignment
  * rows are read here to re-establish each admin in Bouncer.
+ *
+ * This cutover is deliberately EXPAND-ONLY: the spatie tables are NOT dropped.
+ * They are left intact (and the ported rows still present in both systems) so a
+ * revert by redeploying the pre-slug code keeps working without a snapshot —
+ * old code finds its spatie app-admin rows and the retained, dual-written
+ * pivot role_id. Dropping the spatie tables is a later, separate contract PR
+ * (alongside dropping role_id) once this is proven in production.
  *
  * The role row and its id are owned by Bouncer; app code only names the slug
  * (App\Auth\Roles\GlobalRole). Scoped (publication / submission) roles are

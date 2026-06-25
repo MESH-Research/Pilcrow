@@ -146,8 +146,10 @@ runtime-editable.
 wildcard for global ones. Its Bouncer role row (with the human-readable `title`
 used by the GraphQL `Role.name` field) and `everything()` grant are established
 on deploy by the `seed_bouncer_application_admin_role` **migration**, which also
-ports any existing spatie application-administrators onto the Bouncer role before
-the spatie tables are dropped. `Database\Seeders\AbacSeeder` does the same thing
+ports any existing spatie application-administrators onto the Bouncer role. The
+cutover is expand-only — the spatie tables are left intact (not dropped) so a
+revert by redeploying the pre-slug code works without a snapshot; dropping them
+is a later contract PR. `Database\Seeders\AbacSeeder` does the same thing
 idempotently for fresh installs and the test bootstrap. The Bouncer tables are
 namespaced `bouncer_*` (set in `AppServiceProvider`); Bouncer uses its own role
 model — we don't subclass it.
