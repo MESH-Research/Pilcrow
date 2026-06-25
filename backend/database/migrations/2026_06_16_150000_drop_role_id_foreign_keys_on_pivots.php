@@ -34,6 +34,16 @@ return new class extends Migration
 
     public function down(): void
     {
+        // The spatie `roles` table is dropped by a LATER migration whose own
+        // down() is a deliberate no-op (the table is superseded, not restored).
+        // On a full `migrate:rollback` this down() runs after that, so the FK
+        // target may be gone — re-adding it would abort the whole rollback.
+        // Only restore the FK when `roles` still exists (e.g. a single-step
+        // rollback of just this migration); otherwise skip so rollback completes.
+        if (!Schema::hasTable('roles')) {
+            return;
+        }
+
         foreach ($this->tables as $table) {
             Schema::table($table, function (Blueprint $t) {
                 $t->foreign('role_id')->references('id')->on('roles');

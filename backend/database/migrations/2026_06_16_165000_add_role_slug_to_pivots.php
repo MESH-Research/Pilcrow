@@ -47,8 +47,10 @@ return new class extends Migration
             Schema::table($table, function (Blueprint $t) {
                 $t->string('role')->nullable()->after('role_id');
                 $t->index('role');
-                // Retain role_id as the historical record, but make it nullable:
-                // new writes set `role` only and leave role_id null.
+                // Retain role_id as the historical record and make it nullable.
+                // The app keeps it DUAL-WRITTEN (slug + legacyId together) so a
+                // rollback to the pre-slug code finds valid role_id data on rows
+                // created after this deploy — it is the recovery net, not dead.
                 $t->unsignedBigInteger('role_id')->nullable()->change();
             });
 
