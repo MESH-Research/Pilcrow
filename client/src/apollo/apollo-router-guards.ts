@@ -1,9 +1,26 @@
 import { SessionStorage } from "quasar"
-import {
-  CURRENT_USER,
-  GET_SUBMISSION,
-  CURRENT_USER_SUBMISSIONS
-} from "src/graphql/queries"
+import gql from "graphql-tag"
+import { CURRENT_USER, CURRENT_USER_SUBMISSIONS } from "src/graphql/queries"
+
+/**
+ * Colocated query for the route guards' unassigned-access fallback. It selects
+ * only the publication `view` flag the guards need, so it stays decoupled from
+ * the page-level GET_SUBMISSION query and can't pull that operation's heavier
+ * field set (or be perturbed by it).
+ */
+const GUARD_SUBMISSION_ACCESS = gql`
+  query GuardSubmissionAccess($id: ID!) {
+    submission(id: $id) {
+      id
+      publication {
+        id
+        abilities {
+          view
+        }
+      }
+    }
+  }
+`
 
 /**
  * Resolve a submission's authorization flags for the viewer. Used as the
@@ -19,7 +36,7 @@ async function fetchSubmission(apolloClient, submissionId) {
   try {
     return await apolloClient
       .query({
-        query: GET_SUBMISSION,
+        query: GUARD_SUBMISSION_ACCESS,
         variables: { id: submissionId }
       })
       .then(({ data: { submission } }) => submission)
