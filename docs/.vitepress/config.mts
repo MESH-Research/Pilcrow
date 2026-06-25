@@ -60,6 +60,10 @@ export default withMermaid(defineConfig({
                             link: "/developers/architecture",
                         },
                         {
+                            text: "Authorization",
+                            link: "/developers/authorization",
+                        },
+                        {
                             text: "GraphQL",
                             link: "/developers/graphql",
                             items: [

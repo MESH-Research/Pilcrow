@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Auth\Roles\ScopedRole;
 use App\Events\ReviewCoordinatorInvitationAccepted;
 use App\Events\ReviewCoordinatorInvited;
 use App\Events\ReviewerInvitationAccepted;
@@ -26,6 +27,7 @@ class SubmissionInvitation extends Model
         'message',
         'accepted_at',
         'submission_id',
+        'role',
         'role_id',
         'uuid',
     ];
@@ -101,16 +103,6 @@ class SubmissionInvitation extends Model
     public function invitee(): BelongsTo
     {
         return $this->belongsTo(User::class, 'email', 'email');
-    }
-
-    /**
-     * The user role associated with the invitation
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function role(): BelongsTo
-    {
-        return $this->belongsTo(Role::class, 'role_id');
     }
 
     /**
@@ -227,10 +219,10 @@ class SubmissionInvitation extends Model
 
         $this->updateInviteeDetails($details);
 
-        if ((string)$this->role_id === Role::REVIEWER_ROLE_ID) {
+        if ($this->role === ScopedRole::Reviewer->toSlug()) {
             ReviewerInvitationAccepted::dispatch($this);
         }
-        if ((string)$this->role_id === Role::REVIEW_COORDINATOR_ROLE_ID) {
+        if ($this->role === ScopedRole::ReviewCoordinator->toSlug()) {
             ReviewCoordinatorInvitationAccepted::dispatch($this);
         }
 

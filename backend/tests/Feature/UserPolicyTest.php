@@ -3,8 +3,9 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
+use App\Auth\Roles\GlobalRole;
+use App\Auth\Roles\ScopedRole;
 use App\Models\Publication;
-use App\Models\Role;
 use App\Models\Submission;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -15,9 +16,9 @@ class UserPolicyTest extends TestCase
 {
     use RefreshDatabase;
 
-    private function attachToPublication(User $user, Publication $publication, int $roleId): void
+    private function attachToPublication(User $user, Publication $publication, string $roleId): void
     {
-        $user->publications()->attach($publication->id, ['role_id' => $roleId]);
+        $user->publications()->attach($publication->id, ['role' => $roleId]);
     }
 
     public function testViewEmailAllowsSelf(): void
@@ -29,7 +30,7 @@ class UserPolicyTest extends TestCase
     public function testViewEmailAllowsApplicationAdministrator(): void
     {
         $admin = User::factory()->create();
-        $admin->assignRole(Role::APPLICATION_ADMINISTRATOR);
+        $admin->assignRole(GlobalRole::ApplicationAdministrator);
         $target = User::factory()->create();
 
         $this->assertTrue($admin->can('viewEmail', $target));
@@ -41,8 +42,8 @@ class UserPolicyTest extends TestCase
         $admin = User::factory()->create();
         $target = User::factory()->create();
 
-        $this->attachToPublication($admin, $publication, (int)Role::PUBLICATION_ADMINISTRATOR_ROLE_ID);
-        $this->attachToPublication($target, $publication, (int)Role::EDITOR_ROLE_ID);
+        $this->attachToPublication($admin, $publication, ScopedRole::PublicationAdmin->toSlug());
+        $this->attachToPublication($target, $publication, ScopedRole::Editor->toSlug());
 
         $this->assertTrue($admin->can('viewEmail', $target));
     }
@@ -53,8 +54,8 @@ class UserPolicyTest extends TestCase
         $editor = User::factory()->create();
         $target = User::factory()->create();
 
-        $this->attachToPublication($editor, $publication, (int)Role::EDITOR_ROLE_ID);
-        $this->attachToPublication($target, $publication, (int)Role::EDITOR_ROLE_ID);
+        $this->attachToPublication($editor, $publication, ScopedRole::Editor->toSlug());
+        $this->attachToPublication($target, $publication, ScopedRole::Editor->toSlug());
 
         $this->assertTrue($editor->can('viewEmail', $target));
     }
@@ -63,7 +64,7 @@ class UserPolicyTest extends TestCase
     {
         $publication = Publication::factory()->create();
         $editor = User::factory()->create();
-        $this->attachToPublication($editor, $publication, (int)Role::EDITOR_ROLE_ID);
+        $this->attachToPublication($editor, $publication, ScopedRole::Editor->toSlug());
 
         $submitter = User::factory()->create();
         Submission::factory()
@@ -107,10 +108,10 @@ class UserPolicyTest extends TestCase
     public function testViewEmailDeniesEditorOfDifferentPublication(): void
     {
         $editor = User::factory()->create();
-        $this->attachToPublication($editor, Publication::factory()->create(), (int)Role::EDITOR_ROLE_ID);
+        $this->attachToPublication($editor, Publication::factory()->create(), ScopedRole::Editor->toSlug());
 
         $other = User::factory()->create();
-        $this->attachToPublication($other, Publication::factory()->create(), (int)Role::EDITOR_ROLE_ID);
+        $this->attachToPublication($other, Publication::factory()->create(), ScopedRole::Editor->toSlug());
 
         $this->assertFalse($editor->can('viewEmail', $other));
     }
@@ -118,7 +119,7 @@ class UserPolicyTest extends TestCase
     public function testViewAllowsOnlyApplicationAdministrator(): void
     {
         $admin = User::factory()->create();
-        $admin->assignRole(Role::APPLICATION_ADMINISTRATOR);
+        $admin->assignRole(GlobalRole::ApplicationAdministrator);
         $other = User::factory()->create();
 
         $this->assertTrue($admin->can('view', $other));
@@ -138,15 +139,15 @@ class UserPolicyTest extends TestCase
     {
         $publication = Publication::factory()->create();
         $editor = User::factory()->create();
-        $this->attachToPublication($editor, $publication, (int)Role::EDITOR_ROLE_ID);
+        $this->attachToPublication($editor, $publication, ScopedRole::Editor->toSlug());
 
         $targets = User::factory()->count(5)->create();
         foreach ($targets as $target) {
-            $this->attachToPublication($target, $publication, (int)Role::EDITOR_ROLE_ID);
+            $this->attachToPublication($target, $publication, ScopedRole::Editor->toSlug());
         }
 
-        // Prime Spatie role cache so role lookup doesn't pollute the count.
-        $editor->hasRole(Role::APPLICATION_ADMINISTRATOR);
+        // Prime the application-admin role lookup so it doesn't pollute the count.
+        $editor->isApplicationAdministrator();
 
         DB::enableQueryLog();
         foreach ($targets as $target) {
@@ -159,7 +160,7 @@ class UserPolicyTest extends TestCase
         // pivot exactly once even though the policy was invoked 5 times.
         $viewerPubLookups = $queries->filter(
             fn(string $sql) => str_contains($sql, 'publication_user')
-                && str_contains($sql, 'role_id')
+                && str_contains($sql, 'role')
         );
         $this->assertCount(1, $viewerPubLookups);
     }

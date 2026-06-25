@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
+use App\Auth\Roles\ScopedRole;
 use App\Models\Publication;
-use App\Models\Role;
 use App\Models\Submission;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -42,7 +42,7 @@ class SubmissionBuilderTest extends TestCase
             ->create();
 
         $results = Submission::query()
-            ->roleFilter([Role::REVIEWER_ROLE_ID])
+            ->roleFilter([ScopedRole::Reviewer->toSlug()])
             ->get();
 
         $this->assertEquals([$reviewed->id], $results->pluck('id')->all());
@@ -75,8 +75,8 @@ class SubmissionBuilderTest extends TestCase
 
         $results = Submission::query()
             ->roleFilter([
-                Role::REVIEWER_ROLE_ID,
-                Role::REVIEW_COORDINATOR_ROLE_ID,
+                ScopedRole::Reviewer->toSlug(),
+                ScopedRole::ReviewCoordinator->toSlug(),
             ])
             ->get();
 

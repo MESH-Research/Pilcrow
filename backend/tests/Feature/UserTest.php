@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
+use App\Auth\Roles\GlobalRole;
 use App\Models\Publication;
-use App\Models\Role;
 use App\Models\Submission;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -94,7 +94,7 @@ class UserTest extends TestCase
         $user = User::factory()->create();
 
         if (in_array(1, $role_ids)) {
-            $user->assignRole(Role::APPLICATION_ADMINISTRATOR);
+            $user->assignRole(GlobalRole::ApplicationAdministrator);
         }
         if (in_array(2, $role_ids)) {
             $this->assignPublicationRole($user, 'publicationAdmins');

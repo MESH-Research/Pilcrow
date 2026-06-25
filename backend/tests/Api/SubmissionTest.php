@@ -3,8 +3,9 @@ declare(strict_types=1);
 
 namespace Tests\Api;
 
+use App\Auth\Roles\GlobalRole;
+use App\Auth\Roles\ScopedRole;
 use App\Models\Publication;
-use App\Models\Role;
 use App\Models\Submission;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -104,7 +105,7 @@ class SubmissionTest extends ApiTestCase
         $this->actingAs($publicationAdmin);
 
         $publication = Publication::factory()
-            ->hasAttached($publicationAdmin, ['role_id' => Role::PUBLICATION_ADMINISTRATOR_ROLE_ID])
+            ->hasAttached($publicationAdmin, ['role' => ScopedRole::PublicationAdmin->toSlug()])
             ->create();
 
         $submission = Submission::factory()
@@ -514,7 +515,7 @@ class SubmissionTest extends ApiTestCase
         $this->actingAs($publicationAdmin);
 
         Publication::factory()
-            ->hasAttached($publicationAdmin, ['role_id' => Role::PUBLICATION_ADMINISTRATOR_ROLE_ID])
+            ->hasAttached($publicationAdmin, ['role' => ScopedRole::PublicationAdmin->toSlug()])
             ->create();
 
         $submission = Submission::factory()
@@ -958,45 +959,45 @@ class SubmissionTest extends ApiTestCase
     {
         return [
             'Empty Title' => [
-                'role' => Role::APPLICATION_ADMINISTRATOR,
+                'role' => GlobalRole::ApplicationAdministrator->title(),
                 'title' => '',
                 'passes' => false,
                 'message' => 'validation',
             ],
             'Title That Is Too Long ' => [
-                'role' => Role::APPLICATION_ADMINISTRATOR,
+                'role' => GlobalRole::ApplicationAdministrator->title(),
                 'title' => str_repeat('1234567890', 520),
                 'passes' => false,
                 'message' => 'validation',
             ],
             'As A Submitter' => [
-                'role' => Role::SUBMITTER,
+                'role' => ScopedRole::Submitter->title(),
                 'title' => 'My Newly Updated Submission Title',
                 'passes' => true,
             ],
             'As A Reviewer' => [
-                'role' => Role::REVIEWER,
+                'role' => ScopedRole::Reviewer->title(),
                 'title' => 'My Newly Updated Submission Title',
                 'passes' => false,
                 'message' => 'UNAUTHORIZED',
             ],
             'As A Review Coordinator' => [
-                'role' => Role::REVIEW_COORDINATOR,
+                'role' => ScopedRole::ReviewCoordinator->title(),
                 'title' => 'My Newly Updated Submission Title',
                 'passes' => true,
             ],
             'As An Editor' => [
-                'role' => Role::EDITOR,
+                'role' => ScopedRole::Editor->title(),
                 'title' => 'My Newly Updated Submission Title',
                 'passes' => true,
             ],
             'As A Publication Admin' => [
-                'role' => Role::PUBLICATION_ADMINISTRATOR,
+                'role' => ScopedRole::PublicationAdmin->title(),
                 'title' => 'My Newly Updated Submission Title',
                 'passes' => true,
             ],
             'As An Application Admin' => [
-                'role' => Role::APPLICATION_ADMINISTRATOR,
+                'role' => GlobalRole::ApplicationAdministrator->title(),
                 'title' => 'My Newly Updated Submission Title',
                 'passes' => true,
             ],
@@ -1072,27 +1073,27 @@ class SubmissionTest extends ApiTestCase
     public function testSubmissionTitleUpdateByRole(string $role, string $title, bool $passes, ?string $message = null)
     {
         switch ($role) {
-            case Role::SUBMITTER:
+            case ScopedRole::Submitter->title():
                 $user = $this->beSubmitter();
                 $submission = $user->submissions->first();
                 break;
-            case Role::REVIEWER:
+            case ScopedRole::Reviewer->title():
                 $user = $this->beReviewer();
                 $submission = $user->submissions->first();
                 break;
-            case Role::REVIEW_COORDINATOR:
+            case ScopedRole::ReviewCoordinator->title():
                 $user = $this->beReviewCoordinator();
                 $submission = $user->submissions->first();
                 break;
-            case Role::EDITOR:
+            case ScopedRole::Editor->title():
                 $user = $this->beEditor();
                 $submission = $user->publications->first()->submissions->first();
                 break;
-            case Role::PUBLICATION_ADMINISTRATOR:
+            case ScopedRole::PublicationAdmin->title():
                 $user = $this->bePubAdmin();
                 $submission = $user->publications->first()->submissions->first();
                 break;
-            case Role::APPLICATION_ADMINISTRATOR:
+            case GlobalRole::ApplicationAdministrator->title():
                 $this->beAppAdmin();
                 $submission = Submission::factory()->create();
                 break;
