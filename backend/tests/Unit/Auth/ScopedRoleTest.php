@@ -5,6 +5,7 @@ namespace Tests\Unit\Auth;
 
 use App\Auth\Abilities\PublicationAbility;
 use App\Auth\Abilities\SubmissionAbility;
+use App\Auth\Roles\GlobalRole;
 use App\Auth\Roles\ScopedRole;
 use App\Models\Submission;
 use App\Models\User;
@@ -88,5 +89,24 @@ class ScopedRoleTest extends TestCase
     {
         $user = new User();
         $this->assertTrue(ScopedRole::Editor->allows(SubmissionAbility::View, $this->submitted(), $user));
+    }
+
+    /**
+     * legacyId() is frozen, not cosmetic: the role relations and invite
+     * mutations dual-write it into the retained pivot `role_id` so a rollback to
+     * the pre-slug code reads valid data. Changing a value here would silently
+     * corrupt that recovery net on every new row until `role_id` is dropped.
+     * (Also the `highest_privileged_role` rank.)
+     */
+    public function testLegacyIdMappingIsFrozen(): void
+    {
+        $this->assertSame(2, ScopedRole::PublicationAdmin->legacyId());
+        $this->assertSame(3, ScopedRole::Editor->legacyId());
+        $this->assertSame(4, ScopedRole::ReviewCoordinator->legacyId());
+        $this->assertSame(5, ScopedRole::Reviewer->legacyId());
+        $this->assertSame(6, ScopedRole::Submitter->legacyId());
+
+        // application_admin is the global role; its id 1 lives on GlobalRole.
+        $this->assertSame(1, GlobalRole::ApplicationAdministrator->legacyId());
     }
 }
