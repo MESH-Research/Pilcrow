@@ -358,24 +358,13 @@ export async function beforeEachRequiresExportAccess(
 
     // Export is gated on the scoped `export` ability, which the resolver grants
     // to submitters, review coordinators, editors, publication admins and the
-    // application administrator — never plain reviewers.
-    const exportableStates = new Set([
-      "REJECTED",
-      "RESUBMISSION_REQUESTED",
-      "ACCEPTED_AS_FINAL",
-      "ARCHIVED",
-      "EXPIRED"
-    ])
-
+    // application administrator — never plain reviewers. The exportable-state
+    // condition lives in the server's SubmissionIsExportable predicate, so the
+    // flag already reflects status; no client-side state set is needed.
     if (submission.length) {
       const s = submission[0]
 
       access = !!s.abilities?.export
-
-      // Deny when the submission is not in an exportable state
-      if (!exportableStates.has(s.status)) {
-        access = false
-      }
     }
 
     // Not in the viewer's submissions list: not directly assigned, so fall back

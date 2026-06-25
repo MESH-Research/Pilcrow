@@ -253,8 +253,9 @@ class AbilitiesTest extends ApiTestCase
     /**
      * Export is granted to the review coordinator (and up the superset chain to
      * editor / publication admin) but withheld from the reviewer — mirroring the
-     * role logic the client export gate used to hard-code. It is an unconditional
-     * grant, so it holds regardless of submission status.
+     * role logic the client export gate used to hard-code. The grant is
+     * conditioned on an exportable status, so this exercises a settled state
+     * (REJECTED).
      *
      * @return void
      */
@@ -266,7 +267,7 @@ class AbilitiesTest extends ApiTestCase
         $coordinatorSubmission = Submission::factory()
             ->for($publication)
             ->hasAttached($coordinator, [], 'reviewCoordinators')
-            ->create(['status' => Submission::UNDER_REVIEW]);
+            ->create(['status' => Submission::REJECTED]);
 
         $this->actingAs($coordinator);
         $this->graphQL(
@@ -280,7 +281,7 @@ class AbilitiesTest extends ApiTestCase
         $reviewerSubmission = Submission::factory()
             ->for($publication)
             ->hasAttached($reviewer, [], 'reviewers')
-            ->create(['status' => Submission::UNDER_REVIEW]);
+            ->create(['status' => Submission::REJECTED]);
 
         $this->actingAs($reviewer);
         $this->graphQL(
@@ -292,17 +293,21 @@ class AbilitiesTest extends ApiTestCase
     }
 
     /**
-     * The submitter holds export unconditionally — unlike its draft-only status
-     * grant, export does not flip when the submission leaves draft.
+     * Export is a CONDITIONAL grant: the SubmissionIsExportable predicate gates
+     * it on a settled status. A submitter holds export in an exportable state
+     * (ARCHIVED) but not in a mid-review one (UNDER_REVIEW) — the flag tracks the
+     * predicate, so the client no longer hard-codes the state set.
      *
      * @return void
      */
-    public function testSubmissionExportGrantedToSubmitterRegardlessOfStatus(): void
+    public function testSubmissionExportFlipsWithExportableState(): void
     {
         $submitter = User::factory()->create();
         $this->actingAs($submitter);
-        $submission = Submission::factory()
-            ->for(Publication::factory()->create())
+        $publication = Publication::factory()->create();
+
+        $exportable = Submission::factory()
+            ->for($publication)
             ->hasAttached($submitter, [], 'submitters')
             ->create(['status' => Submission::ARCHIVED]);
 
@@ -310,7 +315,19 @@ class AbilitiesTest extends ApiTestCase
             'query getSubmission($id: ID!) {
                 submission(id: $id) { abilities { export } }
             }',
-            ['id' => $submission->id]
+            ['id' => $exportable->id]
         )->assertJsonPath('data.submission.abilities.export', true);
+
+        $notExportable = Submission::factory()
+            ->for($publication)
+            ->hasAttached($submitter, [], 'submitters')
+            ->create(['status' => Submission::UNDER_REVIEW]);
+
+        $this->graphQL(
+            'query getSubmission($id: ID!) {
+                submission(id: $id) { abilities { export } }
+            }',
+            ['id' => $notExportable->id]
+        )->assertJsonPath('data.submission.abilities.export', false);
     }
 }
