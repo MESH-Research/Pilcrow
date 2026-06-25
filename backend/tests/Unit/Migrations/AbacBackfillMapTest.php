@@ -17,8 +17,8 @@ use ReflectionObject;
  * This locks the migration's map to the role vocabulary (ScopedRole /
  * GlobalRole), so the migration and the enums can never drift apart unnoticed.
  * Pure reflection over the migration object — no database, safe on the shared
- * MySQL test connection (the live forward/rollback rehearsal lives in the
- * `migrate:rehearse` command, which needs DDL and so runs against a clone).
+ * MySQL test connection. The live forward/rollback validation against real data
+ * is done out of band, by migrating a restored production snapshot before deploy.
  */
 class AbacBackfillMapTest extends TestCase
 {
