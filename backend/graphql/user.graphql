@@ -42,14 +42,8 @@ type User {
 A user's global (application-wide) abilities. Each flag mirrors a GlobalAbility
 case, resolved directly against Bouncer — the same engine as the policies.
 """
-type UserAbilities {
-    publication_create: Boolean!
-    user_view: Boolean!
-    user_view_any: Boolean!
-    user_update: Boolean!
-    user_manage_beta: Boolean!
-    access_admin: Boolean!
-}
+type UserAbilities
+    @abilityFields(enum: "App\\Auth\\Abilities\\GlobalAbility")
 
 enum UserRoles {
     submitter @enum(value: 6)

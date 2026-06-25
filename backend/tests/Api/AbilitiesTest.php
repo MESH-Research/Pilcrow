@@ -3,11 +3,16 @@ declare(strict_types=1);
 
 namespace Tests\Api;
 
+use App\Auth\Abilities\GlobalAbility;
+use App\Auth\Abilities\PublicationAbility;
+use App\Auth\Abilities\SubmissionAbility;
 use App\Models\Publication;
 use App\Models\Submission;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Str;
 use Nuwave\Lighthouse\Testing\MakesGraphQLRequests;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\ApiTestCase;
 
 /**
@@ -21,6 +26,68 @@ class AbilitiesTest extends ApiTestCase
 {
     use MakesGraphQLRequests;
     use RefreshDatabase;
+
+    /**
+     * The ability GraphQL types are generated from the enums by the AbilityFields
+     * directive, so a new ability case appears in the schema with no SDL edit.
+     * This locks each type's field set to exactly the snake_case enum cases — if
+     * the directive breaks or an enum and its type drift, it fails here rather
+     * than silently dropping a flag the client relies on.
+     *
+     * @return array<string, array{0: string, 1: class-string}>
+     */
+    public static function abilityTypeProvider(): array
+    {
+        return [
+            'UserAbilities' => ['UserAbilities', GlobalAbility::class],
+            'PublicationAbilities' => ['PublicationAbilities', PublicationAbility::class],
+            'SubmissionAbilities' => ['SubmissionAbilities', SubmissionAbility::class],
+        ];
+    }
+
+    /**
+     * @param string $typeName
+     * @param class-string $enum
+     * @return void
+     */
+    #[DataProvider('abilityTypeProvider')]
+    public function testAbilityTypeFieldsAreGeneratedFromTheEnum(string $typeName, string $enum): void
+    {
+        $response = $this->graphQL(
+            'query introspectType($name: String!) {
+                __type(name: $name) {
+                    fields {
+                        name
+                        type {
+                            kind
+                            ofType {
+                                name
+                            }
+                        }
+                    }
+                }
+            }',
+            ['name' => $typeName]
+        );
+
+        $fields = $response->json('data.__type.fields');
+        $fieldNames = array_column($fields, 'name');
+        sort($fieldNames);
+
+        $expected = array_map(
+            static fn($case) => Str::snake($case->name),
+            $enum::cases()
+        );
+        sort($expected);
+
+        $this->assertSame($expected, $fieldNames);
+
+        // Every generated field is a non-null Boolean.
+        foreach ($fields as $field) {
+            $this->assertSame('NON_NULL', $field['type']['kind']);
+            $this->assertSame('Boolean', $field['type']['ofType']['name']);
+        }
+    }
 
     /**
      * An application administrator holds every global ability via Bouncer's
