@@ -88,7 +88,11 @@
       <q-td :props="p">{{ p.row.submission.id }}</q-td>
     </template>
     <template #body-cell-title="p">
-      <WithAsideCell :scope="p" style="white-space: normal">
+      <WithAsideCell
+        :scope="p"
+        :dark-mode-status="darkModeStatus"
+        style="white-space: normal"
+      >
         <template #value>
           <router-link
             data-cy="submission_link_desktop"
@@ -116,7 +120,11 @@
             <AvatarImage :user="submitter" size="32px" rounded />
             <div class="column">
               <div v-if="submitter.name">{{ submitter.name }}</div>
-              <div v-if="submitter.username" class="text-caption text-grey-8">
+              <div
+                v-if="submitter.username"
+                :class="darkModeStatus ? 'text-grey-5' : 'text-grey-8'"
+                class="text-caption"
+              >
                 {{ submitter.username }}
               </div>
             </div>
@@ -180,7 +188,9 @@ import AvatarImage from "src/components/atoms/AvatarImage.vue"
 import RecordOfReviewCard from "src/components/ror/RecordOfReviewCard.vue"
 import SubmissionsFilterPanel from "src/pages/Admin/components/SubmissionsFilterPanel.vue"
 import { defaultOptions as defaultRoleOptions } from "src/pages/Admin/components/SubmissionsFilterPanelRoles.vue"
+import { useDarkMode } from "src/use/guiElements"
 
+const { darkModeStatus } = useDarkMode()
 const $q = useQuasar()
 const { t } = useI18n()
 
@@ -265,7 +275,10 @@ const cols: QueryTableColumn[] = [
     field: (row) => (row.submission as Submission).updated_at,
     sortable: false,
     align: "left",
-    component: DateTimeCell
+    component: DateTimeCell,
+    props: () => ({
+      darkModeStatus: darkModeStatus.value
+    })
   }
 ]
 

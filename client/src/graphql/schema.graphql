@@ -371,7 +371,7 @@ type Mutation {
   also block the user from uploading a replacement.
   """
   resolveAvatarReportAndRemoveAvatar(
-    """If true, also grant the `avatar upload revoked` permission."""
+    """If true, also set the user's avatar-upload-blocked moderation flag."""
     blockFutureUploads: Boolean
     id: ID!
     notes: String
@@ -582,15 +582,6 @@ type PaginatorInfo {
   total: Int!
 }
 
-"""A permission for roles and users"""
-type Permission {
-  created_at: DateTime
-  guard_name: String!
-  id: ID!
-  name: String!
-  updated_at: DateTime
-}
-
 """Profile metadata of a user"""
 type ProfileMetadata {
   academic_profiles: AcademicProfiles
@@ -629,6 +620,10 @@ input ProviderUserInput {
 
 """A publication that has users, reviews, and submissions"""
 type Publication {
+  """
+  The authenticated viewer's scoped abilities on this publication (UI hints; server still enforces).
+  """
+  abilities: PublicationAbilities!
   created_at: DateTimeUtc
   editors: [User!]!
   effective_role: PublicationRole
@@ -643,6 +638,15 @@ type Publication {
   style_criterias: [StyleCriteria!]!
   submissions: [Submission]!
   updated_at: DateTimeUtc
+}
+
+"""
+The authenticated viewer's scoped abilities on a publication. Each flag mirrors a
+PublicationAbility case, resolved through the same engine as the policies.
+"""
+type PublicationAbilities {
+  update: Boolean!
+  view: Boolean!
 }
 
 type PublicationAssignment {
@@ -680,7 +684,7 @@ enum PublicationRole {
 type Query {
   """
   Return avatar reports for moderator review. Requires the
-  `moderate avatars` permission.
+  `moderateAvatars` ability (application administrators).
   """
   avatarReports(
     """Limits number of fetched items."""
@@ -697,9 +701,6 @@ type Query {
   currentUser: User
   generalSettings: GeneralSettings
   identityProviders: [IdentityProvider]
-
-  """Return a permission by ID"""
-  permission(id: ID): Permission
 
   """Return a publication by ID"""
   publication(id: ID): Publication
@@ -817,13 +818,13 @@ input ResetPasswordInput {
   token: String!
 }
 
-"""A user role for permissions"""
+"""A user role"""
 type Role {
   created_at: DateTime
-  guard_name: String!
   id: ID!
+
+  """Human-readable role title (e.g. "Application Administrator")."""
   name: String!
-  permissions: [Permission!]
   updated_at: DateTime
 }
 
@@ -855,6 +856,10 @@ type StyleCriteria {
 
 """A Submission"""
 type Submission {
+  """
+  The authenticated viewer's scoped abilities on this submission (UI hints; server still enforces).
+  """
+  abilities: SubmissionAbilities!
   assignments: [SubmissionAssignment!]!
   audits: [SubmissionAudit]
   commenters(type: CommentParticipantType): [User!]!
@@ -888,6 +893,22 @@ type Submission {
   updated_at: DateTimeUtc
   updated_by: User!
   users: [User!]!
+}
+
+"""
+The authenticated viewer's scoped abilities on a submission. Each flag mirrors a
+SubmissionAbility case, resolved through the same engine as the policies — so
+conditional grants (e.g. draft-only status changes) are reflected correctly.
+"""
+type SubmissionAbilities {
+  invite: Boolean!
+  update: Boolean!
+  update_review_coordinators: Boolean!
+  update_reviewers: Boolean!
+  update_status: Boolean!
+  update_submitters: Boolean!
+  update_title: Boolean!
+  view: Boolean!
 }
 
 """A user associated with a submission and a role"""
@@ -1126,6 +1147,11 @@ scalar Upload
 
 """A user account"""
 type User {
+  """
+  This user's global abilities. Fetched via currentUser this is the viewer's own (UI hints; server still enforces).
+  """
+  abilities: UserAbilities!
+
   """The user's uploaded avatar, or null if the user has not set one."""
   avatar: Avatar
   avatar_color: String! @deprecated(reason: "Temporary placeholder for stable avatar colors; will be removed when user-uploaded avatars are introduced.")
@@ -1156,15 +1182,6 @@ type User {
     read: Boolean
     unread: Boolean
   ): NotificationPaginator!
-
-  """
-  Every permission the user effectively has — both directly-assigned
-  and inherited via their roles. Uses `getAllPermissions()` rather
-  than the `permissions()` relation so role-derived permissions are
-  included (e.g. Application Administrators inherit `moderate
-  avatars` via the role, not a direct user->permission pivot).
-  """
-  permissions: [Permission!]
   profile_metadata: ProfileMetadata
   publications(
     """Limits number of fetched items."""
@@ -1191,6 +1208,19 @@ type User {
   ): SubmissionAssignmentPaginator!
   updated_at: DateTimeUtc
   username: String!
+}
+
+"""
+A user's global (application-wide) abilities. Each flag mirrors a GlobalAbility
+case, resolved directly against Bouncer — the same engine as the policies.
+"""
+type UserAbilities {
+  avatar_moderate: Boolean!
+  publication_create: Boolean!
+  user_manage_beta: Boolean!
+  user_update: Boolean!
+  user_view: Boolean!
+  user_view_any: Boolean!
 }
 
 """A paginated list of User items."""

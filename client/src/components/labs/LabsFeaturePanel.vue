@@ -17,8 +17,7 @@
 
       <q-btn
         no-caps
-        :outline="optedIn"
-        :color="optedIn ? 'grey-8' : 'primary'"
+        :color="optedIn ? 'negative' : 'primary'"
         :label="optedIn ? $t('labs.deactivate') : $t('labs.activate')"
         :loading="saving"
         :data-cy="`labs_feature_${featureKey}`"

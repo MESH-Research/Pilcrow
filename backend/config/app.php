@@ -150,7 +150,6 @@ return [
         Nuwave\Lighthouse\Scout\ScoutServiceProvider::class,
         OwenIt\Auditing\AuditingServiceProvider::class,
         SocialiteProviders\Manager\ServiceProvider::class,
-        Spatie\Permission\PermissionServiceProvider::class,
         TeamTNT\Scout\TNTSearchScoutServiceProvider::class,
     ])->toArray(),
 

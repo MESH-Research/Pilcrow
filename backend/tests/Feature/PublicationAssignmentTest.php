@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
+use App\Auth\Roles\ScopedRole;
 use App\Models\Publication;
 use App\Models\PublicationAssignment;
-use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -34,8 +34,13 @@ class PublicationAssignmentTest extends TestCase
         $this->assertTrue($assignment->user->is($user));
         $this->assertTrue($assignment->publication->is($publication));
         $this->assertEquals(
-            (int)Role::EDITOR_ROLE_ID,
-            (int)$assignment->role->id
+            ScopedRole::Editor->toSlug(),
+            $assignment->role
+        );
+        // role_id is dual-written for rollback safety.
+        $this->assertEquals(
+            ScopedRole::Editor->legacyId(),
+            (int)$assignment->role_id
         );
     }
 }

@@ -60,6 +60,10 @@ export default withMermaid(defineConfig({
                             link: "/developers/architecture",
                         },
                         {
+                            text: "Authorization",
+                            link: "/developers/authorization",
+                        },
+                        {
                             text: "GraphQL",
                             link: "/developers/graphql",
                             items: [
@@ -153,6 +157,10 @@ export default withMermaid(defineConfig({
                                 {
                                     text: "Mysql",
                                     link: "/install/recipes/mysql",
+                                },
+                                {
+                                    text: "Backups",
+                                    link: "/install/recipes/backups",
                                 },
                                 {
                                     text: "SSL/Reverse Proxy",

@@ -41,29 +41,23 @@ export function useCurrentUser() {
   })
 
   /**
-   * Names of every permission the current user has (directly-assigned
-   * plus permissions inherited from their roles). Populated from the
-   * `permissions { name }` selection in currentUserFields.
+   * The current user's global abilities — a UserAbilities object whose
+   * boolean fields each mirror a GlobalAbility case (e.g. avatar_moderate).
+   * Populated from the `abilities { ... }` selection in currentUserFields.
    */
-  const permissions = computed<string[]>(() => {
-    return (
-      query.result.value?.currentUser?.permissions?.map(({ name }) => name) ??
-      []
-    )
+  const abilities = computed(() => {
+    return query.result.value?.currentUser?.abilities ?? null
   })
 
   /**
-   * True if the current user has the named permission.
-   * Usage: `can("moderate avatars")`.
+   * True if the current user holds the named global ability. The name is
+   * the snake_case UserAbilities field (e.g. "avatar_moderate"). These are
+   * UI hints only — the server still enforces authorization.
    */
-  const can = (permission: string): boolean =>
-    permissions.value.includes(permission)
-
-  /**
-   * @deprecated Prefer `permissions` + `can()` — kept so existing
-   * callers don't break. Will be removed once those call sites land.
-   */
-  const abilities = permissions
+  const can = (ability: string): boolean =>
+    Boolean(
+      (abilities.value as Record<string, boolean> | null | undefined)?.[ability]
+    )
 
   const roles = computed(() => {
     return query.result.value?.currentUser.roles.map(({ name }) => name) ?? []
@@ -109,7 +103,6 @@ export function useCurrentUser() {
     isLoggedIn,
     roles,
     abilities,
-    permissions,
     can,
     isAppAdmin,
     isSubmitter,

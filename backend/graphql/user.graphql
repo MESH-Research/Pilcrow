@@ -13,14 +13,8 @@ type User {
     email_verified_at: DateTimeUtc
     roles: [Role!]! @belongsToMany
     highest_privileged_role: UserRoles @method(name: "getHighestPrivilegedRole")
-    """
-    Every permission the user effectively has — both directly-assigned
-    and inherited via their roles. Uses `getAllPermissions()` rather
-    than the `permissions()` relation so role-derived permissions are
-    included (e.g. Application Administrators inherit `moderate
-    avatars` via the role, not a direct user->permission pivot).
-    """
-    permissions: [Permission!] @method(name: "getAllPermissions")
+    "This user's global abilities. Fetched via currentUser this is the viewer's own (UI hints; server still enforces)."
+    abilities: UserAbilities! @method(name: "globalAbilities")
     profile_metadata: ProfileMetadata
     "Whether the user has access to private beta features (admin-set)."
     beta: Boolean!
@@ -62,6 +56,19 @@ type Avatar {
 
     "URL for the 256x256 medium conversion, suitable for profile pages."
     medium_url: String!
+}
+
+"""
+A user's global (application-wide) abilities. Each flag mirrors a GlobalAbility
+case, resolved directly against Bouncer — the same engine as the policies.
+"""
+type UserAbilities {
+    publication_create: Boolean!
+    user_view: Boolean!
+    user_view_any: Boolean!
+    user_update: Boolean!
+    user_manage_beta: Boolean!
+    avatar_moderate: Boolean!
 }
 
 enum UserRoles {

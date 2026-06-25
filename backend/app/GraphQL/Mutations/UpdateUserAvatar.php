@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\GraphQL\Mutations;
 
-use App\Models\Permission;
+use App\Enums\ModerationFlag;
 use App\Models\User;
 use GraphQL\Error\Error;
 use Illuminate\Support\Facades\Validator;
@@ -27,7 +27,7 @@ class UpdateUserAvatar
     {
         $user = User::findOrFail($args['id']);
 
-        if (!$user->hasPermissionTo(Permission::UPLOAD_AVATAR)) {
+        if ($user->hasModerationFlag(ModerationFlag::AvatarUploadBlocked)) {
             throw new Error('This user is not permitted to upload an avatar.');
         }
 

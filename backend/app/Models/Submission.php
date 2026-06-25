@@ -3,6 +3,10 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Auth\Abilities\PublicationAbility;
+use App\Auth\Abilities\SubmissionAbility;
+use App\Auth\Roles\ScopedRole;
+use App\Auth\ScopedAbilityResolver;
 use App\Builders\SubmissionBuilder;
 use App\Events\SubmissionStatusUpdated;
 use App\Http\Traits\CreatedUpdatedBy;
@@ -13,6 +17,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use OwenIt\Auditing\Auditable as AuditableTrait;
 use OwenIt\Auditing\Contracts\Auditable;
 
@@ -53,9 +58,9 @@ class Submission extends Model implements Auditable
      * Restrict the query to submissions in publications managed by the
      * authenticated user:
      *  - Application administrators manage all publications, so see all submissions.
-     *  - Users with any publication role (currently administrator or editor —
-     *    the only roles attached at the publication level) see submissions in
-     *    those publications.
+     *  - Users holding a publication role that grants publication.view (publication
+     *    administrator or editor) see submissions in those publications. The role
+     *    set is derived from the ScopedRole matrix so it tracks authorization.
      *  - Anyone else sees nothing.
      *
      * Relies on the @guard directive to reject unauthenticated requests before
@@ -66,11 +71,16 @@ class Submission extends Model implements Auditable
         /** @var \App\Models\User $user */
         $user = Auth::user();
 
-        if ($user->hasRole(Role::APPLICATION_ADMINISTRATOR)) {
+        if ($user->isApplicationAdministrator()) {
             return $query;
         }
 
-        return $query->whereIn('publication_id', $user->publications()->pluck('publications.id'));
+        $slugs = ScopedRole::grantingSlugsFor(PublicationAbility::View, ScopedRole::PIVOT_PUBLICATION);
+
+        return $query->whereIn(
+            'publication_id',
+            $user->publications()->wherePivotIn('role', $slugs)->pluck('publications.id')
+        );
     }
 
     /**
@@ -133,7 +143,8 @@ class Submission extends Model implements Auditable
     public function reviewers(): BelongsToMany
     {
         return $this->users()
-            ->withPivotValue('role_id', Role::REVIEWER_ROLE_ID);
+            ->withPivotValue('role', ScopedRole::Reviewer->toSlug())
+            ->withPivotValue('role_id', ScopedRole::Reviewer->legacyId());
     }
 
     /**
@@ -144,7 +155,8 @@ class Submission extends Model implements Auditable
     public function reviewCoordinators(): BelongsToMany
     {
         return $this->users()
-            ->withPivotValue('role_id', Role::REVIEW_COORDINATOR_ROLE_ID);
+            ->withPivotValue('role', ScopedRole::ReviewCoordinator->toSlug())
+            ->withPivotValue('role_id', ScopedRole::ReviewCoordinator->legacyId());
     }
 
     /**
@@ -155,7 +167,8 @@ class Submission extends Model implements Auditable
     public function submitters(): BelongsToMany
     {
         return $this->users()
-            ->withPivotValue('role_id', Role::SUBMITTER_ROLE_ID);
+            ->withPivotValue('role', ScopedRole::Submitter->toSlug())
+            ->withPivotValue('role_id', ScopedRole::Submitter->legacyId());
     }
 
     /**
@@ -168,7 +181,7 @@ class Submission extends Model implements Auditable
         return $this->belongsToMany(User::class)
             ->withTimestamps()
             ->using(SubmissionAssignment::class)
-            ->withPivot(['id', 'user_id', 'role_id', 'submission_id']);
+            ->withPivot(['id', 'user_id', 'role', 'submission_id']);
     }
 
     /**
@@ -331,11 +344,11 @@ class Submission extends Model implements Auditable
     }
 
     /**
-     * Get the logged in users assigned role for this submission
+     * Get the logged in users assigned role slug for this submission
      *
-     * @return int|null
+     * @return string|null
      */
-    public function getMyRole(): ?int
+    public function getMyRole(): ?string
     {
         /** @var \App\Models\User $user */
         $user = Auth::user();
@@ -352,15 +365,20 @@ class Submission extends Model implements Auditable
             return null;
         }
 
-        return $first->role_id ?? null;
+        return $first->role ?? null;
     }
 
     /**
-     * Get the logged in users role taking into account parent roles granted to the user
+     * Get the logged in users role slug taking into account parent roles granted to the user
      *
-     * @return int|null
+     * @deprecated Display-only UI hint, NOT authorization — surfaced as the
+     *   GraphQL `effective_role` field for the client, and it lossily collapses
+     *   any parent-publication role to review_coordinator. Slated for
+     *   replacement by per-entity capability flags. For authorization use
+     *   {@see \App\Auth\ScopedAbilityResolver} / `$user->can()`, never this.
+     * @return string|null
      */
-    public function getEffectiveRole(): ?int
+    public function getEffectiveRole(): ?string
     {
         /** @var \App\Models\User $user */
         $user = Auth::user();
@@ -372,9 +390,39 @@ class Submission extends Model implements Auditable
         $publicationRole = $this->publication->getEffectiveRole();
 
         if ($publicationRole !== null) {
-            return (int)Role::REVIEW_COORDINATOR_ROLE_ID;
+            return ScopedRole::ReviewCoordinator->toSlug();
         }
 
         return $this->getMyRole();
+    }
+
+    /**
+     * The authenticated viewer's SCOPED abilities on this submission as a map of
+     * snake_case ability name => bool, e.g. ['view' => true, 'update' => false].
+     *
+     * Resolved through {@see ScopedAbilityResolver} — the same engine the
+     * policies use — so these client-facing flags can never drift from real
+     * authorization. The resolver evaluates each ability against THIS submission
+     * (and inherits the parent publication's admin roles), so conditional grants
+     * such as draft-only status changes are reflected correctly. The keys are
+     * derived from {@see SubmissionAbility} cases. Guests get all-false.
+     *
+     * UI hints only: the server still enforces every mutation with @can.
+     *
+     * @return array<string, bool>
+     */
+    public function abilities(): array
+    {
+        /** @var \App\Models\User|null $user */
+        $user = Auth::user();
+        $resolver = app(ScopedAbilityResolver::class);
+
+        $abilities = [];
+        foreach (SubmissionAbility::cases() as $ability) {
+            $abilities[Str::snake($ability->name)] =
+                $user !== null && $resolver->allows($user, $ability, $this);
+        }
+
+        return $abilities;
     }
 }

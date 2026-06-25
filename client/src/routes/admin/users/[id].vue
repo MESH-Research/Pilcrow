@@ -10,7 +10,10 @@
         </q-card-section>
         <q-card-section class="col">
           <div class="text-h5">{{ user.name || user.username }}</div>
-          <div class="text-subtitle1 text-grey-7 q-mb-sm">
+          <div
+            :class="darkModeStatus ? 'text-grey-5' : 'text-grey-8'"
+            class="text-subtitle1 q-mb-sm"
+          >
             @{{ user.username }}
           </div>
           <div class="row q-col-gutter-x-lg q-col-gutter-y-sm">
@@ -19,11 +22,13 @@
               icon="email"
               :label="$t('admin.users.details.email')"
               :value="user.email"
+              :dark-mode-status="darkModeStatus"
             />
             <FieldDisplay
               class="col-sm-6 col-xs-12"
               icon="verified"
               :label="$t('admin.users.details.verified_at')"
+              :dark-mode-status="darkModeStatus"
             >
               <span v-if="user.email_verified_at">
                 {{ formatDateTime(user.email_verified_at) }}
@@ -36,6 +41,7 @@
               class="col-sm-6 col-xs-12"
               icon="key"
               :label="$t('admin.users.details.role')"
+              :dark-mode-status="darkModeStatus"
             >
               <span v-if="isAdmin">
                 {{ $t("admin.users.details.isAdmin") }}
@@ -47,11 +53,13 @@
               icon="calendar_today"
               :label="$t('admin.users.details.created_at')"
               :value="formatDateTime(user.created_at)"
+              :dark-mode-status="darkModeStatus"
             />
             <FieldDisplay
               class="col-sm-6 col-xs-12"
               icon="science"
               :label="$t('admin.users.details.beta')"
+              :dark-mode-status="darkModeStatus"
             >
               <q-toggle
                 :model-value="user.beta"
@@ -70,6 +78,7 @@
               class="col-xs-12"
               icon="o_science"
               :label="$t('admin.users.details.feature_opt_ins')"
+              :dark-mode-status="darkModeStatus"
             >
               <div
                 v-if="optedInFeatures.length"
@@ -87,7 +96,7 @@
               </div>
               <span
                 v-else
-                class="text-grey-5"
+                :class="darkModeStatus ? 'text-grey-5' : 'text-grey-8'"
                 data-cy="user_no_feature_opt_ins"
               >
                 {{ $t("admin.users.details.no_feature_opt_ins") }}
@@ -197,7 +206,7 @@ import { useRoute } from "vue-router"
 import { DateTime } from "luxon"
 import { useI18n } from "vue-i18n"
 import { setCrumbLabel } from "src/use/breadcrumbs"
-import { useFeedbackMessages } from "src/use/guiElements"
+import { useFeedbackMessages, useDarkMode } from "src/use/guiElements"
 import { useCurrentUser } from "src/use/user"
 
 definePage({
@@ -212,6 +221,7 @@ definePage({
   }
 })
 
+const { darkModeStatus } = useDarkMode()
 const route = useRoute("admin:user:id")
 const id = computed(() => route.params.id as string)
 
@@ -225,7 +235,7 @@ const isAdmin = computed(() =>
 )
 
 const { can } = useCurrentUser()
-const canModerateAvatars = computed(() => can("moderate avatars"))
+const canModerateAvatars = computed(() => can("avatar_moderate"))
 
 const { t, te } = useI18n()
 

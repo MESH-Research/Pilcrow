@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
+use App\Auth\Roles\ScopedRole;
 use App\Models\Publication;
-use App\Models\Role;
 use App\Models\Submission;
 use App\Models\SubmissionAssignment;
 use App\Models\User;
@@ -37,8 +37,13 @@ class SubmissionAssignmentTest extends TestCase
         $this->assertTrue($assignment->user->is($user));
         $this->assertTrue($assignment->submission->is($submission));
         $this->assertEquals(
-            (int)Role::REVIEWER_ROLE_ID,
-            (int)$assignment->role->id
+            ScopedRole::Reviewer->toSlug(),
+            $assignment->role
+        );
+        // role_id is dual-written for rollback safety.
+        $this->assertEquals(
+            ScopedRole::Reviewer->legacyId(),
+            (int)$assignment->role_id
         );
     }
 

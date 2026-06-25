@@ -3,13 +3,13 @@ declare(strict_types=1);
 
 namespace App\GraphQL\Mutations;
 
-use App\Models\Permission;
+use App\Enums\ModerationFlag;
 use App\Models\User;
 
 class SetUserAvatarUploadBlocked
 {
     /**
-     * Grant or revoke the avatar-upload block on a user.
+     * Set or clear the avatar-upload block on a user.
      *
      * @param array{userId: string, blocked: bool} $args
      */
@@ -18,12 +18,12 @@ class SetUserAvatarUploadBlocked
         /** @var \App\Models\User $user */
         $user = User::findOrFail($args['userId']);
 
-        // "Blocking" means revoking the default UPLOAD_AVATAR permission;
-        // "unblocking" grants it back directly on the user.
+        // "Blocking" sets the avatar-upload-blocked moderation flag;
+        // "unblocking" clears it. Uploading is allowed by default.
         if ($args['blocked']) {
-            $user->revokePermissionTo(Permission::UPLOAD_AVATAR);
+            $user->setModerationFlag(ModerationFlag::AvatarUploadBlocked);
         } else {
-            $user->givePermissionTo(Permission::UPLOAD_AVATAR);
+            $user->clearModerationFlag(ModerationFlag::AvatarUploadBlocked);
         }
 
         return $user->refresh();

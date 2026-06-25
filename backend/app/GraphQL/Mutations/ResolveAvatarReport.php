@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\GraphQL\Mutations;
 
+use App\Enums\ModerationFlag;
 use App\Models\AvatarReport;
-use App\Models\Permission;
 use App\Models\User;
 use GraphQL\Error\Error;
 use Illuminate\Support\Carbon;
@@ -58,7 +58,7 @@ class ResolveAvatarReport
             $report->user->clearMediaCollection(User::AVATAR_COLLECTION);
 
             if (!empty($args['blockFutureUploads'])) {
-                $report->user->revokePermissionTo(Permission::UPLOAD_AVATAR);
+                $report->user->setModerationFlag(ModerationFlag::AvatarUploadBlocked);
             }
 
             // Close out other pending reports against the same user — the

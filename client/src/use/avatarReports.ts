@@ -12,13 +12,13 @@ import { useCurrentUser } from "./user"
  * AdminDashboard.vue (where codegen can see it); we just import the
  * generated Document here.
  *
- * Query is skipped when the current user doesn't have
- * `moderate avatars` — the server would reject it anyway, and there
- * is no badge to render for non-moderators.
+ * Query is skipped when the current user doesn't have the
+ * `avatar_moderate` ability — the server would reject it anyway, and
+ * there is no badge to render for non-moderators.
  */
 export function useAvatarReportsPendingCount() {
   const { can } = useCurrentUser()
-  const canModerate = computed(() => can("moderate avatars"))
+  const canModerate = computed(() => can("avatar_moderate"))
 
   const { result, refetch } = useQuery(
     GetPendingAvatarReportCountDocument,

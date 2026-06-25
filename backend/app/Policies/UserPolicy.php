@@ -3,11 +3,21 @@ declare(strict_types=1);
 
 namespace App\Policies;
 
-use App\Models\Permission;
-use App\Models\Role;
+use App\Auth\Abilities\GlobalAbility;
+use App\Auth\Roles\ScopedRole;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
+/**
+ * User authorization.
+ *
+ * The user-management abilities here are GLOBAL, not scoped — no publication or
+ * submission is involved, so they go straight to Bouncer via $user->can() and
+ * never touch the ScopedAbilityResolver. They are application-administrator-only
+ * today (via Bouncer's everything() grant) and could be granted to other roles
+ * at the Bouncer layer later. viewEmail is a relationship predicate (see below),
+ * resolved in-policy.
+ */
 class UserPolicy
 {
     use HandlesAuthorization;
@@ -18,7 +28,7 @@ class UserPolicy
      */
     public function viewAny(User $viewer): bool
     {
-        return $viewer->hasRole(Role::APPLICATION_ADMINISTRATOR);
+        return $viewer->can(GlobalAbility::UserViewAny);
     }
 
     /**
@@ -27,7 +37,7 @@ class UserPolicy
      */
     public function view(User $viewer, User $_target): bool
     {
-        return $viewer->hasRole(Role::APPLICATION_ADMINISTRATOR);
+        return $viewer->can(GlobalAbility::UserView);
     }
 
     /**
@@ -40,7 +50,7 @@ class UserPolicy
      */
     public function manageBeta(User $viewer, User $_target): bool
     {
-        return $viewer->hasRole(Role::APPLICATION_ADMINISTRATOR);
+        return $viewer->can(GlobalAbility::UserManageBeta);
     }
 
     /**
@@ -56,14 +66,9 @@ class UserPolicy
         if ($user->id === $model->id) {
             return true;
         }
-        //User has global permission to update users
-        if ($user->can(Permission::UPDATE_USERS)) {
-            return true;
-        }
 
         // TODO: Check if user can update user within own publication
-        // No explicit permission so return false.
-        return false;
+        return $user->can(GlobalAbility::UserUpdate);
     }
 
     /**
@@ -81,7 +86,7 @@ class UserPolicy
             return true;
         }
 
-        if ($viewer->hasRole(Role::APPLICATION_ADMINISTRATOR)) {
+        if ($viewer->isApplicationAdministrator()) {
             return true;
         }
 
@@ -92,9 +97,9 @@ class UserPolicy
             $viewer->setRelation(
                 'privilegedPublicationIds',
                 $viewer->publications()
-                    ->wherePivotIn('role_id', [
-                        Role::PUBLICATION_ADMINISTRATOR_ROLE_ID,
-                        Role::EDITOR_ROLE_ID,
+                    ->wherePivotIn('role', [
+                        ScopedRole::PublicationAdmin->toSlug(),
+                        ScopedRole::Editor->toSlug(),
                     ])
                     ->pluck('publications.id')
             );

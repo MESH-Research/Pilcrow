@@ -308,6 +308,12 @@ body.body--dark
     .q-table--bordered
         border-color: rgba(255, 255, 255, 0.28)
 
+    .q-field__control
+        color: $dark-primary
+
+    .q-field__control.text-negative
+        color: $dark-negative !important
+
 // Override Quasar's z-index: -1 on the dialog backdrop. The negative
 // z-index trips an axe-core color-contrast false-positive: descendants
 // of a stacking context with negative z-index get blended on top of

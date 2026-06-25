@@ -35,6 +35,14 @@ function userResponse(overrides: Partial<CurrentUser> = {}): {
         roles: [{ name: "Submitter" }],
         beta: false,
         feature_opt_ins: [],
+        abilities: {
+          publication_create: false,
+          user_view: false,
+          user_view_any: false,
+          user_update: false,
+          user_manage_beta: false,
+          avatar_moderate: false
+        },
         ...overrides
       }
     }

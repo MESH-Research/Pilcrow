@@ -2,7 +2,6 @@
 #import avatar_report.graphql
 #import feature.graphql
 #import notification.graphql
-#import permission.graphql
 #import profile_metadata.graphql
 #import publication.graphql
 #import social_media.graphql
@@ -42,9 +41,6 @@ type Query {
 
     "Return pre-defined user roles in the application"
     role(id: ID @eq): Role @find
-
-    "Return a permission by ID"
-    permission(id: ID @eq): Permission @find
 
     versionInfo: VersionInfo
 }

@@ -62,7 +62,15 @@ describe("Settings page", () => {
           email_verified_at: null,
           roles: [],
           beta: false,
-          feature_opt_ins: []
+          feature_opt_ins: [],
+          abilities: {
+            publication_create: false,
+            user_view: false,
+            user_view_any: false,
+            user_update: false,
+            user_manage_beta: false,
+            avatar_moderate: false
+          }
         }
       }
     }

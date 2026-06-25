@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace Tests\Api;
 
+use App\Enums\ModerationFlag;
 use App\Models\AvatarReport;
-use App\Models\Permission;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
@@ -344,8 +344,8 @@ class AvatarReportMutationTest extends ApiTestCase
         ', ['id' => $report->id, 'block' => true])
             ->assertJsonPath('data.resolveAvatarReportAndRemoveAvatar.status', 'REMOVED');
 
-        $this->assertFalse(
-            $target->fresh()->hasPermissionTo(Permission::UPLOAD_AVATAR)
+        $this->assertTrue(
+            $target->fresh()->hasModerationFlag(ModerationFlag::AvatarUploadBlocked)
         );
     }
 
@@ -364,8 +364,8 @@ class AvatarReportMutationTest extends ApiTestCase
         ', ['id' => $target->id, 'blocked' => true])
             ->assertJsonPath('data.setUserAvatarUploadBlocked.avatar_upload_blocked', true);
 
-        $this->assertFalse(
-            $target->fresh()->hasPermissionTo(Permission::UPLOAD_AVATAR)
+        $this->assertTrue(
+            $target->fresh()->hasModerationFlag(ModerationFlag::AvatarUploadBlocked)
         );
 
         $this->graphQL('
@@ -378,8 +378,8 @@ class AvatarReportMutationTest extends ApiTestCase
         ', ['id' => $target->id, 'blocked' => false])
             ->assertJsonPath('data.setUserAvatarUploadBlocked.avatar_upload_blocked', false);
 
-        $this->assertTrue(
-            $target->fresh()->hasPermissionTo(Permission::UPLOAD_AVATAR)
+        $this->assertFalse(
+            $target->fresh()->hasModerationFlag(ModerationFlag::AvatarUploadBlocked)
         );
     }
 
@@ -433,9 +433,9 @@ class AvatarReportMutationTest extends ApiTestCase
         ', ['id' => $target->id]);
 
         $response->assertJsonPath('data.setUserAvatarUploadBlocked', null);
-        $this->assertTrue(
-            $target->fresh()->hasPermissionTo(Permission::UPLOAD_AVATAR),
-            'Target should still have the default upload permission'
+        $this->assertFalse(
+            $target->fresh()->hasModerationFlag(ModerationFlag::AvatarUploadBlocked),
+            'Target should not be blocked by an unauthorized request'
         );
     }
 }

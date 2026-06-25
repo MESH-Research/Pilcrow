@@ -4,6 +4,13 @@
         "config:recommended"
     ],
     /**
+     * Never open PRs automatically. Renovate still scans and lists available
+     * updates on the dependency dashboard issue, but every update requires
+     * manual approval (tick the box on the dashboard) before a PR is created.
+     * Keeps dependency visibility without the open-PR noise.
+     **/
+    "dependencyDashboardApproval": true,
+    /**
      * Recreate PR (close+reopen) when target version bumps so PR age reflects
      * the latest version, not the original branch creation date.
      **/
@@ -131,8 +138,46 @@
         {
             "matchManagers": ["github-actions"],
             "commitMessagePrefix": "ci(gha/deps):"
+        },
+        /**
+         * High-impact core framework deps bypass the dashboard approval gate so
+         * they raise PRs directly (no dashboard-watching). Stability windows from
+         * the rules above still apply. Un-drafted and tagged to stand out.
+         * Adjust this package list as the critical surface changes.
+         **/
+        {
+            "description": "High-impact core deps surface as PRs without dashboard approval",
+            "matchPackageNames": [
+                "vue",
+                "vue-router",
+                "quasar",
+                "@quasar/**",
+                "typescript",
+                "laravel/framework",
+                "laravel/sanctum",
+                "php",
+                "nuwave/lighthouse"
+            ],
+            "dependencyDashboardApproval": false,
+            "draftPR": false,
+            "addLabels": ["high-impact"]
         }
     ],
+    /**
+     * Security advisories bypass the dashboard approval gate above. A dep with a
+     * published vulnerability raises a PR immediately (ignores minimumReleaseAge
+     * and dependencyDashboardApproval) so high-impact fixes surface without
+     * watching the dashboard. Un-drafted and tagged so they stand out.
+     **/
+    "vulnerabilityAlerts": {
+        "draftPR": false,
+        "labels": ["security", "dependencies"]
+    },
+    /**
+     * Broaden advisory coverage beyond GitHub's database using the OSV database
+     * (catches more ecosystems / advisories).
+     **/
+    "osvVulnerabilityAlerts": true,
     "assignees": [
         "wreality"
     ],

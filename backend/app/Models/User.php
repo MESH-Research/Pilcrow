@@ -3,7 +3,11 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Auth\Abilities\GlobalAbility;
+use App\Auth\Roles\GlobalRole;
+use App\Auth\Roles\ScopedRole;
 use App\Builders\UserBuilder;
+use App\Enums\ModerationFlag;
 use Carbon\Carbon;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -13,21 +17,22 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Laravel\Sanctum\HasApiTokens;
 use Laravel\Scout\Attributes\SearchUsingPrefix;
 use Laravel\Scout\Searchable;
+use Silber\Bouncer\Database\HasRolesAndAbilities;
 use Spatie\Image\Enums\Fit;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
-use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements MustVerifyEmail, HasMedia
 {
     use HasFactory;
     use Notifiable;
     use HasApiTokens;
-    use HasRoles;
+    use HasRolesAndAbilities;
     use Searchable;
     use InteractsWithMedia;
 
@@ -68,6 +73,7 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
         'profile_metadata' => 'array',
         'beta' => 'boolean',
         'feature_opt_ins' => 'array',
+        'moderation_flags' => 'array',
     ];
 
     /**
@@ -99,15 +105,6 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
         static::updating(function ($model) {
             if ($model->isDirty('email')) {
                 $model->email_verified_at = null;
-            }
-        });
-
-        // Grant the default `upload avatar` permission directly so that
-        // newly-registered users without any role yet can still upload.
-        // Admins revoke this to block individual users.
-        static::created(function ($model) {
-            if (Permission::where('name', Permission::UPLOAD_AVATAR)->exists()) {
-                $model->givePermissionTo(Permission::UPLOAD_AVATAR);
             }
         });
     }
@@ -232,7 +229,7 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
     {
         return $this->belongsToMany(Submission::class)
             ->withTimestamps()
-            ->withPivot(['id', 'user_id', 'role_id', 'submission_id']);
+            ->withPivot(['id', 'user_id', 'role', 'submission_id']);
     }
 
     /**
@@ -244,7 +241,7 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
     {
         return $this->belongsToMany(Publication::class)
             ->withTimestamps()
-            ->withPivot('role_id');
+            ->withPivot('role');
     }
 
     /**
@@ -278,73 +275,74 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
     }
 
     /**
-     * Return the highest privileged role ID for the user in the following order:
-     * 1. Application Administrator
-     * 2. Publication Administrator
-     * 3. Editor
-     * 4. Review Coordinator
-     * 5. Reviewer
-     * 6. Submitter
+     * Whether the user holds the global application-administrator role.
+     *
+     * @return bool
+     */
+    public function isApplicationAdministrator(): bool
+    {
+        return $this->isA(GlobalRole::ApplicationAdministrator->toSlug());
+    }
+
+    /**
+     * Assign a global role to the user (Bouncer assignment by slug).
+     *
+     * @param \App\Auth\Roles\GlobalRole $role
+     */
+    public function assignRole(GlobalRole $role): self
+    {
+        $this->assign($role->toSlug());
+
+        return $this;
+    }
+
+    /**
+     * Return the highest privileged role rank for the user (lower ranks higher:
+     * application_admin=1 … submitter=6). A UI hint, not authorization.
      *
      * @return int|null
      */
     public function getHighestPrivilegedRole(): ?int
     {
-        if ($this->hasRole(Role::APPLICATION_ADMINISTRATOR)) {
-            return (int)Role::APPLICATION_ADMINISTRATOR_ROLE_ID;
-        }
-        if ($this->publications->isNotEmpty()) {
-            return PublicationUser::where('user_id', $this->id)->min('role_id');
-        }
-        if ($this->submissions->isNotEmpty()) {
-            return SubmissionAssignment::where('user_id', $this->id)->min('role_id');
+        if ($this->isApplicationAdministrator()) {
+            return GlobalRole::ApplicationAdministrator->rank();
         }
 
-        return null;
+        $ranks = [];
+        $slugs = PublicationUser::where('user_id', $this->id)->pluck('role')
+            ->merge(SubmissionAssignment::where('user_id', $this->id)->pluck('role'));
+        foreach ($slugs as $slug) {
+            $role = $slug === null ? null : ScopedRole::tryFrom((string)$slug);
+            if ($role !== null) {
+                $ranks[] = $role->rank();
+            }
+        }
+
+        return $ranks === [] ? null : min($ranks);
     }
 
     /**
-     * Check if user has a role for a publication
+     * This user's GLOBAL (application-wide) abilities as a map of snake_case
+     * ability name => bool, e.g. ['publication_create' => true, ...].
      *
-     * @param array|int $role Role id to check, use * to check for any role.
-     * @param int $publicationId Publication to check for role on
-     * @return bool
-     */
-    public function hasPublicationRole($role, $publicationId)
-    {
-        $publications = $this->publications()->wherePivot('publication_id', $publicationId);
-
-        if ($role === '*') {
-            return $publications->exists();
-        }
-
-        if (is_array($role)) {
-            return $publications->wherePivotIn('role_id', $role)->exists();
-        } else {
-            return $publications->wherePivot('role_id', $role)->exists();
-        }
-    }
-
-    /**
-     * Check if user has given submission role
+     * Resolved through Bouncer ($this->can) — the same engine the policies use —
+     * so these client-facing flags can never drift from real authorization. The
+     * keys are derived from {@see GlobalAbility} cases, so adding an ability case
+     * (plus its schema field) is all it takes to expose it.
      *
-     * @param array|int $role Role id to check
-     * @param int $submissionId Submission to check for role on
-     * @return bool
+     * Fetched via `currentUser` this is the viewer's own capabilities. These are
+     * UI hints only: the server still enforces every mutation with @can.
+     *
+     * @return array<string, bool>
      */
-    public function hasSubmissionRole($role, $submissionId)
+    public function globalAbilities(): array
     {
-        $submissions = $this->submissions()->wherePivot('submission_id', $submissionId);
-
-        if ($role === '*') {
-            return $submissions->exists();
+        $abilities = [];
+        foreach (GlobalAbility::cases() as $ability) {
+            $abilities[Str::snake($ability->name)] = $this->can($ability);
         }
 
-        if (is_array($role)) {
-            return $submissions->wherePivotIn('role_id', $role)->exists();
-        } else {
-            return $submissions->wherePivot('role_id', null, $role)->exists();
-        }
+        return $abilities;
     }
 
     /**
@@ -535,12 +533,62 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
     }
 
     /**
-     * Resolve the GraphQL `User.avatar_upload_blocked` field. True when the
-     * user lacks the UPLOAD_AVATAR permission — either a moderator revoked
-     * it, or (defensive) it was never granted.
+     * Resolve the GraphQL `User.avatar_upload_blocked` field. True when a
+     * moderator has set the avatar-upload-blocked moderation flag on this
+     * user. Uploading is allowed by default; the flag is the exception.
      */
     public function getAvatarUploadBlocked(): bool
     {
-        return !$this->hasPermissionTo(Permission::UPLOAD_AVATAR);
+        return $this->hasModerationFlag(ModerationFlag::AvatarUploadBlocked);
+    }
+
+    /**
+     * Per-user moderation state, stored as a flat array of active flag
+     * keys (mirrors feature_opt_ins). Presence of a key means the flag is
+     * set; absence means it is not. This is deliberately NOT a permission:
+     * it is moderation data on the user, kept out of the Bouncer ability
+     * graph so authorization and moderation state never get confused.
+     *
+     * @param \App\Enums\ModerationFlag $flag
+     * @return bool
+     */
+    public function hasModerationFlag(ModerationFlag $flag): bool
+    {
+        return in_array($flag->value, $this->moderation_flags ?? [], true);
+    }
+
+    /**
+     * Set a moderation flag on the user. Idempotent. Persists immediately.
+     *
+     * @param \App\Enums\ModerationFlag $flag
+     * @return void
+     */
+    public function setModerationFlag(ModerationFlag $flag): void
+    {
+        $flags = $this->moderation_flags ?? [];
+        if (!in_array($flag->value, $flags, true)) {
+            $flags[] = $flag->value;
+            $this->moderation_flags = array_values($flags);
+            $this->save();
+        }
+    }
+
+    /**
+     * Clear a moderation flag from the user. Idempotent. Persists immediately.
+     *
+     * @param \App\Enums\ModerationFlag $flag
+     * @return void
+     */
+    public function clearModerationFlag(ModerationFlag $flag): void
+    {
+        $flags = $this->moderation_flags ?? [];
+        $filtered = array_values(array_filter(
+            $flags,
+            fn($value) => $value !== $flag->value
+        ));
+        if ($filtered !== $flags) {
+            $this->moderation_flags = $filtered;
+            $this->save();
+        }
     }
 }

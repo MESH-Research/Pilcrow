@@ -56,7 +56,15 @@ describe("useCurrentUser composable", () => {
           highest_privileged_role: UserRoles.application_admin,
           roles: [{ name: "tester" }],
           beta: false,
-          feature_opt_ins: []
+          feature_opt_ins: [],
+          abilities: {
+            publication_create: false,
+            user_view: false,
+            user_view_any: false,
+            user_update: false,
+            user_manage_beta: false,
+            avatar_moderate: false
+          }
         }
       }
     }

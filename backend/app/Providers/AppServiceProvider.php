@@ -10,6 +10,7 @@ use App\Listeners\AddPaginatorInterface;
 use Nuwave\Lighthouse\Events\ManipulateAST;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Cache;
+use Silber\Bouncer\BouncerFacade as Bouncer;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -68,7 +69,21 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        // Bouncer's default table names (`roles`, `permissions`) collide with the
+        // legacy spatie tables. The cutover is expand-only — the spatie package
+        // is removed but its tables are retained (dropped in a later contract
+        // PR) — so those names still exist. Namespace Bouncer's tables as
+        // bouncer_* so they never clash.
+        Bouncer::tables([
+            'abilities' => 'bouncer_abilities',
+            'permissions' => 'bouncer_permissions',
+            'roles' => 'bouncer_roles',
+            'assigned_roles' => 'bouncer_assigned_roles',
+        ]);
+
+        // Bouncer owns the role model (Silber\Bouncer\Database\Role) and its
+        // rows / ids; we do not subclass it. Role identity in app code is just
+        // the slug constant in App\Auth\Roles\GlobalRole.
     }
 
     /**

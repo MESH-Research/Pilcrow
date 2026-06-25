@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
-use App\Models\Role;
+use App\Auth\Roles\GlobalRole;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -27,7 +27,7 @@ class UserSeeder extends Seeder
             'name' => 'Application Administrator',
             'password' => Hash::make('adminPassword!@#'),
             'profile_metadata' => $orcid('0000-0002-1825-0097'),
-        ])->assignRole(Role::APPLICATION_ADMINISTRATOR);
+        ])->assignRole(GlobalRole::ApplicationAdministrator);
 
         User::factory()->create([
             'username' => 'publicationAdministrator',

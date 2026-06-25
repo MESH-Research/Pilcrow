@@ -13,8 +13,10 @@ vi.mock("vue-router", () => ({
 }))
 
 const mockNewStatus = vi.fn()
+const mockDarkMode = vi.fn()
 vi.mock("src/use/guiElements", () => ({
-  useFeedbackMessages: () => ({ newStatusMessage: mockNewStatus })
+  useFeedbackMessages: () => ({ newStatusMessage: mockNewStatus }),
+  useDarkMode: () => ({ darkModeStatus: mockDarkMode })
 }))
 
 installQuasarPlugin()

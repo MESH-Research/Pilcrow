@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Tests\Api;
 
-use App\Models\Permission;
+use App\Enums\ModerationFlag;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
@@ -195,7 +195,7 @@ class UserAvatarMutationTest extends ApiTestCase
     {
         /** @var User $user */
         $user = User::factory()->create();
-        $user->revokePermissionTo(Permission::UPLOAD_AVATAR);
+        $user->setModerationFlag(ModerationFlag::AvatarUploadBlocked);
         $this->actingAs($user);
 
         $file = UploadedFile::fake()->image('avatar.png', 400, 400);
@@ -222,7 +222,7 @@ class UserAvatarMutationTest extends ApiTestCase
         );
         $response->assertJsonPath('data.currentUser.avatar_upload_blocked', false);
 
-        $user->revokePermissionTo(Permission::UPLOAD_AVATAR);
+        $user->setModerationFlag(ModerationFlag::AvatarUploadBlocked);
 
         $response = $this->graphQL(
             '{ currentUser { id avatar_upload_blocked } }'

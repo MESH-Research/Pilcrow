@@ -43,9 +43,13 @@ export const _CURRENT_USER_FIELDS = gql`
     roles {
       name
     }
-    permissions {
-      id
-      name
+    abilities {
+      publication_create
+      user_view
+      user_view_any
+      user_update
+      user_manage_beta
+      avatar_moderate
     }
     highest_privileged_role
     beta
