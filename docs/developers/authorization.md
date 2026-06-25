@@ -200,9 +200,7 @@ Because both the resolver and the builders read `rolesGranting()`, item checks
 and list scoping cannot diverge — `ScopedAbilityListParityTest` asserts the
 listed set equals the per-item resolver verdict. List-filtering is limited to
 **unconditional** abilities: a `Predicate` has no SQL form, so `rolesGranting()`
-throws on a conditional grant rather than filter incorrectly (the conditions
-that are list-filterable in SQL are a later, Tier 2 addition giving `Predicate` a
-`scope()` form).
+throws on a conditional grant rather than filter incorrectly.
 
 ## Policies
 
@@ -315,10 +313,11 @@ $publication->editors()->attach($user);                       // scoped (pivot)
 $submission->users()->attach($user->id, ['role' => ScopedRole::Reviewer->toSlug()]);
 ```
 
-**In tests:** the base `Tests\TestCase` seeds `AbacSeeder` after each database
-refresh, so the app-admin role row and its grant are present. Scoped ability
-resolution needs no seeding — it reads the code matrix. Use `beAppAdmin()` and
-the `attachTo*` helpers to set up actors.
+**In tests:** the app-admin role row and its grant are created by the
+`seed_bouncer_application_admin_role` migration when the test database is built,
+so they are present without per-test seeding. Scoped ability resolution needs no
+seeding — it reads the code matrix. Use `beAppAdmin()` and the `attachTo*`
+helpers to set up actors.
 
 ## History
 

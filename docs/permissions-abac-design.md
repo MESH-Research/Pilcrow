@@ -1,37 +1,16 @@
-# Permissions revamp: RBAC → ABAC (Bouncer)
+# Permissions: RBAC → ABAC (Bouncer)
 
-Status: WIP design. Tracks the migration off global Spatie RBAC toward
-attribute-based access control with publication- and submission-scoped
-authorization.
+Design rationale for Pilcrow's authorization model. The developer-facing
+reference — how the pieces fit and how to use them — is
+[developers/authorization.md](developers/authorization.md).
 
 ## Why
 
-Current state (see audit below) uses `spatie/laravel-permission` but only for
-one genuinely global role (Application Administrator). Every scoped role
-(publication/submission) is hand-rolled on top of pivot tables, and every
-capability is a hardcoded role-id list inside policy PHP. Adding a capability
-means editing a policy and redeploying. It is neither data-driven nor
-expandable — the RBAC ceiling.
-
-## Audit of the current system
-
-- `spatie/laravel-permission ^7.0`, `teams => false`. Permissions layer
-  unused (`hasPermissionTo`/`givePermissionTo` = 0 call sites). Role-assignment
-  API unused (`assignRole`/`syncRoles` = 0 except the one global role).
-- 6 roles in one flat table across three scopes:
-  - Application: Application Administrator (id 1)
-  - Publication: Publication Administrator (2), Editor (3)
-  - Submission: Review Coordinator (4), Reviewer (5), Submitter (6)
-- All 12 `hasRole()` calls check only `APPLICATION_ADMINISTRATOR`.
-- Scoped authorization is custom: pivots `publication_user`
-  (`PublicationAssignment`) and `submission_user` (`SubmissionAssignment`),
-  each with `role_id`, checked via `User::hasPublicationRole()` /
-  `hasSubmissionRole()` with a magic `'*'` (any-role) and role-id arrays.
-- Entry point: Lighthouse `@can` (16×) → Laravel Policies
-  (Publication/Submission/User). Policies are pure role-presence checks.
-- Latent bug: `User::hasSubmissionRole()` single-int branch calls
-  `wherePivot('role_id', null, $role)` (wrong arg shape). Dead today — all
-  callers pass arrays or `'*'`.
+Authorization previously used `spatie/laravel-permission` for a single genuinely
+global role (Application Administrator), while every scoped role
+(publication/submission) was hand-rolled on pivot tables and every capability was
+a hardcoded role-id list inside policy PHP. Adding a capability meant editing a
+policy and redeploying — neither data-driven nor expandable, the RBAC ceiling.
 
 ## Decision: hybrid scoping
 
@@ -42,7 +21,7 @@ Native scopes fight all three. So:
 
 | Layer | Owns | Where |
 | --- | --- | --- |
-| Role assignment (scope) | who is Editor of Pub X / Reviewer of Sub Y | pivots (unchanged) |
+| Role assignment (scope) | who is Editor of Pub X / Reviewer of Sub Y | pivots |
 | Ability map (RBAC core) | role → granted abilities | code (`App\Auth\Roles\ScopedRole` enum: each case returns its `Grant`s) |
 | Attribute conditions | state / ownership / relationship predicates | Policy guards (thin) |
 
@@ -88,41 +67,39 @@ case if the ability is new). Live on deploy; no seed, no migration.
 - `submission.update-status` for submitter → only while `DRAFT`.
 - `submission.create` → `publication.is_accepting_submissions`.
 - comment update/delete → `created_by === user.id`.
-- `submission.invite` → current `getEffectiveRole()` behavior (flagged to
-  simplify during migration).
+- `submission.invite` → `getEffectiveRole()` behavior.
 - `publication.view` → `is_publicly_visible` short-circuit (no auth needed).
 
 ## Data model
 
-- Add Bouncer tables via its published migration, namespaced `bouncer_*`
-  (`bouncer_abilities`, `bouncer_permissions`, `bouncer_roles`,
-  `bouncer_assigned_roles`) so they never clash with the retained legacy spatie
-  `roles` / `permissions` tables (the cutover is expand-only; see below).
-- Keep `publication_user` / `submission_user` pivots as the assignment source
-  of truth. The scoped roles and their ability map are code (`App\Auth\Roles\ScopedRole`,
+- Bouncer tables are namespaced `bouncer_*` (`bouncer_abilities`,
+  `bouncer_permissions`, `bouncer_roles`, `bouncer_assigned_roles`) so they never
+  clash with the retained legacy spatie `roles` / `permissions` tables (the
+  cutover is expand-only; see below).
+- `publication_user` / `submission_user` pivots are the assignment source of
+  truth. The scoped roles and their ability map are code (`App\Auth\Roles\ScopedRole`,
   a slug-backed enum) with no Bouncer rows. Bouncer holds only the **global**
   app-admin role row and its grant, using its own role model (we don't subclass
   it); app code names the global slug via the `App\Auth\Roles\GlobalRole` slug-backed
-  enum. Keeping scoped roles out of Bouncer means the global and scoped kinds
-  are never conflated.
+  enum. Keeping scoped roles out of Bouncer means the global and scoped kinds are
+  never conflated.
 - The app-admin Bouncer role + `everything()` grant are created by the
   `seed_bouncer_application_admin_role` **migration** (not just a seeder), which
-  also ports existing spatie application-administrators onto the Bouncer role —
-  so existing instances keep their admins across the cutover. `AbacSeeder` is the
+  also ports existing spatie application-administrators onto the Bouncer role — so
+  existing instances keep their admins across the cutover. `AbacSeeder` is the
   idempotent fresh-install/test equivalent.
-- This cutover is **expand-only**: the spatie tables are **not** dropped. They
-  are left intact (admins still present in both systems) so a revert by
-  redeploying the pre-slug code works without a snapshot — old code finds its
-  spatie app-admin rows and the retained, dual-written pivot `role_id`. Dropping
-  the spatie tables is deferred to a later **contract** PR (with the `role_id`
-  drop) once the cutover is proven in production.
+- The cutover is **expand-only**: the spatie tables are **not** dropped. They are
+  left intact (admins still present in both systems) so a revert by redeploying
+  the pre-slug code works without a snapshot — old code finds its spatie app-admin
+  rows and the retained, dual-written pivot `role_id`. Dropping the spatie tables
+  is deferred to a later **contract** PR (with the `role_id` drop).
 
-### Pivot storage: role slug column added, legacy role_id retained (frozen)
+### Pivot storage: role slug column added, legacy role_id retained
 
-The pivots now carry a human-readable `role` **slug** column — one vocabulary
-across storage, the ability matrix, and the API. The
-`add_role_slug_to_pivots` migration adds `role`, backfills it from the legacy
-`role_id` via the map below, and makes `role_id` nullable:
+The pivots carry a human-readable `role` **slug** column — one vocabulary across
+storage, the ability matrix, and the API. The `add_role_slug_to_pivots` migration
+adds `role`, backfills it from the legacy `role_id` via the map below, and makes
+`role_id` nullable:
 
 | role_id (legacy) | role (slug) |
 | --- | --- |
@@ -135,22 +112,18 @@ across storage, the ability matrix, and the API. The
 
 - `ScopedRole::tryFrom($slug)` is the **live** mapping `ScopedAbilityResolver`
   uses each request to turn the pivot `role` slug into a role case — `ScopedRole`
-  is a slug-backed enum whose backing value *is* the slug. (This lives on
-  `App\Auth\Roles\ScopedRole`, not the Bouncer `Role` model.)
+  is a slug-backed enum whose backing value *is* the slug.
 - GraphQL `@enum(value: …)` for `PublicationRole` / `SubmissionUserRoles` maps
   enum name → slug; the wire representation is the enum **name** (e.g. `editor`),
   so the client contract is untouched. `UserRoles` keeps integer values — it is
   the `highest_privileged_role` **rank** scale, not a stored identifier.
-- `highest_privileged_role` is the min rank (`GlobalRole::rank()` /
-  `ScopedRole::rank()`) the user holds — a display hint, not authz.
 
-**`role_id` retained and dual-written, not dropped:** the legacy integer column
-stays (FK to the spatie roles table dropped, column made nullable) as the
-recovery safety net. The role relations and invite mutations write `role` and
-`role_id` together (`ScopedRole::toSlug()` + `ScopedRole::legacyId()`), so a
-rollback to the pre-slug code finds valid `role_id` data on rows created after the
-deploy — not just on backfilled ones. Dropping `role_id` is a deliberately
-separate, later PR once the slug column is proven in production.
+**`role_id` retained and dual-written:** the legacy integer column stays (FK to
+the spatie roles table dropped, column made nullable) as the recovery safety net.
+The role relations and invite mutations write `role` and `role_id` together
+(`ScopedRole::toSlug()` + `ScopedRole::legacyId()`), so a rollback to the pre-slug
+code finds valid `role_id` data on rows created after the deploy — not just on
+backfilled ones.
 
 ## The bridge
 
@@ -163,94 +136,5 @@ $roles = $resolver->effectiveRoles($user, $submission);   // e.g. [ScopedRole::R
 return $this->allows($user, $ability, $submission);       // $role->allows(...) over its Grants
 ```
 
-Policy methods shrink to `bridge.allows(ability, entity) && <predicate>`. The
-`@can` directives and the 41 characterization tests are untouched.
-
-## Migration plan (each step keeps the characterization suite green)
-
-1. Install Bouncer, publish migration, add `HasRolesAndAbilities` to `User`
-   (coexists with Spatie — different tables).
-2. Create the global app-admin Bouncer role + grant via migration and port
-   existing admins; scoped role→ability resolution is code, nothing to seed.
-3. Build `ScopedAbilityResolver` + unit-test it against the matrix.
-4. Convert PublicationPolicy (3 methods) to the bridge. Run characterization
-   tests.
-5. Convert SubmissionPolicy, then UserPolicy.
-6. Delete `User::hasPublicationRole`/`hasSubmissionRole` (and the dead
-   single-int bug) once unreferenced.
-7. Retire the Spatie **package** — App Admin becomes a Bouncer global role; the
-   `spatie/laravel-permission` composer dependency is removed. The spatie
-   **tables** are left in place (expand-only); dropping them is a later contract
-   PR so this cutover stays revertible by code redeploy.
-
-## Test safety net
-
-`tests/Feature/PublicationPolicyTest.php` and
-`tests/Feature/SubmissionPolicyTest.php` (41 tests / 56 assertions) lock the
-current behavior, quirks included. They assert today's truth as a regression
-baseline, not ideal behavior; some quirks are flagged above as candidates to
-revisit during migration.
-
-## Where this lands, and the roadmap beyond it
-
-The system is deliberately **hybrid**, which is the best-practice shape for
-real-world authorization rather than a compromise:
-
-- **Global concerns** → RBAC on Bouncer (app-admin today; runtime-editable
-  global abilities like `publication.create` / `avatar.upload` next).
-- **Scoped concerns** → role + relationship (who is Editor of Pub X) resolved
-  from a code matrix, with **attribute conditions as data** on the grant.
-
-"Be more ABAC everywhere" is a non-goal — coarse access via roles/relationships
-is faster, more auditable, and easier to test; fine access via attribute
-predicates layers on top. The combined decision point is the PBAC (policy-based)
-ideal. What actually makes it *better* from here, in priority order:
-
-1. **Unify list-filtering with item-authorization (correctness — Tier 1 done).**
-   Query builders used to reimplement authorization as SQL, parallel to the
-   resolver/policies — a latent security bug (listing what you cannot view, or
-   vice versa). **Tier 1** closes the gap for unconditional abilities: the matrix
-   is inverted once (`ScopedRole::rolesGranting()` / `pivot()` /
-   `grantingSlugsFor()`), and `PublicationBuilder::whereCan()` /
-   `SubmissionBuilder::whereCan()` build the WHERE from it — the *same* source the
-   resolver reads, including the parent-publication inheritance and the app-admin
-   bypass. `visible()` now delegates to `whereCan()`, and a parity test
-   (`ScopedAbilityListParityTest`) asserts the listed set equals the
-   per-item resolver verdict, so the two cannot drift. Conditional abilities (a
-   predicate has no SQL form) throw rather than filter wrongly. **Remaining:**
-   Tier 2 — give `Predicate` a SQL form (`scope(Builder)`) so conditional grants
-   are list-filterable; Tier 3 — fold the remaining role-array filters
-   (`myRole` / `myRoleFilter`) and `managedPublicationSubmissions` fully onto
-   `whereCan`.
-
-2. **Conditions as data, not ability-name hacks (done, in this PR).** The old
-   `submission.update-status-draft` encoded a state condition into an ability
-   name and re-checked it in the policy. It is now a conditional grant on
-   `ScopedRole::Submitter` — `[SubmissionAbility::UpdateStatus,
-   SubmissionIsDraft::class]`, normalized to a `Grant` (a `ScopedAbility` plus an
-   optional `Predicate`, absolute when there is none) and evaluated by the
-   resolver. The policy method
-   is a uniform ability check. This is the concrete ABAC improvement and the
-   pattern for future state/ownership conditions. Abilities are typed enums
-   (`App\Auth\Abilities\SubmissionAbility` / `App\Auth\Abilities\PublicationAbility`, both
-   implementing the `App\Auth\Abilities\ScopedAbility` marker), so call sites are typo-proof
-   and the catalog is greppable.
-
-3. **Decision engines by ability type (done).** There is intentionally no single
-   front door: the ability's *type* selects the engine. `GlobalAbility` →
-   Bouncer (`$user->can()`, entity forwarded) at the call site; `ScopedAbility` →
-   `ScopedAbilityResolver` (code-owned role/grant map, app-admin role
-   short-circuit). The resolver's `allows()` is typed to `ScopedAbility`, so a
-   global ability can never enter it. What remains is folding the in-policy
-   attribute predicates and `@can` wiring behind a shared façade, plus decision
-   logging.
-
-4. **Explainability.** Decisions carry no trace today ("why allowed/denied").
-   A decision log would aid debugging and security review. Nice-to-have.
-
-**Non-goal for now:** a full ReBAC engine (Zanzibar / OpenFGA style). The one
-relationship traversal we have — submissions inheriting parent-publication admin
-roles — is hand-coded in `effectiveRoles` and adequate at one level. A
-relationship-graph engine earns its place only if relationships proliferate
-(teams, delegation, nested orgs, sharing). Named here as the escape hatch, not a
-near-term build.
+Policy methods are `allows(ability, entity) && <predicate>`; Lighthouse `@can`
+directives remain the entry point.
