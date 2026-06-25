@@ -4,7 +4,7 @@ import { CURRENT_USER, CURRENT_USER_SUBMISSIONS } from "src/graphql/queries"
 
 /**
  * Colocated query for the route guards' unassigned-access fallback. It selects
- * only the publication `view` flag the guards need, so it stays decoupled from
+ * only the submission ability flags the guards need, so it stays decoupled from
  * the page-level GET_SUBMISSION query and can't pull that operation's heavier
  * field set (or be perturbed by it).
  */
@@ -12,11 +12,9 @@ const GUARD_SUBMISSION_ACCESS = gql`
   query GuardSubmissionAccess($id: ID!) {
     submission(id: $id) {
       id
-      publication {
-        id
-        abilities {
-          view
-        }
+      abilities {
+        view
+        export
       }
     }
   }
@@ -24,10 +22,11 @@ const GUARD_SUBMISSION_ACCESS = gql`
 
 /**
  * Resolve a submission's authorization flags for the viewer. Used as the
- * fallback for users who are not directly assigned to a submission but may still
- * reach it through a publication role (publication admin / editor) or as the
- * application administrator — every such party holds the relevant scoped
- * ability, resolved by the server through the same engine as the policies.
+ * fallback for users not directly assigned to a submission (so it never appears
+ * in their submissions list) who may still reach it through a publication role:
+ * the server grants publication admins, editors and the application
+ * administrator the scoped `view`/`export` abilities directly on the submission,
+ * resolved through the same engine as the policies.
  *
  * Returns null when the submission cannot be fetched (no access), which the
  * callers treat as "denied".
@@ -95,11 +94,13 @@ export async function beforeEachRequiresSubmissionAccess(
       access = !!s.abilities?.view
     }
 
-    // Allow Publication Administrators, Editors and Application Administrators,
-    // who hold the publication's `view` ability even when unassigned.
-    if (!access) {
+    // Not in the viewer's submissions list: not directly assigned, so fall back
+    // to the submission's own `view` ability. The server grants it to
+    // publication admins, editors and the application administrator on the
+    // submissions they manage.
+    if (!access && !submission.length) {
       const fetched = await fetchSubmission(apolloClient, submissionId)
-      access = !!fetched?.publication?.abilities?.view
+      access = !!fetched?.abilities?.view
     }
 
     if (!access) {
@@ -248,12 +249,13 @@ export async function beforeEachRequiresViewAccess(apolloClient, to, _, next) {
       }
     }
 
-    // Allow Publication Administrators, Editors and Application Administrators
-    // (they hold the publication's `view` ability; reviewers do not, so this
-    // cannot re-grant a reviewer denied above).
-    if (!access) {
+    // Not in the viewer's submissions list: not directly assigned, so fall back
+    // to the submission's own `view` ability (held by publication admins,
+    // editors and the application administrator). This runs only for unassigned
+    // viewers, so it cannot re-grant an assigned reviewer denied above.
+    if (!access && !submission.length) {
       const fetched = await fetchSubmission(apolloClient, submissionId)
-      access = !!fetched?.publication?.abilities?.view
+      access = !!fetched?.abilities?.view
     }
 
     if (!access) {
@@ -316,12 +318,13 @@ export async function beforeEachRequiresReviewAccess(
       }
     }
 
-    // Allow Publication Administrators, Editors and Application Administrators
-    // (they hold the publication's `view` ability; reviewers do not, so this
-    // cannot re-grant a reviewer denied above).
-    if (!access) {
+    // Not in the viewer's submissions list: not directly assigned, so fall back
+    // to the submission's own `view` ability (held by publication admins,
+    // editors and the application administrator). This runs only for unassigned
+    // viewers, so it cannot re-grant an assigned reviewer denied above.
+    if (!access && !submission.length) {
       const fetched = await fetchSubmission(apolloClient, submissionId)
-      access = !!fetched?.publication?.abilities?.view
+      access = !!fetched?.abilities?.view
     }
 
     if (!access) {
@@ -375,11 +378,12 @@ export async function beforeEachRequiresExportAccess(
       }
     }
 
-    // Allow unassigned publication admins / editors / application admins, who
-    // hold the publication's `view` ability (and `export` with it).
-    if (!access) {
+    // Not in the viewer's submissions list: not directly assigned, so fall back
+    // to the submission's own `export` ability, which the server grants to
+    // unassigned publication admins, editors and the application administrator.
+    if (!access && !submission.length) {
       const fetched = await fetchSubmission(apolloClient, submissionId)
-      access = !!fetched?.publication?.abilities?.view
+      access = !!fetched?.abilities?.export
     }
 
     if (!access) {
