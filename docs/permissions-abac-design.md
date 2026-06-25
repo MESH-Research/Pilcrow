@@ -96,7 +96,8 @@ case if the ability is new). Live on deploy; no seed, no migration.
 
 - Add Bouncer tables via its published migration, namespaced `bouncer_*`
   (`bouncer_abilities`, `bouncer_permissions`, `bouncer_roles`,
-  `bouncer_assigned_roles`) to coexist with spatie/laravel-permission.
+  `bouncer_assigned_roles`) so they never clash with the retained legacy spatie
+  `roles` / `permissions` tables (the cutover is expand-only; see below).
 - Keep `publication_user` / `submission_user` pivots as the assignment source
   of truth. The scoped roles and their ability map are code (`App\Auth\Roles\ScopedRole`,
   a slug-backed enum) with no Bouncer rows. Bouncer holds only the **global**
