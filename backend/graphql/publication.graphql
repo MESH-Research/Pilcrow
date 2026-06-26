@@ -33,7 +33,9 @@ type Publication {
     my_role: PublicationRole @method(name: "getMyRole")
     effective_role: PublicationRole @method(name: "getEffectiveRole")
     "The authenticated viewer's scoped abilities on this publication (UI hints; server still enforces)."
-    abilities: PublicationAbilities! @method(name: "abilities")
+    abilities: PublicationAbilities!
+        @method(name: "abilities")
+        @with(relation: "publicationAssignments")
 }
 
 """

@@ -181,7 +181,10 @@ type Submission {
         @with(relation: "submissionAssignments")
         @method(name: "getEffectiveRole")
     "The authenticated viewer's scoped abilities on this submission (UI hints; server still enforces)."
-    abilities: SubmissionAbilities! @method(name: "abilities")
+    abilities: SubmissionAbilities!
+        @method(name: "abilities")
+        @with(relation: "submissionAssignments")
+        @with(relation: "publication.publicationAssignments")
     audits: [SubmissionAudit] @belongsToMany
 }
 

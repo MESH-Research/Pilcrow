@@ -8,7 +8,6 @@ use App\Auth\Abilities\ScopedAbility;
 use App\Auth\Abilities\SubmissionAbility;
 use App\Auth\Grants\Grant;
 use App\Auth\Grants\Predicates\SubmissionIsDraft;
-use App\Auth\Grants\Predicates\SubmissionIsExportable;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use LogicException;
@@ -154,9 +153,8 @@ enum ScopedRole: string
      *
      * Roles compose as supersets: each spreads the one below it, so "everything
      * role B has, plus X" is explicit. The submitter is not in the coordinator
-     * chain — it extends the reviewer with title / submitter edits, an
-     * exportable-state-only export, and a DRAFT-only status change (both
-     * conditional grants).
+     * chain — it extends the reviewer with title / submitter edits and a
+     * DRAFT-only status change (a conditional grant).
      *
      * @return array<int, \App\Auth\Abilities\ScopedAbility|array{0: \App\Auth\Abilities\ScopedAbility, 1: class-string<\App\Auth\Grants\Predicate>}>
      */
@@ -174,7 +172,6 @@ enum ScopedRole: string
                 SubmissionAbility::UpdateStatus,
                 SubmissionAbility::UpdateTitle,
                 SubmissionAbility::Invite,
-                [SubmissionAbility::Export, SubmissionIsExportable::class],
             ],
             self::Editor => [
                 ...self::ReviewCoordinator->grantDefinitions(),
@@ -189,7 +186,6 @@ enum ScopedRole: string
                 ...self::Reviewer->grantDefinitions(),
                 SubmissionAbility::UpdateSubmitters,
                 SubmissionAbility::UpdateTitle,
-                [SubmissionAbility::Export, SubmissionIsExportable::class],
                 [SubmissionAbility::UpdateStatus, SubmissionIsDraft::class],
             ],
         };

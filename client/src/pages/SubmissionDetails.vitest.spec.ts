@@ -118,8 +118,7 @@ describe("submissions details page mount", () => {
             update_submitters: true,
             update_reviewers: true,
             update_review_coordinators: false,
-            invite: true,
-            export: true
+            invite: true
           },
           content: {
             data: ""

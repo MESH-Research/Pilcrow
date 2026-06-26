@@ -1,7 +1,6 @@
 import { SessionStorage } from "quasar"
 import gql from "graphql-tag"
 import { CURRENT_USER, CURRENT_USER_SUBMISSIONS } from "src/graphql/queries"
-import { hasAdminAreaAccess } from "src/use/user"
 
 declare module "vue-router" {
   interface RouteMeta {
@@ -40,7 +39,7 @@ const GATES = {
       .query({ query: CURRENT_USER })
       .then(({ data: { currentUser } }) => currentUser)
 
-    return hasAdminAreaAccess(user?.abilities) ? true : { name: "error403" }
+    return user?.abilities?.admin_area === true ? true : { name: "error403" }
   }
 }
 
@@ -111,9 +110,10 @@ const GUARD_SUBMISSION_ACCESS = gql`
   query GuardSubmissionAccess($id: ID!) {
     submission(id: $id) {
       id
+      status
       abilities {
         view
-        export
+        update_title
       }
     }
   }
@@ -460,23 +460,35 @@ export async function beforeEachRequiresExportAccess(
       return submission.id == submissionId
     })
 
-    // Export is gated on the scoped `export` ability, which the resolver grants
-    // to submitters, review coordinators, editors, publication admins and the
-    // application administrator — never plain reviewers. The exportable-state
-    // condition lives in the server's SubmissionIsExportable predicate, so the
-    // flag already reflects status; no client-side state set is needed.
+    // Export has no server mutation — it renders already-viewable content — so
+    // this is a client policy, not a server-enforced ability. Eligible parties
+    // are the authoring/coordinating roles: exactly those who may edit the
+    // submission (`update_title`) — submitter, review coordinator, editor,
+    // publication admin, application administrator — never a plain reviewer. The
+    // exportable-state restriction is layered on top.
+    const exportableStates = new Set([
+      "REJECTED",
+      "RESUBMISSION_REQUESTED",
+      "ACCEPTED_AS_FINAL",
+      "ARCHIVED",
+      "EXPIRED"
+    ])
+
     if (submission.length) {
       const s = submission[0]
 
-      access = !!s.abilities?.export
+      access = !!s.abilities?.update_title && exportableStates.has(s.status)
     }
 
     // Not in the viewer's submissions list: not directly assigned, so fall back
-    // to the submission's own `export` ability, which the server grants to
-    // unassigned publication admins, editors and the application administrator.
+    // to the submission's own `update_title` ability, held by unassigned
+    // publication admins, editors and the application administrator — still only
+    // in an exportable state.
     if (!access && !submission.length) {
       const fetched = await fetchSubmission(apolloClient, submissionId)
-      access = !!fetched?.abilities?.export
+      access =
+        !!fetched?.abilities?.update_title &&
+        exportableStates.has(fetched?.status)
     }
 
     if (!access) {

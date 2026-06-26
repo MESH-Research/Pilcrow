@@ -87,7 +87,7 @@ export const CURRENT_USER_SUBMISSIONS = gql`
         effective_role
         abilities {
           view
-          export
+          update_title
         }
         review_coordinators {
           ...relatedUserFields
@@ -304,7 +304,6 @@ export const GET_SUBMISSION = gql`
         update_reviewers
         update_review_coordinators
         invite
-        export
       }
       content {
         data

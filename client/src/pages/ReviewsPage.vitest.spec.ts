@@ -92,7 +92,7 @@ describe("Reviews Page", () => {
       effective_role: submission_effective_role[role_name],
       abilities: {
         view: true,
-        export: role_name !== "reviewer"
+        update_title: role_name !== "reviewer"
       },
       publication: {
         id: `${id}-pub`,

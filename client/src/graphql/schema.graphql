@@ -781,7 +781,6 @@ SubmissionAbility case, resolved through the same engine as the policies — so
 conditional grants (e.g. draft-only status changes) are reflected correctly.
 """
 type SubmissionAbilities {
-  export: Boolean!
   invite: Boolean!
   update: Boolean!
   update_review_coordinators: Boolean!
@@ -1084,10 +1083,18 @@ type User {
 }
 
 """
-A user's global (application-wide) abilities. Each flag mirrors a GlobalAbility
-case, resolved directly against Bouncer — the same engine as the policies.
+A user's global (application-wide) abilities. Each generated flag mirrors a
+GlobalAbility case, resolved directly against Bouncer — the same engine as the
+policies.
 """
 type UserAbilities {
+  """
+  Derived: true when the viewer holds ANY `admin_*` ability — i.e. may reach
+  the admin area. Computed server-side as the union of the admin capabilities,
+  so the client gates on one flag and a new `admin_*` ability extends admin
+  access automatically. Not itself a GlobalAbility case.
+  """
+  admin_area: Boolean!
   admin_user_manage_beta: Boolean!
   admin_user_update: Boolean!
   admin_user_view: Boolean!

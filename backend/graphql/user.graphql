@@ -39,11 +39,20 @@ type User {
 }
 
 """
-A user's global (application-wide) abilities. Each flag mirrors a GlobalAbility
-case, resolved directly against Bouncer — the same engine as the policies.
+A user's global (application-wide) abilities. Each generated flag mirrors a
+GlobalAbility case, resolved directly against Bouncer — the same engine as the
+policies.
 """
 type UserAbilities
-    @abilityFields(enum: "App\\Auth\\Abilities\\GlobalAbility")
+    @abilityFields(enum: "App\\Auth\\Abilities\\GlobalAbility") {
+    """
+    Derived: true when the viewer holds ANY `admin_*` ability — i.e. may reach
+    the admin area. Computed server-side as the union of the admin capabilities,
+    so the client gates on one flag and a new `admin_*` ability extends admin
+    access automatically. Not itself a GlobalAbility case.
+    """
+    admin_area: Boolean!
+}
 
 enum UserRoles {
     submitter @enum(value: 6)

@@ -80,7 +80,7 @@ describe("Dashboard Page", () => {
       effective_role: submission_effective_role[role],
       abilities: {
         view: true,
-        export: role !== "reviewer"
+        update_title: role !== "reviewer"
       },
       publication: {
         id: "1",

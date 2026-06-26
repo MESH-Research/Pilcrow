@@ -86,7 +86,7 @@ describe("adminArea gate", () => {
       data: {
         currentUser: {
           id: 1,
-          abilities: { admin_user_view_any: true }
+          abilities: { admin_area: true }
         }
       }
     })
@@ -109,7 +109,7 @@ describe("adminArea gate", () => {
       data: {
         currentUser: {
           id: 1,
-          abilities: { admin_user_manage_beta: true }
+          abilities: { admin_area: true }
         }
       }
     })
@@ -131,7 +131,7 @@ describe("adminArea gate", () => {
       data: {
         currentUser: {
           id: 1,
-          abilities: { admin_user_view_any: false }
+          abilities: { admin_area: false }
         }
       }
     })

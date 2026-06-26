@@ -239,14 +239,16 @@ export function useSubmissionExport(
     "ARCHIVED",
     "EXPIRED"
   ]
-  // Export is gated on the scoped `export` ability (UI hint; the resolver
-  // grants it to submitters, review coordinators, editors, publication admins,
-  // and the application administrator — never plain reviewers).
+  // Export has no server mutation — it renders already-viewable content — so the
+  // gate is a client policy, not a server-enforced ability. Eligible parties are
+  // the authoring/coordinating roles: exactly those who may edit the submission
+  // (`update_title`) — submitter, review coordinator, editor, publication admin,
+  // application administrator — never a plain reviewer.
   const isDisabledByRole = computed(() => {
     if (!submission.value) {
       return true
     }
-    return !submission.value.abilities?.export
+    return !submission.value.abilities?.update_title
   })
   const isDisabledByState = computed(() => {
     if (!submission.value) {

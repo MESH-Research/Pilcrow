@@ -90,15 +90,15 @@ class ScopedAbilityResolver
         $roles = [];
 
         if ($entity instanceof Publication) {
-            $roles = $this->publicationRoles($user, $entity->id);
+            $roles = $this->publicationRolesFor($user, $entity);
         } elseif ($entity instanceof Submission) {
             // Direct submission roles plus admin roles inherited from the
             // parent publication (publication admin / editor). The pivots are
             // unique on (user, entity) and publication vs submission role slugs
             // are disjoint, so this merge can never yield a duplicate role.
             $roles = array_merge(
-                $this->submissionRoles($user, $entity->id),
-                $this->publicationRoles($user, $entity->publication_id)
+                $this->submissionRolesFor($user, $entity),
+                $this->submissionPublicationRoles($user, $entity)
             );
         }
 
@@ -106,15 +106,29 @@ class ScopedAbilityResolver
     }
 
     /**
+     * The user's direct roles on a submission. Reads the loaded
+     * submissionAssignments relation when present — so an eager-loaded list
+     * endpoint resolves abilities with no per-row pivot query — and falls back to
+     * a targeted query otherwise.
+     *
      * @param \App\Models\User $user
-     * @param string|int $publicationId
+     * @param \App\Models\Submission $submission
      * @return array<int, \App\Auth\Roles\ScopedRole>
      */
-    private function publicationRoles(User $user, $publicationId): array
+    private function submissionRolesFor(User $user, Submission $submission): array
     {
-        $roleSlugs = PublicationAssignment::query()
+        if ($submission->relationLoaded('submissionAssignments')) {
+            $roleSlugs = $submission->submissionAssignments
+                ->where('user_id', $user->id)
+                ->pluck('role')
+                ->all();
+
+            return $this->rolesForSlugs($roleSlugs);
+        }
+
+        $roleSlugs = SubmissionAssignment::query()
             ->where('user_id', $user->id)
-            ->where('publication_id', $publicationId)
+            ->where('submission_id', $submission->id)
             ->pluck('role')
             ->all();
 
@@ -122,15 +136,55 @@ class ScopedAbilityResolver
     }
 
     /**
+     * The publication-admin roles a user inherits onto a submission through its
+     * parent publication. Prefers the loaded `publication` relation (and its
+     * loaded assignments), else queries by publication_id.
+     *
      * @param \App\Models\User $user
-     * @param string|int $submissionId
+     * @param \App\Models\Submission $submission
      * @return array<int, \App\Auth\Roles\ScopedRole>
      */
-    private function submissionRoles(User $user, $submissionId): array
+    private function submissionPublicationRoles(User $user, Submission $submission): array
     {
-        $roleSlugs = SubmissionAssignment::query()
+        if ($submission->relationLoaded('publication') && $submission->publication !== null) {
+            return $this->publicationRolesFor($user, $submission->publication);
+        }
+
+        return $this->publicationRolesByIdQuery($user, $submission->publication_id);
+    }
+
+    /**
+     * The user's roles on a publication. Reads the loaded publicationAssignments
+     * relation when present, else queries the pivot.
+     *
+     * @param \App\Models\User $user
+     * @param \App\Models\Publication $publication
+     * @return array<int, \App\Auth\Roles\ScopedRole>
+     */
+    private function publicationRolesFor(User $user, Publication $publication): array
+    {
+        if ($publication->relationLoaded('publicationAssignments')) {
+            $roleSlugs = $publication->publicationAssignments
+                ->where('user_id', $user->id)
+                ->pluck('role')
+                ->all();
+
+            return $this->rolesForSlugs($roleSlugs);
+        }
+
+        return $this->publicationRolesByIdQuery($user, $publication->id);
+    }
+
+    /**
+     * @param \App\Models\User $user
+     * @param string|int $publicationId
+     * @return array<int, \App\Auth\Roles\ScopedRole>
+     */
+    private function publicationRolesByIdQuery(User $user, $publicationId): array
+    {
+        $roleSlugs = PublicationAssignment::query()
             ->where('user_id', $user->id)
-            ->where('submission_id', $submissionId)
+            ->where('publication_id', $publicationId)
             ->pluck('role')
             ->all();
 

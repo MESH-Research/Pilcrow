@@ -13,6 +13,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
 use Nuwave\Lighthouse\Testing\MakesGraphQLRequests;
 use PHPUnit\Framework\Attributes\DataProvider;
+use Silber\Bouncer\BouncerFacade;
 use Tests\ApiTestCase;
 
 /**
@@ -34,24 +35,28 @@ class AbilitiesTest extends ApiTestCase
      * the directive breaks or an enum and its type drift, it fails here rather
      * than silently dropping a flag the client relies on.
      *
-     * @return array<string, array{0: string, 1: class-string}>
+     * @return array<string, array{0: string, 1: class-string, 2: array<int, string>}>
      */
     public static function abilityTypeProvider(): array
     {
         return [
-            'UserAbilities' => ['UserAbilities', GlobalAbility::class],
-            'PublicationAbilities' => ['PublicationAbilities', PublicationAbility::class],
-            'SubmissionAbilities' => ['SubmissionAbilities', SubmissionAbility::class],
+            // UserAbilities also carries the manually-declared `admin_area` union
+            // flag alongside the generated case fields.
+            'UserAbilities' => ['UserAbilities', GlobalAbility::class, ['admin_area']],
+            'PublicationAbilities' => ['PublicationAbilities', PublicationAbility::class, []],
+            'SubmissionAbilities' => ['SubmissionAbilities', SubmissionAbility::class, []],
         ];
     }
 
     /**
      * @param string $typeName
      * @param class-string $enum
+     * @param array<int, string> $extraFields manually-declared fields that coexist
+     *   with the generated case fields
      * @return void
      */
     #[DataProvider('abilityTypeProvider')]
-    public function testAbilityTypeFieldsAreGeneratedFromTheEnum(string $typeName, string $enum): void
+    public function testAbilityTypeFieldsAreGeneratedFromTheEnum(string $typeName, string $enum, array $extraFields): void
     {
         $response = $this->graphQL(
             'query introspectType($name: String!) {
@@ -78,6 +83,7 @@ class AbilitiesTest extends ApiTestCase
             static fn($case) => Str::snake($case->name),
             $enum::cases()
         );
+        $expected = array_merge($expected, $extraFields);
         sort($expected);
 
         $this->assertSame($expected, $fieldNames);
@@ -109,6 +115,7 @@ class AbilitiesTest extends ApiTestCase
                         admin_user_view_any
                         admin_user_update
                         admin_user_manage_beta
+                        admin_area
                     }
                 }
             }'
@@ -119,6 +126,7 @@ class AbilitiesTest extends ApiTestCase
             'admin_user_view_any' => true,
             'admin_user_update' => true,
             'admin_user_manage_beta' => true,
+            'admin_area' => true,
         ]);
     }
 
@@ -140,6 +148,7 @@ class AbilitiesTest extends ApiTestCase
                     abilities {
                         publication_create
                         admin_user_view_any
+                        admin_area
                     }
                 }
             }'
@@ -148,6 +157,44 @@ class AbilitiesTest extends ApiTestCase
         $response->assertJsonPath('data.currentUser.abilities', [
             'publication_create' => false,
             'admin_user_view_any' => false,
+            'admin_area' => false,
+        ]);
+    }
+
+    /**
+     * admin_area is the UNION of the admin_* abilities, not a single "is admin"
+     * flag: a user granted just one admin capability (here user.view-any, with no
+     * publication.create) still gets admin-area access. This is the extension
+     * point — a future limited-admin role needs no client change to appear in the
+     * admin area, yet is correctly withheld from non-admin abilities.
+     *
+     * @return void
+     */
+    public function testAdminAreaIsGrantedByAnySingleAdminAbility(): void
+    {
+        $user = User::factory()->create();
+        BouncerFacade::allow($user)->to(GlobalAbility::AdminUserViewAny->value);
+        BouncerFacade::refresh();
+        $this->actingAs($user);
+
+        $response = $this->graphQL(
+            'query {
+                currentUser {
+                    abilities {
+                        publication_create
+                        admin_user_view_any
+                        admin_user_update
+                        admin_area
+                    }
+                }
+            }'
+        );
+
+        $response->assertJsonPath('data.currentUser.abilities', [
+            'publication_create' => false,
+            'admin_user_view_any' => true,
+            'admin_user_update' => false,
+            'admin_area' => true,
         ]);
     }
 
@@ -247,86 +294,5 @@ class AbilitiesTest extends ApiTestCase
         );
 
         $response->assertJsonPath('data.submission.abilities.update_status', false);
-    }
-
-    /**
-     * Export is granted to the review coordinator (and up the superset chain to
-     * editor / publication admin) but withheld from the reviewer — mirroring the
-     * role logic the client export gate used to hard-code. The grant is
-     * conditioned on an exportable status, so this exercises a settled state
-     * (REJECTED).
-     *
-     * @return void
-     */
-    public function testSubmissionExportGrantedToReviewCoordinatorNotReviewer(): void
-    {
-        $publication = Publication::factory()->create();
-
-        $coordinator = User::factory()->create();
-        $coordinatorSubmission = Submission::factory()
-            ->for($publication)
-            ->hasAttached($coordinator, [], 'reviewCoordinators')
-            ->create(['status' => Submission::REJECTED]);
-
-        $this->actingAs($coordinator);
-        $this->graphQL(
-            'query getSubmission($id: ID!) {
-                submission(id: $id) { abilities { export } }
-            }',
-            ['id' => $coordinatorSubmission->id]
-        )->assertJsonPath('data.submission.abilities.export', true);
-
-        $reviewer = User::factory()->create();
-        $reviewerSubmission = Submission::factory()
-            ->for($publication)
-            ->hasAttached($reviewer, [], 'reviewers')
-            ->create(['status' => Submission::REJECTED]);
-
-        $this->actingAs($reviewer);
-        $this->graphQL(
-            'query getSubmission($id: ID!) {
-                submission(id: $id) { abilities { export } }
-            }',
-            ['id' => $reviewerSubmission->id]
-        )->assertJsonPath('data.submission.abilities.export', false);
-    }
-
-    /**
-     * Export is a CONDITIONAL grant: the SubmissionIsExportable predicate gates
-     * it on a settled status. A submitter holds export in an exportable state
-     * (ARCHIVED) but not in a mid-review one (UNDER_REVIEW) — the flag tracks the
-     * predicate, so the client no longer hard-codes the state set.
-     *
-     * @return void
-     */
-    public function testSubmissionExportFlipsWithExportableState(): void
-    {
-        $submitter = User::factory()->create();
-        $this->actingAs($submitter);
-        $publication = Publication::factory()->create();
-
-        $exportable = Submission::factory()
-            ->for($publication)
-            ->hasAttached($submitter, [], 'submitters')
-            ->create(['status' => Submission::ARCHIVED]);
-
-        $this->graphQL(
-            'query getSubmission($id: ID!) {
-                submission(id: $id) { abilities { export } }
-            }',
-            ['id' => $exportable->id]
-        )->assertJsonPath('data.submission.abilities.export', true);
-
-        $notExportable = Submission::factory()
-            ->for($publication)
-            ->hasAttached($submitter, [], 'submitters')
-            ->create(['status' => Submission::UNDER_REVIEW]);
-
-        $this->graphQL(
-            'query getSubmission($id: ID!) {
-                submission(id: $id) { abilities { export } }
-            }',
-            ['id' => $notExportable->id]
-        )->assertJsonPath('data.submission.abilities.export', false);
     }
 }
