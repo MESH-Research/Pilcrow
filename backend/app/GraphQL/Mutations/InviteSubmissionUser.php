@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\GraphQL\Mutations;
 
 use App\Auth\Roles\ScopedRole;
+use App\Exceptions\ClientException;
 use App\Models\Submission;
 use App\Models\SubmissionInvitation;
 
@@ -44,6 +45,7 @@ final class InviteSubmissionUser
     public function inviteReviewCoordinator($_, array $args)
     {
         $submission = Submission::where('id', $args['submission_id'])->firstOrFail();
+        $this->guardAgainstExistingCoordinator($submission);
         $invite = SubmissionInvitation::create([
             'submission_id' => $submission->id,
             'role' => ScopedRole::ReviewCoordinator->toSlug(),
@@ -53,5 +55,25 @@ final class InviteSubmissionUser
         ]);
 
         return $invite->inviteReviewCoordinator();
+    }
+
+    /**
+     * A submission may have at most one review coordinator. Reject the invite if
+     * one already exists, rather than silently creating an invalid
+     * multi-coordinator state (the pivot has no DB constraint enforcing this).
+     *
+     * @param \App\Models\Submission $submission
+     * @return void
+     * @throws \App\Exceptions\ClientException
+     */
+    private function guardAgainstExistingCoordinator(Submission $submission): void
+    {
+        if ($submission->reviewCoordinators()->exists()) {
+            throw new ClientException(
+                'This submission already has a review coordinator.',
+                'submissionInvitation',
+                'SUBMISSION_ALREADY_HAS_COORDINATOR'
+            );
+        }
     }
 }

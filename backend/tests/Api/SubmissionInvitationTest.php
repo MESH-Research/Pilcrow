@@ -199,6 +199,93 @@ class SubmissionInvitationTest extends ApiTestCase
     }
 
     /**
+     * A submission may have at most one review coordinator. Inviting a second
+     * (different) coordinator through the API is rejected with a typed error and
+     * does not create an invitation, leaving the original coordinator intact.
+     *
+     * @return void
+     */
+    public function testCannotInviteASecondReviewCoordinator()
+    {
+        $this->beAppAdmin();
+        $submission = Submission::factory()->create();
+
+        // First coordinator is staged + attached.
+        SubmissionInvitation::create([
+            'submission_id' => $submission->id,
+            'role' => ScopedRole::ReviewCoordinator->toSlug(),
+            'email' => 'first.coordinator@gmail.com',
+        ])->inviteReviewCoordinator();
+
+        $response = $this->graphQL(
+            'mutation InviteReviewCoordinator ($submission_id: ID! $email: String! $message: String){
+                inviteReviewCoordinator(input: {
+                  submission_id: $submission_id
+                  email: $email
+                  message: $message
+                }) {
+                  id
+                }
+              }
+            ',
+            [
+                'submission_id' => $submission->id,
+                'email' => 'second.coordinator@gmail.com',
+                'message' => '',
+            ]
+        );
+
+        $response->assertJsonPath('errors.0.extensions.code', 'SUBMISSION_ALREADY_HAS_COORDINATOR');
+        // The rejected invite is pre-empted before any row is written.
+        $this->assertDatabaseMissing('submission_invitations', [
+            'email' => 'second.coordinator@gmail.com',
+        ]);
+        $this->assertCount(1, $submission->fresh()->reviewCoordinators);
+    }
+
+    /**
+     * The coordinator-uniqueness guard must not over-block: a reviewer can still
+     * be invited to a submission that already has a (different) coordinator.
+     *
+     * @return void
+     */
+    public function testReviewerCanStillBeInvitedWhenCoordinatorExists()
+    {
+        $this->beAppAdmin();
+        $submission = Submission::factory()->create();
+
+        SubmissionInvitation::create([
+            'submission_id' => $submission->id,
+            'role' => ScopedRole::ReviewCoordinator->toSlug(),
+            'email' => 'the.coordinator@gmail.com',
+        ])->inviteReviewCoordinator();
+
+        $response = $this->graphQL(
+            'mutation InviteReviewer ($submission_id: ID! $email: String! $message: String){
+                inviteReviewer(input: {
+                  submission_id: $submission_id
+                  email: $email
+                  message: $message
+                }) {
+                  id
+                  reviewers { email staged }
+                }
+              }
+            ',
+            [
+                'submission_id' => $submission->id,
+                'email' => 'a.reviewer@gmail.com',
+                'message' => '',
+            ]
+        );
+
+        $response->assertJsonPath('data.inviteReviewer.reviewers', [
+            ['email' => 'a.reviewer@gmail.com', 'staged' => true],
+        ]);
+        $this->assertNull($response->json('errors'));
+    }
+
+    /**
      * @return array
      */
     public static function invalidEmailsProvider(): array
