@@ -8,6 +8,8 @@ use App\Models\AvatarReport;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
 use Tests\ApiTestCase;
 
@@ -19,6 +21,7 @@ class AvatarReportMutationTest extends ApiTestCase
     {
         parent::setUp();
         Storage::fake(config('media-library.disk_name'));
+        Storage::fake(AvatarReport::SNAPSHOT_DISK);
     }
 
     /**
@@ -437,5 +440,178 @@ class AvatarReportMutationTest extends ApiTestCase
             $target->fresh()->hasModerationFlag(ModerationFlag::AvatarUploadBlocked),
             'Target should not be blocked by an unauthorized request'
         );
+    }
+
+    /**
+     * File a report through the API so it captures media_id, the durable
+     * reported UUID, and the private snapshot — exactly as production does.
+     */
+    private function reportViaApi(User $reporter, User $target): AvatarReport
+    {
+        $this->actingAs($reporter);
+        $id = $this->graphQL(
+            'mutation ($id: ID!) { reportUserAvatar(userId: $id) { id } }',
+            ['id' => $target->id]
+        )->json('data.reportUserAvatar.id');
+
+        return AvatarReport::findOrFail($id);
+    }
+
+    public function testReportCapturesReportedMediaAndSnapshot(): void
+    {
+        $reporter = User::factory()->create();
+        $target = User::factory()->create();
+        $this->giveUserAnAvatar($target);
+        $reportedMedia = $target->fresh()->getAvatarMedia();
+
+        $report = $this->reportViaApi($reporter, $target);
+
+        $this->assertSame((int)$reportedMedia->id, (int)$report->media_id);
+        $this->assertSame($reportedMedia->uuid, $report->reported_media_uuid);
+        $this->assertNotNull(
+            $report->getSnapshotMedia(),
+            'Reporting should retain a private snapshot of the reported image'
+        );
+        $this->assertSame(
+            AvatarReport::SNAPSHOT_DISK,
+            $report->getSnapshotMedia()->disk
+        );
+    }
+
+    public function testReportedAvatarUrlExposedToModerator(): void
+    {
+        $reporter = User::factory()->create();
+        $target = User::factory()->create();
+        $this->giveUserAnAvatar($target);
+        $report = $this->reportViaApi($reporter, $target);
+
+        $this->beAppAdmin();
+
+        $this->graphQL(
+            'query ($s: AvatarReportStatus) {
+                avatarReports(status: $s) { data { id reported_avatar_url } }
+            }',
+            ['s' => 'PENDING']
+        )->assertJsonPath(
+            'data.avatarReports.data.0.reported_avatar_url',
+            route('avatar-report.snapshot', ['avatarReport' => $report->id])
+        );
+    }
+
+    public function testResolveAndRemoveLeavesAChangedAvatarIntact(): void
+    {
+        $reporter = User::factory()->create();
+        $target = User::factory()->create();
+        $this->giveUserAnAvatar($target);
+        $report = $this->reportViaApi($reporter, $target);
+
+        // Target swaps their avatar after the report; the reported image is
+        // hard-deleted (single-file collection) and replaced with a new one.
+        $this->giveUserAnAvatar($target);
+        $newMedia = $target->fresh()->getAvatarMedia();
+
+        $this->beAppAdmin();
+        $this->graphQL('
+            mutation ($id: ID!) {
+                resolveAvatarReportAndRemoveAvatar(id: $id) { id status resolution_notes }
+            }
+        ', ['id' => $report->id])
+            ->assertJsonPath('data.resolveAvatarReportAndRemoveAvatar.status', 'REMOVED');
+
+        $current = $target->fresh()->getAvatarMedia();
+        $this->assertNotNull($current, 'The replacement avatar must not be removed');
+        $this->assertSame(
+            (int)$newMedia->id,
+            (int)$current->id,
+            'The current (replacement) avatar should be untouched'
+        );
+        $this->assertStringContainsString(
+            'left intact',
+            (string)$report->fresh()->resolution_notes
+        );
+    }
+
+    public function testResolveAndRemoveRetainsSnapshotAndSetsPurgeAfter(): void
+    {
+        $reporter = User::factory()->create();
+        $target = User::factory()->create();
+        $this->giveUserAnAvatar($target);
+        $report = $this->reportViaApi($reporter, $target);
+
+        $this->beAppAdmin();
+        $this->graphQL(
+            'mutation ($id: ID!) { resolveAvatarReportAndRemoveAvatar(id: $id) { id } }',
+            ['id' => $report->id]
+        );
+
+        $report->refresh();
+        $this->assertNull($target->fresh()->getAvatarMedia(), 'Reported avatar removed');
+        $this->assertNotNull(
+            $report->getSnapshotMedia(),
+            'Snapshot is retained through the appeals window after removal'
+        );
+        $this->assertNotNull($report->purge_after);
+        $this->assertTrue(
+            $report->purge_after->greaterThan(Carbon::now()->addDays(80)),
+            'purge_after should be ~90 days out'
+        );
+    }
+
+    public function testDismissPurgesSnapshot(): void
+    {
+        $reporter = User::factory()->create();
+        $target = User::factory()->create();
+        $this->giveUserAnAvatar($target);
+        $report = $this->reportViaApi($reporter, $target);
+        $this->assertNotNull($report->getSnapshotMedia());
+
+        $this->beAppAdmin();
+        $this->graphQL(
+            'mutation ($id: ID!) { dismissAvatarReport(id: $id) { id status } }',
+            ['id' => $report->id]
+        )->assertJsonPath('data.dismissAvatarReport.status', 'DISMISSED');
+
+        $this->assertNull(
+            $report->fresh()->getSnapshotMedia(),
+            'Dismissing a report should purge the retained snapshot immediately'
+        );
+    }
+
+    public function testPurgeCommandDeletesExpiredSnapshots(): void
+    {
+        $reporter = User::factory()->create();
+        $target = User::factory()->create();
+        $this->giveUserAnAvatar($target);
+        $report = $this->reportViaApi($reporter, $target);
+
+        // Simulate a resolved-and-removed report whose retention window lapsed.
+        $report->forceFill([
+            'status' => AvatarReport::STATUS_REMOVED,
+            'purge_after' => Carbon::now()->subDay(),
+        ])->save();
+        $this->assertNotNull($report->getSnapshotMedia());
+
+        Artisan::call('avatar-reports:purge-snapshots');
+
+        $report->refresh();
+        $this->assertNull($report->getSnapshotMedia(), 'Expired snapshot should be purged');
+        $this->assertNull($report->purge_after, 'purge_after is cleared after purge');
+    }
+
+    public function testSnapshotRouteIsModeratorGated(): void
+    {
+        $reporter = User::factory()->create();
+        $target = User::factory()->create();
+        $this->giveUserAnAvatar($target);
+        $report = $this->reportViaApi($reporter, $target);
+        $url = route('avatar-report.snapshot', ['avatarReport' => $report->id]);
+
+        // A non-moderator is forbidden.
+        $this->actingAs(User::factory()->create());
+        $this->get($url)->assertForbidden();
+
+        // A moderator gets the streamed image.
+        $this->beAppAdmin();
+        $this->get($url)->assertOk();
     }
 }

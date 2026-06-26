@@ -164,6 +164,35 @@ describe("admin avatar-reports page", () => {
     )
   })
 
+  it("renders the reported snapshot image, with a fallback once purged", () => {
+    const RowsStub = defineComponent({
+      name: "QueryTable",
+      setup:
+        (_, { slots }) =>
+        () =>
+          h("div", [
+            slots["body-cell-reported_avatar"]?.({
+              row: { id: "1", reported_avatar_url: "http://localhost/snap.png" }
+            }),
+            slots["body-cell-reported_avatar"]?.({
+              row: { id: "2", reported_avatar_url: null }
+            })
+          ])
+    })
+
+    const wrapper = mount(AvatarReportsPage, {
+      global: {
+        mocks: { $t: (t: string) => t },
+        stubs: { QueryTable: RowsStub, QTd: QTdStub }
+      }
+    })
+
+    expect(
+      wrapper.find('[data-cy="reported_avatar_snapshot"] img').attributes("src")
+    ).toBe("http://localhost/snap.png")
+    expect(wrapper.find('[data-cy="reported_avatar_gone"]').exists()).toBe(true)
+  })
+
   it("notifies a failure when the remove mutation rejects", async () => {
     mockClient
       .getRequestHandler(RESOLVE_AVATAR_REPORT_AND_REMOVE_AVATAR)

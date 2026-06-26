@@ -1590,12 +1590,15 @@
     "filter_removed": "Removed",
     "headers": {
       "user": "Reported user",
+      "reported_avatar": "Reported image",
       "reporter": "Reporter",
       "reason": "Reason",
       "status": "Status",
       "created_at": "Reported",
       "actions": ""
     },
+    "reported_image": "The reported avatar image",
+    "reported_image_unavailable": "Image no longer available",
     "action_dismiss": "Dismiss",
     "action_remove": "Remove avatar",
     "cancel": "Cancel",

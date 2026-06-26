@@ -22,6 +22,29 @@
       />
     </template>
 
+    <template #body-cell-reported_avatar="scope">
+      <q-td :props="scope">
+        <q-avatar
+          v-if="scope.row.reported_avatar_url"
+          rounded
+          size="48px"
+          data-cy="reported_avatar_snapshot"
+        >
+          <img
+            :src="scope.row.reported_avatar_url"
+            :alt="$t('admin_avatar_reports.reported_image')"
+          />
+        </q-avatar>
+        <span
+          v-else
+          class="text-caption text-grey"
+          data-cy="reported_avatar_gone"
+        >
+          {{ $t("admin_avatar_reports.reported_image_unavailable") }}
+        </span>
+      </q-td>
+    </template>
+
     <template #body-cell-reason="scope">
       <q-td :props="scope" style="white-space: normal; max-width: 24rem">
         <span v-if="scope.value">{{ scope.value }}</span>
@@ -83,6 +106,7 @@ graphql(`
         resolution_notes
         resolved_at
         created_at
+        reported_avatar_url
         user {
           id
           display_label
@@ -177,6 +201,13 @@ const columns: (QueryTableColumn | NameAvatarColumn)[] = [
     align: "left",
     field: (row) => (row as ReportRow).user,
     component: NameAvatarCell
+  },
+  {
+    // The exact image that was reported, snapshotted at report time, so a
+    // later avatar change doesn't make the queue ambiguous.
+    name: "reported_avatar",
+    align: "left",
+    field: (row) => (row as ReportRow).reported_avatar_url
   },
   {
     name: "reporter",

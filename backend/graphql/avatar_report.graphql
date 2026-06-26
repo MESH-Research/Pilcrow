@@ -6,6 +6,13 @@ type AvatarReport {
     id: ID!
     "User whose avatar was reported."
     user: User! @belongsTo
+    """
+    Moderator-gated URL to the retained private snapshot of the exact avatar
+    that was reported. Captured at report time, so it stays accurate even if
+    the user later changes or removes their avatar. Null once the snapshot has
+    been purged (after resolution) or if it was never captured.
+    """
+    reported_avatar_url: String @method(name: "getReportedAvatarUrl")
     "User who filed the report. Null if that user has since been deleted."
     reporter: User @belongsTo
     "Free-text reason provided by the reporter."

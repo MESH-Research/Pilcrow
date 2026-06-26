@@ -24,7 +24,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+        // Purge expired reported-avatar moderation snapshots daily.
+        $schedule->command('avatar-reports:purge-snapshots')->daily();
     }
 
     /**
