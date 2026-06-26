@@ -35,6 +35,14 @@ class ScopedRoleTest extends TestCase
         return $s;
     }
 
+    private function archived(): Submission
+    {
+        $s = new Submission();
+        $s->status = Submission::ARCHIVED;
+
+        return $s;
+    }
+
     public function testPivotRoleIdMapsToCaseAndExcludesAppAdmin(): void
     {
         $this->assertSame(ScopedRole::Editor, ScopedRole::tryFrom('editor'));
@@ -73,7 +81,11 @@ class ScopedRoleTest extends TestCase
     public function testPublicationAdminIsASupersetOfEditor(): void
     {
         $user = new User();
-        $entity = $this->submitted();
+        // An exportable (archived) submission so every Editor grant holds — the
+        // only conditional one in the chain is Export (exportable-state only);
+        // the rest are absolute. This keeps the assertion about the superset
+        // STRUCTURE, not about any one grant's predicate.
+        $entity = $this->archived();
         foreach (ScopedRole::Editor->grants() as $grant) {
             $this->assertTrue(
                 ScopedRole::PublicationAdmin->allows($grant->ability, $entity, $user),

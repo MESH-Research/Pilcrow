@@ -56,11 +56,10 @@ describe("useCurrentUser composable", () => {
           roles: [{ name: "tester" }],
           abilities: {
             publication_create: false,
-            user_view: false,
-            user_view_any: false,
-            user_update: false,
-            user_manage_beta: false,
-            access_admin: false
+            admin_user_view: false,
+            admin_user_view_any: false,
+            admin_user_update: false,
+            admin_user_manage_beta: false
           },
           beta: false,
           feature_opt_ins: []

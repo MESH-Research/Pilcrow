@@ -16,16 +16,20 @@ namespace App\Auth\Abilities;
  * submission scoped abilities — so Bouncer can never short-circuit a scoped
  * check.
  *
- * The backing value is the Bouncer ability name.
+ * The backing value is the Bouncer ability name. The CASE name is what the
+ * GraphQL UserAbilities field is generated from (snake_case): cases whose name
+ * is prefixed `Admin` surface as `admin_*` flags, and the client treats holding
+ * ANY `admin_*` ability as "may reach the admin area". There is deliberately no
+ * single "can access admin" ability — admin visibility is the union of admin
+ * capabilities, so a new global role that adds an `admin_*` ability extends
+ * admin access with no client change.
  */
 enum GlobalAbility: string
 {
     case PublicationCreate = 'publication.create';
 
-    case UserView = 'user.view';
-    case UserViewAny = 'user.view-any';
-    case UserUpdate = 'user.update';
-    case UserManageBeta = 'user.manage-beta';
-
-    case AccessAdmin = 'admin.access';
+    case AdminUserView = 'user.view';
+    case AdminUserViewAny = 'user.view-any';
+    case AdminUserUpdate = 'user.update';
+    case AdminUserManageBeta = 'user.manage-beta';
 }

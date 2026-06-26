@@ -2,7 +2,7 @@ import { defineBoot } from "#q-app/wrappers"
 import { ApolloClient, InMemoryCache, ApolloLink } from "@apollo/client/core"
 import {
   beforeEachRequiresAuth,
-  beforeEachRequiresAppAdmin,
+  beforeEachGate,
   beforeEachRequiresDraftAccess,
   beforeEachRequiresSubmissionAccess,
   beforeEachRequiresPreviewAccess,
@@ -64,10 +64,11 @@ export default defineBoot(async ({ app, router }) => {
   )
 
   /**
-   * Check routes for requiresRoles meta field.
+   * Run the declarative access gate for routes that name one via `meta.gate`
+   * (auto-routes) or a legacy `requires*` meta flag (manual routes).
    */
   router.beforeEach(async (to, from, next) =>
-    beforeEachRequiresAppAdmin(apolloClient, to, from, next)
+    beforeEachGate(apolloClient, to, from, next)
   )
 
   /**

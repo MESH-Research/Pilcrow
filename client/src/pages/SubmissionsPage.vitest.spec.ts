@@ -549,7 +549,6 @@ describe("Submissions Page", () => {
             role_name == "application_admin"
               ? [{ name: "Application Administrator" }]
               : [],
-          abilities: { access_admin: role_name == "application_admin" },
           submissions: submissions_data[role_name]
         }
       }

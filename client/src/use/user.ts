@@ -9,6 +9,27 @@ import { useRouter } from "vue-router"
 import type { UserAbilities } from "src/graphql/generated/graphql"
 
 /**
+ * Admin-area visibility: the viewer may reach the /admin area if they hold ANY
+ * global ability whose field is prefixed `admin_`. This is deliberately the
+ * UNION of admin capabilities, not a single "can access admin" / "is super
+ * admin" flag — a user granted only one admin capability still gets in, and a
+ * new global role that adds an `admin_*` ability extends admin access with no
+ * code change here. Holding admin access never implies super-admin authority.
+ *
+ * @param abilities the viewer's `currentUser.abilities` map (or null/undefined)
+ */
+export function hasAdminAreaAccess(
+  abilities: Record<string, unknown> | null | undefined
+): boolean {
+  if (!abilities) {
+    return false
+  }
+  return Object.entries(abilities).some(
+    ([key, value]) => key.startsWith("admin_") && value === true
+  )
+}
+
+/**
  * Returns an object of useful current user properties and helper methods:
  *
  * Query:
@@ -48,7 +69,7 @@ export function useCurrentUser() {
     return abilities.value?.[ability] === true
   }
 
-  const canAccessAdmin = computed(() => can("access_admin"))
+  const canAccessAdmin = computed(() => hasAdminAreaAccess(abilities.value))
 
   return {
     currentUser,

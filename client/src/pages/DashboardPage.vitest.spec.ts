@@ -105,7 +105,6 @@ describe("Dashboard Page", () => {
         currentUser: {
           id: "5",
           roles: [],
-          abilities: { access_admin: false },
           submissions: [] as SubmissionData[]
         }
       }
@@ -207,7 +206,6 @@ describe("Dashboard Page", () => {
             role_name == "application_admin"
               ? [{ name: "Application Administrator" }]
               : [],
-          abilities: { access_admin: role_name == "application_admin" },
           submissions: [
             mockSubmission("1000", SubmissionStatus.UNDER_REVIEW, role_name)
           ]

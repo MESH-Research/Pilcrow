@@ -77,9 +77,6 @@ export const CURRENT_USER_SUBMISSIONS = gql`
       roles {
         name
       }
-      abilities {
-        access_admin
-      }
       submissions: raw_submissions {
         id
         title

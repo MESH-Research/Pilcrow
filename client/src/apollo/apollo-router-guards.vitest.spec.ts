@@ -1,8 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest"
-import {
-  beforeEachRequiresAuth,
-  beforeEachRequiresAppAdmin
-} from "./apollo-router-guards"
+import { beforeEachRequiresAuth, beforeEachGate } from "./apollo-router-guards"
 
 const apolloMock = {
   query: vi.fn()
@@ -75,35 +72,35 @@ describe("requiresAuth router hook", () => {
   })
 })
 
-describe("requiresAppAdmin router hook", () => {
+describe("adminArea gate", () => {
   afterEach(() => {
     apolloMock.query.mockClear()
   })
 
-  it("allows navigation when user is an Application Administrator", async () => {
+  it("allows navigation when the viewer holds an admin_* ability (auto-route meta.gate)", async () => {
     const to = {
-      matched: [{ meta: { requiresAppAdmin: true } }]
+      matched: [{ meta: { gate: "adminArea" } }]
     }
 
     apolloMock.query.mockResolvedValue({
       data: {
         currentUser: {
           id: 1,
-          abilities: { access_admin: true }
+          abilities: { admin_user_view_any: true }
         }
       }
     })
 
     const next = vi.fn()
 
-    await beforeEachRequiresAppAdmin(apolloMock, to, undefined, next)
+    await beforeEachGate(apolloMock, to, undefined, next)
 
     expect(apolloMock.query).toHaveBeenCalled()
     expect(next).toHaveBeenCalled()
     expect(next.mock.calls[0][0]).toBeUndefined()
   })
 
-  it("redirects to error403 when user is not an Application Administrator", async () => {
+  it("allows navigation via the legacy requiresAppAdmin meta flag", async () => {
     const to = {
       matched: [{ meta: { requiresAppAdmin: true } }]
     }
@@ -112,28 +109,50 @@ describe("requiresAppAdmin router hook", () => {
       data: {
         currentUser: {
           id: 1,
-          abilities: { access_admin: false }
+          abilities: { admin_user_manage_beta: true }
         }
       }
     })
 
     const next = vi.fn()
 
-    await beforeEachRequiresAppAdmin(apolloMock, to, undefined, next)
+    await beforeEachGate(apolloMock, to, undefined, next)
+
+    expect(apolloMock.query).toHaveBeenCalled()
+    expect(next.mock.calls[0][0]).toBeUndefined()
+  })
+
+  it("redirects to error403 when the viewer holds no admin_* ability", async () => {
+    const to = {
+      matched: [{ meta: { gate: "adminArea" } }]
+    }
+
+    apolloMock.query.mockResolvedValue({
+      data: {
+        currentUser: {
+          id: 1,
+          abilities: { admin_user_view_any: false }
+        }
+      }
+    })
+
+    const next = vi.fn()
+
+    await beforeEachGate(apolloMock, to, undefined, next)
 
     expect(apolloMock.query).toHaveBeenCalled()
     expect(next).toHaveBeenCalled()
     expect(next.mock.calls[0][0]).toStrictEqual({ name: "error403" })
   })
 
-  it("allows navigation when requiresAppAdmin meta property is not present", async () => {
+  it("allows navigation when the route declares no gate", async () => {
     const to = {
       matched: [{ meta: {} }]
     }
 
     const next = vi.fn()
 
-    await beforeEachRequiresAppAdmin(apolloMock, to, undefined, next)
+    await beforeEachGate(apolloMock, to, undefined, next)
 
     expect(apolloMock.query).not.toHaveBeenCalled()
     expect(next).toHaveBeenCalled()

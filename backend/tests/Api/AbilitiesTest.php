@@ -91,7 +91,9 @@ class AbilitiesTest extends ApiTestCase
 
     /**
      * An application administrator holds every global ability via Bouncer's
-     * everything() wildcard, exposed on currentUser.abilities.
+     * everything() wildcard, exposed on currentUser.abilities. The admin-area
+     * capabilities surface as `admin_*` flags (generated from the `Admin`-prefixed
+     * enum cases); the client treats holding any of them as admin-area access.
      *
      * @return void
      */
@@ -104,10 +106,9 @@ class AbilitiesTest extends ApiTestCase
                 currentUser {
                     abilities {
                         publication_create
-                        user_view_any
-                        user_update
-                        user_manage_beta
-                        access_admin
+                        admin_user_view_any
+                        admin_user_update
+                        admin_user_manage_beta
                     }
                 }
             }'
@@ -115,16 +116,16 @@ class AbilitiesTest extends ApiTestCase
 
         $response->assertJsonPath('data.currentUser.abilities', [
             'publication_create' => true,
-            'user_view_any' => true,
-            'user_update' => true,
-            'user_manage_beta' => true,
-            'access_admin' => true,
+            'admin_user_view_any' => true,
+            'admin_user_update' => true,
+            'admin_user_manage_beta' => true,
         ]);
     }
 
     /**
      * A plain user holds no global abilities (the matrix grants them only to the
-     * application administrator role at present).
+     * application administrator role at present), so it surfaces no `admin_*`
+     * flag and the client withholds admin-area access.
      *
      * @return void
      */
@@ -138,8 +139,7 @@ class AbilitiesTest extends ApiTestCase
                 currentUser {
                     abilities {
                         publication_create
-                        user_view_any
-                        access_admin
+                        admin_user_view_any
                     }
                 }
             }'
@@ -147,8 +147,7 @@ class AbilitiesTest extends ApiTestCase
 
         $response->assertJsonPath('data.currentUser.abilities', [
             'publication_create' => false,
-            'user_view_any' => false,
-            'access_admin' => false,
+            'admin_user_view_any' => false,
         ]);
     }
 

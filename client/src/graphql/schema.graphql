@@ -1088,12 +1088,11 @@ A user's global (application-wide) abilities. Each flag mirrors a GlobalAbility
 case, resolved directly against Bouncer — the same engine as the policies.
 """
 type UserAbilities {
-  access_admin: Boolean!
+  admin_user_manage_beta: Boolean!
+  admin_user_update: Boolean!
+  admin_user_view: Boolean!
+  admin_user_view_any: Boolean!
   publication_create: Boolean!
-  user_manage_beta: Boolean!
-  user_update: Boolean!
-  user_view: Boolean!
-  user_view_any: Boolean!
 }
 
 """A paginated list of User items."""

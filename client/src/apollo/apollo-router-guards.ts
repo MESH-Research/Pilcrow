@@ -1,6 +1,105 @@
 import { SessionStorage } from "quasar"
 import gql from "graphql-tag"
 import { CURRENT_USER, CURRENT_USER_SUBMISSIONS } from "src/graphql/queries"
+import { hasAdminAreaAccess } from "src/use/user"
+
+declare module "vue-router" {
+  interface RouteMeta {
+    /**
+     * Auto-route access gate. Names an entry in the gate registry below (e.g.
+     * "adminArea"); the single {@link beforeEachGate} hook resolves and runs it.
+     * Preferred over the legacy `requires*` meta booleans for file-based routes
+     * declared with `definePage`.
+     */
+    gate?: GateName
+  }
+}
+
+/**
+ * A route gate: given the apollo client and the target route, decide whether
+ * navigation is allowed. Resolves to `true` to allow, or to a route location to
+ * redirect to (an error page, or a more appropriate screen).
+ *
+ * @callback Gate
+ */
+
+/**
+ * The gate registry — the single source of truth for declarative route access.
+ * Auto-routes name a gate via `meta.gate`; legacy routes reach the same gates
+ * through {@link LEGACY_META_GATES}. Adding a capability-driven area is a matter
+ * of adding a gate here, not wiring a new `beforeEach` hook.
+ */
+const GATES = {
+  /**
+   * The /admin area is open to anyone holding ANY global `admin_*` ability — the
+   * union of admin capabilities, not a single "is admin" flag. A new global role
+   * that adds an `admin_*` ability widens admin access with no change here.
+   */
+  adminArea: async (apolloClient) => {
+    const user = await apolloClient
+      .query({ query: CURRENT_USER })
+      .then(({ data: { currentUser } }) => currentUser)
+
+    return hasAdminAreaAccess(user?.abilities) ? true : { name: "error403" }
+  }
+}
+
+type GateName = keyof typeof GATES
+
+/**
+ * Legacy bridge. Manual routes (src/router/routes.ts) still declare access with
+ * boolean meta flags; map each to its gate so the one gate runner covers them
+ * until they migrate to the auto-route `meta: { gate }` form. New routes should
+ * declare `meta.gate` directly rather than add entries here.
+ */
+const LEGACY_META_GATES = {
+  requiresAppAdmin: "adminArea"
+}
+
+/**
+ * Resolve the gate a route requires, preferring the auto-route `meta.gate`
+ * declaration and falling back to the legacy boolean meta flags. Returns null
+ * when the route declares no gate.
+ *
+ * @param {import("vue-router").RouteLocationNormalized} to
+ * @returns {GateName | null}
+ */
+function resolveGateName(to) {
+  for (const record of to.matched) {
+    if (typeof record.meta.gate === "string") {
+      return record.meta.gate
+    }
+    for (const legacyKey of Object.keys(LEGACY_META_GATES)) {
+      if (record.meta[legacyKey]) {
+        return LEGACY_META_GATES[legacyKey]
+      }
+    }
+  }
+
+  return null
+}
+
+/**
+ * The single declarative access guard. Resolves the route's gate (auto-route or
+ * legacy) and runs it, allowing navigation or redirecting per the gate's
+ * verdict. Routes with no gate pass straight through.
+ */
+export async function beforeEachGate(apolloClient, to, _, next) {
+  const gateName = resolveGateName(to)
+  if (!gateName) {
+    next()
+    return
+  }
+
+  const gate = GATES[gateName]
+  if (!gate) {
+    next()
+    return
+  }
+
+  const result = await gate(apolloClient, to)
+  next(result === true ? undefined : result)
+}
 
 /**
  * Colocated query for the route guards' unassigned-access fallback. It selects
@@ -190,9 +289,14 @@ export async function beforeEachRequiresPreviewAccess(
       }
     }
 
-    // Allow Application Administrators
-    if (!access && user.abilities?.access_admin) {
-      access = true
+    // Not in the viewer's submissions list: unassigned viewers who still hold
+    // the submission's own `view` ability reach the draft preview — the
+    // application administrator (via the server super-admin short-circuit) and
+    // the publication's admins/editors. Keyed on the submission flag, never a
+    // global "is admin" surrogate.
+    if (!access && !submission.length) {
+      const fetched = await fetchSubmission(apolloClient, submissionId)
+      access = !!fetched?.abilities?.view
     }
 
     if (!access) {
@@ -374,24 +478,6 @@ export async function beforeEachRequiresExportAccess(
       const fetched = await fetchSubmission(apolloClient, submissionId)
       access = !!fetched?.abilities?.export
     }
-
-    if (!access) {
-      next({ name: "error403" })
-    } else {
-      next()
-    }
-  } else {
-    next()
-  }
-}
-
-export async function beforeEachRequiresAppAdmin(apolloClient, to, _, next) {
-  if (to.matched.some((record) => record.meta.requiresAppAdmin)) {
-    const access = await apolloClient
-      .query({
-        query: CURRENT_USER
-      })
-      .then(({ data: { currentUser } }) => !!currentUser?.abilities?.access_admin)
 
     if (!access) {
       next({ name: "error403" })
