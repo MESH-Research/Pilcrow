@@ -34,9 +34,13 @@ class ReportUserAvatar
             throw new Error('This user does not have an uploaded avatar to report.');
         }
 
-        // Idempotent: one pending report per (reporter, reported) pair.
+        // Idempotent per (reporter, reported media): re-reporting the same
+        // image returns the existing pending report, but if the user has since
+        // swapped to a different avatar that new media is reportable in its own
+        // right rather than silently folded into the stale report.
         $existing = AvatarReport::where('user_id', $reportedUser->id)
             ->where('reporter_user_id', $reporter->id)
+            ->where('media_id', $reportedMedia->id)
             ->where('status', AvatarReport::STATUS_PENDING)
             ->first();
         if ($existing !== null) {

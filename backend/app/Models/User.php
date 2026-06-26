@@ -8,6 +8,7 @@ use App\Auth\Roles\GlobalRole;
 use App\Auth\Roles\ScopedRole;
 use App\Builders\UserBuilder;
 use App\Enums\ModerationFlag;
+use App\Models\Traits\HasModerationFlags;
 use Carbon\Carbon;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -35,6 +36,7 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
     use HasRolesAndAbilities;
     use Searchable;
     use InteractsWithMedia;
+    use HasModerationFlags;
 
     public const AVATAR_COLLECTION = 'avatar';
     public const AVATAR_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
@@ -540,55 +542,5 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
     public function getAvatarUploadBlocked(): bool
     {
         return $this->hasModerationFlag(ModerationFlag::AvatarUploadBlocked);
-    }
-
-    /**
-     * Per-user moderation state, stored as a flat array of active flag
-     * keys (mirrors feature_opt_ins). Presence of a key means the flag is
-     * set; absence means it is not. This is deliberately NOT a permission:
-     * it is moderation data on the user, kept out of the Bouncer ability
-     * graph so authorization and moderation state never get confused.
-     *
-     * @param \App\Enums\ModerationFlag $flag
-     * @return bool
-     */
-    public function hasModerationFlag(ModerationFlag $flag): bool
-    {
-        return in_array($flag->value, $this->moderation_flags ?? [], true);
-    }
-
-    /**
-     * Set a moderation flag on the user. Idempotent. Persists immediately.
-     *
-     * @param \App\Enums\ModerationFlag $flag
-     * @return void
-     */
-    public function setModerationFlag(ModerationFlag $flag): void
-    {
-        $flags = $this->moderation_flags ?? [];
-        if (!in_array($flag->value, $flags, true)) {
-            $flags[] = $flag->value;
-            $this->moderation_flags = array_values($flags);
-            $this->save();
-        }
-    }
-
-    /**
-     * Clear a moderation flag from the user. Idempotent. Persists immediately.
-     *
-     * @param \App\Enums\ModerationFlag $flag
-     * @return void
-     */
-    public function clearModerationFlag(ModerationFlag $flag): void
-    {
-        $flags = $this->moderation_flags ?? [];
-        $filtered = array_values(array_filter(
-            $flags,
-            fn($value) => $value !== $flag->value
-        ));
-        if ($filtered !== $flags) {
-            $this->moderation_flags = $filtered;
-            $this->save();
-        }
     }
 }

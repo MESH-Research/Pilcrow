@@ -139,6 +139,28 @@ class AvatarReportMutationTest extends ApiTestCase
         $this->assertDatabaseCount('avatar_reports', 1);
     }
 
+    public function testReportingASwappedAvatarRecordsANewReport(): void
+    {
+        /** @var User $reporter */
+        $reporter = User::factory()->create();
+        $target = User::factory()->create();
+        $this->giveUserAnAvatar($target);
+
+        $first = $this->reportViaApi($reporter, $target);
+
+        // Target swaps to a different image; the single-file collection
+        // replaces the reported media. Re-reporting must record the new image
+        // rather than return the stale pending report for the old one.
+        $this->giveUserAnAvatar($target);
+        $newMedia = $target->fresh()->getAvatarMedia();
+
+        $second = $this->reportViaApi($reporter, $target);
+
+        $this->assertNotEquals($first->id, $second->id);
+        $this->assertSame((int)$newMedia->id, (int)$second->media_id);
+        $this->assertDatabaseCount('avatar_reports', 2);
+    }
+
     public function testAdminCanDismissReport(): void
     {
         /** @var User $reporter */
