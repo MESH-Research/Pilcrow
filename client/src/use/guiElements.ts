@@ -239,16 +239,15 @@ export function useSubmissionExport(
     "ARCHIVED",
     "EXPIRED"
   ]
-  // Export has no server mutation — it renders already-viewable content — so the
-  // gate is a client policy, not a server-enforced ability. Eligible parties are
-  // the authoring/coordinating roles: exactly those who may edit the submission
-  // (`update_title`) — submitter, review coordinator, editor, publication admin,
-  // application administrator — never a plain reviewer.
-  const isDisabledByRole = computed(() => {
+  // Export has no server mutation — it renders content the viewer can already
+  // see — so the gate is exactly "can you view this submission" (`view`), not a
+  // proxy on an edit ability whose constraints may drift independently. Anyone
+  // who may view may export it once it reaches an exportable state.
+  const isDisabledByAccess = computed(() => {
     if (!submission.value) {
       return true
     }
-    return !submission.value.abilities?.update_title
+    return !submission.value.abilities?.view
   })
   const isDisabledByState = computed(() => {
     if (!submission.value) {
@@ -257,5 +256,5 @@ export function useSubmissionExport(
     return !exportVisibleStates.includes(submission.value.status)
   })
 
-  return { isDisabledByRole, isDisabledByState }
+  return { isDisabledByAccess, isDisabledByState }
 }

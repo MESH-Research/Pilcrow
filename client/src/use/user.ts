@@ -48,9 +48,13 @@ export function useCurrentUser() {
     return abilities.value?.[ability] === true
   }
 
-  // `admin_area` is the server-computed union of the viewer's admin_* abilities
-  // (see UserAbilities) — one flag that extends as new admin abilities are added.
-  const canAccessAdmin = computed(() => abilities.value?.admin_area === true)
+  // Admin-area access is its own named gate rather than a raw `can("admin_area")`
+  // at call sites: `admin_area` is not a normal capability but the server-computed
+  // UNION of the viewer's admin_* abilities (see UserAbilities), so wrapping it in
+  // an intention-revealing computed keeps that special meaning in one place and
+  // lets it extend as new admin abilities are added. Granular admin controls still
+  // gate on their specific ability via `can` (e.g. `can("admin_user_update")`).
+  const canAccessAdmin = computed(() => can("admin_area"))
 
   return {
     currentUser,

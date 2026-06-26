@@ -477,8 +477,7 @@ describe("Submissions Page", () => {
       my_role: submission_my_role[role_name],
       effective_role: submission_effective_role[role_name],
       abilities: {
-        view: true,
-        update_title: role_name !== "reviewer"
+        view: true
       },
       publication: {
         id: "1000",

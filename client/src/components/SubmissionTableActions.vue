@@ -213,7 +213,7 @@
       </q-item>
       <q-item
         role="menuitem"
-        :disable="isDisabledByRole || isDisabledByState"
+        :disable="isDisabledByAccess || isDisabledByState"
         data-cy="export_submission"
         clickable
         :to="{
@@ -227,7 +227,7 @@
           </q-item-label>
         </q-item-section>
         <q-tooltip
-          v-if="isDisabledByRole"
+          v-if="isDisabledByAccess"
           anchor="top middle"
           self="bottom middle"
           :offset="[10, 10]"
@@ -271,7 +271,7 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const submissionRef = ref(props.submission)
-const { isDisabledByRole, isDisabledByState } =
+const { isDisabledByAccess, isDisabledByState } =
   useSubmissionExport(submissionRef)
 const { statusChangingDisabledByRole, statusChangingDisabledByState } =
   useStatusChangeControls(submissionRef)

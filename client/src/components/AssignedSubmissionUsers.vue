@@ -156,14 +156,26 @@ const users = computed(() => {
   return props.container[props.roleGroup]
 })
 
+// Inviting a new user is intrinsic to managing that role's roster: the same
+// ability that lets you add/remove a reviewer/coordinator/submitter lets you
+// invite one who doesn't yet exist. So the gate is the per-role update ability
+// (UI hint; the mutation stays @can-enforced on the same ability).
+const updateAbilityByRoleGroup: Record<
+  string,
+  keyof NonNullable<Submission["abilities"]>
+> = {
+  reviewers: "update_reviewers",
+  review_coordinators: "update_review_coordinators",
+  submitters: "update_submitters"
+}
+
 const acceptMore = computed(() => {
-  // Inviting users to a submission is gated on the scoped `invite` ability (UI
-  // hint; the mutation stays @can-enforced). Held by review coordinators and up
-  // (editors, publication admins, application admin) — never plain reviewers.
+  const ability = updateAbilityByRoleGroup[props.roleGroup]
   return (
     props.mutable &&
     (props.maxUsers === false || users.value.length < props.maxUsers) &&
-    props.container.abilities?.invite === true
+    ability !== undefined &&
+    props.container.abilities?.[ability] === true
   )
 })
 

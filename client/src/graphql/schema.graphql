@@ -781,7 +781,6 @@ SubmissionAbility case, resolved through the same engine as the policies — so
 conditional grants (e.g. draft-only status changes) are reflected correctly.
 """
 type SubmissionAbilities {
-  invite: Boolean!
   update: Boolean!
   update_review_coordinators: Boolean!
   update_reviewers: Boolean!

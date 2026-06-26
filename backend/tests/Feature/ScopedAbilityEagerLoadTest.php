@@ -72,13 +72,13 @@ class ScopedAbilityEagerLoadTest extends TestCase
 
         foreach ([$editor, $reviewer] as $user) {
             $unloaded = (new ScopedAbilityResolver())
-                ->allows($user, SubmissionAbility::Invite, $submission->fresh());
+                ->allows($user, SubmissionAbility::UpdateReviewers, $submission->fresh());
 
             $loaded = Submission::query()
                 ->with(['submissionAssignments', 'publication.publicationAssignments'])
                 ->find($submission->id);
             $fromLoaded = (new ScopedAbilityResolver())
-                ->allows($user, SubmissionAbility::Invite, $loaded);
+                ->allows($user, SubmissionAbility::UpdateReviewers, $loaded);
 
             $this->assertSame($unloaded, $fromLoaded);
         }

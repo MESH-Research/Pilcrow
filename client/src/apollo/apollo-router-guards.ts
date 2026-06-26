@@ -113,7 +113,6 @@ const GUARD_SUBMISSION_ACCESS = gql`
       status
       abilities {
         view
-        update_title
       }
     }
   }
@@ -460,11 +459,9 @@ export async function beforeEachRequiresExportAccess(
       return submission.id == submissionId
     })
 
-    // Export has no server mutation — it renders already-viewable content — so
-    // this is a client policy, not a server-enforced ability. Eligible parties
-    // are the authoring/coordinating roles: exactly those who may edit the
-    // submission (`update_title`) — submitter, review coordinator, editor,
-    // publication admin, application administrator — never a plain reviewer. The
+    // Export has no server mutation — it renders content the viewer can already
+    // see — so the gate is exactly "can you view this submission" (`view`), not a
+    // proxy on an edit ability whose constraints may drift independently. The
     // exportable-state restriction is layered on top.
     const exportableStates = new Set([
       "REJECTED",
@@ -477,18 +474,17 @@ export async function beforeEachRequiresExportAccess(
     if (submission.length) {
       const s = submission[0]
 
-      access = !!s.abilities?.update_title && exportableStates.has(s.status)
+      access = !!s.abilities?.view && exportableStates.has(s.status)
     }
 
     // Not in the viewer's submissions list: not directly assigned, so fall back
-    // to the submission's own `update_title` ability, held by unassigned
-    // publication admins, editors and the application administrator — still only
-    // in an exportable state.
+    // to the submission's own `view` ability, held by unassigned publication
+    // admins, editors and the application administrator — still only in an
+    // exportable state.
     if (!access && !submission.length) {
       const fetched = await fetchSubmission(apolloClient, submissionId)
       access =
-        !!fetched?.abilities?.update_title &&
-        exportableStates.has(fetched?.status)
+        !!fetched?.abilities?.view && exportableStates.has(fetched?.status)
     }
 
     if (!access) {

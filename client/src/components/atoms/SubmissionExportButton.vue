@@ -1,5 +1,5 @@
 <template>
-  <div v-if="isDisabledByRole || isDisabledByState">
+  <div v-if="isDisabledByAccess || isDisabledByState">
     <q-btn
       disabled
       :label="$t(`export.call_to_action`)"
@@ -8,7 +8,7 @@
     >
     </q-btn>
     <q-icon name="info" size="sm" class="q-ml-sm">
-      <q-tooltip v-if="isDisabledByRole">{{
+      <q-tooltip v-if="isDisabledByAccess">{{
         $t(`export.disabled.by_role`)
       }}</q-tooltip>
       <q-tooltip v-else-if="isDisabledByState">{{
@@ -38,6 +38,6 @@ interface Props {
 
 const props = defineProps<Props>()
 const submissionRef = toRef(props, "submission")
-const { isDisabledByRole, isDisabledByState } =
+const { isDisabledByAccess, isDisabledByState } =
   useSubmissionExport(submissionRef)
 </script>
