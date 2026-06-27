@@ -97,7 +97,7 @@ extend type Mutation {
     and send them an email notification inviting them to accept the assignment"
     """
     inviteReviewer(input: inviteSubmissionUserInput @spread): Submission
-        @can(ability: "invite", find: "submission_id")
+        @can(ability: "updateReviewers", find: "submission_id")
         @field(
             resolver: "App\\GraphQL\\Mutations\\InviteSubmissionUser@inviteReviewer"
         )
@@ -109,7 +109,7 @@ extend type Mutation {
     inviteReviewCoordinator(
         input: inviteSubmissionUserInput @spread
     ): Submission
-        @can(ability: "invite", find: "submission_id")
+        @can(ability: "updateReviewCoordinators", find: "submission_id")
         @field(
             resolver: "App\\GraphQL\\Mutations\\InviteSubmissionUser@inviteReviewCoordinator"
         )
@@ -118,7 +118,7 @@ extend type Mutation {
     Resend an email notification inviting a staged reviewer to accept the assignment
     """
     reinviteReviewer(input: reinviteSubmissionUserInput @spread): Submission
-        @can(ability: "invite", find: "submission_id")
+        @can(ability: "updateReviewers", find: "submission_id")
         @field(
             resolver: "App\\GraphQL\\Mutations\\ReinviteSubmissionUser@reinviteReviewer"
         )
@@ -129,7 +129,7 @@ extend type Mutation {
     reinviteReviewCoordinator(
         input: reinviteSubmissionUserInput @spread
     ): Submission
-        @can(ability: "invite", find: "submission_id")
+        @can(ability: "updateReviewCoordinators", find: "submission_id")
         @field(
             resolver: "App\\GraphQL\\Mutations\\ReinviteSubmissionUser@reinviteReviewCoordinator"
         )
@@ -181,7 +181,10 @@ type Submission {
         @with(relation: "submissionAssignments")
         @method(name: "getEffectiveRole")
     "The authenticated viewer's scoped abilities on this submission (UI hints; server still enforces)."
-    abilities: SubmissionAbilities! @method(name: "abilities")
+    abilities: SubmissionAbilities!
+        @method(name: "abilities")
+        @with(relation: "submissionAssignments")
+        @with(relation: "publication.publicationAssignments")
     audits: [SubmissionAudit] @belongsToMany
 }
 
@@ -190,16 +193,8 @@ The authenticated viewer's scoped abilities on a submission. Each flag mirrors a
 SubmissionAbility case, resolved through the same engine as the policies — so
 conditional grants (e.g. draft-only status changes) are reflected correctly.
 """
-type SubmissionAbilities {
-    view: Boolean!
-    update: Boolean!
-    update_status: Boolean!
-    update_title: Boolean!
-    update_submitters: Boolean!
-    update_reviewers: Boolean!
-    update_review_coordinators: Boolean!
-    invite: Boolean!
-}
+type SubmissionAbilities
+    @abilityFields(enum: "App\\Auth\\Abilities\\SubmissionAbility")
 
 """
 A user associated with a submission and a role

@@ -78,6 +78,9 @@ describe("Dashboard Page", () => {
       status: status,
       my_role: submission_my_role[role],
       effective_role: submission_effective_role[role],
+      abilities: {
+        view: true
+      },
       publication: {
         id: "1",
         name: "Pilcrow Test Publication 1",

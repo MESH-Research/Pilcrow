@@ -17,6 +17,7 @@
           v-model:accepting-filter="acceptingFilter"
         />
         <q-btn
+          v-if="canCreatePublication"
           color="primary"
           icon="add"
           :label="$t('publication.create_button')"
@@ -105,13 +106,32 @@ graphql(`
     }
   }
 `)
+
+// Colocated: gate the create action on the viewer's own publication.create
+// ability. A limited admin may reach the admin area (admin_area union) without
+// holding publication.create, so creating is gated here rather than at the
+// area's route guard.
+graphql(`
+  query AdminPublicationsViewerAbilities {
+    currentUser {
+      id
+      abilities {
+        publication_create
+      }
+    }
+  }
+`)
 </script>
 
 <script setup lang="ts">
 import QueryTable, {
   type QueryTableColumn
 } from "src/components/tables/QueryTable.vue"
-import { GetAdminPublicationsDocument } from "src/graphql/generated/graphql"
+import {
+  GetAdminPublicationsDocument,
+  AdminPublicationsViewerAbilitiesDocument
+} from "src/graphql/generated/graphql"
+import { useQuery } from "@vue/apollo-composable"
 import CreateForm from "src/components/forms/Publication/CreateForm.vue"
 import PublicationsFilterPanel, {
   defaultVisibility,
@@ -161,6 +181,14 @@ const columns: QueryTableColumn[] = [
 const showCreateDialog = ref(false)
 const queryTableRef = ref<InstanceType<typeof QueryTable> | null>(null)
 const createFormRef = ref<InstanceType<typeof CreateForm> | null>(null)
+
+const { result: viewerAbilities } = useQuery(
+  AdminPublicationsViewerAbilitiesDocument
+)
+const canCreatePublication = computed(
+  () =>
+    viewerAbilities.value?.currentUser?.abilities?.publication_create === true
+)
 
 const route = useRoute()
 const router = useRouter()

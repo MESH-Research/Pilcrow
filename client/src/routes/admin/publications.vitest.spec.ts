@@ -6,7 +6,9 @@ import PublicationIndexPage from "./publications.vue"
 import { Notify } from "quasar"
 import {
   GetAdminPublicationsDocument,
-  type GetAdminPublicationsQuery
+  AdminPublicationsViewerAbilitiesDocument,
+  type GetAdminPublicationsQuery,
+  type AdminPublicationsViewerAbilitiesQuery
 } from "src/graphql/generated/graphql"
 import { beforeEach, describe, expect, it, test, vi } from "vitest"
 
@@ -21,10 +23,30 @@ vi.mock("vue-router", () => ({
 installQuasarPlugin({ plugins: { Notify } })
 const mockClient = installApolloClient()
 
+function mockViewerCanCreatePublication(canCreate: boolean) {
+  const response: { data: AdminPublicationsViewerAbilitiesQuery } = {
+    data: {
+      currentUser: {
+        __typename: "User",
+        id: "1",
+        abilities: {
+          __typename: "UserAbilities",
+          publication_create: canCreate
+        }
+      }
+    }
+  }
+  mockClient
+    .getRequestHandler(AdminPublicationsViewerAbilitiesDocument)
+    .mockResolvedValue(response)
+}
+
 beforeEach(() => {
   routeQuery = {}
   routerMock.push.mockReset()
   routerMock.replace.mockReset()
+  // Default: viewer may create; the gating tests override this.
+  mockViewerCanCreatePublication(true)
 })
 
 describe("publications page mount", () => {
@@ -217,5 +239,19 @@ describe("publications page filter logic", () => {
       name: "publication:setup:basic",
       params: { id: "55" }
     })
+  })
+
+  it("shows the create button when the viewer holds publication_create", async () => {
+    mockViewerCanCreatePublication(true)
+    const wrapper = factory()
+    await flushPromises()
+    expect(wrapper.find('[data-cy="create_pub_button"]').exists()).toBe(true)
+  })
+
+  it("hides the create button when the viewer lacks publication_create", async () => {
+    mockViewerCanCreatePublication(false)
+    const wrapper = factory()
+    await flushPromises()
+    expect(wrapper.find('[data-cy="create_pub_button"]').exists()).toBe(false)
   })
 })

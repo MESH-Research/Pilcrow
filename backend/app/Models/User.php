@@ -332,6 +332,14 @@ class User extends Authenticatable implements MustVerifyEmail
             $abilities[Str::snake($ability->name)] = $this->can($ability);
         }
 
+        // Derived union: admin-area access is "holds any admin_* ability", so the
+        // client gates the admin area on one flag and a new admin_* ability
+        // extends it automatically. Computed from the case flags above, before
+        // the key itself is added so it never folds into its own union.
+        $abilities['admin_area'] = collect($abilities)
+            ->filter(fn(bool $granted, string $key): bool => str_starts_with($key, 'admin_'))
+            ->contains(true);
+
         return $abilities;
     }
 

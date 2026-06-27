@@ -133,20 +133,6 @@ class SubmissionPolicy
     }
 
     /**
-     * Invite users to a submission.
-     *
-     * @param \App\Models\User $user
-     * @param \App\Models\Submission $submission
-     * @return \Illuminate\Auth\Access\Response|bool
-     */
-    public function invite(User $user, Submission $submission)
-    {
-        return $this->scoped->allows($user, SubmissionAbility::Invite, $submission)
-            ? true
-            : Response::deny('You do not have permission to invite users to this submission.');
-    }
-
-    /**
      * Update an inline comment of a submission
      *
      * @param \App\Models\User $user

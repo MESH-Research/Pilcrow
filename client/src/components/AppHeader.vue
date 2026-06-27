@@ -74,7 +74,7 @@
                 $t("record_of_review.title")
               }}</q-item-section>
             </q-item>
-            <div v-if="isAppAdmin">
+            <div v-if="canAccessAdmin">
               <q-separator />
               <q-item :to="{ name: 'admin:dashboard' }">
                 <q-item-section avatar>
@@ -186,7 +186,7 @@ interface Props {
 }
 defineProps<Props>()
 
-const { currentUser, isAppAdmin } = useCurrentUser()
+const { currentUser, canAccessAdmin } = useCurrentUser()
 const { isFeatureEnabled } = useFeatures()
 const recordOfReviewEnabled = isFeatureEnabled("record_of_review")
 const { locale } = useI18n({ useScope: "global" })

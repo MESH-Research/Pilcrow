@@ -1,7 +1,6 @@
 import { computed, ref, watch, type Ref } from "vue"
 import { useQuasar, type QNotifyCreateOptions } from "quasar"
 import { useI18n } from "vue-i18n"
-import { useCurrentUser } from "./user"
 import type { Submission } from "src/graphql/generated/graphql"
 
 export function useDarkMode() {
@@ -172,13 +171,14 @@ export const submissionStateButtons = {
 export function useStatusChangeControls(
   submission: Ref<Submission | null | undefined>
 ) {
-  const { isReviewer } = useCurrentUser()
-
+  // Status changes are gated on the scoped `update_status` ability (UI hint;
+  // the mutation stays @can-enforced). This honors conditional grants — a
+  // submitter may change status only while the submission is a draft.
   const statusChangingDisabledByRole = computed(() => {
     if (!submission.value) {
       return true
     }
-    return isReviewer(submission.value)
+    return !submission.value.abilities?.update_status
   })
 
   const statusChangingDisabledStates = [
@@ -232,14 +232,6 @@ export function useStatusChangeControls(
 export function useSubmissionExport(
   submission: Ref<Submission | null | undefined>
 ) {
-  const {
-    isAppAdmin,
-    isPublicationAdmin,
-    isEditor,
-    isReviewCoordinator,
-    isSubmitter
-  } = useCurrentUser()
-
   const exportVisibleStates = [
     "REJECTED",
     "RESUBMISSION_REQUESTED",
@@ -247,17 +239,15 @@ export function useSubmissionExport(
     "ARCHIVED",
     "EXPIRED"
   ]
-  const isDisabledByRole = computed(() => {
+  // Export has no server mutation — it renders content the viewer can already
+  // see — so the gate is exactly "can you view this submission" (`view`), not a
+  // proxy on an edit ability whose constraints may drift independently. Anyone
+  // who may view may export it once it reaches an exportable state.
+  const isDisabledByAccess = computed(() => {
     if (!submission.value) {
       return true
     }
-    return !(
-      isAppAdmin.value ||
-      isPublicationAdmin(submission.value.publication) ||
-      isEditor(submission.value.publication) ||
-      isReviewCoordinator(submission.value) ||
-      isSubmitter(submission.value)
-    )
+    return !submission.value.abilities?.view
   })
   const isDisabledByState = computed(() => {
     if (!submission.value) {
@@ -266,5 +256,5 @@ export function useSubmissionExport(
     return !exportVisibleStates.includes(submission.value.status)
   })
 
-  return { isDisabledByRole, isDisabledByState }
+  return { isDisabledByAccess, isDisabledByState }
 }

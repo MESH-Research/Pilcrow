@@ -32,6 +32,13 @@ function userResponse(overrides: Partial<CurrentUser> = {}): {
         email_verified_at: "2021-08-14 02:26:32",
         highest_privileged_role: UserRoles.submitter,
         roles: [{ name: "Submitter" }],
+        abilities: {
+          admin_user_view: false,
+          admin_user_view_any: false,
+          admin_user_update: false,
+          admin_user_manage_beta: false,
+          admin_area: false
+        },
         beta: false,
         feature_opt_ins: [],
         ...overrides

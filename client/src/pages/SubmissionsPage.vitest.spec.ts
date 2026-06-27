@@ -476,6 +476,9 @@ describe("Submissions Page", () => {
       status: SubmissionStatus.UNDER_REVIEW,
       my_role: submission_my_role[role_name],
       effective_role: submission_effective_role[role_name],
+      abilities: {
+        view: true
+      },
       publication: {
         id: "1000",
         name: "Jest Publication",

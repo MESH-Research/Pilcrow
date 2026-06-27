@@ -96,6 +96,19 @@ class Publication extends BaseModel
     }
 
     /**
+     * The role-assignment pivot rows for this publication. Exposed as a HasMany
+     * (not just the role-filtered belongsToMany helpers) so the abilities
+     * resolver can eager-load and read assignments in memory, avoiding a
+     * per-entity pivot query on list endpoints.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function publicationAssignments(): HasMany
+    {
+        return $this->hasMany(PublicationAssignment::class, 'publication_id');
+    }
+
+    /**
      * Submissions that belong to a publication
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
