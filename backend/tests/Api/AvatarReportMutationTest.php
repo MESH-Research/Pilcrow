@@ -6,8 +6,10 @@ namespace Tests\Api;
 use App\Enums\ModerationFlag;
 use App\Models\AvatarReport;
 use App\Models\User;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Storage;
 use Tests\ApiTestCase;
 
@@ -135,6 +137,53 @@ class AvatarReportMutationTest extends ApiTestCase
 
         $this->assertEquals($first, $second);
         $this->assertDatabaseCount('avatar_reports', 1);
+    }
+
+    public function testRateLimitsExcessiveReporting(): void
+    {
+        $reporter = User::factory()->create();
+        $target = User::factory()->create();
+        $this->giveUserAnAvatar($target);
+
+        // Saturate the reporter's hourly budget directly so the test doesn't
+        // have to file 15 real reports.
+        $key = 'avatar-report:' . $reporter->id;
+        for ($i = 0; $i < 15; $i++) {
+            RateLimiter::hit($key, 3600);
+        }
+
+        $this->actingAs($reporter);
+        $response = $this->graphQL(
+            'mutation ($id: ID!) { reportUserAvatar(userId: $id) { id } }',
+            ['id' => $target->id]
+        );
+
+        $this->assertNotEmpty($response->json('errors'));
+        $this->assertNull($response->json('data.reportUserAvatar'));
+        $this->assertDatabaseCount('avatar_reports', 0);
+    }
+
+    public function testPendingDedupIndexBlocksDuplicatePendingReports(): void
+    {
+        $reporter = User::factory()->create();
+        $target = User::factory()->create();
+        $this->giveUserAnAvatar($target);
+        $media = $target->fresh()->getAvatarMedia();
+
+        $base = [
+            'user_id' => $target->id,
+            'media_id' => $media->id,
+            'reported_media_uuid' => $media->uuid,
+            'reporter_user_id' => $reporter->id,
+            'status' => AvatarReport::STATUS_PENDING,
+        ];
+        AvatarReport::create($base);
+
+        // A second pending report for the same (reporter, user, media) is
+        // rejected at the database layer — the guarantee the resolver relies on
+        // to resolve the read-then-write race.
+        $this->expectException(QueryException::class);
+        AvatarReport::create($base);
     }
 
     public function testReportingASwappedAvatarRecordsANewReport(): void

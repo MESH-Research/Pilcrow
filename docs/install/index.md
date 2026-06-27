@@ -86,3 +86,16 @@ Upgrading is a relatively simple affair.  After checking the [release notes](htt
 docker compose pull # Pull new container images
 docker compose up -d # Swap the new container images for the old.
 ```
+
+## Security maintenance
+
+::: warning Keep image libraries patched
+User-uploaded avatars are re-encoded server-side to strip metadata. That
+re-encode step parses **untrusted image input** with the platform's native
+image libraries (GD and the underlying `libwebp`/`libpng`/`libjpeg`) *before*
+the image is sanitized, so their patch currency is a security dependency.
+
+Pulling new Pilcrow images during [upgrades](#upgrading) picks up the patched
+libraries baked into each release. If you pin to an older image for an extended
+period, rebuild it against an up-to-date base so decoder fixes still land.
+:::
