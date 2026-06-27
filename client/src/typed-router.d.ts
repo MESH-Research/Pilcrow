@@ -20,8 +20,9 @@ import type {
 
 declare module 'vue-router' {
   interface TypesConfig {
-    ParamParsers:
-      | never
+    _ParamParsers: {}
+    RouteNamedMap: import('vue-router/auto-routes').RouteNamedMap
+    _RouteFileInfoMap: import('vue-router/auto-routes')._RouteFileInfoMap
   }
 }
 
@@ -162,6 +163,8 @@ declare module 'vue-router/auto-routes' {
         | 'account:settings'
       views:
         | 'default'
+      pathParamNames:
+        | never
     }
     'src/routes/account/labs.vue': {
       routes:
@@ -169,11 +172,15 @@ declare module 'vue-router/auto-routes' {
         | 'account:labs:record-of-review'
       views:
         | 'default'
+      pathParamNames:
+        | never
     }
     'src/routes/account/labs/record-of-review.vue': {
       routes:
         | 'account:labs:record-of-review'
       views:
+        | never
+      pathParamNames:
         | never
     }
     'src/routes/account/profile.vue': {
@@ -181,17 +188,23 @@ declare module 'vue-router/auto-routes' {
         | 'account:profile'
       views:
         | never
+      pathParamNames:
+        | never
     }
     'src/routes/account/record-of-review.vue': {
       routes:
         | 'account:record_of_review'
       views:
         | never
+      pathParamNames:
+        | never
     }
     'src/routes/account/settings.vue': {
       routes:
         | 'account:settings'
       views:
+        | never
+      pathParamNames:
         | never
     }
     'src/routes/admin.vue': {
@@ -206,11 +219,15 @@ declare module 'vue-router/auto-routes' {
         | 'user_details:submissions'
       views:
         | 'default'
+      pathParamNames:
+        | never
     }
     'src/routes/admin/index.vue': {
       routes:
         | 'admin:dashboard'
       views:
+        | never
+      pathParamNames:
         | never
     }
     'src/routes/admin/beta-users.vue': {
@@ -218,11 +235,15 @@ declare module 'vue-router/auto-routes' {
         | 'admin:beta-users'
       views:
         | never
+      pathParamNames:
+        | never
     }
     'src/routes/admin/publications.vue': {
       routes:
         | 'admin:publication:index'
       views:
+        | never
+      pathParamNames:
         | never
     }
     'src/routes/admin/user/[id].vue': {
@@ -232,11 +253,15 @@ declare module 'vue-router/auto-routes' {
         | 'user_details:submissions'
       views:
         | 'default'
+      pathParamNames:
+        | 'id'
     }
     'src/routes/admin/user/[id]/index.vue': {
       routes:
         | 'user_details'
       views:
+        | never
+      pathParamNames:
         | never
     }
     'src/routes/admin/user/[id]/submissions.vue': {
@@ -244,11 +269,15 @@ declare module 'vue-router/auto-routes' {
         | 'user_details:submissions'
       views:
         | never
+      pathParamNames:
+        | never
     }
     'src/routes/admin/users.vue': {
       routes:
         | 'admin:users'
       views:
+        | never
+      pathParamNames:
         | never
     }
   }
