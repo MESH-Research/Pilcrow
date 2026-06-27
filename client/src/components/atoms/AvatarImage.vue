@@ -1,12 +1,12 @@
 <template>
   <q-avatar v-bind="{ ...$attrs, ...$props }">
-    <q-img v-if="uploadedSrc" :src="uploadedSrc" alt="User Avatar" />
+    <q-img v-if="uploadedSrc" :src="uploadedSrc" :alt="avatarAlt" />
     <!-- eslint-disable-next-line vue/no-v-html -->
     <div
       v-else
       class="identicon-wrap"
       role="img"
-      aria-label="User Avatar"
+      :aria-label="avatarAlt"
       v-html="identiconSvg"
     />
     <span
@@ -32,6 +32,7 @@ graphql(`
     id
     email
     staged
+    display_label
     avatar {
       url
       thumb_url
@@ -43,8 +44,11 @@ graphql(`
 
 <script setup lang="ts">
 import { computed } from "vue"
+import { useI18n } from "vue-i18n"
 import { toSvg } from "jdenticon"
 import type { avatarImageFragment } from "src/graphql/generated/graphql"
+
+const { t } = useI18n()
 
 interface Props {
   user: avatarImageFragment
@@ -108,6 +112,16 @@ const identiconSvg = computed(() => {
 
 const showStagedCorner = computed(
   () => props.user.staged === true && !props.hideStaged
+)
+
+/**
+ * Accessible label for the avatar image. Names the user when a display
+ * label is available; otherwise a generic, still-localized fallback.
+ */
+const avatarAlt = computed(() =>
+  props.user.display_label
+    ? t("user.avatar_alt", { name: props.user.display_label })
+    : t("user.avatar_alt_generic")
 )
 </script>
 

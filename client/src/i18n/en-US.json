@@ -14,6 +14,8 @@
     "password": "Password",
     "empty_name": "No display name",
     "details_heading": "User Details",
+    "avatar_alt": "{name}'s profile picture",
+    "avatar_alt_generic": "Profile picture",
     "staged_corner": {
       "aria": "Invitation pending",
       "tooltip": "User has been invited but hasn't signed in yet."
@@ -366,6 +368,7 @@
       "change_button": "Change picture",
       "remove_button": "Remove picture",
       "upload_success": "Profile picture updated.",
+      "remove_confirm": "Remove your profile picture? This can't be undone.",
       "remove_success": "Profile picture removed.",
       "upload_failure": "Unable to update profile picture.",
       "remove_failure": "Unable to remove profile picture.",
@@ -1386,7 +1389,8 @@
       "aria_label": "Crop Avatar",
       "title": "Crop your avatar",
       "save": "Save",
-      "cancel": "Cancel"
+      "cancel": "Cancel",
+      "process_failure": "We couldn't process the cropped image. Please try again."
     },
     "reportAvatar": {
       "aria_label": "Report Avatar",
@@ -1604,6 +1608,7 @@
     "action_remove": "Remove avatar",
     "cancel": "Cancel",
     "confirm_remove": "Remove this user's avatar?",
+    "confirm_remove_detail": "This permanently deletes the avatar and the retained evidence snapshot of the reported image. This can't be undone.",
     "confirm_block_label": "Also revoke upload permission",
     "confirm_block_help": "Prevent this user from uploading a new avatar. They can be reinstated from the user's admin detail page.",
     "dismissed_success": "Report dismissed.",

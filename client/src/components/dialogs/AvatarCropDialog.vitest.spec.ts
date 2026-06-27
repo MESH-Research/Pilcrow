@@ -2,6 +2,20 @@ import { installQuasarPlugin } from "app/test/vitest/utils"
 import { mount } from "@vue/test-utils"
 import { defineComponent, h } from "vue"
 import { describe, expect, it, beforeEach, afterEach, vi } from "vitest"
+import { Notify } from "quasar"
+import type { Mock } from "vitest"
+
+vi.mock("vue-i18n", () => ({
+  useI18n: () => ({ t: (key: string) => key })
+}))
+
+// installQuasarPlugin doesn't register the Notify plugin; the failure path
+// calls Notify.create, so swap it for a spy (keeping everything else real,
+// including useDialogPluginComponent).
+vi.mock("quasar", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("quasar")>()
+  return { ...actual, Notify: { ...actual.Notify, create: vi.fn() } }
+})
 
 // useDialogPluginComponent never shows the dialog standalone; passthrough stub
 // that renders the slot and mirrors hide → @hide.
@@ -63,6 +77,7 @@ describe("AvatarCropDialog", () => {
   beforeEach(() => {
     cropResult = { canvas: {} }
     lastToBlobType = undefined
+    ;(Notify.create as unknown as Mock).mockReset()
     installCanvasStub()
   })
 
@@ -91,12 +106,15 @@ describe("AvatarCropDialog", () => {
     expect(lastToBlobType).toBe("image/jpeg")
   })
 
-  it("does not emit ok when the cropper yields no canvas", async () => {
+  it("does not emit ok but notifies when the cropper yields no canvas", async () => {
     cropResult = {}
     const wrapper = factory()
     await wrapper.find('[data-cy="avatar_crop_save"]').trigger("click")
 
     expect(wrapper.emitted("ok")).toBeFalsy()
+    expect(Notify.create as unknown as Mock).toHaveBeenCalledWith(
+      expect.objectContaining({ type: "negative" })
+    )
   })
 
   it("hides without emitting ok when cancelled", async () => {

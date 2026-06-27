@@ -10,11 +10,11 @@
       :aria-label="$t('dialog.reportAvatar.button')"
       data-cy="reportable_avatar_trigger"
       @click.stop
-      @keydown.enter.prevent
-      @keydown.space.prevent
+      @keydown.enter.prevent="openMenu"
+      @keydown.space.prevent="openMenu"
     >
       <q-icon name="more_horiz" :size="compact ? '11px' : '16px'" />
-      <q-menu>
+      <q-menu ref="menu">
         <q-list dense style="min-width: 200px">
           <q-item
             v-close-popup
@@ -36,8 +36,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue"
-import { Dialog, Notify } from "quasar"
+import { computed, useTemplateRef } from "vue"
+import { Dialog, Notify, type QMenu } from "quasar"
 import { useI18n } from "vue-i18n"
 import { useMutation } from "@vue/apollo-composable"
 import AvatarImage from "../atoms/AvatarImage.vue"
@@ -81,6 +81,17 @@ const shouldShow = computed(() => {
   if (!props.user.avatar?.url) return false
   return String(currentUser.value.id) !== String(props.user.id)
 })
+
+const menu = useTemplateRef<QMenu>("menu")
+
+/**
+ * Open the report menu from the keyboard. The q-menu opens on pointer
+ * click of the trigger by default; Enter/Space must drive it explicitly
+ * so keyboard users can reach it too.
+ */
+function openMenu() {
+  menu.value?.show()
+}
 
 const { mutate: reportAvatar } = useMutation(REPORT_USER_AVATAR)
 

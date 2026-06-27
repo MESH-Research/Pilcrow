@@ -51,10 +51,13 @@ vi.mock("src/use/avatarReports", () => ({
 
 // QueryTable owns the listing/refetch; stub it down to the actions slot so
 // the per-row dismiss/remove buttons are reachable with a fake PENDING row.
+// Exposes a spy refetch so we can assert the list is refreshed after an action.
+const refetchTable = vi.fn()
 const PENDING_ROW = { id: "42", status: "PENDING" }
 const QueryTableStub = defineComponent({
   name: "QueryTable",
-  setup(_, { slots }) {
+  setup(_, { slots, expose }) {
+    expose({ refetch: refetchTable })
     return () =>
       h("div", { class: "query-table-stub" }, [
         slots["body-cell-actions"]?.({ row: PENDING_ROW })
@@ -90,6 +93,7 @@ describe("admin avatar-reports page", () => {
   beforeEach(() => {
     mockClient.mockReset()
     refetchPendingCount.mockReset()
+    refetchTable.mockReset()
     dialogCreate.mockReset()
     notifyCreate.mockReset()
     mockClient.getRequestHandler(DISMISS_AVATAR_REPORT).mockResolvedValue({
@@ -128,6 +132,7 @@ describe("admin avatar-reports page", () => {
       mockClient.getRequestHandler(DISMISS_AVATAR_REPORT)
     ).toHaveBeenCalledWith({ id: "42" })
     expect(refetchPendingCount).toHaveBeenCalled()
+    expect(refetchTable).toHaveBeenCalled()
     expect(notifyCreate).toHaveBeenCalledWith(
       expect.objectContaining({ type: "positive" })
     )
@@ -159,6 +164,7 @@ describe("admin avatar-reports page", () => {
       mockClient.getRequestHandler(RESOLVE_AVATAR_REPORT_AND_REMOVE_AVATAR)
     ).toHaveBeenCalledWith({ id: "42", blockFutureUploads: true })
     expect(refetchPendingCount).toHaveBeenCalled()
+    expect(refetchTable).toHaveBeenCalled()
     expect(notifyCreate).toHaveBeenCalledWith(
       expect.objectContaining({ type: "positive" })
     )

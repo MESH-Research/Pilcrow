@@ -50,6 +50,17 @@ function mockCropOk(file: File = CROPPED_FILE) {
   }))
 }
 
+// remove() opens a confirm dialog first; mock it to resolve OK so the
+// delete path runs. The confirm callback takes no payload.
+function mockConfirmOk() {
+  dialogCreate.mockImplementation(() => ({
+    onOk: (cb: () => void) => {
+      cb()
+      return { onCancel: () => ({ onDismiss: () => ({}) }) }
+    }
+  }))
+}
+
 // AvatarImage runs identicon/image logic irrelevant here; stub it out.
 const AvatarImageStub = defineComponent({
   name: "AvatarImage",
@@ -198,6 +209,7 @@ describe("AvatarUploader", () => {
   })
 
   it("removes the avatar and notifies success", async () => {
+    mockConfirmOk()
     const wrapper = factory({
       avatar: {
         __typename: "Avatar",
@@ -218,6 +230,7 @@ describe("AvatarUploader", () => {
   })
 
   it("notifies a failure when the delete mutation rejects", async () => {
+    mockConfirmOk()
     mockClient
       .getRequestHandler(DELETE_USER_AVATAR)
       .mockRejectedValue(new Error("network"))

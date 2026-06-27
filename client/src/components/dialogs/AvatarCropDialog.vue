@@ -42,9 +42,12 @@
 
 <script setup lang="ts">
 import { ref } from "vue"
-import { useDialogPluginComponent } from "quasar"
+import { Notify, useDialogPluginComponent } from "quasar"
+import { useI18n } from "vue-i18n"
 import { Cropper } from "vue-advanced-cropper"
 import "vue-advanced-cropper/dist/style.css"
+
+const { t } = useI18n()
 
 interface Props {
   src: string
@@ -74,20 +77,36 @@ interface CropperInstance {
 }
 const cropperRef = ref<CropperInstance | null>(null)
 
+function failCrop() {
+  Notify.create({
+    type: "negative",
+    message: t("dialog.avatarCrop.process_failure")
+  })
+}
+
 function handleSave() {
   const result = cropperRef.value?.getResult()
-  if (!result?.canvas) return
+  if (!result?.canvas) {
+    failCrop()
+    return
+  }
 
   // Resize to a fixed output size to cap upload size regardless of source.
   const target = document.createElement("canvas")
   target.width = props.outputSize
   target.height = props.outputSize
   const ctx = target.getContext("2d")
-  if (!ctx) return
+  if (!ctx) {
+    failCrop()
+    return
+  }
   ctx.drawImage(result.canvas, 0, 0, props.outputSize, props.outputSize)
 
   target.toBlob((blob) => {
-    if (!blob) return
+    if (!blob) {
+      failCrop()
+      return
+    }
     const ext = props.mimeType === "image/jpeg" ? "jpg" : "png"
     const file = new File([blob], `avatar.${ext}`, { type: props.mimeType })
     onDialogOK({ file })

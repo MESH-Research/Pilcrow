@@ -3,6 +3,7 @@
     <h2>{{ $t("admin_avatar_reports.page_title") }}</h2>
   </div>
   <QueryTable
+    ref="table"
     class="q-px-lg"
     :query="GetAvatarReportsDocument"
     t-prefix="admin_avatar_reports"
@@ -70,6 +71,8 @@
             size="sm"
             color="primary"
             :label="$t('admin_avatar_reports.action_dismiss')"
+            :loading="actingRowId === scope.row.id"
+            :disable="actingRowId !== null"
             data-cy="avatar_report_dismiss"
             @click="dismiss(scope.row)"
           />
@@ -77,6 +80,7 @@
             size="sm"
             color="negative"
             :label="$t('admin_avatar_reports.action_remove')"
+            :disable="actingRowId !== null"
             data-cy="avatar_report_remove"
             class="q-ml-xs"
             @click="confirmRemove(scope.row)"
@@ -129,7 +133,7 @@ graphql(`
 </script>
 
 <script setup lang="ts">
-import { computed, ref } from "vue"
+import { computed, ref, useTemplateRef } from "vue"
 import { Dialog, Notify } from "quasar"
 import { useI18n } from "vue-i18n"
 import { useMutation } from "@vue/apollo-composable"
@@ -165,6 +169,12 @@ definePage({
 })
 
 type ReportRow = GetAvatarReportsQuery["avatarReports"]["data"][number]
+
+const table = useTemplateRef<InstanceType<typeof QueryTable>>("table")
+
+// The id of the report currently being actioned, so its buttons show a
+// spinner and every row's action buttons disable — guarding double-submits.
+const actingRowId = ref<string | null>(null)
 
 const { t } = useI18n()
 const statusFilter = ref<"PENDING" | "DISMISSED" | "REMOVED" | null>("PENDING")
@@ -255,9 +265,12 @@ const { mutate: resolveMutation } = useMutation(
 )
 
 async function dismiss(row: ReportRow) {
+  if (actingRowId.value !== null) return
+  actingRowId.value = row.id
   try {
     await dismissMutation({ id: row.id })
     void refetchPendingCount()
+    void table.value?.refetch()
     Notify.create({
       type: "positive",
       message: t("admin_avatar_reports.dismissed_success")
@@ -267,15 +280,20 @@ async function dismiss(row: ReportRow) {
       type: "negative",
       message: t("admin_avatar_reports.failure")
     })
+  } finally {
+    actingRowId.value = null
   }
 }
 
 function confirmRemove(row: ReportRow) {
   Dialog.create({ component: RemoveAvatarDialog }).onOk(
     async ({ blockFutureUploads }: { blockFutureUploads: boolean }) => {
+      if (actingRowId.value !== null) return
+      actingRowId.value = row.id
       try {
         await resolveMutation({ id: row.id, blockFutureUploads })
         void refetchPendingCount()
+        void table.value?.refetch()
         Notify.create({
           type: "positive",
           message: t("admin_avatar_reports.removed_success")
@@ -285,6 +303,8 @@ function confirmRemove(row: ReportRow) {
           type: "negative",
           message: t("admin_avatar_reports.failure")
         })
+      } finally {
+        actingRowId.value = null
       }
     }
   )

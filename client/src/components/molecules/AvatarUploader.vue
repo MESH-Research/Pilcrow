@@ -151,7 +151,18 @@ async function upload(file: File) {
   }
 }
 
-async function remove() {
+function remove() {
+  Dialog.create({
+    title: t("account.avatar.remove_button"),
+    message: t("account.avatar.remove_confirm"),
+    cancel: true,
+    ok: { label: t("account.avatar.remove_button"), color: "negative" }
+  }).onOk(() => {
+    void doRemove()
+  })
+}
+
+async function doRemove() {
   removing.value = true
   try {
     await deleteAvatar({ id: props.user.id })

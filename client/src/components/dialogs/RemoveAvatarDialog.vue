@@ -15,6 +15,9 @@
         <p class="text-body2">
           {{ $t("admin_avatar_reports.confirm_remove") }}
         </p>
+        <p class="text-body2 text-negative" data-cy="confirm_remove_detail">
+          {{ $t("admin_avatar_reports.confirm_remove_detail") }}
+        </p>
         <q-checkbox
           v-model="block"
           :label="$t('admin_avatar_reports.confirm_block_label')"
