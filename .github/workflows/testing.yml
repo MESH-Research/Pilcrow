@@ -80,9 +80,10 @@ jobs:
           use_oidc: true
       - name: Upload test results to Codecov
         if: ${{ !cancelled() }}
-        uses: codecov/test-results-action@v1
+        uses: codecov/codecov-action@v6
         with:
           files: ./coverage-web/junit.xml
+          report_type: test_results
           flags: client
           fail_ci_if_error: false
           use_oidc: true
@@ -192,9 +193,10 @@ jobs:
           use_oidc: true
       - name: Upload test results to Codecov
         if: ${{ !cancelled() }}
-        uses: codecov/test-results-action@v1
+        uses: codecov/codecov-action@v6
         with:
           files: ./coverage-fpm/junit.xml
+          report_type: test_results
           flags: backend
           fail_ci_if_error: false
           use_oidc: true
