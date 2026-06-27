@@ -62,12 +62,17 @@ const mockClient = installApolloClient()
 
 import AvatarUploader from "./AvatarUploader.vue"
 
-const BASE_USER: avatarImageFragment & { avatar_upload_blocked?: boolean } = {
+const BASE_USER: avatarImageFragment & {
+  can_upload_avatar?: boolean
+  avatar_upload_blocked?: boolean
+} = {
   __typename: "User",
   id: "1",
   email: "user@example.com",
   staged: null,
-  avatar: null
+  avatar: null,
+  can_upload_avatar: true,
+  avatar_upload_blocked: false
 }
 
 function factory(user: Partial<typeof BASE_USER> = {}) {
@@ -106,9 +111,15 @@ describe("AvatarUploader", () => {
     })
   })
 
-  it("renders nothing when uploads are blocked", () => {
-    const wrapper = factory({ avatar_upload_blocked: true })
+  it("hides the uploader and explains when uploads are blocked", () => {
+    const wrapper = factory({
+      can_upload_avatar: false,
+      avatar_upload_blocked: true
+    })
     expect(wrapper.find(".avatar-uploader").exists()).toBe(false)
+    expect(
+      wrapper.find('[data-cy="avatar_upload_blocked_notice"]').exists()
+    ).toBe(true)
   })
 
   it("shows the upload label and no remove button when there is no avatar", () => {

@@ -30,6 +30,7 @@ function userResponse(overrides: Partial<CurrentUser> = {}): {
         username: "betaUser",
         avatar_color: "blue",
         avatar_upload_blocked: false,
+        can_upload_avatar: true,
         email_verified_at: "2021-08-14 02:26:32",
         highest_privileged_role: UserRoles.submitter,
         roles: [{ name: "Submitter" }],
@@ -41,7 +42,7 @@ function userResponse(overrides: Partial<CurrentUser> = {}): {
           user_view_any: false,
           user_update: false,
           user_manage_beta: false,
-          avatar_moderate: false
+          admin_avatar_moderate: false
         },
         ...overrides
       }

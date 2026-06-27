@@ -370,7 +370,8 @@
       "upload_failure": "Unable to update profile picture.",
       "remove_failure": "Unable to remove profile picture.",
       "invalid_type": "Please select a JPEG, PNG, or WebP image.",
-      "too_large": "Image must be 5 MB or smaller."
+      "too_large": "Image must be 5 MB or smaller.",
+      "upload_blocked_by_moderator": "A moderator has disabled profile picture uploads for this account."
     }
   },
   "home": {

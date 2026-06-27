@@ -1,5 +1,8 @@
 <template>
-  <div v-if="!user.avatar_upload_blocked" class="avatar-uploader q-gutter-md items-center">
+  <div
+    v-if="user.can_upload_avatar"
+    class="avatar-uploader q-gutter-md items-center"
+  >
     <div class="row items-center q-gutter-md">
       <avatar-image
         :user="user"
@@ -48,6 +51,13 @@
       @change="onFileSelected"
     />
   </div>
+  <div
+    v-else-if="user.avatar_upload_blocked"
+    class="avatar-uploader-blocked text-caption text-grey-8"
+    data-cy="avatar_upload_blocked_notice"
+  >
+    {{ $t("account.avatar.upload_blocked_by_moderator") }}
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -61,7 +71,10 @@ import { UPLOAD_USER_AVATAR, DELETE_USER_AVATAR } from "src/graphql/mutations"
 import type { avatarImageFragment } from "src/graphql/generated/graphql"
 
 interface Props {
-  user: avatarImageFragment & { avatar_upload_blocked?: boolean }
+  user: avatarImageFragment & {
+    can_upload_avatar?: boolean
+    avatar_upload_blocked?: boolean
+  }
 }
 const props = defineProps<Props>()
 

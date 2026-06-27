@@ -43,7 +43,7 @@ describe("useAvatarReportsPendingCount", () => {
     const { result, handler } = mountComposable(7)
     await flushPromises()
 
-    expect(can).toHaveBeenCalledWith("avatar_moderate")
+    expect(can).toHaveBeenCalledWith("admin_avatar_moderate")
     expect(result.canModerate.value).toBe(false)
     expect(handler).not.toHaveBeenCalled()
     expect(result.count.value).toBe(0)

@@ -235,7 +235,7 @@ const isAdmin = computed(() =>
 )
 
 const { can } = useCurrentUser()
-const canModerateAvatars = computed(() => can("avatar_moderate"))
+const canModerateAvatars = computed(() => can("admin_avatar_moderate"))
 
 const { t, te } = useI18n()
 

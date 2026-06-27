@@ -42,6 +42,13 @@ type User {
 
     "True when a moderator has revoked this user's ability to upload an avatar."
     avatar_upload_blocked: Boolean! @method(name: "getAvatarUploadBlocked")
+
+    """
+    Whether the current viewer may upload an avatar for this user — the
+    server-owned uploadAvatar decision (owner AND not moderator-blocked). The
+    client gates the uploader UI on this rather than re-deriving it.
+    """
+    can_upload_avatar: Boolean! @method(name: "getCanUploadAvatar")
 }
 
 """
@@ -68,7 +75,7 @@ type UserAbilities {
     user_view_any: Boolean!
     user_update: Boolean!
     user_manage_beta: Boolean!
-    avatar_moderate: Boolean!
+    admin_avatar_moderate: Boolean!
 }
 
 enum UserRoles {

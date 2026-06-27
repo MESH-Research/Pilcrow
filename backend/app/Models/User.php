@@ -16,7 +16,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Laravel\Sanctum\HasApiTokens;
@@ -542,5 +544,18 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
     public function getAvatarUploadBlocked(): bool
     {
         return $this->hasModerationFlag(ModerationFlag::AvatarUploadBlocked);
+    }
+
+    /**
+     * Resolve the GraphQL `can_upload_avatar` field: whether the current viewer
+     * may upload an avatar for this user, per the server-owned uploadAvatar
+     * gate (owner AND not moderator-blocked). False for guests.
+     */
+    public function getCanUploadAvatar(): bool
+    {
+        $viewer = Auth::user();
+
+        return $viewer !== null
+            && Gate::forUser($viewer)->allows('uploadAvatar', $this);
     }
 }

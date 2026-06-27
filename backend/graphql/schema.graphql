@@ -110,12 +110,12 @@ type Mutation {
     "Upload or replace a user's avatar image. JPEG/PNG/WebP, max 5MB."
     uploadUserAvatar(id: ID!, avatar: Upload!): User!
         @field(resolver: "App\\GraphQL\\Mutations\\UpdateUserAvatar@upload")
-        @can(ability: "update", find: "id")
+        @can(ability: "uploadAvatar", find: "id")
 
     "Remove a user's avatar image."
     deleteUserAvatar(id: ID!): User!
         @field(resolver: "App\\GraphQL\\Mutations\\UpdateUserAvatar@delete")
-        @can(ability: "update", find: "id")
+        @can(ability: "deleteAvatar", find: "id")
 }
 
 "A date string with format `Y-m-d`, e.g. `2011-05-23`."

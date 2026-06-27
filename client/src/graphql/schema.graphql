@@ -692,7 +692,7 @@ enum PublicationRole {
 type Query {
   """
   Return avatar reports for moderator review. Requires the
-  `moderateAvatars` ability (application administrators).
+  `admin_avatar_moderate` ability (application administrators).
   """
   avatarReports(
     """Limits number of fetched items."""
@@ -1171,6 +1171,13 @@ type User {
 
   """Whether the user has access to private beta features (admin-set)."""
   beta: Boolean!
+
+  """
+  Whether the current viewer may upload an avatar for this user — the
+  server-owned uploadAvatar decision (owner AND not moderator-blocked). The
+  client gates the uploader UI on this rather than re-deriving it.
+  """
+  can_upload_avatar: Boolean!
   created_at: DateTimeUtc!
   display_label: String
   email: String
@@ -1223,7 +1230,7 @@ A user's global (application-wide) abilities. Each flag mirrors a GlobalAbility
 case, resolved directly against Bouncer — the same engine as the policies.
 """
 type UserAbilities {
-  avatar_moderate: Boolean!
+  admin_avatar_moderate: Boolean!
   publication_create: Boolean!
   user_manage_beta: Boolean!
   user_update: Boolean!

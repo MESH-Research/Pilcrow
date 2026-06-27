@@ -49,12 +49,13 @@ export const _CURRENT_USER_FIELDS = gql`
       user_view_any
       user_update
       user_manage_beta
-      avatar_moderate
+      admin_avatar_moderate
     }
     highest_privileged_role
     beta
     feature_opt_ins
     avatar_upload_blocked
+    can_upload_avatar
     ...avatarFields
   }
   ${_AVATAR_FIELDS}
