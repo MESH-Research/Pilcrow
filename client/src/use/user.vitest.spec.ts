@@ -73,7 +73,59 @@ describe("useCurrentUser composable", () => {
     await flushPromises()
     expect(result.currentUser.value).not.toBeNull()
     expect(result.isLoggedIn.value).toBe(true)
-    //TODO: Implement a composable function to return roles and abilities booleans
+    // The viewer holds no abilities, so every gate is closed.
+    expect(result.can("admin_user_view")).toBe(false)
+    expect(result.canAccessAdmin.value).toBe(false)
+  })
+
+  test("can() and canAccessAdmin reflect the viewer's ability flags", async () => {
+    const response: { data: CurrentUserQuery } = {
+      data: {
+        currentUser: {
+          __typename: "User",
+          id: "1",
+          display_label: "Hello",
+          name: "Hello",
+          email: "hello@example.com",
+          username: "helloUser",
+          avatar_color: "blue",
+          email_verified_at: "2021-08-14 02:26:32",
+          highest_privileged_role: UserRoles.application_admin,
+          roles: [{ name: "tester" }],
+          abilities: {
+            admin_user_view: true,
+            admin_user_view_any: false,
+            admin_user_update: false,
+            admin_user_manage_beta: false,
+            // The server-computed union of the viewer's admin_* abilities.
+            admin_area: true
+          },
+          beta: false,
+          feature_opt_ins: []
+        }
+      }
+    }
+
+    const { result } = mountComposable([
+      [CURRENT_USER, vi.fn().mockResolvedValue(response)]
+    ])
+    await flushPromises()
+
+    // A held ability is true; an unheld one stays false.
+    expect(result.can("admin_user_view")).toBe(true)
+    expect(result.can("admin_user_update")).toBe(false)
+    // canAccessAdmin tracks the server-resolved admin_area union flag.
+    expect(result.canAccessAdmin.value).toBe(true)
+  })
+
+  test("can() is false for a guest (no abilities resolved)", async () => {
+    const { result } = mountComposable([
+      [CURRENT_USER, vi.fn().mockResolvedValue({ data: { currentUser: null } })]
+    ])
+    await flushPromises()
+
+    expect(result.can("admin_user_view")).toBe(false)
+    expect(result.canAccessAdmin.value).toBe(false)
   })
 })
 
