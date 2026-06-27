@@ -8,8 +8,6 @@ use App\Models\AvatarReport;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
 use Tests\ApiTestCase;
 
@@ -232,28 +230,30 @@ class AvatarReportMutationTest extends ApiTestCase
         $target = User::factory()->create();
         $this->giveUserAnAvatar($target);
 
-        AvatarReport::create([
-            'user_id' => $target->id,
-            'reporter_user_id' => User::factory()->create()->id,
-            'status' => AvatarReport::STATUS_PENDING,
-        ]);
-        $second = AvatarReport::create([
-            'user_id' => $target->id,
-            'reporter_user_id' => User::factory()->create()->id,
-            'status' => AvatarReport::STATUS_PENDING,
-        ]);
+        // Two reports against the same current avatar, filed via the API so
+        // each holds its own private snapshot.
+        $sibling = $this->reportViaApi(User::factory()->create(), $target);
+        $resolved = $this->reportViaApi(User::factory()->create(), $target);
+        $this->assertNotNull($sibling->getSnapshotMedia());
 
         $this->beAppAdmin();
 
         $this->graphQL(
             'mutation ($id: ID!) { resolveAvatarReportAndRemoveAvatar(id: $id) { id } }',
-            ['id' => $second->id]
+            ['id' => $resolved->id]
         );
 
         $pending = AvatarReport::where('user_id', $target->id)
             ->where('status', AvatarReport::STATUS_PENDING)
             ->count();
         $this->assertSame(0, $pending);
+
+        $sibling->refresh();
+        $this->assertSame(AvatarReport::STATUS_REMOVED, $sibling->status);
+        $this->assertNull(
+            $sibling->getSnapshotMedia(),
+            'A bulk-closed sibling report has its snapshot purged too'
+        );
     }
 
     public function testCannotResolveAlreadyResolvedReport(): void
@@ -553,12 +553,44 @@ class AvatarReportMutationTest extends ApiTestCase
         );
     }
 
-    public function testResolveAndRemoveRetainsSnapshotAndSetsPurgeAfter(): void
+    public function testResolvingAStaleReportLeavesOtherReportsPending(): void
+    {
+        $target = User::factory()->create();
+        $this->giveUserAnAvatar($target);
+
+        // Two reports against the current (reported) avatar.
+        $stale = $this->reportViaApi(User::factory()->create(), $target);
+        $other = $this->reportViaApi(User::factory()->create(), $target);
+
+        // Target swaps their avatar, so the first report is now stale (the
+        // reported image is gone; the current one is a possibly-innocent
+        // replacement the other report may concern).
+        $this->giveUserAnAvatar($target);
+
+        $this->beAppAdmin();
+        $this->graphQL(
+            'mutation ($id: ID!) { resolveAvatarReportAndRemoveAvatar(id: $id) { id status } }',
+            ['id' => $stale->id]
+        )->assertJsonPath('data.resolveAvatarReportAndRemoveAvatar.status', 'REMOVED');
+
+        $this->assertNotNull(
+            $target->fresh()->getAvatarMedia(),
+            'Innocent replacement avatar must be left intact'
+        );
+        $this->assertSame(
+            AvatarReport::STATUS_PENDING,
+            $other->fresh()->status,
+            'A stale resolve must NOT close sibling reports — nothing was removed'
+        );
+    }
+
+    public function testResolveAndRemovePurgesSnapshot(): void
     {
         $reporter = User::factory()->create();
         $target = User::factory()->create();
         $this->giveUserAnAvatar($target);
         $report = $this->reportViaApi($reporter, $target);
+        $this->assertNotNull($report->getSnapshotMedia());
 
         $this->beAppAdmin();
         $this->graphQL(
@@ -566,16 +598,10 @@ class AvatarReportMutationTest extends ApiTestCase
             ['id' => $report->id]
         );
 
-        $report->refresh();
         $this->assertNull($target->fresh()->getAvatarMedia(), 'Reported avatar removed');
-        $this->assertNotNull(
-            $report->getSnapshotMedia(),
-            'Snapshot is retained through the appeals window after removal'
-        );
-        $this->assertNotNull($report->purge_after);
-        $this->assertTrue(
-            $report->purge_after->greaterThan(Carbon::now()->addDays(80)),
-            'purge_after should be ~90 days out'
+        $this->assertNull(
+            $report->fresh()->getSnapshotMedia(),
+            'Snapshot is purged the moment the report is resolved — no post-resolution retention'
         );
     }
 
@@ -597,27 +623,6 @@ class AvatarReportMutationTest extends ApiTestCase
             $report->fresh()->getSnapshotMedia(),
             'Dismissing a report should purge the retained snapshot immediately'
         );
-    }
-
-    public function testPurgeCommandDeletesExpiredSnapshots(): void
-    {
-        $reporter = User::factory()->create();
-        $target = User::factory()->create();
-        $this->giveUserAnAvatar($target);
-        $report = $this->reportViaApi($reporter, $target);
-
-        // Simulate a resolved-and-removed report whose retention window lapsed.
-        $report->forceFill([
-            'status' => AvatarReport::STATUS_REMOVED,
-            'purge_after' => Carbon::now()->subDay(),
-        ])->save();
-        $this->assertNotNull($report->getSnapshotMedia());
-
-        Artisan::call('avatar-reports:purge-snapshots');
-
-        $report->refresh();
-        $this->assertNull($report->getSnapshotMedia(), 'Expired snapshot should be purged');
-        $this->assertNull($report->purge_after, 'purge_after is cleared after purge');
     }
 
     public function testSnapshotRouteIsModeratorGated(): void

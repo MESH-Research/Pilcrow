@@ -21,16 +21,11 @@ class AvatarReport extends Model implements HasMedia
      * Private, moderator-only collection holding a snapshot copy of the exact
      * avatar that was reported. Captured at report time so review survives the
      * user later swapping or deleting their avatar; never publicly served.
+     * Purged the moment the report is resolved (any outcome) — we never retain
+     * violative content past the moderation decision.
      */
     public const SNAPSHOT_COLLECTION = 'reported_avatar';
     public const SNAPSHOT_DISK = 'media_private';
-
-    /**
-     * How long a retained snapshot is kept after a report is resolved by
-     * removal, to support appeals / repeat-offender review, before the
-     * scheduled purge command deletes it.
-     */
-    public const SNAPSHOT_RETENTION_DAYS = 90;
 
     /**
      * @var array<int, string>
@@ -44,7 +39,6 @@ class AvatarReport extends Model implements HasMedia
         'status',
         'resolved_by_user_id',
         'resolved_at',
-        'purge_after',
         'resolution_notes',
     ];
 
@@ -53,7 +47,6 @@ class AvatarReport extends Model implements HasMedia
      */
     protected $casts = [
         'resolved_at' => 'datetime',
-        'purge_after' => 'datetime',
     ];
 
     /**
@@ -113,7 +106,7 @@ class AvatarReport extends Model implements HasMedia
      * Resolve the GraphQL `reported_avatar_url` field: an ability-gated URL to
      * the retained snapshot of the exact image that was reported, or null once
      * the snapshot has been purged (or was never captured). The URL points at
-     * a controller that re-checks the moderateAvatars ability per request — the
+     * a controller that re-checks the admin_avatar_moderate ability per request — the
      * snapshot is never publicly addressable.
      */
     public function getReportedAvatarUrl(): ?string

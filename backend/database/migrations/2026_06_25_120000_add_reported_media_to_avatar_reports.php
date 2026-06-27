@@ -6,8 +6,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 /**
- * Pin each avatar report to the exact media row that was reported, and add a
- * retention deadline for the private snapshot of that image.
+ * Pin each avatar report to the exact media row that was reported.
  *
  * Without media_id a report only names the user, so if the user swaps or
  * deletes their avatar before review the moderator sees — and would remove —
@@ -16,9 +15,6 @@ use Illuminate\Support\Facades\Schema;
  * collection is single-file, so re-uploading hard-deletes the old row) the
  * report record survives with media_id = null, signalling "the reported image
  * is no longer the current avatar".
- *
- * purge_after is set when a snapshot is retained at resolution time; a
- * scheduled command purges snapshots past that deadline.
  */
 return new class extends Migration
 {
@@ -41,10 +37,6 @@ return new class extends Migration
                 ->nullable()
                 ->after('media_id')
                 ->comment('UUID of the reported media; persists after the media row is deleted');
-            $table->timestamp('purge_after')
-                ->nullable()
-                ->after('resolved_at')
-                ->comment('When the retained private snapshot of the reported avatar may be purged');
         });
     }
 
@@ -52,7 +44,7 @@ return new class extends Migration
     {
         Schema::table('avatar_reports', function (Blueprint $table) {
             $table->dropConstrainedForeignId('media_id');
-            $table->dropColumn('purge_after');
+            $table->dropColumn('reported_media_uuid');
         });
     }
 };

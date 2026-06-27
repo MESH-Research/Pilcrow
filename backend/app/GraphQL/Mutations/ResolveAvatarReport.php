@@ -78,31 +78,18 @@ class ResolveAvatarReport
                 $notes = $notes ? ($notes . ' ' . $staleNote) : $staleNote;
             } else {
                 $report->user->clearMediaCollection(User::AVATAR_COLLECTION);
+
+                // Close out other pending reports against the same user — the
+                // avatar is actually gone, so they no longer need moderator
+                // attention. Only when we removed it: a stale resolve leaves the
+                // current (possibly innocent) avatar in place, so other reports
+                // — which may concern that replacement — must stay open.
+                $this->closeSiblingPendingReports($report, $admin, $now);
             }
 
             if (!empty($args['blockFutureUploads'])) {
                 $report->user->setModerationFlag(ModerationFlag::AvatarUploadBlocked);
             }
-
-            // Retain the private snapshot for the appeals / repeat-offender
-            // window, after which the scheduled purge command deletes it.
-            $report->purge_after = $now->copy()
-                ->addDays(AvatarReport::SNAPSHOT_RETENTION_DAYS);
-
-            // Close out other pending reports against the same user — the
-            // avatar is gone, so they no longer need moderator attention. Their
-            // retained snapshots get the same purge deadline.
-            AvatarReport::where('user_id', $report->user_id)
-                ->where('status', AvatarReport::STATUS_PENDING)
-                ->where('id', '!=', $report->id)
-                ->update([
-                    'status' => AvatarReport::STATUS_REMOVED,
-                    'resolved_by_user_id' => $admin->id,
-                    'resolved_at' => $now,
-                    'purge_after' => $now->copy()
-                        ->addDays(AvatarReport::SNAPSHOT_RETENTION_DAYS),
-                    'resolution_notes' => 'Closed automatically when avatar was removed.',
-                ]);
         }
 
         $report->fill([
@@ -112,12 +99,36 @@ class ResolveAvatarReport
             'resolution_notes' => $notes,
         ])->save();
 
-        // Dismissals are not actionable content — purge the snapshot now rather
-        // than holding a flagged image with no moderation reason to keep it.
-        if ($status === AvatarReport::STATUS_DISMISSED) {
-            $report->clearMediaCollection(AvatarReport::SNAPSHOT_COLLECTION);
-        }
+        // Resolving a report ends any reason to hold its evidence — purge the
+        // private snapshot now, whatever the outcome. We never retain violative
+        // content past the moderation decision.
+        $report->clearMediaCollection(AvatarReport::SNAPSHOT_COLLECTION);
 
         return $report->refresh();
+    }
+
+    /**
+     * Close every other pending report against the same user as removed — the
+     * avatar they all concern is gone. Iterated (not a mass update) so each
+     * sibling's private snapshot is purged on resolution too.
+     */
+    private function closeSiblingPendingReports(
+        AvatarReport $report,
+        User $admin,
+        Carbon $now
+    ): void {
+        AvatarReport::where('user_id', $report->user_id)
+            ->where('status', AvatarReport::STATUS_PENDING)
+            ->where('id', '!=', $report->id)
+            ->each(function (AvatarReport $sibling) use ($admin, $now): void {
+                $sibling->fill([
+                    'status' => AvatarReport::STATUS_REMOVED,
+                    'resolved_by_user_id' => $admin->id,
+                    'resolved_at' => $now,
+                    'resolution_notes' => 'Closed automatically when avatar was removed.',
+                ])->save();
+
+                $sibling->clearMediaCollection(AvatarReport::SNAPSHOT_COLLECTION);
+            });
     }
 }
