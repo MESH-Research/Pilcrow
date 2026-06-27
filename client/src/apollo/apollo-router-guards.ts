@@ -160,65 +160,60 @@ export async function beforeEachRequiresAuth(apolloClient, to, _, next) {
   }
 }
 
-export async function beforeEachRequiresSubmissionAccess(
-  apolloClient,
-  to,
-  _,
-  next
-) {
-  if (to.matched.some((record) => record.meta.requiresSubmissionAccess)) {
-    let access = false
-    const submissionId = to.params.id
-    const user = await apolloClient
-      .query({
-        query: CURRENT_USER_SUBMISSIONS
-      })
-      .then(({ data: { currentUser } }) => currentUser)
+/**
+ * Submission states from which a viewer may export — export renders content
+ * already visible, so the gate is `view` plus this state restriction.
+ */
+const EXPORTABLE_STATES = new Set([
+  "REJECTED",
+  "RESUBMISSION_REQUESTED",
+  "ACCEPTED_AS_FINAL",
+  "ARCHIVED",
+  "EXPIRED"
+])
 
-    const submission = user.submissions.filter((submission) => {
-      return submission.id == submissionId
-    })
+/**
+ * States in which a Reviewer loses access even though their `view` ability is
+ * unconditional — the denial stays keyed on the assignment and status.
+ */
+const NONREVIEWABLE_STATES = new Set(["REJECTED", "RESUBMISSION_REQUESTED"])
 
-    if (submission.length) {
-      const s = submission[0]
-
-      // Redirect when the submission is a Draft
-      if (s.status === "DRAFT") {
-        next({ name: "submission:draft", params: { id: s.id } })
-        return false
-      }
-
-      // Anyone assigned to the submission holds `view`.
-      access = !!s.abilities?.view
-    }
-
-    // Not in the viewer's submissions list: not directly assigned, so fall back
-    // to the submission's own `view` ability. The server grants it to
-    // publication admins, editors and the application administrator on the
-    // submissions they manage.
-    if (!access && !submission.length) {
-      const fetched = await fetchSubmission(apolloClient, submissionId)
-      access = !!fetched?.abilities?.view
-    }
-
-    if (!access) {
-      next({ name: "error403" })
-    } else {
+/**
+ * Build a `beforeEach` guard for a submission-scoped route. Every such guard
+ * shares one skeleton — gate on a `meta` flag, load the viewer's submissions,
+ * find the target, then decide — so the per-guard logic collapses to two small
+ * functions:
+ *
+ * @param {object}   config
+ * @param {string}   config.metaKey   The `meta` boolean that arms this guard.
+ * @param {string}  [config.fetchPolicy] Apollo fetch policy for the submissions
+ *   query (e.g. "network-only" where stale assignment data would misroute).
+ * @param {(s: object) => boolean | object} config.decideAssigned  Given the
+ *   viewer's own copy of the submission, return `true`/`false` for access, or a
+ *   route location to redirect to (e.g. a status-appropriate screen).
+ * @param {(fetched: object | null) => boolean} [config.decideUnassigned]  The
+ *   fallback for viewers not directly assigned (so the submission never appears
+ *   in their list) who may still reach it through a publication role — the
+ *   server grants admins, editors and the application administrator the scoped
+ *   `view` ability on the submission itself. Omit to deny unassigned viewers.
+ */
+function submissionAccessGuard({
+  metaKey,
+  fetchPolicy = undefined,
+  decideAssigned,
+  decideUnassigned = undefined
+}) {
+  return async function (apolloClient, to, _, next) {
+    if (!to.matched.some((record) => record.meta[metaKey])) {
       next()
+      return
     }
-  } else {
-    next()
-  }
-}
 
-export async function beforeEachRequiresDraftAccess(apolloClient, to, _, next) {
-  if (to.matched.some((record) => record.meta.requiresDraftAccess)) {
-    let access = false
     const submissionId = to.params.id
     const user = await apolloClient
       .query({
         query: CURRENT_USER_SUBMISSIONS,
-        fetchPolicy: "network-only"
+        ...(fetchPolicy ? { fetchPolicy } : {})
       })
       .then(({ data: { currentUser } }) => currentUser)
 
@@ -226,273 +221,124 @@ export async function beforeEachRequiresDraftAccess(apolloClient, to, _, next) {
       return submission.id == submissionId
     })
 
-    if (submission.length) {
-      const s = submission[0]
-
-      // The draft is the author's editing surface — only submitters reach it.
-      if (["submitter"].some((role) => role === s.my_role)) {
-        access = true
-      }
-    }
-    if (!access) {
-      next({ name: "error403" })
-    } else {
-      next()
-    }
-  } else {
-    next()
-  }
-}
-
-export async function beforeEachRequiresPreviewAccess(
-  apolloClient,
-  to,
-  _,
-  next
-) {
-  if (to.matched.some((record) => record.meta.requiresPreviewAccess)) {
     let access = false
-    const submissionId = to.params.id
-    const user = await apolloClient
-      .query({
-        query: CURRENT_USER_SUBMISSIONS
-      })
-      .then(({ data: { currentUser } }) => currentUser)
-
-    const submission = user.submissions.filter((submission) => {
-      return submission.id == submissionId
-    })
-
     if (submission.length) {
-      const s = submission[0]
-
-      // Redirect when the submission is not a Draft
-      if (s.status !== "DRAFT") {
-        next({ name: "submission:view", params: { id: s.id } })
-        return false
+      const verdict = decideAssigned(submission[0])
+      // A route location means "redirect"; a boolean is the access decision.
+      if (typeof verdict !== "boolean") {
+        next(verdict)
+        return
       }
-
-      // The draft preview is for the authoring side — submitters and review
-      // coordinators only. Reviewers are excluded even though they can view the
-      // submission, so this stays keyed on the assignment, not the `view`
-      // ability (which editors and publication admins also hold).
-      if (
-        ["submitter", "review_coordinator"].some((role) => role === s.my_role)
-      ) {
-        access = true
-      }
-
-      // Deny Reviewers
-      if ("reviewer" === s.my_role) {
-        access = false
-      }
-    }
-
-    // Not in the viewer's submissions list: unassigned viewers who still hold
-    // the submission's own `view` ability reach the draft preview — the
-    // application administrator (via the server super-admin short-circuit) and
-    // the publication's admins/editors. Keyed on the submission flag, never a
-    // global "is admin" surrogate.
-    if (!access && !submission.length) {
+      access = verdict
+    } else if (decideUnassigned) {
       const fetched = await fetchSubmission(apolloClient, submissionId)
-      access = !!fetched?.abilities?.view
+      access = decideUnassigned(fetched)
     }
 
-    if (!access) {
-      next({ name: "error403" })
-    } else {
-      next()
-    }
-  } else {
-    next()
+    next(access ? undefined : { name: "error403" })
   }
 }
 
-export async function beforeEachRequiresViewAccess(apolloClient, to, _, next) {
-  if (to.matched.some((record) => record.meta.requiresViewAccess)) {
-    let access = false
-    const submissionId = to.params.id
-    const user = await apolloClient
-      .query({
-        query: CURRENT_USER_SUBMISSIONS
-      })
-      .then(({ data: { currentUser } }) => currentUser)
-
-    const submission = user.submissions.filter((submission) => {
-      return submission.id == submissionId
-    })
-
-    if (submission.length) {
-      const s = submission[0]
-
-      // Redirect when the submission is a Draft
-      if (s.status === "DRAFT") {
-        next({ name: "submission:preview", params: { id: s.id } })
-        return false
-      }
-
-      // Redirect when the submission is not Initially Submitted
-      if (s.status !== "INITIALLY_SUBMITTED") {
-        next({ name: "submission:review", params: { id: s.id } })
-        return false
-      }
-
-      // Anyone assigned to the submission holds `view`.
-      access = !!s.abilities?.view
-
-      // Deny Reviewers when the submission is in a nonreviewable state — the
-      // `view` ability is unconditional for them, so this stays keyed on the
-      // assignment and status.
-      const nonreviewableStates = new Set([
-        "REJECTED",
-        "RESUBMISSION_REQUESTED"
-      ])
-      if ("reviewer" === s.my_role && nonreviewableStates.has(s.status)) {
-        access = false
-      }
+export const beforeEachRequiresSubmissionAccess = submissionAccessGuard({
+  metaKey: "requiresSubmissionAccess",
+  decideAssigned: (s) => {
+    // Redirect when the submission is a Draft.
+    if (s.status === "DRAFT") {
+      return { name: "submission:draft", params: { id: s.id } }
     }
+    // Anyone assigned to the submission holds `view`.
+    return !!s.abilities?.view
+  },
+  decideUnassigned: (fetched) => !!fetched?.abilities?.view
+})
 
-    // Not in the viewer's submissions list: not directly assigned, so fall back
-    // to the submission's own `view` ability (held by publication admins,
-    // editors and the application administrator). This runs only for unassigned
-    // viewers, so it cannot re-grant an assigned reviewer denied above.
-    if (!access && !submission.length) {
-      const fetched = await fetchSubmission(apolloClient, submissionId)
-      access = !!fetched?.abilities?.view
+export const beforeEachRequiresDraftAccess = submissionAccessGuard({
+  metaKey: "requiresDraftAccess",
+  fetchPolicy: "network-only",
+  // The draft is the author's editing surface — only submitters reach it, and
+  // there is no unassigned fallback.
+  decideAssigned: (s) => ["submitter"].some((role) => role === s.my_role)
+})
+
+export const beforeEachRequiresPreviewAccess = submissionAccessGuard({
+  metaKey: "requiresPreviewAccess",
+  decideAssigned: (s) => {
+    // Redirect when the submission is not a Draft.
+    if (s.status !== "DRAFT") {
+      return { name: "submission:view", params: { id: s.id } }
     }
-
-    if (!access) {
-      next({ name: "error403" })
-    } else {
-      next()
+    // The draft preview is for the authoring side — submitters and review
+    // coordinators only. Reviewers are excluded even though they can view the
+    // submission, so this stays keyed on the assignment, not the `view` ability
+    // (which editors and publication admins also hold).
+    let access = ["submitter", "review_coordinator"].some(
+      (role) => role === s.my_role
+    )
+    // Deny Reviewers.
+    if ("reviewer" === s.my_role) {
+      access = false
     }
-  } else {
-    next()
-  }
-}
+    return access
+  },
+  // Unassigned viewers who still hold the submission's own `view` ability reach
+  // the draft preview — the application administrator (via the server
+  // super-admin short-circuit) and the publication's admins/editors.
+  decideUnassigned: (fetched) => !!fetched?.abilities?.view
+})
 
-export async function beforeEachRequiresReviewAccess(
-  apolloClient,
-  to,
-  _,
-  next
-) {
-  if (to.matched.some((record) => record.meta.requiresReviewAccess)) {
-    let access = false
-    const submissionId = to.params.id
-    const user = await apolloClient
-      .query({
-        query: CURRENT_USER_SUBMISSIONS,
-        fetchPolicy: "network-only"
-      })
-      .then(({ data: { currentUser } }) => currentUser)
-
-    const submission = user.submissions.filter((submission) => {
-      return submission.id == submissionId
-    })
-
-    if (submission.length) {
-      const s = submission[0]
-
-      // Redirect when the submission is a Draft
-      if (s.status === "DRAFT") {
-        next({ name: "submission:preview", params: { id: s.id } })
-        return false
-      }
-
-      // Redirect when the submission is Initially Submitted
-      if (s.status === "INITIALLY_SUBMITTED") {
-        next({ name: "submission:view", params: { id: s.id } })
-        return false
-      }
-
-      // Anyone assigned to the submission holds `view`.
-      access = !!s.abilities?.view
-
-      // Deny Reviewers when the submission is in a nonreviewable state — the
-      // `view` ability is unconditional for them, so this stays keyed on the
-      // assignment and status.
-      const nonreviewableStates = new Set([
-        "REJECTED",
-        "RESUBMISSION_REQUESTED"
-      ])
-      if ("reviewer" === s.my_role && nonreviewableStates.has(s.status)) {
-        access = false
-      }
+export const beforeEachRequiresViewAccess = submissionAccessGuard({
+  metaKey: "requiresViewAccess",
+  decideAssigned: (s) => {
+    // Redirect when the submission is a Draft.
+    if (s.status === "DRAFT") {
+      return { name: "submission:preview", params: { id: s.id } }
     }
-
-    // Not in the viewer's submissions list: not directly assigned, so fall back
-    // to the submission's own `view` ability (held by publication admins,
-    // editors and the application administrator). This runs only for unassigned
-    // viewers, so it cannot re-grant an assigned reviewer denied above.
-    if (!access && !submission.length) {
-      const fetched = await fetchSubmission(apolloClient, submissionId)
-      access = !!fetched?.abilities?.view
+    // Redirect when the submission is not Initially Submitted.
+    if (s.status !== "INITIALLY_SUBMITTED") {
+      return { name: "submission:review", params: { id: s.id } }
     }
-
-    if (!access) {
-      next({ name: "error403" })
-    } else {
-      next()
+    // Anyone assigned to the submission holds `view`.
+    let access = !!s.abilities?.view
+    if ("reviewer" === s.my_role && NONREVIEWABLE_STATES.has(s.status)) {
+      access = false
     }
-  } else {
-    next()
-  }
-}
+    return access
+  },
+  decideUnassigned: (fetched) => !!fetched?.abilities?.view
+})
 
-export async function beforeEachRequiresExportAccess(
-  apolloClient,
-  to,
-  _,
-  next
-) {
-  if (to.matched.some((record) => record.meta.requiresExportAccess)) {
-    let access = false
-    const submissionId = to.params.id
-    const user = await apolloClient
-      .query({
-        query: CURRENT_USER_SUBMISSIONS
-      })
-      .then(({ data: { currentUser } }) => currentUser)
-
-    const submission = user.submissions.filter((submission) => {
-      return submission.id == submissionId
-    })
-
-    // Export has no server mutation — it renders content the viewer can already
-    // see — so the gate is exactly "can you view this submission" (`view`), not a
-    // proxy on an edit ability whose constraints may drift independently. The
-    // exportable-state restriction is layered on top.
-    const exportableStates = new Set([
-      "REJECTED",
-      "RESUBMISSION_REQUESTED",
-      "ACCEPTED_AS_FINAL",
-      "ARCHIVED",
-      "EXPIRED"
-    ])
-
-    if (submission.length) {
-      const s = submission[0]
-
-      access = !!s.abilities?.view && exportableStates.has(s.status)
+export const beforeEachRequiresReviewAccess = submissionAccessGuard({
+  metaKey: "requiresReviewAccess",
+  fetchPolicy: "network-only",
+  decideAssigned: (s) => {
+    // Redirect when the submission is a Draft.
+    if (s.status === "DRAFT") {
+      return { name: "submission:preview", params: { id: s.id } }
     }
-
-    // Not in the viewer's submissions list: not directly assigned, so fall back
-    // to the submission's own `view` ability, held by unassigned publication
-    // admins, editors and the application administrator — still only in an
-    // exportable state.
-    if (!access && !submission.length) {
-      const fetched = await fetchSubmission(apolloClient, submissionId)
-      access =
-        !!fetched?.abilities?.view && exportableStates.has(fetched?.status)
+    // Redirect when the submission is Initially Submitted.
+    if (s.status === "INITIALLY_SUBMITTED") {
+      return { name: "submission:view", params: { id: s.id } }
     }
-
-    if (!access) {
-      next({ name: "error403" })
-    } else {
-      next()
+    // Anyone assigned to the submission holds `view`.
+    let access = !!s.abilities?.view
+    // Deny Reviewers when the submission is in a nonreviewable state — the
+    // `view` ability is unconditional for them, so this stays keyed on the
+    // assignment and status.
+    if ("reviewer" === s.my_role && NONREVIEWABLE_STATES.has(s.status)) {
+      access = false
     }
-  } else {
-    next()
-  }
-}
+    return access
+  },
+  decideUnassigned: (fetched) => !!fetched?.abilities?.view
+})
+
+export const beforeEachRequiresExportAccess = submissionAccessGuard({
+  metaKey: "requiresExportAccess",
+  // Export has no server mutation — it renders content the viewer can already
+  // see — so the gate is exactly "can you view this submission" (`view`), not a
+  // proxy on an edit ability whose constraints may drift independently. The
+  // exportable-state restriction is layered on top.
+  decideAssigned: (s) => !!s.abilities?.view && EXPORTABLE_STATES.has(s.status),
+  decideUnassigned: (fetched) =>
+    !!fetched?.abilities?.view && EXPORTABLE_STATES.has(fetched?.status)
+})
