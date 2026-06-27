@@ -81,17 +81,26 @@ declare module 'vue-router/auto-routes' {
       '/admin',
       Record<never, never>,
       Record<never, never>,
+      | 'admin:avatar_reports'
       | 'admin:beta-users'
       | 'admin:dashboard'
       | 'admin:publication:index'
       | 'admin:user:id'
       | 'admin:users'
+      | 'admin:users-section'
       | 'user_details'
       | 'user_details:submissions'
     >,
     'admin:dashboard': RouteRecordInfo<
       'admin:dashboard',
       '/admin',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    'admin:avatar_reports': RouteRecordInfo<
+      'admin:avatar_reports',
+      '/admin/avatar-reports',
       Record<never, never>,
       Record<never, never>,
       | never
@@ -110,9 +119,26 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
+    'admin:users-section': RouteRecordInfo<
+      'admin:users-section',
+      '/admin/users',
+      Record<never, never>,
+      Record<never, never>,
+      | 'admin:user:id'
+      | 'admin:users'
+      | 'user_details'
+      | 'user_details:submissions'
+    >,
+    'admin:users': RouteRecordInfo<
+      'admin:users',
+      '/admin/users',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
     'admin:user:id': RouteRecordInfo<
       'admin:user:id',
-      '/admin/user/:id',
+      '/admin/users/:id',
       { id: ParamValue<true> },
       { id: ParamValue<false> },
       | 'user_details'
@@ -120,23 +146,16 @@ declare module 'vue-router/auto-routes' {
     >,
     'user_details': RouteRecordInfo<
       'user_details',
-      '/admin/user/:id',
+      '/admin/users/:id',
       { id: ParamValue<true> },
       { id: ParamValue<false> },
       | never
     >,
     'user_details:submissions': RouteRecordInfo<
       'user_details:submissions',
-      '/admin/user/:id/submissions',
+      '/admin/users/:id/submissions',
       { id: ParamValue<true> },
       { id: ParamValue<false> },
-      | never
-    >,
-    'admin:users': RouteRecordInfo<
-      'admin:users',
-      '/admin/users',
-      Record<never, never>,
-      Record<never, never>,
       | never
     >,
   }
@@ -197,11 +216,13 @@ declare module 'vue-router/auto-routes' {
     'src/routes/admin.vue': {
       routes:
         | '/admin'
+        | 'admin:avatar_reports'
         | 'admin:beta-users'
         | 'admin:dashboard'
         | 'admin:publication:index'
         | 'admin:user:id'
         | 'admin:users'
+        | 'admin:users-section'
         | 'user_details'
         | 'user_details:submissions'
       views:
@@ -210,6 +231,12 @@ declare module 'vue-router/auto-routes' {
     'src/routes/admin/index.vue': {
       routes:
         | 'admin:dashboard'
+      views:
+        | never
+    }
+    'src/routes/admin/avatar-reports.vue': {
+      routes:
+        | 'admin:avatar_reports'
       views:
         | never
     }
@@ -225,7 +252,23 @@ declare module 'vue-router/auto-routes' {
       views:
         | never
     }
-    'src/routes/admin/user/[id].vue': {
+    'src/routes/admin/users.vue': {
+      routes:
+        | 'admin:user:id'
+        | 'admin:users'
+        | 'admin:users-section'
+        | 'user_details'
+        | 'user_details:submissions'
+      views:
+        | 'default'
+    }
+    'src/routes/admin/users/index.vue': {
+      routes:
+        | 'admin:users'
+      views:
+        | never
+    }
+    'src/routes/admin/users/[id].vue': {
       routes:
         | 'admin:user:id'
         | 'user_details'
@@ -233,21 +276,15 @@ declare module 'vue-router/auto-routes' {
       views:
         | 'default'
     }
-    'src/routes/admin/user/[id]/index.vue': {
+    'src/routes/admin/users/[id]/index.vue': {
       routes:
         | 'user_details'
       views:
         | never
     }
-    'src/routes/admin/user/[id]/submissions.vue': {
+    'src/routes/admin/users/[id]/submissions.vue': {
       routes:
         | 'user_details:submissions'
-      views:
-        | never
-    }
-    'src/routes/admin/users.vue': {
-      routes:
-        | 'admin:users'
       views:
         | never
     }

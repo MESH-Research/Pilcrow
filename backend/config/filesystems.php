@@ -56,6 +56,18 @@ return [
             'visibility' => 'public',
         ],
 
+        // Private, non-public-served store for moderation evidence (e.g.
+        // retained snapshots of reported avatars). Deliberately has no `url`:
+        // files here are never publicly addressable and are streamed only
+        // through an ability-gated controller. Override the driver via a
+        // deployment disk (see $deploymentDisks above) to move it off-host.
+        'media_private' => [
+            'driver' => 'local',
+            'root' => storage_path('app/media-private'),
+            'visibility' => 'private',
+            'throw' => false,
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),

@@ -31,6 +31,17 @@ server {
         try_files /dev/null @backend;
     }
 
+    # Media-library uploads (avatars) on the public disk. phpfpm writes them to
+    # the shared `storage` volume; nginx mounts that same volume at
+    # /var/www/storage and serves them straight from disk. `alias` maps the
+    # public URL prefix /storage/ onto the disk's app/public root. Without this
+    # the generic location / below falls through to @backend (phpfpm), which
+    # has no /storage route and 404s.
+    location /storage/ {
+        alias /var/www/storage/app/public/;
+        try_files $uri =404;
+    }
+
     location ~* \.js\.map$ {
         if ($expose_sourcemaps != "true") {
             return 404;

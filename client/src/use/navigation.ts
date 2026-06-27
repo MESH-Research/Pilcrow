@@ -30,6 +30,12 @@ declare module "vue-router" {
       /** Quasar/Material icon name shown next to the label. */
       icon?: string
       /**
+       * Optional secondary line for card-style menus (e.g. the admin
+       * dashboard). Pass an i18n key — callers run it through `t()`.
+       * List/compact menus ignore it.
+       */
+      description?: string
+      /**
        * Sort key. Lower values render first. Routes without `order`
        * are pushed to the end. Ties preserve source order. Leave gaps
        * (10, 20, 30) so new entries can slot in without renumbering.

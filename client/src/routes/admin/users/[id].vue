@@ -102,6 +102,39 @@
                 {{ $t("admin.users.details.no_feature_opt_ins") }}
               </span>
             </FieldDisplay>
+            <FieldDisplay
+              class="col-sm-6 col-xs-12"
+              :icon="user.avatar_upload_blocked ? 'block' : 'image'"
+              :label="$t('admin.users.details.avatar_upload')"
+            >
+              <div class="row items-center q-gutter-sm">
+                <span
+                  :class="
+                    user.avatar_upload_blocked ? 'text-negative' : 'text-grey-7'
+                  "
+                >
+                  {{
+                    user.avatar_upload_blocked
+                      ? $t("admin.users.details.avatar_upload_blocked")
+                      : $t("admin.users.details.avatar_upload_allowed")
+                  }}
+                </span>
+                <q-btn
+                  v-if="canModerateAvatars"
+                  dense
+                  size="sm"
+                  :color="user.avatar_upload_blocked ? 'primary' : 'negative'"
+                  :loading="togglingBlock"
+                  :label="
+                    user.avatar_upload_blocked
+                      ? $t('admin.users.details.avatar_reinstate')
+                      : $t('admin.users.details.avatar_revoke')
+                  "
+                  data-cy="avatar_upload_toggle_block"
+                  @click="toggleBlock"
+                />
+              </div>
+            </FieldDisplay>
           </div>
         </q-card-section>
       </q-card-section>
@@ -140,6 +173,7 @@ graphql(`
       email_verified_at
       beta
       feature_opt_ins
+      avatar_upload_blocked
       ...avatarImage
       roles {
         name
@@ -165,6 +199,7 @@ import {
   getUserDetailDocument,
   SetUserBetaAccessDocument
 } from "src/graphql/generated/graphql"
+import { SET_USER_AVATAR_UPLOAD_BLOCKED } from "src/graphql/mutations"
 import { useMutation, useQuery } from "@vue/apollo-composable"
 import { computed, ref } from "vue"
 import { useRoute } from "vue-router"
@@ -172,21 +207,17 @@ import { DateTime } from "luxon"
 import { useI18n } from "vue-i18n"
 import { setCrumbLabel } from "src/use/breadcrumbs"
 import { useFeedbackMessages, useDarkMode } from "src/use/guiElements"
+import { useCurrentUser } from "src/use/user"
 
 definePage({
   // Named so setCrumbLabel below can target it by name. The user
   // never navigates to this layout directly — child routes own the
   // URLs — but vue-router still lets layout routes carry names.
   name: "admin:user:id",
-  // Stacks the ancestor "Users" crumb (linking back to admin:users)
-  // in front of this route's dynamic user-name crumb in one go, so
-  // we don't need a separate routes/admin/user.vue layout just to
-  // hold the "Users" link.
+  // The "Users" ancestor crumb comes from the section layout
+  // (../users.vue); this route only adds the dynamic user-name leaf.
   meta: {
-    crumb: [
-      { label: "breadcrumbs.admin.users", to: { name: "admin:users" } },
-      { label: "breadcrumbs.admin.user" }
-    ]
+    crumb: { label: "breadcrumbs.admin.user" }
   }
 })
 
@@ -194,7 +225,7 @@ const { darkModeStatus } = useDarkMode()
 const route = useRoute("admin:user:id")
 const id = computed(() => route.params.id as string)
 
-const { result } = useQuery(getUserDetailDocument, () => ({
+const { result, refetch } = useQuery(getUserDetailDocument, () => ({
   id: id.value
 }))
 const user = computed(() => result.value?.user)
@@ -202,6 +233,9 @@ const user = computed(() => result.value?.user)
 const isAdmin = computed(() =>
   user.value?.roles.some((r) => r.name === "Application Administrator")
 )
+
+const { can } = useCurrentUser()
+const canModerateAvatars = computed(() => can("avatar_moderate"))
 
 const { t, te } = useI18n()
 
@@ -228,6 +262,32 @@ async function onBetaToggle(enabled: boolean) {
     newStatusMessage("failure", t("admin.users.details.beta_error"))
   } finally {
     savingBeta.value = false
+  }
+}
+
+const { mutate: setBlocked } = useMutation(SET_USER_AVATAR_UPLOAD_BLOCKED)
+const togglingBlock = ref(false)
+
+async function toggleBlock() {
+  if (!user.value) return
+  const wasBlocked = user.value.avatar_upload_blocked
+  togglingBlock.value = true
+  try {
+    await setBlocked({
+      userId: user.value.id,
+      blocked: !wasBlocked
+    })
+    newStatusMessage(
+      "success",
+      wasBlocked
+        ? t("admin.users.details.avatar_reinstated")
+        : t("admin.users.details.avatar_revoked")
+    )
+    await refetch()
+  } catch {
+    newStatusMessage("failure", t("admin.users.details.avatar_toggle_failure"))
+  } finally {
+    togglingBlock.value = false
   }
 }
 

@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 
+use App\Http\Controllers\AvatarReportSnapshotController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,6 +23,14 @@ Route::get('/', function () {
 Route::get('/reset-password/{token}', function () {
     return view('index');
 })->name('password.reset');
+
+// Moderator-gated stream of a reported avatar's retained private snapshot.
+// Defined before the SPA catch-all so it is reachable; authorization is
+// enforced in the controller via the moderateAvatars ability.
+Route::get(
+    '/moderation/avatar-reports/{avatarReport}/snapshot',
+    [AvatarReportSnapshotController::class, 'show']
+)->middleware('auth')->name('avatar-report.snapshot');
 
 // Catch-all route for SPA deep linking. All unmatched routes serve the index
 // view so that Vue Router can handle client-side routing. This must remain the

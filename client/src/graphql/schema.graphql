@@ -21,6 +21,76 @@ type Audit {
   user: User!
 }
 
+"""
+An uploaded avatar image with URLs for the original and derived conversions.
+"""
+type Avatar {
+  """URL for the 256x256 medium conversion, suitable for profile pages."""
+  medium_url: String!
+
+  """
+  URL for the 96x96 thumbnail conversion, suitable for inline avatar display.
+  """
+  thumb_url: String!
+
+  """URL for the original uploaded image."""
+  url: String!
+}
+
+"""
+A report filed by a user flagging another user's avatar for moderator
+review.
+"""
+type AvatarReport {
+  created_at: DateTimeUtc!
+  id: ID!
+
+  """Free-text reason provided by the reporter."""
+  reason: String
+
+  """
+  Moderator-gated URL to the retained private snapshot of the exact avatar
+  that was reported. Captured at report time, so it stays accurate even if
+  the user later changes or removes their avatar. Null once the snapshot has
+  been purged (after resolution) or if it was never captured.
+  """
+  reported_avatar_url: String
+
+  """User who filed the report. Null if that user has since been deleted."""
+  reporter: User
+
+  """Moderator notes added at resolution time."""
+  resolution_notes: String
+
+  """When the report was resolved."""
+  resolved_at: DateTimeUtc
+
+  """Administrator who resolved the report, if any."""
+  resolver: User
+
+  """Current moderation status of the report."""
+  status: AvatarReportStatus!
+  updated_at: DateTimeUtc!
+
+  """User whose avatar was reported."""
+  user: User!
+}
+
+"""A paginated list of AvatarReport items."""
+type AvatarReportPaginator implements Paginator {
+  """A list of AvatarReport items."""
+  data: [AvatarReport!]!
+
+  """Pagination information about the list of items."""
+  paginatorInfo: PaginatorInfo!
+}
+
+enum AvatarReportStatus {
+  DISMISSED
+  PENDING
+  REMOVED
+}
+
 interface Comment {
   content: String!
   created_at: DateTimeUtc!
@@ -233,6 +303,12 @@ type Mutation {
   """Delete an overall comment of a submission"""
   deleteOverallComment(input: DeleteCommentInput!): Submission!
 
+  """Remove a user's avatar image."""
+  deleteUserAvatar(id: ID!): User!
+
+  """Dismiss a pending avatar report without removing the avatar."""
+  dismissAvatarReport(id: ID!, notes: String): AvatarReport!
+
   """
   Create a staged user, assign them as a review coordinator of a submisison,
   and send them an email notification inviting them to accept the assignment
@@ -273,6 +349,19 @@ type Mutation {
   """
   reinviteReviewer(input: reinviteSubmissionUserInput): Submission
 
+  """
+  Report another user's avatar for moderator review. Any authenticated
+  user may report. Filing multiple pending reports against the same
+  user is idempotent — the existing pending report is returned.
+  """
+  reportUserAvatar(
+    """Optional free-text reason."""
+    reason: String
+
+    """ID of the user whose avatar is being reported."""
+    userId: ID!
+  ): AvatarReport!
+
   """Send a password reset email to a specified email address"""
   requestPasswordReset(email: String!): Boolean
 
@@ -284,6 +373,17 @@ type Mutation {
 
   """Update a password from a password reset request"""
   resetPassword(input: ResetPasswordInput): User
+
+  """
+  Resolve an avatar report and remove the reported avatar. Optionally
+  also block the user from uploading a replacement.
+  """
+  resolveAvatarReportAndRemoveAvatar(
+    """If true, also set the user's avatar-upload-blocked moderation flag."""
+    blockFutureUploads: Boolean
+    id: ID!
+    notes: String
+  ): AvatarReport!
   saveGeneralSettings(settings: GeneralSettingsInput!): GeneralSettings
 
   """(Re)send a verification email to a user.  """
@@ -303,6 +403,16 @@ type Mutation {
   setFeatureOptIn(enabled: Boolean!, feature: String!): User!
 
   """
+  Grant or revoke a user's avatar-upload block independent of any
+  specific report (e.g. from an admin user-detail page).
+  """
+  setUserAvatarUploadBlocked(
+    """True to block the user; false to unblock."""
+    blocked: Boolean!
+    userId: ID!
+  ): User!
+
+  """
   Grant or revoke a user's access to private beta features.
   Application-administrator only.
   """
@@ -320,6 +430,9 @@ type Mutation {
 
   """Update user information"""
   updateUser(user: UpdateUserInput!): User!
+
+  """Upload or replace a user's avatar image. JPEG/PNG/WebP, max 5MB."""
+  uploadUserAvatar(avatar: Upload!, id: ID!): User!
 
   """Verify the currently logged in user's email address"""
   verifyEmail(
@@ -577,6 +690,21 @@ enum PublicationRole {
 }
 
 type Query {
+  """
+  Return avatar reports for moderator review. Requires the
+  `moderateAvatars` ability (application administrators).
+  """
+  avatarReports(
+    """Limits number of fetched items."""
+    first: Int! = 20
+
+    """The offset from which items are returned."""
+    page: Int
+
+    """Filter by status. Omit to return all statuses."""
+    status: AvatarReportStatus
+  ): AvatarReportPaginator!
+
   """Return information about the currently logged in user"""
   currentUser: User
   generalSettings: GeneralSettings
@@ -1031,7 +1159,15 @@ type User {
   This user's global abilities. Fetched via currentUser this is the viewer's own (UI hints; server still enforces).
   """
   abilities: UserAbilities!
+
+  """The user's uploaded avatar, or null if the user has not set one."""
+  avatar: Avatar
   avatar_color: String! @deprecated(reason: "Temporary placeholder for stable avatar colors; will be removed when user-uploaded avatars are introduced.")
+
+  """
+  True when a moderator has revoked this user's ability to upload an avatar.
+  """
+  avatar_upload_blocked: Boolean!
 
   """Whether the user has access to private beta features (admin-set)."""
   beta: Boolean!
@@ -1087,6 +1223,7 @@ A user's global (application-wide) abilities. Each flag mirrors a GlobalAbility
 case, resolved directly against Bouncer — the same engine as the policies.
 """
 type UserAbilities {
+  avatar_moderate: Boolean!
   publication_create: Boolean!
   user_manage_beta: Boolean!
   user_update: Boolean!

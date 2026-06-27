@@ -9,17 +9,18 @@ ARG TARGETARCH
 
 ARG PANDOC_VERSION=2.18
 ARG COMPOSE_WAIT_VERSION=2.7.3
-ARG PHP_EXTS="bcmath pdo_mysql pcntl zip intl gettext mysqli"
+ARG PHP_EXTS="bcmath pdo_mysql pcntl zip intl gettext mysqli exif gd"
 ARG PHP_PECL_EXTS="redis apcu xhprof"
-ARG APT_PACKAGES="openssl ca-certificates bash libzip-dev libaio1t64 libncurses6 libnuma1 libxml2-dev git libfcgi-bin sqlite3 default-mysql-client libicu-dev"
+ARG APT_PACKAGES="openssl ca-certificates bash libzip-dev libaio1t64 libncurses6 libnuma1 libxml2-dev git libfcgi-bin sqlite3 default-mysql-client libicu-dev libpng-dev libjpeg62-turbo-dev libwebp-dev libfreetype6-dev"
 #ENV COMPOSER_HOME=/tmp/composer
 ENV LOG_CHANNEL=stderr
 
 RUN  apt update && apt install -y ${APT_PACKAGES} \
+    && docker-php-ext-configure gd --with-jpeg --with-webp --with-freetype \
     && docker-php-ext-install -j$(nproc) ${PHP_EXTS} \
     && pecl install ${PHP_PECL_EXTS} \
     && docker-php-ext-enable ${PHP_PECL_EXTS} \
-    && apt purge libxml2-dev libzip-dev -y \
+    && apt purge libxml2-dev libzip-dev libpng-dev libjpeg62-turbo-dev libwebp-dev libfreetype6-dev -y \
     && rm -rf /var/lib/apt/lists/*
 
 RUN curl -Lo /wait https://github.com/ufoscout/docker-compose-wait/releases/download/${COMPOSE_WAIT_VERSION}/wait \

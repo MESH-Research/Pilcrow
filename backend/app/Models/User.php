@@ -7,6 +7,8 @@ use App\Auth\Abilities\GlobalAbility;
 use App\Auth\Roles\GlobalRole;
 use App\Auth\Roles\ScopedRole;
 use App\Builders\UserBuilder;
+use App\Enums\ModerationFlag;
+use App\Models\Traits\HasModerationFlags;
 use Carbon\Carbon;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -21,14 +23,23 @@ use Laravel\Sanctum\HasApiTokens;
 use Laravel\Scout\Attributes\SearchUsingPrefix;
 use Laravel\Scout\Searchable;
 use Silber\Bouncer\Database\HasRolesAndAbilities;
+use Spatie\Image\Enums\Fit;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
-class User extends Authenticatable implements MustVerifyEmail
+class User extends Authenticatable implements MustVerifyEmail, HasMedia
 {
     use HasFactory;
     use Notifiable;
     use HasApiTokens;
     use HasRolesAndAbilities;
     use Searchable;
+    use InteractsWithMedia;
+    use HasModerationFlags;
+
+    public const AVATAR_COLLECTION = 'avatar';
+    public const AVATAR_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 
     /**
      * The attributes that are mass assignable.
@@ -64,6 +75,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'profile_metadata' => 'array',
         'beta' => 'boolean',
         'feature_opt_ins' => 'array',
+        'moderation_flags' => 'array',
     ];
 
     /**
@@ -440,5 +452,95 @@ class User extends Authenticatable implements MustVerifyEmail
         }
 
         return $colors[abs($hash) % count($colors)];
+    }
+
+    /**
+     * Register media collections for the user.
+     */
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection(self::AVATAR_COLLECTION)
+            ->singleFile()
+            ->acceptsMimeTypes(self::AVATAR_MIME_TYPES);
+    }
+
+    /**
+     * Register media conversions for the user.
+     *
+     * The 'thumb' conversion is used by AvatarImage; 'medium' is available
+     * for larger displays (e.g. account layout).
+     *
+     * Conversions are left queueable so they run on a queue worker when one
+     * is configured (QUEUE_CONNECTION + media-library's
+     * queue_conversions_by_default), and fall back to running inline under
+     * the sync driver when no worker is present.
+     *
+     * @param \Spatie\MediaLibrary\MediaCollections\Models\Media|null $_media
+     *        Required by the Spatie HasMedia contract; unused here because
+     *        the same conversions apply to any media item in this model's
+     *        collections.
+     */
+    public function registerMediaConversions(?Media $_media = null): void
+    {
+        $this->addMediaConversion('thumb')
+            ->fit(Fit::Crop, 96, 96);
+
+        $this->addMediaConversion('medium')
+            ->fit(Fit::Crop, 256, 256);
+    }
+
+    /**
+     * Return the avatar Media item if set.
+     */
+    public function getAvatarMedia(): ?Media
+    {
+        return $this->getFirstMedia(self::AVATAR_COLLECTION);
+    }
+
+    /**
+     * Resolve the GraphQL `User.avatar` field: URLs for the original plus
+     * the thumb/medium conversions, or null when no avatar is uploaded so
+     * the client can fall back to a generated placeholder.
+     *
+     * @return array<string, string>|null
+     */
+    public function getAvatar(): ?array
+    {
+        $media = $this->getAvatarMedia();
+        if ($media === null) {
+            return null;
+        }
+
+        return [
+            'url' => $media->getFullUrl(),
+            'thumb_url' => $this->conversionUrl($media, 'thumb'),
+            'medium_url' => $this->conversionUrl($media, 'medium'),
+        ];
+    }
+
+    /**
+     * URL for a media conversion, falling back to the original file's URL
+     * while the conversion has not been generated yet. Conversions may be
+     * queued (see registerMediaConversions), so right after upload the
+     * thumb/medium derivatives can be momentarily absent; serving the
+     * original avoids a broken image until the queue worker catches up.
+     */
+    private function conversionUrl(Media $media, string $conversion): string
+    {
+        if (!$media->hasGeneratedConversion($conversion)) {
+            return $media->getFullUrl();
+        }
+
+        return $media->getFullUrl($conversion);
+    }
+
+    /**
+     * Resolve the GraphQL `User.avatar_upload_blocked` field. True when a
+     * moderator has set the avatar-upload-blocked moderation flag on this
+     * user. Uploading is allowed by default; the flag is the exception.
+     */
+    public function getAvatarUploadBlocked(): bool
+    {
+        return $this->hasModerationFlag(ModerationFlag::AvatarUploadBlocked);
     }
 }

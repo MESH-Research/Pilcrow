@@ -1,0 +1,99 @@
+"""
+A report filed by a user flagging another user's avatar for moderator
+review.
+"""
+type AvatarReport {
+    id: ID!
+    "User whose avatar was reported."
+    user: User! @belongsTo
+    """
+    Moderator-gated URL to the retained private snapshot of the exact avatar
+    that was reported. Captured at report time, so it stays accurate even if
+    the user later changes or removes their avatar. Null once the snapshot has
+    been purged (after resolution) or if it was never captured.
+    """
+    reported_avatar_url: String @method(name: "getReportedAvatarUrl")
+    "User who filed the report. Null if that user has since been deleted."
+    reporter: User @belongsTo
+    "Free-text reason provided by the reporter."
+    reason: String
+    "Current moderation status of the report."
+    status: AvatarReportStatus!
+    "Administrator who resolved the report, if any."
+    resolver: User @belongsTo
+    "When the report was resolved."
+    resolved_at: DateTimeUtc
+    "Moderator notes added at resolution time."
+    resolution_notes: String
+    created_at: DateTimeUtc!
+    updated_at: DateTimeUtc!
+}
+
+enum AvatarReportStatus {
+    PENDING @enum(value: "pending")
+    DISMISSED @enum(value: "dismissed")
+    REMOVED @enum(value: "removed")
+}
+
+extend type Query {
+    """
+    Return avatar reports for moderator review. Requires the
+    `moderateAvatars` ability (application administrators).
+    """
+    avatarReports(
+        "Filter by status. Omit to return all statuses."
+        status: AvatarReportStatus @eq
+    ): [AvatarReport!]!
+        @paginate(defaultCount: 20, model: "App\\Models\\AvatarReport")
+        @can(ability: "moderateAvatars")
+}
+
+extend type Mutation {
+    """
+    Report another user's avatar for moderator review. Any authenticated
+    user may report. Filing multiple pending reports against the same
+    user is idempotent — the existing pending report is returned.
+    """
+    reportUserAvatar(
+        "ID of the user whose avatar is being reported."
+        userId: ID!
+        "Optional free-text reason."
+        reason: String
+    ): AvatarReport!
+        @field(resolver: "App\\GraphQL\\Mutations\\ReportUserAvatar")
+        @guard
+
+    "Dismiss a pending avatar report without removing the avatar."
+    dismissAvatarReport(id: ID!, notes: String): AvatarReport!
+        @field(
+            resolver: "App\\GraphQL\\Mutations\\ResolveAvatarReport@dismiss"
+        )
+        @can(ability: "moderateAvatars")
+
+    """
+    Resolve an avatar report and remove the reported avatar. Optionally
+    also block the user from uploading a replacement.
+    """
+    resolveAvatarReportAndRemoveAvatar(
+        id: ID!
+        notes: String
+        "If true, also set the user's avatar-upload-blocked moderation flag."
+        blockFutureUploads: Boolean
+    ): AvatarReport!
+        @field(
+            resolver: "App\\GraphQL\\Mutations\\ResolveAvatarReport@resolveAndRemove"
+        )
+        @can(ability: "moderateAvatars")
+
+    """
+    Grant or revoke a user's avatar-upload block independent of any
+    specific report (e.g. from an admin user-detail page).
+    """
+    setUserAvatarUploadBlocked(
+        userId: ID!
+        "True to block the user; false to unblock."
+        blocked: Boolean!
+    ): User!
+        @field(resolver: "App\\GraphQL\\Mutations\\SetUserAvatarUploadBlocked")
+        @can(ability: "moderateAvatars")
+}

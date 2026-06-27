@@ -106,7 +106,13 @@ import { useFeedbackMessages } from "src/use/guiElements"
 definePage({
   name: "admin:beta-users",
   meta: {
-    crumb: { label: "breadcrumbs.admin.beta_users" }
+    crumb: { label: "breadcrumbs.admin.beta_users" },
+    navigation: {
+      label: "admin.beta_users.title",
+      icon: "science",
+      description: "admin.dashboard.beta_users_description",
+      order: 30
+    }
   }
 })
 

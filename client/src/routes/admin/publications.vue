@@ -126,7 +126,13 @@ import { ref, computed, watch } from "vue"
 definePage({
   name: "admin:publication:index",
   meta: {
-    crumb: { label: "breadcrumbs.admin.publications" }
+    crumb: { label: "breadcrumbs.admin.publications" },
+    navigation: {
+      label: "header.publications",
+      icon: "collections_bookmark",
+      description: "admin.dashboard.publications_description",
+      order: 20
+    }
   }
 })
 
