@@ -35,8 +35,8 @@
 import CollapseMenu from "src/components/molecules/CollapseMenu.vue"
 import { useQuery } from "@vue/apollo-composable"
 import { GET_PUBLICATION } from "src/graphql/queries"
-import { computed, watchEffect } from "vue"
-import { useRoute, useRouter } from "vue-router"
+import { computed } from "vue"
+import { useRoute } from "vue-router"
 import { useI18n } from "vue-i18n"
 interface Props {
   id: string
@@ -50,7 +50,6 @@ const noStyleCriteria = computed(
   () => publication.value?.style_criterias.length === 0
 )
 const route = useRoute()
-const { replace } = useRouter()
 const params = { id: props.id }
 const labelKey = (page) => `publication.setup_pages.${page}`
 const { t } = useI18n()
@@ -92,13 +91,4 @@ const items = computed(() => [
     }
   }
 ])
-watchEffect(() => {
-  if (publication.value) {
-    // Publication setup is gated on the scoped `update` ability (UI hint; the
-    // server still enforces). Only publication admins hold it.
-    if (!publication.value.abilities?.update) {
-      replace("/error403")
-    }
-  }
-})
 </script>

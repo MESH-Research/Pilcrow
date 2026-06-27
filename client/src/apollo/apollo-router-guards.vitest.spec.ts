@@ -39,14 +39,19 @@ async function runGuard(guard, meta) {
   return next
 }
 
-/** Stub the current-user query (the only query the gate runner makes). */
+/** Stub the current-user query (the adminArea gate's only query). */
 function mockCurrentUser(currentUser) {
   apolloMock.query.mockResolvedValue({ data: { currentUser } })
 }
 
+/** Stub the colocated publication query (the publicationSetup gate's query). */
+function mockPublication(publication) {
+  apolloMock.query.mockResolvedValue({ data: { publication } })
+}
+
 /** Run the declarative gate runner against route `meta`, returning `next`. */
-async function runGate(meta) {
-  const to = { matched: [{ meta }] }
+async function runGate(meta, params = {}) {
+  const to = { matched: [{ meta }], params }
   const next = vi.fn()
   await beforeEachGate(apolloMock, to, undefined, next)
   return next
@@ -156,6 +161,38 @@ describe("adminArea gate", () => {
 
     expect(apolloMock.query).not.toHaveBeenCalled()
     expect(next.mock.calls[0][0]).toBeUndefined()
+  })
+})
+
+describe("publicationSetup gate", () => {
+  afterEach(() => {
+    apolloMock.query.mockReset()
+  })
+
+  it("allows navigation when the viewer holds the publication's `update` ability", async () => {
+    mockPublication({ id: "1", abilities: { update: true } })
+
+    const next = await runGate({ gate: "publicationSetup" }, { id: "1" })
+
+    expect(apolloMock.query).toHaveBeenCalled()
+    expect(next.mock.calls[0][0]).toBeUndefined()
+  })
+
+  it("redirects to error403 when the viewer lacks `update`", async () => {
+    mockPublication({ id: "1", abilities: { update: false } })
+
+    const next = await runGate({ gate: "publicationSetup" }, { id: "1" })
+
+    expect(next.mock.calls[0][0]).toStrictEqual({ name: "error403" })
+  })
+
+  it("redirects to error403 when the publication cannot be fetched", async () => {
+    // A rejected query (no view access) resolves the fetch to null.
+    apolloMock.query.mockRejectedValue(new Error("forbidden"))
+
+    const next = await runGate({ gate: "publicationSetup" }, { id: "1" })
+
+    expect(next.mock.calls[0][0]).toStrictEqual({ name: "error403" })
   })
 })
 

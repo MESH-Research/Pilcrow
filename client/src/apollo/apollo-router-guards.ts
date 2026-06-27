@@ -40,6 +40,18 @@ const GATES = {
       .then(({ data: { currentUser } }) => currentUser)
 
     return user?.abilities?.admin_area === true ? true : { name: "error403" }
+  },
+
+  /**
+   * Publication setup is gated on the publication's scoped `update` ability,
+   * resolved on the publication itself (only publication admins hold it). The
+   * gate runs before navigation — so an unauthorized viewer never renders the
+   * setup shell — and covers every setup child route through the shared parent.
+   */
+  publicationSetup: async (apolloClient, to) => {
+    const publication = await fetchPublication(apolloClient, to.params.id)
+
+    return publication?.abilities?.update === true ? true : { name: "error403" }
   }
 }
 
@@ -137,6 +149,40 @@ async function fetchSubmission(apolloClient, submissionId) {
         variables: { id: submissionId }
       })
       .then(({ data: { submission } }) => submission)
+  } catch (error) {
+    return null
+  }
+}
+
+/**
+ * Colocated query for the {@link GATES.publicationSetup} gate. Selects only the
+ * publication's `update` ability flag, so the gate stays decoupled from the
+ * page-level GET_PUBLICATION query.
+ */
+const GUARD_PUBLICATION_ACCESS = gql`
+  query GuardPublicationAccess($id: ID!) {
+    publication(id: $id) {
+      id
+      abilities {
+        update
+      }
+    }
+  }
+`
+
+/**
+ * Resolve a publication's authorization flags for the viewer, for the setup
+ * gate. Returns null when the publication cannot be fetched (no access), which
+ * the gate treats as "denied".
+ */
+async function fetchPublication(apolloClient, publicationId) {
+  try {
+    return await apolloClient
+      .query({
+        query: GUARD_PUBLICATION_ACCESS,
+        variables: { id: publicationId }
+      })
+      .then(({ data: { publication } }) => publication)
   } catch (error) {
     return null
   }

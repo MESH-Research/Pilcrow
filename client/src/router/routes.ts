@@ -46,6 +46,9 @@ const routes: RouteRecordRaw[] = [
         path: "publication/:id/setup/",
         component: () => import("src/layouts/Publication/SetupLayout.vue"),
         props: true,
+        // Gate the whole setup area on the publication's scoped `update`
+        // ability, resolved before navigation by the declarative gate runner.
+        meta: { gate: "publicationSetup" },
         children: [
           {
             name: "publication:setup:basic",
