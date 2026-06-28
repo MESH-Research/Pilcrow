@@ -13,7 +13,7 @@ jobs:
   publish:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - run: echo "REPO=${GITHUB_REPOSITORY,,}" >> "$GITHUB_ENV"
       - uses: wreality/helm-push@v1.1.1
         id: helm-push
