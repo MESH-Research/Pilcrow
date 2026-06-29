@@ -12,20 +12,15 @@ use Illuminate\Support\Facades\Auth;
 class ResolveAvatarReport
 {
     /**
-     * Dismiss a report without removing the avatar. Records the decision in the
-     * audit log, then deletes the transient report and its snapshot.
+     * Dismiss a report without removing the avatar. No action is taken against
+     * the user, so nothing is recorded — the transient report and its snapshot
+     * are simply discarded.
      *
-     * @param array{id: string, notes: ?string} $args
+     * @param array{id: string} $args
      */
     public function dismiss(null $_, array $args): User
     {
         [$report, $reportedUser] = $this->load($args);
-
-        $reportedUser->recordModerationAudit('avatar_report_dismissed', [
-            'reporter_id' => $report->reporter_user_id,
-            'reason' => $report->reason,
-            'notes' => $args['notes'] ?? null,
-        ]);
 
         $this->discard($report);
 
@@ -54,15 +49,10 @@ class ResolveAvatarReport
             && ($currentMedia === null || $currentMedia->uuid !== $reportedUuid);
 
         if ($isStale) {
-            // Nothing to remove — the reported image is already gone. Record the
-            // closure as a (stale) dismissal and leave sibling reports, which may
-            // concern the replacement avatar, pending.
-            $reportedUser->recordModerationAudit('avatar_report_dismissed', [
-                'stale' => true,
-                'reporter_id' => $report->reporter_user_id,
-                'reason' => $report->reason,
-                'notes' => $notes,
-            ]);
+            // The reported image is already gone — nothing to remove and no
+            // action taken against the user, so there's nothing to record.
+            // Discard the report; sibling reports (which may concern the
+            // replacement avatar) stay pending.
             $this->discard($report);
 
             return $reportedUser->refresh();

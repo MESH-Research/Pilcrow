@@ -289,10 +289,11 @@ type Mutation {
   deleteUserAvatar(id: ID!): User!
 
   """
-  Dismiss a pending avatar report without removing the avatar. Records the
-  decision in the audit log and deletes the report; returns the reported user.
+  Dismiss a pending avatar report without removing the avatar. No action is
+  taken against the user, so nothing is recorded; the report is simply
+  deleted. Returns the reported user.
   """
-  dismissAvatarReport(id: ID!, notes: String): User!
+  dismissAvatarReport(id: ID!): User!
 
   """
   Create a staged user, assign them as a review coordinator of a submisison,

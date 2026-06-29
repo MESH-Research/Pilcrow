@@ -245,27 +245,21 @@ class AvatarReportMutationTest extends ApiTestCase
             'reason' => 'looks off',
         ]);
 
-        $admin = $this->beAppAdmin();
+        $this->beAppAdmin();
 
         $response = $this->graphQL('
-            mutation ($id: ID!, $notes: String) {
-                dismissAvatarReport(id: $id, notes: $notes) { id }
+            mutation ($id: ID!) {
+                dismissAvatarReport(id: $id) { id }
             }
-        ', ['id' => $report->id, 'notes' => 'reviewed — looks fine']);
+        ', ['id' => $report->id]);
 
         // Returns the reported user; the report is gone; the avatar remains.
         $response->assertJsonPath('data.dismissAvatarReport.id', (string)$target->id);
         $this->assertDatabaseMissing('avatar_reports', ['id' => $report->id]);
         $this->assertNotNull($target->fresh()->getAvatarMedia(), 'Avatar should remain');
 
-        // The decision is recorded in the durable audit log on the reported user.
-        $audit = $this->latestAudit($target, 'avatar_report_dismissed');
-        $this->assertNotNull($audit, 'a dismissal should be audited');
-        $this->assertSame((int)$admin->id, (int)$audit->user_id, 'actor is the moderator');
-        $this->assertSame('reviewed — looks fine', $audit->new_values['notes']);
-        $this->assertSame((int)$reporter->id, (int)$audit->new_values['reporter_id']);
-        $this->assertSame('looks off', $audit->new_values['reason']);
-        $this->assertContains('moderation', $audit->tags ? explode(',', $audit->tags) : []);
+        // Dismissal takes no action against the user, so nothing is audited.
+        $this->assertCount(0, $target->fresh()->audits()->get());
     }
 
     public function testAdminCanResolveAndRemoveAvatar(): void
@@ -617,13 +611,10 @@ class AvatarReportMutationTest extends ApiTestCase
             'The current (replacement) avatar should be untouched'
         );
 
-        // Stale resolve is recorded as a dismissal flagged stale, and no
-        // avatar_removed event is emitted because nothing was removed.
+        // A stale resolve removes nothing and takes no action against the user,
+        // so it discards the report without recording anything.
         $this->assertDatabaseMissing('avatar_reports', ['id' => $report->id]);
-        $audit = $this->latestAudit($target, 'avatar_report_dismissed');
-        $this->assertNotNull($audit);
-        $this->assertTrue($audit->new_values['stale'] ?? false);
-        $this->assertNull($this->latestAudit($target, 'avatar_removed'));
+        $this->assertCount(0, $target->fresh()->audits()->get());
     }
 
     public function testResolvingAStaleReportLeavesOtherReportsPending(): void
@@ -710,7 +701,7 @@ class AvatarReportMutationTest extends ApiTestCase
 
         $this->beAppAdmin();
         $this->graphQL(
-            'mutation ($id: ID!) { dismissAvatarReport(id: $id) { id } }',
+            'mutation ($id: ID!) { resolveAvatarReportAndRemoveAvatar(id: $id) { id } }',
             ['id' => $report->id]
         );
 
@@ -723,7 +714,7 @@ class AvatarReportMutationTest extends ApiTestCase
 
         $response->assertJsonPath(
             'data.user.moderationHistory.0.event',
-            'avatar_report_dismissed'
+            'avatar_removed'
         );
     }
 

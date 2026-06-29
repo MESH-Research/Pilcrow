@@ -101,8 +101,8 @@ export const REPORT_USER_AVATAR = gql`
 `
 
 export const DISMISS_AVATAR_REPORT = gql`
-  mutation DismissAvatarReport($id: ID!, $notes: String) {
-    dismissAvatarReport(id: $id, notes: $notes) {
+  mutation DismissAvatarReport($id: ID!) {
+    dismissAvatarReport(id: $id) {
       id
       avatar_upload_blocked
     }
