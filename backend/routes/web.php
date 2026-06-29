@@ -25,12 +25,15 @@ Route::get('/reset-password/{token}', function () {
 })->name('password.reset');
 
 // Moderator-gated stream of a reported avatar's retained private snapshot.
-// Defined before the SPA catch-all so it is reachable; authorization is
-// enforced in the controller via the moderateAvatars ability.
+// Defined before the SPA catch-all so it is reachable. Authorization lives in
+// the controller (the admin_avatar_moderate ability), which denies guests too —
+// so we deliberately omit the `auth` middleware: as an <img> load it doesn't
+// expect JSON, so `auth` would try to redirect an expired session to the
+// (nonexistent) `login` route and 500 instead of returning a clean 403.
 Route::get(
     '/moderation/avatar-reports/{avatarReport}/snapshot',
     [AvatarReportSnapshotController::class, 'show']
-)->middleware('auth')->name('avatar-report.snapshot');
+)->name('avatar-report.snapshot');
 
 // Catch-all route for SPA deep linking. All unmatched routes serve the index
 // view so that Vue Router can handle client-side routing. This must remain the

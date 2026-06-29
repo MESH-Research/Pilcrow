@@ -62,6 +62,16 @@ server {
         try_files /dev/null @backend;
     }
 
+    # Moderator-only backend routes (e.g. the reported-avatar snapshot stream
+    # at /moderation/avatar-reports/{id}/snapshot). These are served by Laravel,
+    # not the SPA, and are loaded as <img>/fetch requests whose Accept header
+    # isn't text/html — so without this they'd fall through `location /` to the
+    # vite dev server and never reach PHP. The SPA's own admin pages live under
+    # /admin, so routing all of /moderation to the backend is unambiguous.
+    location /moderation/ {
+        try_files /dev/null @backend;
+    }
+
     location /graphql {
         error_page 404 = @backend;
         log_not_found off;

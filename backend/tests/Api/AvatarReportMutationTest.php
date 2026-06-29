@@ -739,6 +739,9 @@ class AvatarReportMutationTest extends ApiTestCase
         $report = $this->reportViaApi($reporter, $target);
         $url = route('avatar-report.snapshot', ['avatarReport' => $report->id]);
 
+        // A guest is forbidden — cleanly (403), not redirected to a login route.
+        $this->get($url)->assertForbidden();
+
         // A non-moderator is forbidden.
         $this->actingAs(User::factory()->create());
         $this->get($url)->assertForbidden();
