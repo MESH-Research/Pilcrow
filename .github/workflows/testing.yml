@@ -89,10 +89,12 @@ jobs:
           flags: client
           fail_ci_if_error: false
           use_oidc: true
-      # On forks (no Codecov), surface coverage of the CHANGED lines as a PR
-      # comment using only GITHUB_TOKEN — no external service, no secret.
+      # Surface coverage of the CHANGED lines as a sticky PR comment using only
+      # GITHUB_TOKEN — no external service, no secret. Runs on every PR
+      # (including forks, which lack Codecov); on origin it duplicates Codecov's
+      # patch coverage but keeps the comment path exercised.
       - name: Patch coverage of change (client)
-        if: ${{ github.repository != 'MESH-Research/Pilcrow' && github.event_name == 'pull_request' && !cancelled() }}
+        if: ${{ github.event_name == 'pull_request' && !cancelled() }}
         run: |
           git fetch --no-tags origin ${{ github.base_ref }}:refs/remotes/origin/${{ github.base_ref }}
           pipx install diff_cover
@@ -102,7 +104,7 @@ jobs:
             --markdown-report patch-coverage-client.md \
             --fail-under=0 || true
       - name: Comment patch coverage (client)
-        if: ${{ github.repository != 'MESH-Research/Pilcrow' && github.event_name == 'pull_request' && !cancelled() }}
+        if: ${{ github.event_name == 'pull_request' && !cancelled() }}
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           header: patch-coverage-client
@@ -221,10 +223,12 @@ jobs:
           flags: backend
           fail_ci_if_error: false
           use_oidc: true
-      # On forks (no Codecov), surface coverage of the CHANGED lines as a PR
-      # comment using only GITHUB_TOKEN — no external service, no secret.
+      # Surface coverage of the CHANGED lines as a sticky PR comment using only
+      # GITHUB_TOKEN — no external service, no secret. Runs on every PR
+      # (including forks, which lack Codecov); on origin it duplicates Codecov's
+      # patch coverage but keeps the comment path exercised.
       - name: Patch coverage of change (backend)
-        if: ${{ github.repository != 'MESH-Research/Pilcrow' && github.event_name == 'pull_request' && !cancelled() }}
+        if: ${{ github.event_name == 'pull_request' && !cancelled() }}
         run: |
           git fetch --no-tags origin ${{ github.base_ref }}:refs/remotes/origin/${{ github.base_ref }}
           pipx install diff_cover
@@ -234,7 +238,7 @@ jobs:
             --markdown-report patch-coverage-backend.md \
             --fail-under=0 || true
       - name: Comment patch coverage (backend)
-        if: ${{ github.repository != 'MESH-Research/Pilcrow' && github.event_name == 'pull_request' && !cancelled() }}
+        if: ${{ github.event_name == 'pull_request' && !cancelled() }}
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           header: patch-coverage-backend
