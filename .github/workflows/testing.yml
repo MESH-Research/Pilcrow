@@ -16,6 +16,7 @@ permissions:
   packages: write
   id-token: write
   contents: read
+  pull-requests: write
 concurrency:
   group: tests-${{ format('{0}-{1}', github.head_ref || github.run_number, github.job) }}
   cancel-in-progress: true
@@ -70,8 +71,9 @@ jobs:
         name: Run Unit Tests
         with:
           target: "web-test-ci"
+      # Codecov runs on origin only (provides overall + trend + patch coverage).
       - name: Upload coverage to Codecov
-        if: ${{ !cancelled() }}
+        if: ${{ github.repository == 'MESH-Research/Pilcrow' && !cancelled() }}
         uses: codecov/codecov-action@v6
         with:
           files: ./coverage-web/cobertura-coverage.xml
@@ -79,7 +81,7 @@ jobs:
           fail_ci_if_error: false
           use_oidc: true
       - name: Upload test results to Codecov
-        if: ${{ !cancelled() }}
+        if: ${{ github.repository == 'MESH-Research/Pilcrow' && !cancelled() }}
         uses: codecov/codecov-action@v6
         with:
           files: ./coverage-web/junit.xml
@@ -87,6 +89,24 @@ jobs:
           flags: client
           fail_ci_if_error: false
           use_oidc: true
+      # On forks (no Codecov), surface coverage of the CHANGED lines as a PR
+      # comment using only GITHUB_TOKEN — no external service, no secret.
+      - name: Patch coverage of change (client)
+        if: ${{ github.repository != 'MESH-Research/Pilcrow' && github.event_name == 'pull_request' && !cancelled() }}
+        run: |
+          git fetch --no-tags origin ${{ github.base_ref }}:refs/remotes/origin/${{ github.base_ref }}
+          pipx install diff_cover
+          diff-cover ./coverage-web/cobertura-coverage.xml \
+            --compare-branch=origin/${{ github.base_ref }} \
+            --src-roots client \
+            --markdown-report patch-coverage-client.md \
+            --fail-under=0 || true
+      - name: Comment patch coverage (client)
+        if: ${{ github.repository != 'MESH-Research/Pilcrow' && github.event_name == 'pull_request' && !cancelled() }}
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: patch-coverage-client
+          path: patch-coverage-client.md
 
   client-fallow-audit:
     name: "Client / Fallow Audit"
@@ -183,8 +203,9 @@ jobs:
       - uses: mesh-research/github-actions/build-image@v2
         with:
           target: "fpm-test-ci"
+      # Codecov runs on origin only (provides overall + trend + patch coverage).
       - name: Upload coverage to Codecov
-        if: ${{ !cancelled() }}
+        if: ${{ github.repository == 'MESH-Research/Pilcrow' && !cancelled() }}
         uses: codecov/codecov-action@v6
         with:
           files: ./coverage-fpm/cobertura.xml
@@ -192,7 +213,7 @@ jobs:
           fail_ci_if_error: false
           use_oidc: true
       - name: Upload test results to Codecov
-        if: ${{ !cancelled() }}
+        if: ${{ github.repository == 'MESH-Research/Pilcrow' && !cancelled() }}
         uses: codecov/codecov-action@v6
         with:
           files: ./coverage-fpm/junit.xml
@@ -200,6 +221,24 @@ jobs:
           flags: backend
           fail_ci_if_error: false
           use_oidc: true
+      # On forks (no Codecov), surface coverage of the CHANGED lines as a PR
+      # comment using only GITHUB_TOKEN — no external service, no secret.
+      - name: Patch coverage of change (backend)
+        if: ${{ github.repository != 'MESH-Research/Pilcrow' && github.event_name == 'pull_request' && !cancelled() }}
+        run: |
+          git fetch --no-tags origin ${{ github.base_ref }}:refs/remotes/origin/${{ github.base_ref }}
+          pipx install diff_cover
+          diff-cover ./coverage-fpm/cobertura.xml \
+            --compare-branch=origin/${{ github.base_ref }} \
+            --src-roots backend \
+            --markdown-report patch-coverage-backend.md \
+            --fail-under=0 || true
+      - name: Comment patch coverage (backend)
+        if: ${{ github.repository != 'MESH-Research/Pilcrow' && github.event_name == 'pull_request' && !cancelled() }}
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: patch-coverage-backend
+          path: patch-coverage-backend.md
   # e2e:
   #   name: "E2E Test"
   #   needs: [build-images]
