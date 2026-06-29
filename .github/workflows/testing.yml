@@ -98,10 +98,14 @@ jobs:
         run: |
           git fetch --no-tags origin ${{ github.base_ref }}:refs/remotes/origin/${{ github.base_ref }}
           pipx install diff_cover
+          # Cobertura from the build container records an absolute in-container
+          # <source> path; rewrite it to the checkout's client dir so diff-cover
+          # resolves files to client/… and matches the git diff paths.
+          sed -i -E "s#<source>.*</source>#<source>${GITHUB_WORKSPACE}/client</source>#" \
+            ./coverage-web/cobertura-coverage.xml
           diff-cover ./coverage-web/cobertura-coverage.xml \
             --compare-branch=origin/${{ github.base_ref }} \
-            --src-roots client \
-            --markdown-report patch-coverage-client.md \
+            --format markdown:patch-coverage-client.md \
             --fail-under=0 || true
           # Trim per-hunk source from the report: keep header, file list, summary.
           awk '/^## / && seen { exit } /^## Summary/ { seen=1 } { print }' \
@@ -235,10 +239,15 @@ jobs:
         run: |
           git fetch --no-tags origin ${{ github.base_ref }}:refs/remotes/origin/${{ github.base_ref }}
           pipx install diff_cover
+          # Cobertura from the build container records <source>/var/www/html/app
+          # with filenames relative to app/; rewrite <source> to the checkout's
+          # backend/app dir so diff-cover resolves files to backend/app/… and
+          # matches the git diff paths.
+          sed -i -E "s#<source>.*</source>#<source>${GITHUB_WORKSPACE}/backend/app</source>#" \
+            ./coverage-fpm/cobertura.xml
           diff-cover ./coverage-fpm/cobertura.xml \
             --compare-branch=origin/${{ github.base_ref }} \
-            --src-roots backend \
-            --markdown-report patch-coverage-backend.md \
+            --format markdown:patch-coverage-backend.md \
             --fail-under=0 || true
           # Trim per-hunk source from the report: keep header, file list, summary.
           awk '/^## / && seen { exit } /^## Summary/ { seen=1 } { print }' \
