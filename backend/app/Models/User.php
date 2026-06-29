@@ -8,6 +8,7 @@ use App\Auth\Roles\GlobalRole;
 use App\Auth\Roles\ScopedRole;
 use App\Builders\UserBuilder;
 use App\Enums\ModerationFlag;
+use App\Models\Traits\HasAvatarImage;
 use App\Models\Traits\HasModerationFlags;
 use Carbon\Carbon;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -29,7 +30,6 @@ use OwenIt\Auditing\Auditable as AuditableTrait;
 use OwenIt\Auditing\Contracts\Auditable;
 use OwenIt\Auditing\Events\AuditCustom;
 use Silber\Bouncer\Database\HasRolesAndAbilities;
-use Spatie\Image\Enums\Fit;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
@@ -42,6 +42,7 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia, Auditab
     use HasRolesAndAbilities;
     use Searchable;
     use InteractsWithMedia;
+    use HasAvatarImage;
     use HasModerationFlags;
     use AuditableTrait;
 
@@ -54,9 +55,6 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia, Auditab
      * @var array<int, string>
      */
     protected $auditEvents = [];
-
-    public const AVATAR_COLLECTION = 'avatar';
-    public const AVATAR_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 
     /**
      * The attributes that are mass assignable.
@@ -472,83 +470,24 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia, Auditab
     }
 
     /**
-     * Register media collections for the user.
+     * Register the user's media collections. The avatar collection's mechanics
+     * live in {@see HasAvatarImage}; moderation of that avatar is a separate
+     * concern kept on this model.
      */
     public function registerMediaCollections(): void
     {
-        $this->addMediaCollection(self::AVATAR_COLLECTION)
-            ->singleFile()
-            ->acceptsMimeTypes(self::AVATAR_MIME_TYPES);
+        $this->registerAvatarMediaCollection();
     }
 
     /**
-     * Register media conversions for the user.
-     *
-     * The 'thumb' conversion is used by AvatarImage; 'medium' is available
-     * for larger displays (e.g. account layout).
-     *
-     * Conversions are left queueable so they run on a queue worker when one
-     * is configured (QUEUE_CONNECTION + media-library's
-     * queue_conversions_by_default), and fall back to running inline under
-     * the sync driver when no worker is present.
+     * Register the user's media conversions (avatar thumb/medium).
      *
      * @param \Spatie\MediaLibrary\MediaCollections\Models\Media|null $_media
-     *        Required by the Spatie HasMedia contract; unused here because
-     *        the same conversions apply to any media item in this model's
-     *        collections.
+     *        Required by the Spatie HasMedia contract; unused here.
      */
     public function registerMediaConversions(?Media $_media = null): void
     {
-        $this->addMediaConversion('thumb')
-            ->fit(Fit::Crop, 96, 96);
-
-        $this->addMediaConversion('medium')
-            ->fit(Fit::Crop, 256, 256);
-    }
-
-    /**
-     * Return the avatar Media item if set.
-     */
-    public function getAvatarMedia(): ?Media
-    {
-        return $this->getFirstMedia(self::AVATAR_COLLECTION);
-    }
-
-    /**
-     * Resolve the GraphQL `User.avatar` field: URLs for the original plus
-     * the thumb/medium conversions, or null when no avatar is uploaded so
-     * the client can fall back to a generated placeholder.
-     *
-     * @return array<string, string>|null
-     */
-    public function getAvatar(): ?array
-    {
-        $media = $this->getAvatarMedia();
-        if ($media === null) {
-            return null;
-        }
-
-        return [
-            'url' => $media->getFullUrl(),
-            'thumb_url' => $this->conversionUrl($media, 'thumb'),
-            'medium_url' => $this->conversionUrl($media, 'medium'),
-        ];
-    }
-
-    /**
-     * URL for a media conversion, falling back to the original file's URL
-     * while the conversion has not been generated yet. Conversions may be
-     * queued (see registerMediaConversions), so right after upload the
-     * thumb/medium derivatives can be momentarily absent; serving the
-     * original avoids a broken image until the queue worker catches up.
-     */
-    private function conversionUrl(Media $media, string $conversion): string
-    {
-        if (!$media->hasGeneratedConversion($conversion)) {
-            return $media->getFullUrl();
-        }
-
-        return $media->getFullUrl($conversion);
+        $this->registerAvatarMediaConversions();
     }
 
     /**
