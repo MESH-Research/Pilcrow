@@ -45,7 +45,7 @@ import { graphql } from "src/graphql/generated"
 
 graphql(`
   query GetPendingAvatarReportCount {
-    avatarReports(status: PENDING, first: 1, page: 1) {
+    avatarReports(first: 1, page: 1) {
       paginatorInfo {
         total
       }

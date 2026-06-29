@@ -7,128 +7,118 @@ use App\Enums\ModerationFlag;
 use App\Models\AvatarReport;
 use App\Models\User;
 use GraphQL\Error\Error;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 
 class ResolveAvatarReport
 {
     /**
-     * Dismiss a report without removing the avatar.
+     * Dismiss a report without removing the avatar. Records the decision in the
+     * audit log, then deletes the transient report and its snapshot.
      *
      * @param array{id: string, notes: ?string} $args
      */
-    public function dismiss(null $_, array $args): AvatarReport
+    public function dismiss(null $_, array $args): User
     {
-        return $this->resolve($args, AvatarReport::STATUS_DISMISSED, false);
+        [$report, $reportedUser] = $this->load($args);
+
+        $reportedUser->recordModerationAudit('avatar_report_dismissed', [
+            'reporter_id' => $report->reporter_user_id,
+            'reason' => $report->reason,
+            'notes' => $args['notes'] ?? null,
+        ]);
+
+        $this->discard($report);
+
+        return $reportedUser->refresh();
     }
 
     /**
-     * Resolve a report and remove the reported user's avatar.
+     * Resolve a report and remove the reported user's avatar — unless the user
+     * has since swapped to a different image, in which case the report is closed
+     * as stale and the (possibly innocent) current avatar is left intact.
      *
      * @param array{id: string, notes: ?string, blockFutureUploads?: ?bool} $args
      */
-    public function resolveAndRemove(null $_, array $args): AvatarReport
+    public function resolveAndRemove(null $_, array $args): User
     {
-        return $this->resolve($args, AvatarReport::STATUS_REMOVED, true);
+        [$report, $reportedUser] = $this->load($args);
+        $notes = $args['notes'] ?? null;
+
+        // Only remove the current avatar if it is still the exact image that was
+        // reported. Compare by the durable reported UUID (media_id is nulled the
+        // moment the old media row is deleted). When the UUID is absent (legacy)
+        // we can't compare, so fall back to removing the current avatar.
+        $currentMedia = $reportedUser->getAvatarMedia();
+        $reportedUuid = $report->reported_media_uuid;
+        $isStale = $reportedUuid !== null
+            && ($currentMedia === null || $currentMedia->uuid !== $reportedUuid);
+
+        if ($isStale) {
+            // Nothing to remove — the reported image is already gone. Record the
+            // closure as a (stale) dismissal and leave sibling reports, which may
+            // concern the replacement avatar, pending.
+            $reportedUser->recordModerationAudit('avatar_report_dismissed', [
+                'stale' => true,
+                'reporter_id' => $report->reporter_user_id,
+                'reason' => $report->reason,
+                'notes' => $notes,
+            ]);
+            $this->discard($report);
+
+            return $reportedUser->refresh();
+        }
+
+        $reportedUser->clearMediaCollection(User::AVATAR_COLLECTION);
+
+        $reportedUser->recordModerationAudit('avatar_removed', [
+            'reporter_id' => $report->reporter_user_id,
+            'reason' => $report->reason,
+            'notes' => $notes,
+            'reported_media_uuid' => $reportedUuid,
+        ]);
+
+        if (!empty($args['blockFutureUploads'])) {
+            $reportedUser->setModerationFlag(ModerationFlag::AvatarUploadBlocked);
+            $reportedUser->recordModerationAudit('avatar_upload_blocked', [
+                'via' => 'avatar_report',
+            ]);
+        }
+
+        // The avatar is gone, so every pending report against this user — this
+        // one and its siblings — is moot. Delete them all (and their snapshots);
+        // the single avatar_removed entry above is the durable record.
+        $this->discard($report);
+        AvatarReport::where('user_id', $reportedUser->id)
+            ->get()
+            ->each(fn(AvatarReport $sibling) => $this->discard($sibling));
+
+        return $reportedUser->refresh();
     }
 
     /**
-     * @param array{
-     *     id: string,
-     *     notes: ?string,
-     *     blockFutureUploads?: ?bool
-     * } $args
+     * Load the report and its reported user, guarding authentication.
+     *
+     * @param array{id: string} $args
+     * @return array{0: \App\Models\AvatarReport, 1: \App\Models\User}
      */
-    private function resolve(array $args, string $status, bool $removeAvatar): AvatarReport
+    private function load(array $args): array
     {
-        /** @var \App\Models\User|null $admin */
-        $admin = Auth::user();
-        if ($admin === null) {
+        if (Auth::user() === null) {
             throw new Error('Authentication required.');
         }
 
         /** @var \App\Models\AvatarReport $report */
         $report = AvatarReport::findOrFail($args['id']);
 
-        if ($report->status !== AvatarReport::STATUS_PENDING) {
-            throw new Error('This report has already been resolved.');
-        }
-
-        $now = Carbon::now();
-        $notes = $args['notes'] ?? null;
-
-        if ($removeAvatar) {
-            // Only remove the current avatar if it is still the exact image
-            // that was reported. If the user swapped or deleted it after the
-            // report, removing would delete an innocent replacement — skip it
-            // and note the staleness. Compare by the durable reported UUID
-            // (media_id is nulled the moment the old media row is deleted, so it
-            // can't be trusted here). When the UUID is absent (e.g. a legacy
-            // report) we can't compare, so fall back to removing the current
-            // avatar.
-            $currentMedia = $report->user->getAvatarMedia();
-            $reportedUuid = $report->reported_media_uuid;
-            $isStale = $reportedUuid !== null
-                && ($currentMedia === null
-                    || $currentMedia->uuid !== $reportedUuid);
-
-            if ($isStale) {
-                $staleNote = 'Reported avatar was already changed or removed before review; '
-                    . 'current avatar left intact.';
-                $notes = $notes ? ($notes . ' ' . $staleNote) : $staleNote;
-            } else {
-                $report->user->clearMediaCollection(User::AVATAR_COLLECTION);
-
-                // Close out other pending reports against the same user — the
-                // avatar is actually gone, so they no longer need moderator
-                // attention. Only when we removed it: a stale resolve leaves the
-                // current (possibly innocent) avatar in place, so other reports
-                // — which may concern that replacement — must stay open.
-                $this->closeSiblingPendingReports($report, $admin, $now);
-            }
-
-            if (!empty($args['blockFutureUploads'])) {
-                $report->user->setModerationFlag(ModerationFlag::AvatarUploadBlocked);
-            }
-        }
-
-        $report->fill([
-            'status' => $status,
-            'resolved_by_user_id' => $admin->id,
-            'resolved_at' => $now,
-            'resolution_notes' => $notes,
-        ])->save();
-
-        // Resolving a report ends any reason to hold its evidence — purge the
-        // private snapshot now, whatever the outcome. We never retain violative
-        // content past the moderation decision.
-        $report->clearMediaCollection(AvatarReport::SNAPSHOT_COLLECTION);
-
-        return $report->refresh();
+        return [$report, $report->user];
     }
 
     /**
-     * Close every other pending report against the same user as removed — the
-     * avatar they all concern is gone. Iterated (not a mass update) so each
-     * sibling's private snapshot is purged on resolution too.
+     * Delete a transient report and its private snapshot. Spatie removes the
+     * report's media when the model is deleted.
      */
-    private function closeSiblingPendingReports(
-        AvatarReport $report,
-        User $admin,
-        Carbon $now
-    ): void {
-        AvatarReport::where('user_id', $report->user_id)
-            ->where('status', AvatarReport::STATUS_PENDING)
-            ->where('id', '!=', $report->id)
-            ->each(function (AvatarReport $sibling) use ($admin, $now): void {
-                $sibling->fill([
-                    'status' => AvatarReport::STATUS_REMOVED,
-                    'resolved_by_user_id' => $admin->id,
-                    'resolved_at' => $now,
-                    'resolution_notes' => 'Closed automatically when avatar was removed.',
-                ])->save();
-
-                $sibling->clearMediaCollection(AvatarReport::SNAPSHOT_COLLECTION);
-            });
+    private function discard(AvatarReport $report): void
+    {
+        $report->delete();
     }
 }

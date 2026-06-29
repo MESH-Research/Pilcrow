@@ -49,6 +49,14 @@ type User {
     client gates the uploader UI on this rather than re-deriving it.
     """
     can_upload_avatar: Boolean! @method(name: "getCanUploadAvatar")
+
+    """
+    This user's moderation history — their avatar-moderation audit entries,
+    newest first. Moderator-gated: a user cannot read their own moderation file.
+    """
+    moderationHistory: [Audit!]!
+        @method(name: "getModerationHistory")
+        @canRoot(ability: "admin_avatar_moderate")
 }
 
 """

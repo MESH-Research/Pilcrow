@@ -66,7 +66,6 @@ class ReportUserAvatar
                 'reported_media_uuid' => $reportedMedia->uuid,
                 'reporter_user_id' => $reporter->id,
                 'reason' => $args['reason'] ?? null,
-                'status' => AvatarReport::STATUS_PENDING,
             ]);
         } catch (QueryException $e) {
             // Lost a race: a concurrent request created the pending report first
@@ -103,7 +102,6 @@ class ReportUserAvatar
         return AvatarReport::where('user_id', $reportedUser->id)
             ->where('reporter_user_id', $reporter->id)
             ->where('media_id', $reportedMedia->id)
-            ->where('status', AvatarReport::STATUS_PENDING)
             ->first();
     }
 }

@@ -96,7 +96,6 @@ export const REPORT_USER_AVATAR = gql`
   mutation ReportUserAvatar($userId: ID!, $reason: String) {
     reportUserAvatar(userId: $userId, reason: $reason) {
       id
-      status
     }
   }
 `
@@ -105,9 +104,7 @@ export const DISMISS_AVATAR_REPORT = gql`
   mutation DismissAvatarReport($id: ID!, $notes: String) {
     dismissAvatarReport(id: $id, notes: $notes) {
       id
-      status
-      resolution_notes
-      resolved_at
+      avatar_upload_blocked
     }
   }
 `
@@ -124,9 +121,12 @@ export const RESOLVE_AVATAR_REPORT_AND_REMOVE_AVATAR = gql`
       blockFutureUploads: $blockFutureUploads
     ) {
       id
-      status
-      resolution_notes
-      resolved_at
+      avatar_upload_blocked
+      avatar {
+        url
+        thumb_url
+        medium_url
+      }
     }
   }
 `

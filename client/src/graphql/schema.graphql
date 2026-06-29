@@ -58,18 +58,6 @@ type AvatarReport {
 
   """User who filed the report. Null if that user has since been deleted."""
   reporter: User
-
-  """Moderator notes added at resolution time."""
-  resolution_notes: String
-
-  """When the report was resolved."""
-  resolved_at: DateTimeUtc
-
-  """Administrator who resolved the report, if any."""
-  resolver: User
-
-  """Current moderation status of the report."""
-  status: AvatarReportStatus!
   updated_at: DateTimeUtc!
 
   """User whose avatar was reported."""
@@ -83,12 +71,6 @@ type AvatarReportPaginator implements Paginator {
 
   """Pagination information about the list of items."""
   paginatorInfo: PaginatorInfo!
-}
-
-enum AvatarReportStatus {
-  DISMISSED
-  PENDING
-  REMOVED
 }
 
 interface Comment {
@@ -306,8 +288,11 @@ type Mutation {
   """Remove a user's avatar image."""
   deleteUserAvatar(id: ID!): User!
 
-  """Dismiss a pending avatar report without removing the avatar."""
-  dismissAvatarReport(id: ID!, notes: String): AvatarReport!
+  """
+  Dismiss a pending avatar report without removing the avatar. Records the
+  decision in the audit log and deletes the report; returns the reported user.
+  """
+  dismissAvatarReport(id: ID!, notes: String): User!
 
   """
   Create a staged user, assign them as a review coordinator of a submisison,
@@ -375,15 +360,17 @@ type Mutation {
   resetPassword(input: ResetPasswordInput): User
 
   """
-  Resolve an avatar report and remove the reported avatar. Optionally
-  also block the user from uploading a replacement.
+  Resolve an avatar report and remove the reported avatar (unless the user has
+  since changed it, in which case the report is closed as stale). Optionally
+  also block the user from uploading a replacement. Records the decision in the
+  audit log and deletes the report(s); returns the reported user.
   """
   resolveAvatarReportAndRemoveAvatar(
     """If true, also set the user's avatar-upload-blocked moderation flag."""
     blockFutureUploads: Boolean
     id: ID!
     notes: String
-  ): AvatarReport!
+  ): User!
   saveGeneralSettings(settings: GeneralSettingsInput!): GeneralSettings
 
   """(Re)send a verification email to a user.  """
@@ -691,8 +678,10 @@ enum PublicationRole {
 
 type Query {
   """
-  Return avatar reports for moderator review. Requires the
-  `admin_avatar_moderate` ability (application administrators).
+  The pending avatar-report queue for moderator review. Reports are
+  transient — a resolved report is deleted and its decision recorded in the
+  moderation audit log — so this only ever returns pending reports. Requires
+  the `admin_avatar_moderate` ability (application administrators).
   """
   avatarReports(
     """Limits number of fetched items."""
@@ -700,9 +689,6 @@ type Query {
 
     """The offset from which items are returned."""
     page: Int
-
-    """Filter by status. Omit to return all statuses."""
-    status: AvatarReportStatus
   ): AvatarReportPaginator!
 
   """Return information about the currently logged in user"""
@@ -1187,6 +1173,12 @@ type User {
   feature_opt_ins: [String!]!
   highest_privileged_role: UserRoles
   id: ID!
+
+  """
+  This user's moderation history — their avatar-moderation audit entries,
+  newest first. Moderator-gated: a user cannot read their own moderation file.
+  """
+  moderationHistory: [Audit!]!
   name: String
   notifications(
     """Limits number of fetched items."""

@@ -43,14 +43,12 @@ class AvatarReportSeeder extends Seeder
             'user_id' => $reported[0]->id,
             'reporter_user_id' => $reporter->id,
             'reason' => 'Sample report — the avatar looks inappropriate for this context.',
-            'status' => AvatarReport::STATUS_PENDING,
         ]);
 
         AvatarReport::create([
             'user_id' => $reported[1]->id,
             'reporter_user_id' => $reporter->id,
             'reason' => null,
-            'status' => AvatarReport::STATUS_PENDING,
         ]);
     }
 }

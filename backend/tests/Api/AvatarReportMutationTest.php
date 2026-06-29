@@ -11,6 +11,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Storage;
+use OwenIt\Auditing\Models\Audit;
 use Tests\ApiTestCase;
 
 class AvatarReportMutationTest extends ApiTestCase
@@ -35,6 +36,32 @@ class AvatarReportMutationTest extends ApiTestCase
             ->toMediaCollection(User::AVATAR_COLLECTION);
     }
 
+    /**
+     * File a report through the API so it captures media_id, the durable
+     * reported UUID, and the private snapshot — exactly as production does.
+     */
+    private function reportViaApi(User $reporter, User $target): AvatarReport
+    {
+        $this->actingAs($reporter);
+        $id = $this->graphQL(
+            'mutation ($id: ID!) { reportUserAvatar(userId: $id) { id } }',
+            ['id' => $target->id]
+        )->json('data.reportUserAvatar.id');
+
+        return AvatarReport::findOrFail($id);
+    }
+
+    /**
+     * The most recent moderation audit of a given event recorded about a user.
+     */
+    private function latestAudit(User $user, string $event): ?Audit
+    {
+        /** @var Audit|null $audit */
+        $audit = $user->audits()->where('event', $event)->latest('id')->first();
+
+        return $audit;
+    }
+
     public function testAuthenticatedUserCanReportAvatar(): void
     {
         /** @var User $reporter */
@@ -48,7 +75,6 @@ class AvatarReportMutationTest extends ApiTestCase
             mutation ($userId: ID!, $reason: String) {
                 reportUserAvatar(userId: $userId, reason: $reason) {
                     id
-                    status
                     reason
                     user { id }
                     reporter { id }
@@ -56,7 +82,6 @@ class AvatarReportMutationTest extends ApiTestCase
             }
         ', ['userId' => $target->id, 'reason' => 'inappropriate']);
 
-        $response->assertJsonPath('data.reportUserAvatar.status', 'PENDING');
         $response->assertJsonPath('data.reportUserAvatar.reason', 'inappropriate');
         $response->assertJsonPath('data.reportUserAvatar.user.id', (string)$target->id);
         $response->assertJsonPath('data.reportUserAvatar.reporter.id', (string)$reporter->id);
@@ -64,7 +89,6 @@ class AvatarReportMutationTest extends ApiTestCase
         $this->assertDatabaseHas('avatar_reports', [
             'user_id' => $target->id,
             'reporter_user_id' => $reporter->id,
-            'status' => AvatarReport::STATUS_PENDING,
         ]);
     }
 
@@ -163,7 +187,7 @@ class AvatarReportMutationTest extends ApiTestCase
         $this->assertDatabaseCount('avatar_reports', 0);
     }
 
-    public function testPendingDedupIndexBlocksDuplicatePendingReports(): void
+    public function testPendingDedupIndexBlocksDuplicateReports(): void
     {
         $reporter = User::factory()->create();
         $target = User::factory()->create();
@@ -175,13 +199,12 @@ class AvatarReportMutationTest extends ApiTestCase
             'media_id' => $media->id,
             'reported_media_uuid' => $media->uuid,
             'reporter_user_id' => $reporter->id,
-            'status' => AvatarReport::STATUS_PENDING,
         ];
         AvatarReport::create($base);
 
-        // A second pending report for the same (reporter, user, media) is
-        // rejected at the database layer — the guarantee the resolver relies on
-        // to resolve the read-then-write race.
+        // A second report for the same (reporter, user, media) is rejected at
+        // the database layer — the guarantee the resolver relies on to resolve
+        // the read-then-write race.
         $this->expectException(QueryException::class);
         AvatarReport::create($base);
     }
@@ -197,7 +220,7 @@ class AvatarReportMutationTest extends ApiTestCase
 
         // Target swaps to a different image; the single-file collection
         // replaces the reported media. Re-reporting must record the new image
-        // rather than return the stale pending report for the old one.
+        // rather than return the existing report for the old one.
         $this->giveUserAnAvatar($target);
         $newMedia = $target->fresh()->getAvatarMedia();
 
@@ -219,25 +242,30 @@ class AvatarReportMutationTest extends ApiTestCase
         $report = AvatarReport::create([
             'user_id' => $target->id,
             'reporter_user_id' => $reporter->id,
-            'status' => AvatarReport::STATUS_PENDING,
+            'reason' => 'looks off',
         ]);
 
         $admin = $this->beAppAdmin();
 
         $response = $this->graphQL('
             mutation ($id: ID!, $notes: String) {
-                dismissAvatarReport(id: $id, notes: $notes) {
-                    id status resolution_notes
-                    resolver { id }
-                }
+                dismissAvatarReport(id: $id, notes: $notes) { id }
             }
         ', ['id' => $report->id, 'notes' => 'reviewed — looks fine']);
 
-        $response->assertJsonPath('data.dismissAvatarReport.status', 'DISMISSED');
-        $response->assertJsonPath('data.dismissAvatarReport.resolver.id', (string)$admin->id);
-        $response->assertJsonPath('data.dismissAvatarReport.resolution_notes', 'reviewed — looks fine');
-
+        // Returns the reported user; the report is gone; the avatar remains.
+        $response->assertJsonPath('data.dismissAvatarReport.id', (string)$target->id);
+        $this->assertDatabaseMissing('avatar_reports', ['id' => $report->id]);
         $this->assertNotNull($target->fresh()->getAvatarMedia(), 'Avatar should remain');
+
+        // The decision is recorded in the durable audit log on the reported user.
+        $audit = $this->latestAudit($target, 'avatar_report_dismissed');
+        $this->assertNotNull($audit, 'a dismissal should be audited');
+        $this->assertSame((int)$admin->id, (int)$audit->user_id, 'actor is the moderator');
+        $this->assertSame('reviewed — looks fine', $audit->new_values['notes']);
+        $this->assertSame((int)$reporter->id, (int)$audit->new_values['reporter_id']);
+        $this->assertSame('looks off', $audit->new_values['reason']);
+        $this->assertContains('moderation', $audit->tags ? explode(',', $audit->tags) : []);
     }
 
     public function testAdminCanResolveAndRemoveAvatar(): void
@@ -251,39 +279,37 @@ class AvatarReportMutationTest extends ApiTestCase
         $report = AvatarReport::create([
             'user_id' => $target->id,
             'reporter_user_id' => $reporter->id,
-            'status' => AvatarReport::STATUS_PENDING,
         ]);
 
         $admin = $this->beAppAdmin();
 
         $response = $this->graphQL('
             mutation ($id: ID!) {
-                resolveAvatarReportAndRemoveAvatar(id: $id) {
-                    id status
-                    resolver { id }
-                }
+                resolveAvatarReportAndRemoveAvatar(id: $id) { id }
             }
         ', ['id' => $report->id]);
 
-        $response->assertJsonPath('data.resolveAvatarReportAndRemoveAvatar.status', 'REMOVED');
         $response->assertJsonPath(
-            'data.resolveAvatarReportAndRemoveAvatar.resolver.id',
-            (string)$admin->id
+            'data.resolveAvatarReportAndRemoveAvatar.id',
+            (string)$target->id
         );
-
         $this->assertNull($target->fresh()->getAvatarMedia(), 'Avatar should be removed');
+        $this->assertDatabaseMissing('avatar_reports', ['id' => $report->id]);
+
+        $audit = $this->latestAudit($target, 'avatar_removed');
+        $this->assertNotNull($audit, 'removal should be audited');
+        $this->assertSame((int)$admin->id, (int)$audit->user_id);
     }
 
-    public function testRemovingAlsoClosesOtherPendingReports(): void
+    public function testRemovingDeletesAllPendingReportsForTheUser(): void
     {
         $target = User::factory()->create();
         $this->giveUserAnAvatar($target);
 
         // Two reports against the same current avatar, filed via the API so
         // each holds its own private snapshot.
-        $sibling = $this->reportViaApi(User::factory()->create(), $target);
+        $this->reportViaApi(User::factory()->create(), $target);
         $resolved = $this->reportViaApi(User::factory()->create(), $target);
-        $this->assertNotNull($sibling->getSnapshotMedia());
 
         $this->beAppAdmin();
 
@@ -292,35 +318,28 @@ class AvatarReportMutationTest extends ApiTestCase
             ['id' => $resolved->id]
         );
 
-        $pending = AvatarReport::where('user_id', $target->id)
-            ->where('status', AvatarReport::STATUS_PENDING)
-            ->count();
-        $this->assertSame(0, $pending);
-
-        $sibling->refresh();
-        $this->assertSame(AvatarReport::STATUS_REMOVED, $sibling->status);
-        $this->assertNull(
-            $sibling->getSnapshotMedia(),
-            'A bulk-closed sibling report has its snapshot purged too'
+        // Removing the avatar moots every pending report against this user, so
+        // they're all deleted; a single avatar_removed audit is the record.
+        $this->assertSame(
+            0,
+            AvatarReport::where('user_id', $target->id)->count(),
+            'all pending reports for the user are deleted on removal'
+        );
+        $this->assertCount(
+            1,
+            $target->fresh()->audits()->where('event', 'avatar_removed')->get()
         );
     }
 
-    public function testCannotResolveAlreadyResolvedReport(): void
+    public function testDismissingAMissingReportSurfacesError(): void
     {
-        $target = User::factory()->create();
-        $this->giveUserAnAvatar($target);
-
-        $report = AvatarReport::create([
-            'user_id' => $target->id,
-            'reporter_user_id' => User::factory()->create()->id,
-            'status' => AvatarReport::STATUS_DISMISSED,
-        ]);
-
         $this->beAppAdmin();
 
+        // The report was already resolved (and thus deleted); acting on it again
+        // surfaces a clean error rather than a 500.
         $response = $this->graphQL(
             'mutation ($id: ID!) { dismissAvatarReport(id: $id) { id } }',
-            ['id' => $report->id]
+            ['id' => '999999']
         );
 
         $this->assertNotEmpty($response->json('errors'));
@@ -333,7 +352,6 @@ class AvatarReportMutationTest extends ApiTestCase
         $report = AvatarReport::create([
             'user_id' => $target->id,
             'reporter_user_id' => User::factory()->create()->id,
-            'status' => AvatarReport::STATUS_PENDING,
         ]);
 
         /** @var User $regular */
@@ -351,6 +369,8 @@ class AvatarReportMutationTest extends ApiTestCase
             ['id' => $report->id]
         );
         $remove->assertJsonPath('data.resolveAvatarReportAndRemoveAvatar', null);
+
+        $this->assertDatabaseHas('avatar_reports', ['id' => $report->id]);
     }
 
     public function testAdminCanListPendingReports(): void
@@ -361,28 +381,20 @@ class AvatarReportMutationTest extends ApiTestCase
         AvatarReport::create([
             'user_id' => $target->id,
             'reporter_user_id' => User::factory()->create()->id,
-            'status' => AvatarReport::STATUS_PENDING,
-        ]);
-        AvatarReport::create([
-            'user_id' => $target->id,
-            'reporter_user_id' => User::factory()->create()->id,
-            'status' => AvatarReport::STATUS_DISMISSED,
         ]);
 
         $this->beAppAdmin();
 
-        $response = $this->graphQL(
-            'query ($status: AvatarReportStatus) {
-                avatarReports(status: $status) {
+        $response = $this->graphQL('
+            query {
+                avatarReports {
                     paginatorInfo { count }
-                    data { id status }
+                    data { id }
                 }
-            }',
-            ['status' => 'PENDING']
-        );
+            }
+        ');
 
         $response->assertJsonPath('data.avatarReports.paginatorInfo.count', 1);
-        $response->assertJsonPath('data.avatarReports.data.0.status', 'PENDING');
     }
 
     public function testNonAdminCannotListReports(): void
@@ -404,7 +416,6 @@ class AvatarReportMutationTest extends ApiTestCase
         $report = AvatarReport::create([
             'user_id' => $target->id,
             'reporter_user_id' => User::factory()->create()->id,
-            'status' => AvatarReport::STATUS_PENDING,
         ]);
 
         $this->beAppAdmin();
@@ -412,27 +423,30 @@ class AvatarReportMutationTest extends ApiTestCase
         $this->graphQL('
             mutation ($id: ID!, $block: Boolean) {
                 resolveAvatarReportAndRemoveAvatar(id: $id, blockFutureUploads: $block) {
-                    id status
+                    id avatar_upload_blocked
                 }
             }
         ', ['id' => $report->id, 'block' => true])
-            ->assertJsonPath('data.resolveAvatarReportAndRemoveAvatar.status', 'REMOVED');
+            ->assertJsonPath('data.resolveAvatarReportAndRemoveAvatar.avatar_upload_blocked', true);
 
         $this->assertTrue(
             $target->fresh()->hasModerationFlag(ModerationFlag::AvatarUploadBlocked)
+        );
+        $this->assertNotNull(
+            $this->latestAudit($target, 'avatar_upload_blocked'),
+            'blocking as part of a removal is audited'
         );
     }
 
     public function testAdminCanBlockAndUnblockUserUploads(): void
     {
         $target = User::factory()->create();
-        $this->beAppAdmin();
+        $admin = $this->beAppAdmin();
 
         $this->graphQL('
             mutation ($id: ID!, $blocked: Boolean!) {
                 setUserAvatarUploadBlocked(userId: $id, blocked: $blocked) {
-                    id
-                    avatar_upload_blocked
+                    id avatar_upload_blocked
                 }
             }
         ', ['id' => $target->id, 'blocked' => true])
@@ -441,12 +455,14 @@ class AvatarReportMutationTest extends ApiTestCase
         $this->assertTrue(
             $target->fresh()->hasModerationFlag(ModerationFlag::AvatarUploadBlocked)
         );
+        $blockAudit = $this->latestAudit($target, 'avatar_upload_blocked');
+        $this->assertNotNull($blockAudit);
+        $this->assertSame((int)$admin->id, (int)$blockAudit->user_id);
 
         $this->graphQL('
             mutation ($id: ID!, $blocked: Boolean!) {
                 setUserAvatarUploadBlocked(userId: $id, blocked: $blocked) {
-                    id
-                    avatar_upload_blocked
+                    id avatar_upload_blocked
                 }
             }
         ', ['id' => $target->id, 'blocked' => false])
@@ -454,6 +470,28 @@ class AvatarReportMutationTest extends ApiTestCase
 
         $this->assertFalse(
             $target->fresh()->hasModerationFlag(ModerationFlag::AvatarUploadBlocked)
+        );
+        $this->assertNotNull($this->latestAudit($target, 'avatar_upload_unblocked'));
+    }
+
+    public function testRepeatingTheSameBlockedStateDoesNotChurnTheAuditLog(): void
+    {
+        $target = User::factory()->create();
+        $this->beAppAdmin();
+
+        $block = fn() => $this->graphQL('
+            mutation ($id: ID!, $blocked: Boolean!) {
+                setUserAvatarUploadBlocked(userId: $id, blocked: $blocked) { id }
+            }
+        ', ['id' => $target->id, 'blocked' => true]);
+
+        $block();
+        $block();
+
+        $this->assertCount(
+            1,
+            $target->fresh()->audits()->where('event', 'avatar_upload_blocked')->get(),
+            'a no-op re-block should not add another audit entry'
         );
     }
 
@@ -513,21 +551,6 @@ class AvatarReportMutationTest extends ApiTestCase
         );
     }
 
-    /**
-     * File a report through the API so it captures media_id, the durable
-     * reported UUID, and the private snapshot — exactly as production does.
-     */
-    private function reportViaApi(User $reporter, User $target): AvatarReport
-    {
-        $this->actingAs($reporter);
-        $id = $this->graphQL(
-            'mutation ($id: ID!) { reportUserAvatar(userId: $id) { id } }',
-            ['id' => $target->id]
-        )->json('data.reportUserAvatar.id');
-
-        return AvatarReport::findOrFail($id);
-    }
-
     public function testReportCapturesReportedMediaAndSnapshot(): void
     {
         $reporter = User::factory()->create();
@@ -559,10 +582,7 @@ class AvatarReportMutationTest extends ApiTestCase
         $this->beAppAdmin();
 
         $this->graphQL(
-            'query ($s: AvatarReportStatus) {
-                avatarReports(status: $s) { data { id reported_avatar_url } }
-            }',
-            ['s' => 'PENDING']
+            'query { avatarReports { data { id reported_avatar_url } } }'
         )->assertJsonPath(
             'data.avatarReports.data.0.reported_avatar_url',
             route('avatar-report.snapshot', ['avatarReport' => $report->id])
@@ -584,10 +604,10 @@ class AvatarReportMutationTest extends ApiTestCase
         $this->beAppAdmin();
         $this->graphQL('
             mutation ($id: ID!) {
-                resolveAvatarReportAndRemoveAvatar(id: $id) { id status resolution_notes }
+                resolveAvatarReportAndRemoveAvatar(id: $id) { id }
             }
         ', ['id' => $report->id])
-            ->assertJsonPath('data.resolveAvatarReportAndRemoveAvatar.status', 'REMOVED');
+            ->assertJsonPath('data.resolveAvatarReportAndRemoveAvatar.id', (string)$target->id);
 
         $current = $target->fresh()->getAvatarMedia();
         $this->assertNotNull($current, 'The replacement avatar must not be removed');
@@ -596,10 +616,14 @@ class AvatarReportMutationTest extends ApiTestCase
             (int)$current->id,
             'The current (replacement) avatar should be untouched'
         );
-        $this->assertStringContainsString(
-            'left intact',
-            (string)$report->fresh()->resolution_notes
-        );
+
+        // Stale resolve is recorded as a dismissal flagged stale, and no
+        // avatar_removed event is emitted because nothing was removed.
+        $this->assertDatabaseMissing('avatar_reports', ['id' => $report->id]);
+        $audit = $this->latestAudit($target, 'avatar_report_dismissed');
+        $this->assertNotNull($audit);
+        $this->assertTrue($audit->new_values['stale'] ?? false);
+        $this->assertNull($this->latestAudit($target, 'avatar_removed'));
     }
 
     public function testResolvingAStaleReportLeavesOtherReportsPending(): void
@@ -618,22 +642,20 @@ class AvatarReportMutationTest extends ApiTestCase
 
         $this->beAppAdmin();
         $this->graphQL(
-            'mutation ($id: ID!) { resolveAvatarReportAndRemoveAvatar(id: $id) { id status } }',
+            'mutation ($id: ID!) { resolveAvatarReportAndRemoveAvatar(id: $id) { id } }',
             ['id' => $stale->id]
-        )->assertJsonPath('data.resolveAvatarReportAndRemoveAvatar.status', 'REMOVED');
+        );
 
         $this->assertNotNull(
             $target->fresh()->getAvatarMedia(),
             'Innocent replacement avatar must be left intact'
         );
-        $this->assertSame(
-            AvatarReport::STATUS_PENDING,
-            $other->fresh()->status,
-            'A stale resolve must NOT close sibling reports — nothing was removed'
-        );
+        // A stale resolve must NOT delete sibling reports — nothing was removed.
+        $this->assertDatabaseMissing('avatar_reports', ['id' => $stale->id]);
+        $this->assertDatabaseHas('avatar_reports', ['id' => $other->id]);
     }
 
-    public function testResolveAndRemovePurgesSnapshot(): void
+    public function testResolveAndRemoveDeletesReportAndSnapshot(): void
     {
         $reporter = User::factory()->create();
         $target = User::factory()->create();
@@ -648,13 +670,14 @@ class AvatarReportMutationTest extends ApiTestCase
         );
 
         $this->assertNull($target->fresh()->getAvatarMedia(), 'Reported avatar removed');
-        $this->assertNull(
-            $report->fresh()->getSnapshotMedia(),
-            'Snapshot is purged the moment the report is resolved — no post-resolution retention'
-        );
+        $this->assertDatabaseMissing('avatar_reports', ['id' => $report->id]);
+        $this->assertDatabaseMissing('media', [
+            'model_type' => AvatarReport::class,
+            'model_id' => $report->id,
+        ]);
     }
 
-    public function testDismissPurgesSnapshot(): void
+    public function testDismissDeletesReportAndSnapshot(): void
     {
         $reporter = User::factory()->create();
         $target = User::factory()->create();
@@ -664,14 +687,57 @@ class AvatarReportMutationTest extends ApiTestCase
 
         $this->beAppAdmin();
         $this->graphQL(
-            'mutation ($id: ID!) { dismissAvatarReport(id: $id) { id status } }',
+            'mutation ($id: ID!) { dismissAvatarReport(id: $id) { id } }',
             ['id' => $report->id]
-        )->assertJsonPath('data.dismissAvatarReport.status', 'DISMISSED');
-
-        $this->assertNull(
-            $report->fresh()->getSnapshotMedia(),
-            'Dismissing a report should purge the retained snapshot immediately'
         );
+
+        $this->assertDatabaseMissing('avatar_reports', ['id' => $report->id]);
+        $this->assertDatabaseMissing('media', [
+            'model_type' => AvatarReport::class,
+            'model_id' => $report->id,
+        ]);
+    }
+
+    public function testModerationHistoryReadableByModerator(): void
+    {
+        $reporter = User::factory()->create();
+        $target = User::factory()->create();
+        $this->giveUserAnAvatar($target);
+        $report = AvatarReport::create([
+            'user_id' => $target->id,
+            'reporter_user_id' => $reporter->id,
+        ]);
+
+        $this->beAppAdmin();
+        $this->graphQL(
+            'mutation ($id: ID!) { dismissAvatarReport(id: $id) { id } }',
+            ['id' => $report->id]
+        );
+
+        $response = $this->graphQL(
+            'query ($id: ID!) {
+                user(id: $id) { id moderationHistory { event } }
+            }',
+            ['id' => $target->id]
+        );
+
+        $response->assertJsonPath(
+            'data.user.moderationHistory.0.event',
+            'avatar_report_dismissed'
+        );
+    }
+
+    public function testModerationHistoryHiddenFromNonModerator(): void
+    {
+        /** @var User $user */
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        // A user cannot read their own moderation file; the field is gated.
+        $response = $this->graphQL('{ currentUser { id moderationHistory { event } } }');
+
+        $this->assertNotEmpty($response->json('errors'));
+        $this->assertNull($response->json('data.currentUser.moderationHistory'));
     }
 
     public function testSnapshotRouteIsModeratorGated(): void

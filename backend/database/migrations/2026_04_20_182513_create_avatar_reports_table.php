@@ -11,6 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // An avatar report is a transient queue item: it exists only while
+        // pending review. On resolution the moderator's decision is written to
+        // the durable audit log (see User::recordModerationAudit) and the
+        // report row — plus its private snapshot — is deleted. So there is no
+        // status / resolved-by / resolved-at / resolution-notes here; the queue
+        // never holds anything but pending reports.
         Schema::create('avatar_reports', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')
@@ -23,18 +29,9 @@ return new class extends Migration
                 ->constrained('users')
                 ->nullOnDelete();
             $table->text('reason')->nullable();
-            $table->string('status', 16)->default('pending')
-                ->comment('pending | dismissed | removed');
-            $table->foreignId('resolved_by_user_id')
-                ->nullable()
-                ->constrained('users')
-                ->nullOnDelete();
-            $table->timestamp('resolved_at')->nullable();
-            $table->text('resolution_notes')->nullable();
             $table->timestamps();
 
-            $table->index(['user_id', 'status']);
-            $table->index('status');
+            $table->index('user_id');
         });
     }
 

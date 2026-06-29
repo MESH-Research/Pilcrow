@@ -17,33 +17,18 @@ type AvatarReport {
     reporter: User @belongsTo
     "Free-text reason provided by the reporter."
     reason: String
-    "Current moderation status of the report."
-    status: AvatarReportStatus!
-    "Administrator who resolved the report, if any."
-    resolver: User @belongsTo
-    "When the report was resolved."
-    resolved_at: DateTimeUtc
-    "Moderator notes added at resolution time."
-    resolution_notes: String
     created_at: DateTimeUtc!
     updated_at: DateTimeUtc!
 }
 
-enum AvatarReportStatus {
-    PENDING @enum(value: "pending")
-    DISMISSED @enum(value: "dismissed")
-    REMOVED @enum(value: "removed")
-}
-
 extend type Query {
     """
-    Return avatar reports for moderator review. Requires the
-    `admin_avatar_moderate` ability (application administrators).
+    The pending avatar-report queue for moderator review. Reports are
+    transient — a resolved report is deleted and its decision recorded in the
+    moderation audit log — so this only ever returns pending reports. Requires
+    the `admin_avatar_moderate` ability (application administrators).
     """
-    avatarReports(
-        "Filter by status. Omit to return all statuses."
-        status: AvatarReportStatus @eq
-    ): [AvatarReport!]!
+    avatarReports: [AvatarReport!]!
         @paginate(defaultCount: 20, model: "App\\Models\\AvatarReport")
         @can(ability: "admin_avatar_moderate")
 }
@@ -63,23 +48,28 @@ extend type Mutation {
         @field(resolver: "App\\GraphQL\\Mutations\\ReportUserAvatar")
         @guard
 
-    "Dismiss a pending avatar report without removing the avatar."
-    dismissAvatarReport(id: ID!, notes: String): AvatarReport!
+    """
+    Dismiss a pending avatar report without removing the avatar. Records the
+    decision in the audit log and deletes the report; returns the reported user.
+    """
+    dismissAvatarReport(id: ID!, notes: String): User!
         @field(
             resolver: "App\\GraphQL\\Mutations\\ResolveAvatarReport@dismiss"
         )
         @can(ability: "admin_avatar_moderate")
 
     """
-    Resolve an avatar report and remove the reported avatar. Optionally
-    also block the user from uploading a replacement.
+    Resolve an avatar report and remove the reported avatar (unless the user has
+    since changed it, in which case the report is closed as stale). Optionally
+    also block the user from uploading a replacement. Records the decision in the
+    audit log and deletes the report(s); returns the reported user.
     """
     resolveAvatarReportAndRemoveAvatar(
         id: ID!
         notes: String
         "If true, also set the user's avatar-upload-blocked moderation flag."
         blockFutureUploads: Boolean
-    ): AvatarReport!
+    ): User!
         @field(
             resolver: "App\\GraphQL\\Mutations\\ResolveAvatarReport@resolveAndRemove"
         )

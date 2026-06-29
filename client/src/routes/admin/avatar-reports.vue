@@ -7,22 +7,10 @@
     class="q-px-lg"
     :query="GetAvatarReportsDocument"
     t-prefix="admin_avatar_reports"
-    :variables="queryVariables"
     :columns="columns"
     sync-url
     :default-sort="{ sortBy: 'created_at', descending: true }"
   >
-    <template #top-before>
-      <q-btn-toggle
-        v-model="statusFilter"
-        :options="statusOptions"
-        toggle-color="primary"
-        no-caps
-        class="q-mb-md"
-        data-cy="avatar_reports_filter"
-      />
-    </template>
-
     <template #body-cell-reported_avatar="scope">
       <q-td :props="scope">
         <q-avatar
@@ -55,42 +43,27 @@
       </q-td>
     </template>
 
-    <template #body-cell-status="scope">
-      <q-td :props="scope">
-        <q-badge :color="statusColor(scope.row.status)">
-          {{ scope.row.status }}
-        </q-badge>
-      </q-td>
-    </template>
-
     <template #body-cell-actions="scope">
       <q-td :props="scope">
-        <template v-if="scope.row.status === 'PENDING'">
-          <q-btn
-            flat
-            size="sm"
-            color="primary"
-            :label="$t('admin_avatar_reports.action_dismiss')"
-            :loading="actingRowId === scope.row.id"
-            :disable="actingRowId !== null"
-            data-cy="avatar_report_dismiss"
-            @click="dismiss(scope.row)"
-          />
-          <q-btn
-            size="sm"
-            color="negative"
-            :label="$t('admin_avatar_reports.action_remove')"
-            :disable="actingRowId !== null"
-            data-cy="avatar_report_remove"
-            class="q-ml-xs"
-            @click="confirmRemove(scope.row)"
-          />
-        </template>
-        <template v-else>
-          <span class="text-caption text-grey-7">
-            {{ scope.row.resolver?.display_label ?? "—" }}
-          </span>
-        </template>
+        <q-btn
+          flat
+          size="sm"
+          color="primary"
+          :label="$t('admin_avatar_reports.action_dismiss')"
+          :loading="actingRowId === scope.row.id"
+          :disable="actingRowId !== null"
+          data-cy="avatar_report_dismiss"
+          @click="dismiss(scope.row)"
+        />
+        <q-btn
+          size="sm"
+          color="negative"
+          :label="$t('admin_avatar_reports.action_remove')"
+          :disable="actingRowId !== null"
+          data-cy="avatar_report_remove"
+          class="q-ml-xs"
+          @click="confirmRemove(scope.row)"
+        />
       </q-td>
     </template>
   </QueryTable>
@@ -99,16 +72,15 @@
 <script lang="ts">
 import { graphql } from "src/graphql/generated"
 
+// Reports are transient: a resolved report is deleted and its decision recorded
+// in the moderation audit log, so this query only ever returns pending reports.
 graphql(`
-  query GetAvatarReports($page: Int, $first: Int, $status: AvatarReportStatus) {
-    avatarReports(page: $page, first: $first, status: $status) {
+  query GetAvatarReports($page: Int, $first: Int) {
+    avatarReports(page: $page, first: $first) {
       ...QueryTable
       data {
         id
-        status
         reason
-        resolution_notes
-        resolved_at
         created_at
         reported_avatar_url
         user {
@@ -121,11 +93,6 @@ graphql(`
           display_label
           username
         }
-        resolver {
-          id
-          display_label
-          username
-        }
       }
     }
   }
@@ -133,7 +100,7 @@ graphql(`
 </script>
 
 <script setup lang="ts">
-import { computed, ref, useTemplateRef } from "vue"
+import { ref, useTemplateRef } from "vue"
 import { Dialog, Notify } from "quasar"
 import { useI18n } from "vue-i18n"
 import { useMutation } from "@vue/apollo-composable"
@@ -177,32 +144,9 @@ const table = useTemplateRef<InstanceType<typeof QueryTable>>("table")
 const actingRowId = ref<string | null>(null)
 
 const { t } = useI18n()
-const statusFilter = ref<"PENDING" | "DISMISSED" | "REMOVED" | null>("PENDING")
 
-/**
- * Omit `status` entirely when the filter is "All" — `@eq` in the
- * Lighthouse schema treats an explicit null as `WHERE status IS NULL`,
- * which matches zero rows since status is never null.
- */
-const queryVariables = computed(() =>
-  statusFilter.value === null ? {} : { status: statusFilter.value }
-)
-
-const { count: pendingReportsCount, refetch: refetchPendingCount } =
-  useAvatarReportsPendingCount()
-
-const statusOptions = computed(() => [
-  { value: null, label: t("admin_avatar_reports.filter_all") },
-  {
-    value: "PENDING",
-    label:
-      pendingReportsCount.value > 0
-        ? `${t("admin_avatar_reports.filter_pending")} (${pendingReportsCount.value})`
-        : t("admin_avatar_reports.filter_pending")
-  },
-  { value: "DISMISSED", label: t("admin_avatar_reports.filter_dismissed") },
-  { value: "REMOVED", label: t("admin_avatar_reports.filter_removed") }
-])
+// Drives the admin-nav pending badge; refetched after each action.
+const { refetch: refetchPendingCount } = useAvatarReportsPendingCount()
 
 const columns: (QueryTableColumn | NameAvatarColumn)[] = [
   {
@@ -230,11 +174,6 @@ const columns: (QueryTableColumn | NameAvatarColumn)[] = [
     field: "reason"
   },
   {
-    name: "status",
-    align: "left",
-    field: "status"
-  },
-  {
     name: "created_at",
     align: "left",
     field: "created_at",
@@ -247,17 +186,6 @@ const columns: (QueryTableColumn | NameAvatarColumn)[] = [
     field: (row) => row
   }
 ]
-
-function statusColor(status: string): string {
-  switch (status) {
-    case "PENDING":
-      return "warning"
-    case "REMOVED":
-      return "negative"
-    default:
-      return "grey-6"
-  }
-}
 
 const { mutate: dismissMutation } = useMutation(DISMISS_AVATAR_REPORT)
 const { mutate: resolveMutation } = useMutation(

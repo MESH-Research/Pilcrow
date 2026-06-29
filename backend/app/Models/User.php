@@ -11,6 +11,7 @@ use App\Enums\ModerationFlag;
 use App\Models\Traits\HasModerationFlags;
 use Carbon\Carbon;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -24,13 +25,16 @@ use Illuminate\Support\Str;
 use Laravel\Sanctum\HasApiTokens;
 use Laravel\Scout\Attributes\SearchUsingPrefix;
 use Laravel\Scout\Searchable;
+use OwenIt\Auditing\Auditable as AuditableTrait;
+use OwenIt\Auditing\Contracts\Auditable;
+use OwenIt\Auditing\Events\AuditCustom;
 use Silber\Bouncer\Database\HasRolesAndAbilities;
 use Spatie\Image\Enums\Fit;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
-class User extends Authenticatable implements MustVerifyEmail, HasMedia
+class User extends Authenticatable implements MustVerifyEmail, HasMedia, Auditable
 {
     use HasFactory;
     use Notifiable;
@@ -39,6 +43,17 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
     use Searchable;
     use InteractsWithMedia;
     use HasModerationFlags;
+    use AuditableTrait;
+
+    /**
+     * Don't audit ordinary attribute changes (profile edits, logins). The only
+     * User audits we want are explicit moderation custom events emitted via
+     * {@see self::recordModerationAudit()}, so the log stays a clean moderation
+     * trail rather than churning on every save.
+     *
+     * @var array<int, string>
+     */
+    protected $auditEvents = [];
 
     public const AVATAR_COLLECTION = 'avatar';
     public const AVATAR_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
@@ -557,5 +572,48 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
 
         return $viewer !== null
             && Gate::forUser($viewer)->allows('uploadAvatar', $this);
+    }
+
+    /**
+     * Tag every User audit "moderation". Since automatic attribute auditing is
+     * off ({@see self::$auditEvents}), the only audits on a User are the
+     * moderation custom events, so this tags the whole moderation trail.
+     *
+     * @return array<int, string>
+     */
+    public function generateTags(): array
+    {
+        return ['moderation'];
+    }
+
+    /**
+     * Record a moderation decision about this user in the durable audit log as
+     * a named custom event. The acting moderator is captured automatically as
+     * the audit's user; $payload (reporter, reason, notes, reported media uuid)
+     * preserves the context of the now-deleted report.
+     *
+     * @param array<string, mixed> $payload
+     */
+    public function recordModerationAudit(string $event, array $payload = []): void
+    {
+        $this->auditEvent = $event;
+        $this->isCustomEvent = true;
+        $this->auditCustomOld = [];
+        $this->auditCustomNew = $payload;
+        event(new AuditCustom($this));
+    }
+
+    /**
+     * This user's moderation history: their moderation audit entries, newest
+     * first. Resolves the GraphQL `moderationHistory` field (moderator-gated).
+     *
+     * @return \Illuminate\Database\Eloquent\Collection<int, \OwenIt\Auditing\Models\Audit>
+     */
+    public function getModerationHistory(): Collection
+    {
+        return $this->audits()
+            ->where('tags', 'like', '%moderation%')
+            ->latest()
+            ->get();
     }
 }

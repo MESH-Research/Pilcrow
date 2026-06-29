@@ -13,10 +13,6 @@ class AvatarReport extends Model implements HasMedia
 {
     use InteractsWithMedia;
 
-    public const STATUS_PENDING = 'pending';
-    public const STATUS_DISMISSED = 'dismissed';
-    public const STATUS_REMOVED = 'removed';
-
     /**
      * Private, moderator-only collection holding a snapshot copy of the exact
      * avatar that was reported. Captured at report time so review survives the
@@ -36,17 +32,6 @@ class AvatarReport extends Model implements HasMedia
         'reported_media_uuid',
         'reporter_user_id',
         'reason',
-        'status',
-        'resolved_by_user_id',
-        'resolved_at',
-        'resolution_notes',
-    ];
-
-    /**
-     * @var array<string, string>
-     */
-    protected $casts = [
-        'resolved_at' => 'datetime',
     ];
 
     /**
@@ -84,14 +69,6 @@ class AvatarReport extends Model implements HasMedia
     public function reporter(): BelongsTo
     {
         return $this->belongsTo(User::class, 'reporter_user_id');
-    }
-
-    /**
-     * The administrator who resolved the report.
-     */
-    public function resolver(): BelongsTo
-    {
-        return $this->belongsTo(User::class, 'resolved_by_user_id');
     }
 
     /**
