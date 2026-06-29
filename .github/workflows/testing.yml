@@ -103,12 +103,15 @@ jobs:
             --src-roots client \
             --markdown-report patch-coverage-client.md \
             --fail-under=0 || true
+          # Trim per-hunk source from the report: keep header, file list, summary.
+          awk '/^## / && seen { exit } /^## Summary/ { seen=1 } { print }' \
+            patch-coverage-client.md > patch-coverage-client.trimmed.md
       - name: Comment patch coverage (client)
         if: ${{ github.event_name == 'pull_request' && !cancelled() }}
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           header: patch-coverage-client
-          path: patch-coverage-client.md
+          path: patch-coverage-client.trimmed.md
 
   client-fallow-audit:
     name: "Client / Fallow Audit"
@@ -237,12 +240,15 @@ jobs:
             --src-roots backend \
             --markdown-report patch-coverage-backend.md \
             --fail-under=0 || true
+          # Trim per-hunk source from the report: keep header, file list, summary.
+          awk '/^## / && seen { exit } /^## Summary/ { seen=1 } { print }' \
+            patch-coverage-backend.md > patch-coverage-backend.trimmed.md
       - name: Comment patch coverage (backend)
         if: ${{ github.event_name == 'pull_request' && !cancelled() }}
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           header: patch-coverage-backend
-          path: patch-coverage-backend.md
+          path: patch-coverage-backend.trimmed.md
   # e2e:
   #   name: "E2E Test"
   #   needs: [build-images]
