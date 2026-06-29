@@ -3,6 +3,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.36.0](https://github.com/MESH-Research/Pilcrow/compare/v0.35.0...v0.36.0) (2026-06-29)
+
+
+### Features
+
+* **auth:** replace Spatie RBAC with Bouncer-backed ABAC ([5f43b4f](https://github.com/MESH-Research/Pilcrow/commit/5f43b4f77386505c6c96488613dd069f0212af71))
+* **auth:** revamp permissions — RBAC → ABAC (Bouncer), retire Spatie ([#2310](https://github.com/MESH-Research/Pilcrow/issues/2310)) ([5f43b4f](https://github.com/MESH-Research/Pilcrow/commit/5f43b4f77386505c6c96488613dd069f0212af71))
+* **backend:** add database/file backups via spatie/laravel-backup ([#2319](https://github.com/MESH-Research/Pilcrow/issues/2319)) ([83b5f4c](https://github.com/MESH-Research/Pilcrow/commit/83b5f4c1b8c3bf493254439c681540046fb383a3))
+* **config:** deployment-supplied filesystem disks seam ([#2323](https://github.com/MESH-Research/Pilcrow/issues/2323)) ([b4c3dcd](https://github.com/MESH-Research/Pilcrow/commit/b4c3dcd71b3c635d57a403de8bdf87041aa104b9))
+
+
+### Bug Fixes
+
+* **client:** correct sticky footer on home page ([#2321](https://github.com/MESH-Research/Pilcrow/issues/2321)) ([c2baaf5](https://github.com/MESH-Research/Pilcrow/commit/c2baaf5cd37b47fd2f900468b73b154a7ccc29f0))
+* **submission:** enforce single review coordinator per submission ([#2324](https://github.com/MESH-Research/Pilcrow/issues/2324)) ([#2328](https://github.com/MESH-Research/Pilcrow/issues/2328)) ([770609c](https://github.com/MESH-Research/Pilcrow/commit/770609cb01a504e150549f0e8c642013e16d2a2c))
+* Use sufficiently contrasting colors for checkboxes in dark mode ([#2322](https://github.com/MESH-Research/Pilcrow/issues/2322)) ([8005ffc](https://github.com/MESH-Research/Pilcrow/commit/8005ffc35a4e347091249a7efeb730e4abcbe253))
+
 ## [0.35.0](https://github.com/MESH-Research/Pilcrow/compare/v0.34.0...v0.35.0) (2026-06-16)
 
 
