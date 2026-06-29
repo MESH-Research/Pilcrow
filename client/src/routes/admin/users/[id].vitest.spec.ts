@@ -5,6 +5,7 @@ import {
   getUserDetailDocument,
   SetUserBetaAccessDocument
 } from "src/graphql/generated/graphql"
+import { SET_USER_AVATAR_UPLOAD_BLOCKED } from "src/graphql/mutations"
 import UserDetailLayout from "./[id].vue"
 
 vi.mock("vue-router", () => ({
@@ -17,6 +18,14 @@ const mockDarkMode = vi.fn()
 vi.mock("src/use/guiElements", () => ({
   useFeedbackMessages: () => ({ newStatusMessage: mockNewStatus }),
   useDarkMode: () => ({ darkModeStatus: mockDarkMode })
+}))
+
+// The avatar block/reinstate control is gated on the admin_avatar_moderate
+// ability; grant it so the moderation button renders.
+vi.mock("src/use/user", () => ({
+  useCurrentUser: () => ({
+    can: (ability: string) => ability === "admin_avatar_moderate"
+  })
 }))
 
 installQuasarPlugin()
@@ -36,6 +45,7 @@ function userResult(overrides: Record<string, unknown> = {}) {
         avatar_color: "#123456",
         roles: [{ __typename: "Role", name: "Reviewer" }],
         beta: false,
+        avatar_upload_blocked: false,
         feature_opt_ins: [],
         ...overrides
       }
@@ -213,6 +223,87 @@ describe("admin user detail layout", () => {
     expect(mockNewStatus).toHaveBeenCalledWith(
       "failure",
       "admin.users.details.beta_error"
+    )
+  })
+
+  it("blocks avatar uploads and reports them revoked when not yet blocked", async () => {
+    mockClient
+      .getRequestHandler(getUserDetailDocument)
+      .mockResolvedValue(userResult({ avatar_upload_blocked: false }))
+    const blockHandler = mockClient
+      .getRequestHandler(SET_USER_AVATAR_UPLOAD_BLOCKED)
+      .mockResolvedValue({
+        data: {
+          setUserAvatarUploadBlocked: {
+            __typename: "User",
+            id: "5",
+            avatar_upload_blocked: true
+          }
+        }
+      })
+    const wrapper = factory()
+    await flushPromises()
+
+    await wrapper
+      .find('[data-cy="avatar_upload_toggle_block"]')
+      .trigger("click")
+    await flushPromises()
+
+    expect(blockHandler).toHaveBeenCalledWith({ userId: "5", blocked: true })
+    expect(mockNewStatus).toHaveBeenCalledWith(
+      "success",
+      "admin.users.details.avatar_revoked"
+    )
+  })
+
+  it("reinstates avatar uploads when the user was already blocked", async () => {
+    mockClient
+      .getRequestHandler(getUserDetailDocument)
+      .mockResolvedValue(userResult({ avatar_upload_blocked: true }))
+    const blockHandler = mockClient
+      .getRequestHandler(SET_USER_AVATAR_UPLOAD_BLOCKED)
+      .mockResolvedValue({
+        data: {
+          setUserAvatarUploadBlocked: {
+            __typename: "User",
+            id: "5",
+            avatar_upload_blocked: false
+          }
+        }
+      })
+    const wrapper = factory()
+    await flushPromises()
+
+    await wrapper
+      .find('[data-cy="avatar_upload_toggle_block"]')
+      .trigger("click")
+    await flushPromises()
+
+    expect(blockHandler).toHaveBeenCalledWith({ userId: "5", blocked: false })
+    expect(mockNewStatus).toHaveBeenCalledWith(
+      "success",
+      "admin.users.details.avatar_reinstated"
+    )
+  })
+
+  it("surfaces a failure message when the block mutation rejects", async () => {
+    mockClient
+      .getRequestHandler(getUserDetailDocument)
+      .mockResolvedValue(userResult({ avatar_upload_blocked: false }))
+    mockClient
+      .getRequestHandler(SET_USER_AVATAR_UPLOAD_BLOCKED)
+      .mockRejectedValue(new Error("network"))
+    const wrapper = factory()
+    await flushPromises()
+
+    await wrapper
+      .find('[data-cy="avatar_upload_toggle_block"]')
+      .trigger("click")
+    await flushPromises()
+
+    expect(mockNewStatus).toHaveBeenCalledWith(
+      "failure",
+      "admin.users.details.avatar_toggle_failure"
     )
   })
 })

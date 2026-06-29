@@ -62,6 +62,48 @@ class UserAvatarMutationTest extends ApiTestCase
         $this->assertNotNull($user->fresh()->getAvatarMedia());
     }
 
+    public function testUploadsAndReencodesAJpeg(): void
+    {
+        /** @var User $user */
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        // A jpeg exercises the toJpeg() re-encode arm (the EXIF-strip path is
+        // format-specific). The original carries metadata; what we store must be
+        // the re-encoded copy.
+        $file = UploadedFile::fake()->image('avatar.jpg', 400, 400);
+
+        $response = $this->multipartGraphQL(
+            ['query' => self::UPLOAD_MUTATION, 'variables' => ['id' => $user->id, 'avatar' => null]],
+            ['0' => ['variables.avatar']],
+            ['0' => $file]
+        );
+
+        $response->assertJsonPath('data.uploadUserAvatar.id', (string)$user->id);
+        $media = $user->fresh()->getAvatarMedia();
+        $this->assertNotNull($media);
+        $this->assertSame('avatar.jpg', $media->file_name);
+    }
+
+    public function testUploadsAndReencodesAWebp(): void
+    {
+        /** @var User $user */
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        // Covers the toWebp() re-encode arm.
+        $file = UploadedFile::fake()->image('avatar.webp', 400, 400);
+
+        $response = $this->multipartGraphQL(
+            ['query' => self::UPLOAD_MUTATION, 'variables' => ['id' => $user->id, 'avatar' => null]],
+            ['0' => ['variables.avatar']],
+            ['0' => $file]
+        );
+
+        $response->assertJsonPath('data.uploadUserAvatar.id', (string)$user->id);
+        $this->assertNotNull($user->fresh()->getAvatarMedia());
+    }
+
     public function testUploadingNewAvatarReplacesOld(): void
     {
         /** @var User $user */

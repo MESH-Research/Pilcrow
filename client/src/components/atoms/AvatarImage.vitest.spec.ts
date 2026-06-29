@@ -9,7 +9,10 @@ installQuasarPlugin()
 describe("AvatarImage Component", () => {
   const factory = (
     user: Partial<avatarImageFragment>,
-    props: { hideStaged?: boolean } = {}
+    props: {
+      hideStaged?: boolean
+      variant?: "thumb" | "medium" | "original"
+    } = {}
   ) => {
     const fullUser: avatarImageFragment = {
       __typename: "User",
@@ -60,6 +63,67 @@ describe("AvatarImage Component", () => {
     })
     expect(wrapper.html()).toContain("https://example.com/avatar/thumb.png")
     expect(wrapper.find(".identicon-wrap").exists()).toBe(false)
+  })
+
+  it("uses the original-size url when variant is 'original'", () => {
+    const wrapper = factory(
+      {
+        id: "1",
+        avatar: {
+          __typename: "Avatar",
+          thumb_url: "https://example.com/avatar/thumb.png",
+          medium_url: "https://example.com/avatar/medium.png",
+          url: "https://example.com/avatar/original.png"
+        }
+      },
+      { variant: "original" }
+    )
+    expect(wrapper.html()).toContain("https://example.com/avatar/original.png")
+  })
+
+  it("uses the medium-size url when variant is 'medium'", () => {
+    const wrapper = factory(
+      {
+        id: "1",
+        avatar: {
+          __typename: "Avatar",
+          thumb_url: "https://example.com/avatar/thumb.png",
+          medium_url: "https://example.com/avatar/medium.png",
+          url: "https://example.com/avatar/original.png"
+        }
+      },
+      { variant: "medium" }
+    )
+    expect(wrapper.html()).toContain("https://example.com/avatar/medium.png")
+  })
+
+  it("falls back to the original url when the requested conversion is missing", () => {
+    // Conversions can lag behind the upload (queued). With only the original
+    // present, every variant must still resolve to a usable image.
+    const wrapper = factory(
+      {
+        id: "1",
+        avatar: {
+          __typename: "Avatar",
+          thumb_url: "",
+          medium_url: "",
+          url: "https://example.com/avatar/original.png"
+        }
+      },
+      { variant: "medium" }
+    )
+    expect(wrapper.html()).toContain("https://example.com/avatar/original.png")
+    expect(wrapper.find(".identicon-wrap").exists()).toBe(false)
+  })
+
+  it("seeds the identicon from email when the user has no id", () => {
+    // id is the preferred seed; with none, the email keeps the identicon stable.
+    const a = factory({ id: "", email: "seed@example.com" }).html()
+    const b = factory({ id: "", email: "seed@example.com" }).html()
+    const c = factory({ id: "", email: "other@example.com" }).html()
+    expect(a).toContain("<svg")
+    expect(a).toBe(b)
+    expect(a).not.toBe(c)
   })
 
   it("shows the staged corner marker when user.staged is true", () => {
