@@ -33,7 +33,7 @@ jobs:
       md: ${{ steps.filter.outputs.md }}
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - uses: dorny/paths-filter@master
         id: filter
         with:
@@ -61,7 +61,7 @@ jobs:
     needs: [changes]
     if: ${{ needs.changes.outputs.client == 'true' }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
           fetch-tags: true
@@ -72,7 +72,7 @@ jobs:
           target: "web-test-ci"
       - name: Upload coverage to Codecov
         if: ${{ !cancelled() }}
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v6
         with:
           files: ./coverage-web/cobertura-coverage.xml
           flags: client
@@ -80,9 +80,10 @@ jobs:
           use_oidc: true
       - name: Upload test results to Codecov
         if: ${{ !cancelled() }}
-        uses: codecov/test-results-action@v1
+        uses: codecov/codecov-action@v6
         with:
           files: ./coverage-web/junit.xml
+          report_type: test_results
           flags: client
           fail_ci_if_error: false
           use_oidc: true
@@ -97,10 +98,10 @@ jobs:
       pull-requests: write
       security-events: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: 22
           cache: yarn
@@ -135,12 +136,12 @@ jobs:
     outputs:
       version: ${{ steps.build-image.outputs.version }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
           fetch-tags: true
       - name: Login to Github Packages
-        uses: docker/login-action@v2
+        uses: docker/login-action@v4
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -173,7 +174,7 @@ jobs:
           --health-retries 3
     if: ${{ needs.changes.outputs.api == 'true' }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
           fetch-tags: true
@@ -184,7 +185,7 @@ jobs:
           target: "fpm-test-ci"
       - name: Upload coverage to Codecov
         if: ${{ !cancelled() }}
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v6
         with:
           files: ./coverage-fpm/cobertura.xml
           flags: backend
@@ -192,9 +193,10 @@ jobs:
           use_oidc: true
       - name: Upload test results to Codecov
         if: ${{ !cancelled() }}
-        uses: codecov/test-results-action@v1
+        uses: codecov/codecov-action@v6
         with:
           files: ./coverage-fpm/junit.xml
+          report_type: test_results
           flags: backend
           fail_ci_if_error: false
           use_oidc: true
@@ -212,7 +214,7 @@ jobs:
     if: ${{ needs.changes.outputs.php == 'true' }}
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
           fetch-tags: true
@@ -226,7 +228,7 @@ jobs:
     if: ${{ needs.changes.outputs.js == 'true' }}
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
           fetch-tags: true
@@ -240,8 +242,8 @@ jobs:
     if: ${{ needs.changes.outputs.docs == 'true' }}
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v4
-      - uses: actions/setup-node@v3
+        uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
           node-version: 22
       - run: |
@@ -255,8 +257,8 @@ jobs:
     if: ${{ needs.changes.outputs.md == 'true' }}
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+        uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
           node-version: 20
           cache: yarn
