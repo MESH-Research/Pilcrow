@@ -35,6 +35,14 @@ class ScopedRoleTest extends TestCase
         return $s;
     }
 
+    private function reviewable(): Submission
+    {
+        $s = new Submission();
+        $s->status = Submission::UNDER_REVIEW;
+
+        return $s;
+    }
+
     public function testPivotRoleIdMapsToCaseAndExcludesAppAdmin(): void
     {
         $this->assertSame(ScopedRole::Editor, ScopedRole::tryFrom('editor'));
@@ -44,12 +52,28 @@ class ScopedRoleTest extends TestCase
         $this->assertNull(ScopedRole::tryFrom('not-a-role'));
     }
 
-    public function testReviewerHasViewAndUpdateButNotStatus(): void
+    public function testReviewerReviewsWhileReviewableButHoldsNoContentUpdate(): void
     {
         $user = new User();
+        // Transitional: the reviewer keeps View; reviews only while reviewable.
         $this->assertTrue(ScopedRole::Reviewer->allows(SubmissionAbility::View, $this->submitted(), $user));
-        $this->assertTrue(ScopedRole::Reviewer->allows(SubmissionAbility::Update, $this->submitted(), $user));
+        $this->assertTrue(ScopedRole::Reviewer->allows(SubmissionAbility::Review, $this->reviewable(), $user));
+        $this->assertFalse(ScopedRole::Reviewer->allows(SubmissionAbility::Review, $this->submitted(), $user));
+        // The manuscript-edit hole is closed: a reviewer holds no content Update,
+        // and no status control.
+        $this->assertFalse(ScopedRole::Reviewer->allows(SubmissionAbility::UpdateContent, $this->draft(), $user));
         $this->assertFalse(ScopedRole::Reviewer->allows(SubmissionAbility::UpdateStatus, $this->submitted(), $user));
+        // Bridge: the deprecated god-mutation umbrella stays open for every role.
+        $this->assertTrue(ScopedRole::Reviewer->allows(SubmissionAbility::LegacyUpdate, $this->submitted(), $user));
+    }
+
+    public function testSubmitterOwnsContentAndSubmitWhileDraftOnly(): void
+    {
+        $user = new User();
+        $this->assertTrue(ScopedRole::Submitter->allows(SubmissionAbility::UpdateContent, $this->draft(), $user));
+        $this->assertFalse(ScopedRole::Submitter->allows(SubmissionAbility::UpdateContent, $this->submitted(), $user));
+        $this->assertTrue(ScopedRole::Submitter->allows(SubmissionAbility::Submit, $this->draft(), $user));
+        $this->assertFalse(ScopedRole::Submitter->allows(SubmissionAbility::Submit, $this->submitted(), $user));
     }
 
     public function testReviewCoordinatorGetsStatusUnconditionally(): void
@@ -66,14 +90,14 @@ class ScopedRoleTest extends TestCase
         // Conditional grant: status only while DRAFT.
         $this->assertTrue(ScopedRole::Submitter->allows(SubmissionAbility::UpdateStatus, $this->draft(), $user));
         $this->assertFalse(ScopedRole::Submitter->allows(SubmissionAbility::UpdateStatus, $this->submitted(), $user));
-        // Title edit is absolute for a submitter.
-        $this->assertTrue(ScopedRole::Submitter->allows(SubmissionAbility::UpdateTitle, $this->submitted(), $user));
     }
 
     public function testPublicationAdminIsASupersetOfEditor(): void
     {
         $user = new User();
-        $entity = $this->submitted();
+        // A reviewable submission so Editor's conditional `review` grant holds and
+        // the superset check covers every Editor grant.
+        $entity = $this->reviewable();
         foreach (ScopedRole::Editor->grants() as $grant) {
             $this->assertTrue(
                 ScopedRole::PublicationAdmin->allows($grant->ability, $entity, $user),

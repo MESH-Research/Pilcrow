@@ -37,7 +37,7 @@ class GrantTest extends TestCase
         $grant = new Grant(SubmissionAbility::View);
 
         $this->assertFalse(
-            $grant->permits(SubmissionAbility::Update, $this->draft(), new User())
+            $grant->permits(SubmissionAbility::UpdateContent, $this->draft(), new User())
         );
     }
 

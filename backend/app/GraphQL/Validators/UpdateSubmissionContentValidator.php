@@ -18,8 +18,16 @@ final class UpdateSubmissionContentValidator extends Validator
             'id' => [
                 'required',
             ],
+            // Body and title are both the author's content; supply either or
+            // both, but at least one (a no-op update is rejected).
             'content' => [
-                'required',
+                'required_without:title',
+                'filled',
+            ],
+            'title' => [
+                'required_without:content',
+                'filled',
+                'max:512',
             ],
         ];
     }

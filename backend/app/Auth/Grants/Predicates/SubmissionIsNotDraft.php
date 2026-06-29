@@ -9,10 +9,11 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Holds when the entity is a submission still in DRAFT — the author's to shape.
- * Backs the submitter's conditional grants (content update, submit).
+ * Holds when the entity is a submission that has left DRAFT — the inverse of
+ * {@see SubmissionIsDraft}. Backs the editorial side of the submitter -> editorial
+ * co-submitter handoff (RC+ may manage co-submitters once the draft is submitted).
  */
-final class SubmissionIsDraft implements Predicate
+final class SubmissionIsNotDraft implements Predicate
 {
     /**
      * @param \Illuminate\Database\Eloquent\Model $entity
@@ -21,6 +22,6 @@ final class SubmissionIsDraft implements Predicate
      */
     public function holds(Model $entity, User $_user): bool
     {
-        return $entity instanceof Submission && $entity->isDraft();
+        return $entity instanceof Submission && ! $entity->isDraft();
     }
 }

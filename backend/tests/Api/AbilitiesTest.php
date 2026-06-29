@@ -133,7 +133,9 @@ class AbilitiesTest extends ApiTestCase
                 submission(id: $id) {
                     abilities {
                         view
-                        update
+                        update_content
+                        submit
+                        review
                         update_status
                         update_reviewers
                     }
@@ -143,9 +145,60 @@ class AbilitiesTest extends ApiTestCase
         );
 
         $response->assertJsonPath('data.submission.abilities.view', true);
-        $response->assertJsonPath('data.submission.abilities.update', true);
+        // Author owns the work while DRAFT — content edit and submit are on.
+        $response->assertJsonPath('data.submission.abilities.update_content', true);
+        $response->assertJsonPath('data.submission.abilities.submit', true);
+        // A draft is not reviewable, so the comment-gate `review` is off.
+        $response->assertJsonPath('data.submission.abilities.review', false);
         $response->assertJsonPath('data.submission.abilities.update_status', true);
         $response->assertJsonPath('data.submission.abilities.update_reviewers', false);
+    }
+
+    /**
+     * `review` — the reviewer's gate to the manuscript and comments — is a
+     * CONDITIONAL grant held only while the submission is reviewable
+     * (UNDER_REVIEW). It is the reviewer's single footprint: no `update`.
+     *
+     * @return void
+     */
+    public function testSubmissionReviewAbilityForReviewerTracksReviewable(): void
+    {
+        $reviewer = User::factory()->create();
+        $this->actingAs($reviewer);
+        $submission = Submission::factory()
+            ->for(Publication::factory()->create())
+            ->hasAttached($reviewer, [], 'reviewers')
+            ->create(['status' => Submission::UNDER_REVIEW]);
+
+        $response = $this->graphQL(
+            'query getSubmission($id: ID!) {
+                submission(id: $id) {
+                    abilities {
+                        review
+                        update_content
+                    }
+                }
+            }',
+            ['id' => $submission->id]
+        );
+
+        $response->assertJsonPath('data.submission.abilities.review', true);
+        $response->assertJsonPath('data.submission.abilities.update_content', false);
+
+        $submission->update(['status' => Submission::REVISION_REQUESTED]);
+
+        $response = $this->graphQL(
+            'query getSubmission($id: ID!) {
+                submission(id: $id) {
+                    abilities {
+                        review
+                    }
+                }
+            }',
+            ['id' => $submission->id]
+        );
+
+        $response->assertJsonPath('data.submission.abilities.review', false);
     }
 
     /**

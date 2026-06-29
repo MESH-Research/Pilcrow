@@ -42,6 +42,27 @@ class Submission extends Model implements Auditable
     public const DELETED = 12;
 
     /**
+     * Whether the submission is still a draft (the author's to shape).
+     *
+     * @return bool
+     */
+    public function isDraft(): bool
+    {
+        return $this->status === self::DRAFT;
+    }
+
+    /**
+     * Whether the submission accepts review activity — i.e. it is UNDER_REVIEW.
+     * New comments may only be created while a submission is reviewable.
+     *
+     * @return bool
+     */
+    public function isReviewable(): bool
+    {
+        return $this->status === self::UNDER_REVIEW;
+    }
+
+    /**
      * The "booted" method of the model.
      *
      * @return void
