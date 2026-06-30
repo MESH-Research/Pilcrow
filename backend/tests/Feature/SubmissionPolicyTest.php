@@ -298,36 +298,6 @@ class SubmissionPolicyTest extends TestCase
         }
     }
 
-    // ---- invite (review coordinator and up, via the ScopedRole matrix) ------
-
-    public function testInviteAllowsApplicationAdministrator(): void
-    {
-        $admin = $this->appAdmin();
-        $this->actingAs($admin);
-
-        $this->assertTrue($admin->can('invite', $this->makeSubmission()));
-    }
-
-    public function testInviteAllowsReviewCoordinator(): void
-    {
-        $submission = $this->makeSubmission();
-        $coordinator = User::factory()->create();
-        $this->attachToSubmission($coordinator, $submission, ScopedRole::ReviewCoordinator->toSlug());
-        $this->actingAs($coordinator);
-
-        $this->assertTrue($coordinator->can('invite', $submission->fresh()));
-    }
-
-    public function testInviteDeniesReviewer(): void
-    {
-        $submission = $this->makeSubmission();
-        $reviewer = User::factory()->create();
-        $this->attachToSubmission($reviewer, $submission, ScopedRole::Reviewer->toSlug());
-        $this->actingAs($reviewer);
-
-        $this->assertFalse($reviewer->can('invite', $submission->fresh()));
-    }
-
     // ---- inline comment ownership -------------------------------------------
 
     public function testUpdateInlineCommentsAllowsOwnerAndDeniesOther(): void

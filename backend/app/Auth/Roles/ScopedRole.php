@@ -188,7 +188,6 @@ enum ScopedRole: string
                 SubmissionAbility::UpdateSubmitters,
                 SubmissionAbility::UpdateReviewers,
                 SubmissionAbility::UpdateStatus,
-                SubmissionAbility::Invite,
             ],
             self::Editor => [
                 ...self::ReviewCoordinator->grantDefinitions(),

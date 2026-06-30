@@ -52,5 +52,4 @@ enum SubmissionAbility: string implements ScopedAbility
     case UpdateSubmitters = 'submission.update-submitters';
     case UpdateReviewers = 'submission.update-reviewers';
     case UpdateReviewCoordinators = 'submission.update-review-coordinators';
-    case Invite = 'submission.invite';
 }
