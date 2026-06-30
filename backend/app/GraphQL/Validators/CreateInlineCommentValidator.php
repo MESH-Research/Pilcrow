@@ -16,11 +16,17 @@ final class CreateInlineCommentValidator extends Validator
      */
     public function rules(): array
     {
-        // The coherence rule reads parent_id / reply_to_id / submission_id from
-        // the args itself, so a single attachment validates the whole thread.
+        // Attached to submission_id (always present) so it runs for every create.
+        // The parent / reply-target ids are read here from the input-scoped args
+        // and injected — see CommentReplyCoherence on why a DataAwareRule is unfit
+        // under @spread.
         return [
-            'parent_id' => [
-                new CommentReplyCoherence(InlineComment::class),
+            'submission_id' => [
+                new CommentReplyCoherence(
+                    InlineComment::class,
+                    $this->arg('parent_id'),
+                    $this->arg('reply_to_id'),
+                ),
             ],
         ];
     }

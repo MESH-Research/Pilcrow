@@ -377,6 +377,92 @@ class SubmissionIntentMutationsTest extends ApiTestCase
         $response->assertJsonPath('data.createInlineComment', null);
     }
 
+    public function testCreateInlineCommentRejectsReplyToOutsideThread(): void
+    {
+        [$submission, $reviewer] = $this->submissionWithSubmissionRole(ScopedRole::Reviewer, Submission::UNDER_REVIEW);
+        $this->actingAs($reviewer);
+        $parent = $submission->inlineComments()->create(['content' => 'Parent', 'style_criteria' => []]);
+        $unrelated = $submission->inlineComments()->create(['content' => 'Unrelated', 'style_criteria' => []]);
+
+        // reply_to_id must be the parent or one of its replies; an unrelated
+        // comment is not a coherent thread.
+        $response = $this->graphQL(
+            'mutation ($id: ID!, $parent: ID!, $replyTo: ID!) {
+                createInlineComment(input: { submission_id: $id, content: "bad", parent_id: $parent, reply_to_id: $replyTo }) { id }
+            }',
+            ['id' => $submission->id, 'parent' => $parent->id, 'replyTo' => $unrelated->id]
+        );
+
+        $this->assertNotEmpty($response->json('errors'));
+        $response->assertJsonPath('data.createInlineComment', null);
+        // No third row was created.
+        $this->assertSame(2, $submission->inlineComments()->count());
+    }
+
+    public function testCreateInlineCommentRejectsParentFromAnotherSubmission(): void
+    {
+        [$submission, $reviewer] = $this->submissionWithSubmissionRole(ScopedRole::Reviewer, Submission::UNDER_REVIEW);
+        $this->actingAs($reviewer);
+        $other = Submission::factory()
+            ->for(Publication::factory()->create())
+            ->create(['status' => Submission::UNDER_REVIEW]);
+        $foreignParent = $other->inlineComments()->create(['content' => 'Foreign', 'style_criteria' => []]);
+
+        // The whole thread must live on the same submission.
+        $response = $this->graphQL(
+            'mutation ($id: ID!, $parent: ID!, $replyTo: ID!) {
+                createInlineComment(input: { submission_id: $id, content: "bad", parent_id: $parent, reply_to_id: $replyTo }) { id }
+            }',
+            ['id' => $submission->id, 'parent' => $foreignParent->id, 'replyTo' => $foreignParent->id]
+        );
+
+        $this->assertNotEmpty($response->json('errors'));
+        $response->assertJsonPath('data.createInlineComment', null);
+    }
+
+    public function testCreateInlineCommentAllowsReplyTargetingASiblingReply(): void
+    {
+        [$submission, $reviewer] = $this->submissionWithSubmissionRole(ScopedRole::Reviewer, Submission::UNDER_REVIEW);
+        $this->actingAs($reviewer);
+        $parent = $submission->inlineComments()->create(['content' => 'Parent', 'style_criteria' => []]);
+        $firstReply = $submission->inlineComments()->create([
+            'content' => 'First reply',
+            'style_criteria' => [],
+            'parent_id' => $parent->id,
+            'reply_to_id' => $parent->id,
+        ]);
+
+        // Replying to an existing reply of the parent is coherent.
+        $response = $this->graphQL(
+            'mutation ($id: ID!, $parent: ID!, $replyTo: ID!) {
+                createInlineComment(input: { submission_id: $id, content: "second", parent_id: $parent, reply_to_id: $replyTo }) { id }
+            }',
+            ['id' => $submission->id, 'parent' => $parent->id, 'replyTo' => $firstReply->id]
+        );
+
+        $response->assertJsonPath('data.createInlineComment.id', (string)$submission->id);
+        // The new reply joined the parent's thread alongside the first.
+        $this->assertSame(2, $parent->replies()->count());
+    }
+
+    public function testCreateOverallCommentRejectsReplyToOutsideThread(): void
+    {
+        [$submission, $reviewer] = $this->submissionWithSubmissionRole(ScopedRole::Reviewer, Submission::UNDER_REVIEW);
+        $this->actingAs($reviewer);
+        $parent = $submission->overallComments()->create(['content' => 'Parent']);
+        $unrelated = $submission->overallComments()->create(['content' => 'Unrelated']);
+
+        $response = $this->graphQL(
+            'mutation ($id: ID!, $parent: ID!, $replyTo: ID!) {
+                createOverallComment(input: { submission_id: $id, content: "bad", parent_id: $parent, reply_to_id: $replyTo }) { id }
+            }',
+            ['id' => $submission->id, 'parent' => $parent->id, 'replyTo' => $unrelated->id]
+        );
+
+        $this->assertNotEmpty($response->json('errors'));
+        $response->assertJsonPath('data.createOverallComment', null);
+    }
+
     public function testCreateOverallCommentAllowsReviewerWhileUnderReview(): void
     {
         [$submission, $reviewer] = $this->submissionWithSubmissionRole(ScopedRole::Reviewer, Submission::UNDER_REVIEW);
