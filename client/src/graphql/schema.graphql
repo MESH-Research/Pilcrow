@@ -45,6 +45,20 @@ enum CommentParticipantType {
   OVERALL
 }
 
+"""
+Add an inline comment (or reply). The coherence validator reads parent_id /
+reply_to_id / submission_id off this input to enforce a well-formed thread.
+"""
+input CreateInlineCommentArgs {
+  content: String!
+  from: Int
+  parent_id: ID
+  reply_to_id: ID
+  style_criteria: [ID!]
+  submission_id: ID!
+  to: Int
+}
+
 input CreateInlineCommentInput {
   content: String!
   from: Int
@@ -52,6 +66,14 @@ input CreateInlineCommentInput {
   reply_to_id: ID
   style_criteria: [ID!]
   to: Int
+}
+
+"""Add an overall comment (or reply); coherence validated as for inline."""
+input CreateOverallCommentArgs {
+  content: String!
+  parent_id: ID
+  reply_to_id: ID
+  submission_id: ID!
 }
 
 input CreateOverallCommentInput {
@@ -233,10 +255,10 @@ type Mutation {
   changeSubmissionStatus(input: ChangeSubmissionStatusInput!): Submission!
 
   """Add an inline comment (or reply) to a submission under review."""
-  createInlineComment(content: String!, from: Int, parent_id: ID, reply_to_id: ID, style_criteria: [ID!], submission_id: ID!, to: Int): Submission!
+  createInlineComment(input: CreateInlineCommentArgs!): Submission!
 
   """Add an overall comment (or reply) to a submission under review."""
-  createOverallComment(content: String!, parent_id: ID, reply_to_id: ID, submission_id: ID!): Submission!
+  createOverallComment(input: CreateOverallCommentArgs!): Submission!
 
   """Create a new publication"""
   createPublication(publication: CreatePublicationInput!): Publication!
@@ -330,6 +352,20 @@ type Mutation {
 
   """Send a draft submission in for review."""
   submitSubmission(submission_id: ID!): Submission!
+
+  """
+  Edit an inline comment (or reply). Content for any; a top-level comment may
+  also revise its style criteria and range. Author-only — the same gate as
+  delete. Replies fold in: a reply is an inline-comment row, edited by id.
+  Only the supplied fields change.
+  """
+  updateInlineComment(input: UpdateInlineCommentArgs!): Submission!
+
+  """
+  Edit an overall comment (or reply). Author-only — the same gate as delete.
+  Replies fold in: a reply is an overall-comment row, edited by id.
+  """
+  updateOverallComment(input: UpdateOverallCommentArgs!): Submission!
   updatePublication(publication: UpdatePublicationInput!): Publication
 
   """
@@ -338,7 +374,8 @@ type Mutation {
   DEPRECATED: this catch-all god-mutation is being dissolved into intent-shaped
   mutations (updateSubmissionContent now also edits the title, submitSubmission,
   changeSubmissionStatus, updateSubmissionSubmitters / Reviewers /
-  ReviewCoordinators, createInlineComment, createOverallComment). It stays
+  ReviewCoordinators, createInlineComment, createOverallComment,
+  updateInlineComment, updateOverallComment). It stays
   callable while clients migrate; its umbrella now gates on the bridge
   `legacyUpdate` ability (the prior broad `update`) and each input field is
   still authorized per-field by @argPolicy. Remove once no client calls it.
@@ -955,12 +992,32 @@ input UpdateAcademicProfilesInput {
   orcid_id: String
 }
 
+"""
+Edit an inline comment (or reply). Only the supplied fields change — content for
+any row; style criteria and range for a top-level comment.
+"""
+input UpdateInlineCommentArgs {
+  comment_id: ID!
+  content: String
+  from: Int
+  style_criteria: [ID!]
+  submission_id: ID!
+  to: Int
+}
+
 input UpdateInlineCommentInput {
   content: String
   from: Int
   id: ID!
   style_criteria: [ID!]
   to: Int
+}
+
+"""Edit an overall comment (or reply). Only the supplied content changes."""
+input UpdateOverallCommentArgs {
+  comment_id: ID!
+  content: String
+  submission_id: ID!
 }
 
 input UpdateOverallCommentInput {

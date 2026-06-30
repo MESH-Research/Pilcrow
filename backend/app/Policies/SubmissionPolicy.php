@@ -216,6 +216,29 @@ class SubmissionPolicy
     }
 
     /**
+     * Edit an inline comment (or reply) of a submission — author-only, the flat
+     * single-comment gate for the intent mutation. Mirrors deleteInlineComment;
+     * the plural updateInlineComments above stays for the god-mutation's nested
+     *
+     * @argPolicy shape until clients migrate off it.
+     * @param \App\Models\User $user
+     * @param \App\Models\Submission $_
+     * @param array{submission_id: string, comment_id: string}  $args
+     * @return \Illuminate\Auth\Access\Response|bool
+     */
+    public function updateInlineComment(User $user, Submission $_, array $args)
+    {
+        if (isset($args['comment_id'])) {
+            $inline_comment = InlineComment::findOrFail($args['comment_id']);
+            if ($inline_comment->created_by === $user->id) {
+                return true;
+            }
+        }
+
+        return Response::deny('UNAUTHORIZED');
+    }
+
+    /**
      * Update an overall comment of a submission
      *
      * @param \App\Models\User $user
@@ -247,6 +270,29 @@ class SubmissionPolicy
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function deleteOverallComment(User $user, Submission $_, array $args)
+    {
+        if (isset($args['comment_id'])) {
+            $overall_comment = OverallComment::findOrFail($args['comment_id']);
+            if ($overall_comment->created_by === $user->id) {
+                return true;
+            }
+        }
+
+        return Response::deny('UNAUTHORIZED');
+    }
+
+    /**
+     * Edit an overall comment (or reply) of a submission — author-only, the flat
+     * single-comment gate for the intent mutation. Mirrors deleteOverallComment;
+     * the plural updateOverallComments above stays for the god-mutation's nested
+     *
+     * @argPolicy shape until clients migrate off it.
+     * @param \App\Models\User $user
+     * @param \App\Models\Submission $_
+     * @param array{submission_id: string, comment_id: string}  $args
+     * @return \Illuminate\Auth\Access\Response|bool
+     */
+    public function updateOverallComment(User $user, Submission $_, array $args)
     {
         if (isset($args['comment_id'])) {
             $overall_comment = OverallComment::findOrFail($args['comment_id']);

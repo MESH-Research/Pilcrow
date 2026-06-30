@@ -301,7 +301,7 @@ class SubmissionIntentMutationsTest extends ApiTestCase
 
         $response = $this->graphQL(
             'mutation ($id: ID!) {
-                createInlineComment(submission_id: $id, content: "Inline note", from: 1, to: 5) {
+                createInlineComment(input: { submission_id: $id, content: "Inline note", from: 1, to: 5 }) {
                     id
                     inline_comments { content from to }
                 }
@@ -320,7 +320,7 @@ class SubmissionIntentMutationsTest extends ApiTestCase
 
         $response = $this->graphQL(
             'mutation ($id: ID!) {
-                createInlineComment(submission_id: $id, content: "Too early") { id }
+                createInlineComment(input: { submission_id: $id, content: "Too early" }) { id }
             }',
             ['id' => $submission->id]
         );
@@ -341,12 +341,12 @@ class SubmissionIntentMutationsTest extends ApiTestCase
 
         $response = $this->graphQL(
             'mutation ($id: ID!, $parent: ID!, $replyTo: ID!) {
-                createInlineComment(
+                createInlineComment(input: {
                     submission_id: $id
                     content: "A reply"
                     parent_id: $parent
                     reply_to_id: $replyTo
-                ) {
+                }) {
                     id
                     inline_comments { replies { content parent_id reply_to_id } }
                 }
@@ -368,7 +368,7 @@ class SubmissionIntentMutationsTest extends ApiTestCase
         // parent_id without reply_to_id is not a coherent reply.
         $response = $this->graphQL(
             'mutation ($id: ID!, $parent: ID!) {
-                createInlineComment(submission_id: $id, content: "Bad reply", parent_id: $parent) { id }
+                createInlineComment(input: { submission_id: $id, content: "Bad reply", parent_id: $parent }) { id }
             }',
             ['id' => $submission->id, 'parent' => 999999]
         );
@@ -384,7 +384,7 @@ class SubmissionIntentMutationsTest extends ApiTestCase
 
         $response = $this->graphQL(
             'mutation ($id: ID!) {
-                createOverallComment(submission_id: $id, content: "Overall note") {
+                createOverallComment(input: { submission_id: $id, content: "Overall note" }) {
                     id
                     overall_comments { content }
                 }
@@ -402,11 +402,135 @@ class SubmissionIntentMutationsTest extends ApiTestCase
 
         $response = $this->graphQL(
             'mutation ($id: ID!) {
-                createOverallComment(submission_id: $id, content: "Too late") { id }
+                createOverallComment(input: { submission_id: $id, content: "Too late" }) { id }
             }',
             ['id' => $submission->id]
         );
 
         $response->assertJsonPath('errors.0.message', 'UNAUTHORIZED');
+    }
+
+    // ---- updateInlineComment / updateOverallComment (author-only) -----------
+    // Editing a comment is gated by ownership, the same gate as delete — not by
+    // `review`, so the author can fix their wording regardless of status.
+
+    public function testUpdateInlineCommentAllowsAuthor(): void
+    {
+        [$submission, $reviewer] = $this->submissionWithSubmissionRole(ScopedRole::Reviewer, Submission::UNDER_REVIEW);
+        // Act before creating: created_by is set from the acting user.
+        $this->actingAs($reviewer);
+        $comment = $submission->inlineComments()->create([
+            'content' => 'Original',
+            'style_criteria' => [],
+            'from' => 1,
+            'to' => 5,
+        ]);
+
+        $response = $this->graphQL(
+            'mutation ($id: ID!, $comment: ID!) {
+                updateInlineComment(input: { submission_id: $id, comment_id: $comment, content: "Edited" }) {
+                    id
+                    inline_comments { content }
+                }
+            }',
+            ['id' => $submission->id, 'comment' => $comment->id]
+        );
+
+        $response->assertJsonPath('data.updateInlineComment.inline_comments.0.content', 'Edited');
+        $this->assertSame('Edited', $comment->fresh()->content);
+    }
+
+    public function testUpdateInlineCommentDeniesNonAuthor(): void
+    {
+        [$submission, $author] = $this->submissionWithSubmissionRole(ScopedRole::Reviewer, Submission::UNDER_REVIEW);
+        $this->actingAs($author);
+        $comment = $submission->inlineComments()->create([
+            'content' => 'Original',
+            'style_criteria' => [],
+        ]);
+
+        // A different reviewer on the same submission may not edit another's comment.
+        $other = User::factory()->create();
+        $submission->users()->attach($other->id, ['role' => ScopedRole::Reviewer->toSlug()]);
+        $this->actingAs($other);
+
+        $response = $this->graphQL(
+            'mutation ($id: ID!, $comment: ID!) {
+                updateInlineComment(input: { submission_id: $id, comment_id: $comment, content: "Hijack" }) { id }
+            }',
+            ['id' => $submission->id, 'comment' => $comment->id]
+        );
+
+        $response->assertJsonPath('errors.0.message', 'UNAUTHORIZED');
+        $this->assertSame('Original', $comment->fresh()->content);
+    }
+
+    public function testUpdateInlineCommentEditsAReply(): void
+    {
+        [$submission, $reviewer] = $this->submissionWithSubmissionRole(ScopedRole::Reviewer, Submission::UNDER_REVIEW);
+        $this->actingAs($reviewer);
+        $parent = $submission->inlineComments()->create([
+            'content' => 'Parent comment',
+            'style_criteria' => [],
+        ]);
+        // A reply is just an inline-comment row carrying parent_id/reply_to_id,
+        // so the edit folds in: it is found and updated by id like any other.
+        $reply = $submission->inlineComments()->create([
+            'content' => 'Original reply',
+            'style_criteria' => [],
+            'parent_id' => $parent->id,
+            'reply_to_id' => $parent->id,
+        ]);
+
+        $response = $this->graphQL(
+            'mutation ($id: ID!, $comment: ID!) {
+                updateInlineComment(input: { submission_id: $id, comment_id: $comment, content: "Edited reply" }) { id }
+            }',
+            ['id' => $submission->id, 'comment' => $reply->id]
+        );
+
+        $response->assertJsonPath('data.updateInlineComment.id', (string)$submission->id);
+        $this->assertSame('Edited reply', $reply->fresh()->content);
+    }
+
+    public function testUpdateOverallCommentAllowsAuthor(): void
+    {
+        [$submission, $reviewer] = $this->submissionWithSubmissionRole(ScopedRole::Reviewer, Submission::UNDER_REVIEW);
+        $this->actingAs($reviewer);
+        $comment = $submission->overallComments()->create(['content' => 'Original']);
+
+        $response = $this->graphQL(
+            'mutation ($id: ID!, $comment: ID!) {
+                updateOverallComment(input: { submission_id: $id, comment_id: $comment, content: "Edited" }) {
+                    id
+                    overall_comments { content }
+                }
+            }',
+            ['id' => $submission->id, 'comment' => $comment->id]
+        );
+
+        $response->assertJsonPath('data.updateOverallComment.overall_comments.0.content', 'Edited');
+        $this->assertSame('Edited', $comment->fresh()->content);
+    }
+
+    public function testUpdateOverallCommentDeniesNonAuthor(): void
+    {
+        [$submission, $author] = $this->submissionWithSubmissionRole(ScopedRole::Reviewer, Submission::UNDER_REVIEW);
+        $this->actingAs($author);
+        $comment = $submission->overallComments()->create(['content' => 'Original']);
+
+        $other = User::factory()->create();
+        $submission->users()->attach($other->id, ['role' => ScopedRole::Reviewer->toSlug()]);
+        $this->actingAs($other);
+
+        $response = $this->graphQL(
+            'mutation ($id: ID!, $comment: ID!) {
+                updateOverallComment(input: { submission_id: $id, comment_id: $comment, content: "Hijack" }) { id }
+            }',
+            ['id' => $submission->id, 'comment' => $comment->id]
+        );
+
+        $response->assertJsonPath('errors.0.message', 'UNAUTHORIZED');
+        $this->assertSame('Original', $comment->fresh()->content);
     }
 }

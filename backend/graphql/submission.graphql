@@ -27,7 +27,8 @@ extend type Mutation {
     DEPRECATED: this catch-all god-mutation is being dissolved into intent-shaped
     mutations (updateSubmissionContent now also edits the title, submitSubmission,
     changeSubmissionStatus, updateSubmissionSubmitters / Reviewers /
-    ReviewCoordinators, createInlineComment, createOverallComment). It stays
+    ReviewCoordinators, createInlineComment, createOverallComment,
+    updateInlineComment, updateOverallComment). It stays
     callable while clients migrate; its umbrella now gates on the bridge
     `legacyUpdate` ability (the prior broad `update`) and each input field is
     still authorized per-field by @argPolicy. Remove once no client calls it.
@@ -129,29 +130,40 @@ extend type Mutation {
         @canFind(ability: "updateReviewCoordinators", find: "id")
 
     "Add an inline comment (or reply) to a submission under review."
-    createInlineComment(
-        submission_id: ID!
-        content: String!
-        style_criteria: [ID!] @transformStyleCriteriaIds
-        from: Int
-        to: Int
-        parent_id: ID
-        reply_to_id: ID
-    ): Submission!
+    createInlineComment(input: CreateInlineCommentArgs! @spread): Submission!
         @canFind(ability: "review", find: "submission_id")
-        @validator(class: "CreateInlineCommentValidator")
         @field(resolver: "App\\GraphQL\\Mutations\\CommentMutator@createInline")
 
     "Add an overall comment (or reply) to a submission under review."
-    createOverallComment(
-        submission_id: ID!
-        content: String!
-        parent_id: ID
-        reply_to_id: ID
-    ): Submission!
+    createOverallComment(input: CreateOverallCommentArgs! @spread): Submission!
         @canFind(ability: "review", find: "submission_id")
-        @validator(class: "CreateOverallCommentValidator")
         @field(resolver: "App\\GraphQL\\Mutations\\CommentMutator@createOverall")
+
+    """
+    Edit an inline comment (or reply). Content for any; a top-level comment may
+    also revise its style criteria and range. Author-only — the same gate as
+    delete. Replies fold in: a reply is an inline-comment row, edited by id.
+    Only the supplied fields change.
+    """
+    updateInlineComment(input: UpdateInlineCommentArgs! @spread): Submission!
+        @canFind(
+            ability: "updateInlineComment"
+            find: "submission_id"
+            injectArgs: true
+        )
+        @field(resolver: "App\\GraphQL\\Mutations\\CommentMutator@updateInline")
+
+    """
+    Edit an overall comment (or reply). Author-only — the same gate as delete.
+    Replies fold in: a reply is an overall-comment row, edited by id.
+    """
+    updateOverallComment(input: UpdateOverallCommentArgs! @spread): Submission!
+        @canFind(
+            ability: "updateOverallComment"
+            find: "submission_id"
+            injectArgs: true
+        )
+        @field(resolver: "App\\GraphQL\\Mutations\\CommentMutator@updateOverall")
 
     "Verify access to an invitation to a submission as the assigned role"
     verifySubmissionInvite(
@@ -321,6 +333,50 @@ enum SubmissionStatus {
 input DeleteCommentInput {
     submission_id: ID!
     comment_id: ID!
+}
+
+"""
+Add an inline comment (or reply). The coherence validator reads parent_id /
+reply_to_id / submission_id off this input to enforce a well-formed thread.
+"""
+input CreateInlineCommentArgs
+    @validator(class: "CreateInlineCommentValidator") {
+    submission_id: ID!
+    content: String!
+    style_criteria: [ID!] @transformStyleCriteriaIds
+    from: Int
+    to: Int
+    parent_id: ID
+    reply_to_id: ID
+}
+
+"Add an overall comment (or reply); coherence validated as for inline."
+input CreateOverallCommentArgs
+    @validator(class: "CreateOverallCommentValidator") {
+    submission_id: ID!
+    content: String!
+    parent_id: ID
+    reply_to_id: ID
+}
+
+"""
+Edit an inline comment (or reply). Only the supplied fields change — content for
+any row; style criteria and range for a top-level comment.
+"""
+input UpdateInlineCommentArgs {
+    submission_id: ID!
+    comment_id: ID!
+    content: String
+    style_criteria: [ID!] @transformStyleCriteriaIds
+    from: Int
+    to: Int
+}
+
+"Edit an overall comment (or reply). Only the supplied content changes."
+input UpdateOverallCommentArgs {
+    submission_id: ID!
+    comment_id: ID!
+    content: String
 }
 
 """
