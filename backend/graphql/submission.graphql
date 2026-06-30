@@ -56,18 +56,18 @@ extend type Mutation {
     "Delete an inline comment of a submission"
     deleteInlineComment(input: DeleteCommentInput! @spread): Submission!
         @canFind(
-            ability: "deleteInlineComment"
-            find: "submission_id"
-            injectArgs: true
+            ability: "delete"
+            find: "comment_id"
+            model: "App\\Models\\InlineComment"
         )
         @field(resolver: "App\\GraphQL\\Mutations\\DeleteInlineComment@delete")
 
     "Delete an overall comment of a submission"
     deleteOverallComment(input: DeleteCommentInput! @spread): Submission!
         @canFind(
-            ability: "deleteOverallComment"
-            find: "submission_id"
-            injectArgs: true
+            ability: "delete"
+            find: "comment_id"
+            model: "App\\Models\\OverallComment"
         )
         @field(resolver: "App\\GraphQL\\Mutations\\DeleteOverallComment@delete")
 
@@ -147,9 +147,9 @@ extend type Mutation {
     """
     updateInlineComment(input: UpdateInlineCommentArgs! @spread): Submission!
         @canFind(
-            ability: "updateInlineComment"
-            find: "submission_id"
-            injectArgs: true
+            ability: "update"
+            find: "comment_id"
+            model: "App\\Models\\InlineComment"
         )
         @field(resolver: "App\\GraphQL\\Mutations\\CommentMutator@updateInline")
 
@@ -159,9 +159,9 @@ extend type Mutation {
     """
     updateOverallComment(input: UpdateOverallCommentArgs! @spread): Submission!
         @canFind(
-            ability: "updateOverallComment"
-            find: "submission_id"
-            injectArgs: true
+            ability: "update"
+            find: "comment_id"
+            model: "App\\Models\\OverallComment"
         )
         @field(resolver: "App\\GraphQL\\Mutations\\CommentMutator@updateOverall")
 

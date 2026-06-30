@@ -5,6 +5,7 @@ namespace App\Auth;
 
 use App\Auth\Abilities\ScopedAbility;
 use App\Auth\Roles\ScopedRole;
+use App\Models\Contracts\Comment;
 use App\Models\Publication;
 use App\Models\PublicationAssignment;
 use App\Models\Submission;
@@ -52,7 +53,7 @@ class ScopedAbilityResolver
      *
      * @param \App\Models\User $user
      * @param \App\Auth\Abilities\ScopedAbility $ability
-     * @param \App\Models\Publication|\App\Models\Submission|null $entity
+     * @param \App\Models\Publication|\App\Models\Submission|\App\Models\Contracts\Comment|null $entity
      */
     public function allows(User $user, ScopedAbility $ability, $entity = null): bool
     {
@@ -73,7 +74,7 @@ class ScopedAbilityResolver
      * Resolve the user's effective scoped roles for an entity.
      *
      * @param \App\Models\User $user
-     * @param \App\Models\Publication|\App\Models\Submission|null $entity
+     * @param \App\Models\Publication|\App\Models\Submission|\App\Models\Contracts\Comment|null $entity
      * @return array<int, \App\Auth\Roles\ScopedRole>
      */
     public function effectiveRoles(User $user, $entity = null): array
@@ -100,6 +101,18 @@ class ScopedAbilityResolver
                 $this->submissionRolesFor($user, $entity),
                 $this->submissionPublicationRoles($user, $entity)
             );
+        } elseif ($entity instanceof Comment) {
+            // A comment carries no roles of its own — its authorization is the
+            // submission's. Resolve roles against the owning submission; the
+            // CommentAbility predicate then ties the grant to authorship of THIS
+            // comment.
+            $submission = $entity->submission;
+            $roles = $submission instanceof Submission
+                ? array_merge(
+                    $this->submissionRolesFor($user, $submission),
+                    $this->submissionPublicationRoles($user, $submission)
+                )
+                : [];
         }
 
         return $this->effectiveRoleCache[$cacheKey] = $roles;

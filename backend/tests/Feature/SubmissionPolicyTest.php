@@ -321,19 +321,9 @@ class SubmissionPolicyTest extends TestCase
         $this->assertTrue(User::factory()->create()->can('updateInlineComments', [$submission, []]));
     }
 
-    public function testDeleteInlineCommentAllowsOwnerAndDeniesOther(): void
-    {
-        $submission = $this->makeSubmission();
-        $owner = User::factory()->create();
-        $comment = InlineComment::factory()->create([
-            'submission_id' => $submission->id,
-            'created_by' => $owner->id,
-        ]);
-        $args = ['comment_id' => $comment->id];
-
-        $this->assertTrue($owner->can('deleteInlineComment', [$submission, $args]));
-        $this->assertFalse(User::factory()->create()->can('deleteInlineComment', [$submission, $args]));
-    }
+    // Single-comment edit/delete moved off this policy onto CommentPolicy (a
+    // comment-scoped ability); see CommentPolicyTest. The plural methods above
+    // remain only for the deprecated god-mutation's nested @argPolicy.
 
     // ---- overall comment ownership ------------------------------------------
 
@@ -349,19 +339,5 @@ class SubmissionPolicyTest extends TestCase
 
         $this->assertTrue($owner->can('updateOverallComments', [$submission, $args]));
         $this->assertFalse(User::factory()->create()->can('updateOverallComments', [$submission, $args]));
-    }
-
-    public function testDeleteOverallCommentAllowsOwnerAndDeniesOther(): void
-    {
-        $submission = $this->makeSubmission();
-        $owner = User::factory()->create();
-        $comment = OverallComment::factory()->create([
-            'submission_id' => $submission->id,
-            'created_by' => $owner->id,
-        ]);
-        $args = ['comment_id' => $comment->id];
-
-        $this->assertTrue($owner->can('deleteOverallComment', [$submission, $args]));
-        $this->assertFalse(User::factory()->create()->can('deleteOverallComment', [$submission, $args]));
     }
 }

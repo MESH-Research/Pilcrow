@@ -94,19 +94,26 @@ class ScopedRoleTest extends TestCase
 
     public function testPublicationAdminIsASupersetOfEditor(): void
     {
-        $user = new User();
-        // A reviewable submission so Editor's conditional `review` grant holds and
-        // the superset check covers every Editor grant.
-        $entity = $this->reviewable();
-        foreach (ScopedRole::Editor->grants() as $grant) {
-            $this->assertTrue(
-                ScopedRole::PublicationAdmin->allows($grant->ability, $entity, $user),
-                "PublicationAdmin should inherit Editor's {$grant->ability->value}"
+        // Inheritance is structural: PublicationAdmin's granted abilities are a
+        // superset of Editor's. Asserted on the ability SET rather than by
+        // evaluating allows() against a fixed entity, because some grants are
+        // comment-scoped (their predicate needs a Comment, not a submission) and
+        // would spuriously fail a submission-entity probe. Predicate evaluation
+        // is covered per-grant by the tests above.
+        $editorAbilities = array_map(fn($grant) => $grant->ability, ScopedRole::Editor->grants());
+        $adminAbilities = array_map(fn($grant) => $grant->ability, ScopedRole::PublicationAdmin->grants());
+
+        foreach ($editorAbilities as $ability) {
+            $this->assertContains(
+                $ability,
+                $adminAbilities,
+                "PublicationAdmin should inherit Editor's {$ability->value}"
             );
         }
-        // ...plus its own.
-        $this->assertTrue(ScopedRole::PublicationAdmin->allows(PublicationAbility::Update, $entity, $user));
-        $this->assertFalse(ScopedRole::Editor->allows(PublicationAbility::Update, $entity, $user));
+
+        // ...plus its own: the absolute publication update Editor lacks.
+        $this->assertContains(PublicationAbility::Update, $adminAbilities);
+        $this->assertNotContains(PublicationAbility::Update, $editorAbilities);
     }
 
     public function testEditorInheritsReviewerSubmissionView(): void

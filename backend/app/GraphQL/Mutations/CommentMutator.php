@@ -15,12 +15,15 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
  *
  * Grouped controller-style (resolved via `Class@method`, the house convention)
  * because comment authoring is one domain concern. Authorization is enforced by
- * the @canFind directive on each field — `review` (held only while reviewable)
- * for the creates, author-ownership (the same gate as delete) for the edits.
- * Reply-thread coherence is enforced declaratively by the per-field @validator
- * on the creates; the edits leave the structural ids untouched, so they need no
- * coherence check. Replies fold into the edits for free: a reply is just a
- * comment row carrying a parent_id, so editing it is editing the row by id.
+ * the @canFind directive on each field — the submission's `review` ability
+ * (held only while reviewable) for the creates, and the comment-scoped
+ * {@see \App\Auth\Abilities\CommentAbility::Update} for the edits (the author
+ * may revise their own comment while review is open; see
+ * {@see \App\Policies\CommentPolicy}). Reply-thread coherence is enforced
+ * declaratively by the per-field @validator on the creates; the edits leave the
+ * structural ids untouched, so they need no coherence check. Replies fold into
+ * the edits for free: a reply is just a comment row carrying a parent_id, so
+ * editing it is editing the row by id.
  *
  * @see \App\GraphQL\Validators\CreateInlineCommentValidator
  * @see \App\GraphQL\Validators\CreateOverallCommentValidator

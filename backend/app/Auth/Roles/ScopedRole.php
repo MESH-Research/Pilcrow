@@ -3,10 +3,12 @@ declare(strict_types=1);
 
 namespace App\Auth\Roles;
 
+use App\Auth\Abilities\CommentAbility;
 use App\Auth\Abilities\PublicationAbility;
 use App\Auth\Abilities\ScopedAbility;
 use App\Auth\Abilities\SubmissionAbility;
 use App\Auth\Grants\Grant;
+use App\Auth\Grants\Predicates\OwnsCommentWhileReviewable;
 use App\Auth\Grants\Predicates\SubmissionIsDraft;
 use App\Auth\Grants\Predicates\SubmissionIsReviewable;
 use App\Models\User;
@@ -179,6 +181,12 @@ enum ScopedRole: string
                 // `review`.)
                 SubmissionAbility::View,
                 [SubmissionAbility::Review, SubmissionIsReviewable::class],
+                // Authoring a comment grants the right to revise or retract it —
+                // but only one's OWN, and only while review is open. Held by every
+                // comment-capable role through this base grant; the predicate
+                // carries the authorship + reviewable conditions.
+                [CommentAbility::Update, OwnsCommentWhileReviewable::class],
+                [CommentAbility::Delete, OwnsCommentWhileReviewable::class],
                 // Bridge: the deprecated god-mutation umbrella (@can legacyUpdate)
                 // needs the prior broad grant so it stays callable for every role.
                 SubmissionAbility::LegacyUpdate,

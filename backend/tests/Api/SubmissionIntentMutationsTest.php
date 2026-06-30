@@ -465,6 +465,29 @@ class SubmissionIntentMutationsTest extends ApiTestCase
         $this->assertSame('Original', $comment->fresh()->content);
     }
 
+    public function testUpdateInlineCommentDeniesAuthorAfterReviewCloses(): void
+    {
+        [$submission, $reviewer] = $this->submissionWithSubmissionRole(ScopedRole::Reviewer, Submission::UNDER_REVIEW);
+        $this->actingAs($reviewer);
+        $comment = $submission->inlineComments()->create([
+            'content' => 'Original',
+            'style_criteria' => [],
+        ]);
+
+        // Review closes — the author's edit window closes with it.
+        $submission->update(['status' => Submission::AWAITING_DECISION]);
+
+        $response = $this->graphQL(
+            'mutation ($id: ID!, $comment: ID!) {
+                updateInlineComment(input: { submission_id: $id, comment_id: $comment, content: "Too late" }) { id }
+            }',
+            ['id' => $submission->id, 'comment' => $comment->id]
+        );
+
+        $response->assertJsonPath('errors.0.message', 'UNAUTHORIZED');
+        $this->assertSame('Original', $comment->fresh()->content);
+    }
+
     public function testUpdateInlineCommentEditsAReply(): void
     {
         [$submission, $reviewer] = $this->submissionWithSubmissionRole(ScopedRole::Reviewer, Submission::UNDER_REVIEW);
