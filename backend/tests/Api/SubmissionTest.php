@@ -981,20 +981,27 @@ class SubmissionTest extends ApiTestCase
                 'passes' => false,
                 'message' => 'UNAUTHORIZED',
             ],
+            // Title is the author's content: editorial no longer edits it. The
+            // deprecated god-mutation's title field now gates on the author/draft
+            // `updateContent` ability, so RC / editor / pub admin are denied (they
+            // are not the submission's author).
             'As A Review Coordinator' => [
                 'role' => ScopedRole::ReviewCoordinator->title(),
                 'title' => 'My Newly Updated Submission Title',
-                'passes' => true,
+                'passes' => false,
+                'message' => 'UNAUTHORIZED',
             ],
             'As An Editor' => [
                 'role' => ScopedRole::Editor->title(),
                 'title' => 'My Newly Updated Submission Title',
-                'passes' => true,
+                'passes' => false,
+                'message' => 'UNAUTHORIZED',
             ],
             'As A Publication Admin' => [
                 'role' => ScopedRole::PublicationAdmin->title(),
                 'title' => 'My Newly Updated Submission Title',
-                'passes' => true,
+                'passes' => false,
+                'message' => 'UNAUTHORIZED',
             ],
             'As An Application Admin' => [
                 'role' => GlobalRole::ApplicationAdministrator->title(),

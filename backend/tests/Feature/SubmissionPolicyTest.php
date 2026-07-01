@@ -195,29 +195,7 @@ class SubmissionPolicyTest extends TestCase
         $this->assertFalse($reviewer->can('updateStatus', $submission));
     }
 
-    // ---- updateTitle --------------------------------------------------------
-
-    public function testUpdateTitleAllowsReviewCoordinatorAndSubmitter(): void
-    {
-        foreach ([ScopedRole::ReviewCoordinator->toSlug(), ScopedRole::Submitter->toSlug()] as $roleId) {
-            $submission = $this->makeSubmission(Submission::INITIALLY_SUBMITTED);
-            $user = User::factory()->create();
-            $this->attachToSubmission($user, $submission, $roleId);
-
-            $this->assertTrue($user->can('updateTitle', $submission), "role_id $roleId");
-        }
-    }
-
-    public function testUpdateTitleDeniesReviewer(): void
-    {
-        $submission = $this->makeSubmission();
-        $reviewer = User::factory()->create();
-        $this->attachToSubmission($reviewer, $submission, ScopedRole::Reviewer->toSlug());
-
-        $this->assertFalse($reviewer->can('updateTitle', $submission));
-    }
-
-    // ---- view / update (any submission role grants both, via the matrix) ----
+    // ---- view (any submission role grants it, via the matrix) ---------------
 
     public function testViewAllowsAdminAndAnySubmissionRole(): void
     {
@@ -234,44 +212,90 @@ class SubmissionPolicyTest extends TestCase
         $this->assertFalse(User::factory()->create()->can('view', $this->makeSubmission()));
     }
 
-    public function testUpdateAllowsAnySubmissionRoleAndDeniesUnaffiliated(): void
+    // ---- update (the work: author-only, draft-only) -------------------------
+
+    public function testUpdateAllowsSubmitterOnlyWhileDraft(): void
+    {
+        $draft = $this->makeSubmission(Submission::DRAFT);
+        $submitterDraft = User::factory()->create();
+        $this->attachToSubmission($submitterDraft, $draft, ScopedRole::Submitter->toSlug());
+        $this->assertTrue($submitterDraft->can('updateContent', $draft));
+
+        $submitted = $this->makeSubmission(Submission::INITIALLY_SUBMITTED);
+        $submitterSubmitted = User::factory()->create();
+        $this->attachToSubmission($submitterSubmitted, $submitted, ScopedRole::Submitter->toSlug());
+        $this->assertFalse($submitterSubmitted->can('updateContent', $submitted));
+    }
+
+    public function testUpdateDeniesReviewerAndUnaffiliated(): void
+    {
+        $draft = $this->makeSubmission(Submission::DRAFT);
+        $reviewer = User::factory()->create();
+        $this->attachToSubmission($reviewer, $draft, ScopedRole::Reviewer->toSlug());
+
+        // The manuscript-edit hole closed: a reviewer holds no `update`.
+        $this->assertFalse($reviewer->can('updateContent', $draft));
+        $this->assertFalse(User::factory()->create()->can('updateContent', $draft));
+    }
+
+    // ---- legacyUpdate (transitional god-mutation umbrella; broad) ------------
+
+    public function testLegacyUpdateAllowsAnySubmissionRoleAndDeniesUnaffiliated(): void
     {
         $submission = $this->makeSubmission();
         $reviewer = User::factory()->create();
         $this->attachToSubmission($reviewer, $submission, ScopedRole::Reviewer->toSlug());
-        $this->assertTrue($reviewer->can('update', $submission));
+        $this->assertTrue($reviewer->can('legacyUpdate', $submission));
 
-        $this->assertFalse(User::factory()->create()->can('update', $this->makeSubmission()));
+        $this->assertFalse(User::factory()->create()->can('legacyUpdate', $this->makeSubmission()));
     }
 
-    // ---- invite (review coordinator and up, via the ScopedRole matrix) ------
+    // ---- review (manuscript access + comment, while reviewable) --------------
 
-    public function testInviteAllowsApplicationAdministrator(): void
+    public function testReviewAllowsAnySubmissionRoleOnlyWhileReviewable(): void
     {
-        $admin = $this->appAdmin();
-        $this->actingAs($admin);
-
-        $this->assertTrue($admin->can('invite', $this->makeSubmission()));
-    }
-
-    public function testInviteAllowsReviewCoordinator(): void
-    {
-        $submission = $this->makeSubmission();
-        $coordinator = User::factory()->create();
-        $this->attachToSubmission($coordinator, $submission, ScopedRole::ReviewCoordinator->toSlug());
-        $this->actingAs($coordinator);
-
-        $this->assertTrue($coordinator->can('invite', $submission->fresh()));
-    }
-
-    public function testInviteDeniesReviewer(): void
-    {
-        $submission = $this->makeSubmission();
+        $underReview = $this->makeSubmission(Submission::UNDER_REVIEW);
         $reviewer = User::factory()->create();
-        $this->attachToSubmission($reviewer, $submission, ScopedRole::Reviewer->toSlug());
-        $this->actingAs($reviewer);
+        $this->attachToSubmission($reviewer, $underReview, ScopedRole::Reviewer->toSlug());
+        $this->assertTrue($reviewer->can('review', $underReview));
 
-        $this->assertFalse($reviewer->can('invite', $submission->fresh()));
+        $draft = $this->makeSubmission(Submission::DRAFT);
+        $reviewerDraft = User::factory()->create();
+        $this->attachToSubmission($reviewerDraft, $draft, ScopedRole::Reviewer->toSlug());
+        $this->assertFalse($reviewerDraft->can('review', $draft));
+    }
+
+    public function testReviewDeniesUnaffiliatedUser(): void
+    {
+        $this->assertFalse(
+            User::factory()->create()->can('review', $this->makeSubmission(Submission::UNDER_REVIEW))
+        );
+    }
+
+    // ---- submit (the author's forward action, draft-only) -------------------
+
+    public function testSubmitAllowsSubmitterOnlyWhileDraft(): void
+    {
+        $draft = $this->makeSubmission(Submission::DRAFT);
+        $submitter = User::factory()->create();
+        $this->attachToSubmission($submitter, $draft, ScopedRole::Submitter->toSlug());
+        $this->assertTrue($submitter->can('submit', $draft));
+
+        $submitted = $this->makeSubmission(Submission::INITIALLY_SUBMITTED);
+        $submitterSubmitted = User::factory()->create();
+        $this->attachToSubmission($submitterSubmitted, $submitted, ScopedRole::Submitter->toSlug());
+        $this->assertFalse($submitterSubmitted->can('submit', $submitted));
+    }
+
+    public function testSubmitDeniesReviewerAndCoordinator(): void
+    {
+        foreach ([ScopedRole::Reviewer->toSlug(), ScopedRole::ReviewCoordinator->toSlug()] as $roleId) {
+            $draft = $this->makeSubmission(Submission::DRAFT);
+            $user = User::factory()->create();
+            $this->attachToSubmission($user, $draft, $roleId);
+
+            $this->assertFalse($user->can('submit', $draft), "role_id $roleId");
+        }
     }
 
     // ---- inline comment ownership -------------------------------------------
@@ -297,19 +321,9 @@ class SubmissionPolicyTest extends TestCase
         $this->assertTrue(User::factory()->create()->can('updateInlineComments', [$submission, []]));
     }
 
-    public function testDeleteInlineCommentAllowsOwnerAndDeniesOther(): void
-    {
-        $submission = $this->makeSubmission();
-        $owner = User::factory()->create();
-        $comment = InlineComment::factory()->create([
-            'submission_id' => $submission->id,
-            'created_by' => $owner->id,
-        ]);
-        $args = ['comment_id' => $comment->id];
-
-        $this->assertTrue($owner->can('deleteInlineComment', [$submission, $args]));
-        $this->assertFalse(User::factory()->create()->can('deleteInlineComment', [$submission, $args]));
-    }
+    // Single-comment edit/delete moved off this policy onto CommentPolicy (a
+    // comment-scoped ability); see CommentPolicyTest. The plural methods above
+    // remain only for the deprecated god-mutation's nested @argPolicy.
 
     // ---- overall comment ownership ------------------------------------------
 
@@ -325,19 +339,5 @@ class SubmissionPolicyTest extends TestCase
 
         $this->assertTrue($owner->can('updateOverallComments', [$submission, $args]));
         $this->assertFalse(User::factory()->create()->can('updateOverallComments', [$submission, $args]));
-    }
-
-    public function testDeleteOverallCommentAllowsOwnerAndDeniesOther(): void
-    {
-        $submission = $this->makeSubmission();
-        $owner = User::factory()->create();
-        $comment = OverallComment::factory()->create([
-            'submission_id' => $submission->id,
-            'created_by' => $owner->id,
-        ]);
-        $args = ['comment_id' => $comment->id];
-
-        $this->assertTrue($owner->can('deleteOverallComment', [$submission, $args]));
-        $this->assertFalse(User::factory()->create()->can('deleteOverallComment', [$submission, $args]));
     }
 }

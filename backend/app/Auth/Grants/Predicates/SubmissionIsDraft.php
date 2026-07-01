@@ -9,8 +9,8 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Holds when the entity is a submission still in DRAFT. Backs the submitter's
- * conditional grant on submission.update-status.
+ * Holds when the entity is a submission still in DRAFT — the author's to shape.
+ * Backs the submitter's conditional grants (content update, submit).
  */
 final class SubmissionIsDraft implements Predicate
 {
@@ -21,6 +21,6 @@ final class SubmissionIsDraft implements Predicate
      */
     public function holds(Model $entity, User $_user): bool
     {
-        return $entity instanceof Submission && $entity->status === Submission::DRAFT;
+        return $entity instanceof Submission && $entity->isDraft();
     }
 }

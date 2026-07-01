@@ -101,18 +101,6 @@ class SubmissionPolicy
      * @param \App\Models\Submission $submission
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function updateTitle(User $user, Submission $submission)
-    {
-        return $this->scoped->allows($user, SubmissionAbility::UpdateTitle, $submission)
-            ? true
-            : Response::deny('UNAUTHORIZED');
-    }
-
-    /**
-     * @param \App\Models\User $user
-     * @param \App\Models\Submission $submission
-     * @return \Illuminate\Auth\Access\Response|bool
-     */
     public function view(User $user, Submission $submission)
     {
         return $this->scoped->allows($user, SubmissionAbility::View, $submission)
@@ -121,29 +109,67 @@ class SubmissionPolicy
     }
 
     /**
-     * @param \App\Models\User $user
-     * @param \App\Models\Submission $submission
-     * @return \Illuminate\Auth\Access\Response|bool
-     */
-    public function update(User $user, Submission $submission)
-    {
-        return $this->scoped->allows($user, SubmissionAbility::Update, $submission)
-            ? true
-            : Response::deny('UNAUTHORIZED');
-    }
-
-    /**
-     * Invite users to a submission.
+     * Edit the work itself — body, file, and title as one capability —
+     * author-only, draft-only.
      *
      * @param \App\Models\User $user
      * @param \App\Models\Submission $submission
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function invite(User $user, Submission $submission)
+    public function updateContent(User $user, Submission $submission)
     {
-        return $this->scoped->allows($user, SubmissionAbility::Invite, $submission)
+        return $this->scoped->allows($user, SubmissionAbility::UpdateContent, $submission)
             ? true
-            : Response::deny('You do not have permission to invite users to this submission.');
+            : Response::deny('UNAUTHORIZED');
+    }
+
+    /**
+     * Access the manuscript and post comments — held by reviewers (and up the
+     * chain) only while the submission is reviewable. Gates the comment-create
+     * mutations; folds in the former SubmissionIsReviewable validation rule.
+     *
+     * @param \App\Models\User $user
+     * @param \App\Models\Submission $submission
+     * @return \Illuminate\Auth\Access\Response|bool
+     */
+    public function review(User $user, Submission $submission)
+    {
+        return $this->scoped->allows($user, SubmissionAbility::Review, $submission)
+            ? true
+            : Response::deny('UNAUTHORIZED');
+    }
+
+    /**
+     * Send a DRAFT in for review — the submitter's forward action, draft-only.
+     *
+     * @param \App\Models\User $user
+     * @param \App\Models\Submission $submission
+     * @return \Illuminate\Auth\Access\Response|bool
+     */
+    public function submit(User $user, Submission $submission)
+    {
+        return $this->scoped->allows($user, SubmissionAbility::Submit, $submission)
+            ? true
+            : Response::deny('UNAUTHORIZED');
+    }
+
+    /**
+     * Umbrella gate of the DEPRECATED `updateSubmission` god-mutation. Preserves
+     * the prior broad `update` semantics (any submission role) so the
+     * god-mutation stays callable while clients migrate to the intent-shaped
+     * mutations; its per-field @argPolicy entries enforce the real, corrected
+     * abilities. Removed with the god-mutation.
+     *
+     * @deprecated Transitional. New code gates on the specific intent ability.
+     * @param \App\Models\User $user
+     * @param \App\Models\Submission $submission
+     * @return \Illuminate\Auth\Access\Response|bool
+     */
+    public function legacyUpdate(User $user, Submission $submission)
+    {
+        return $this->scoped->allows($user, SubmissionAbility::LegacyUpdate, $submission)
+            ? true
+            : Response::deny('UNAUTHORIZED');
     }
 
     /**
@@ -170,26 +196,6 @@ class SubmissionPolicy
     }
 
     /**
-     * Delete an inline comment of a submission
-     *
-     * @param \App\Models\User $user
-     * @param \App\Models\Submission $_
-     * @param array {submission_id: string, comment_id:string}  $args
-     * @return \Illuminate\Auth\Access\Response|bool
-     */
-    public function deleteInlineComment(User $user, Submission $_, array $args)
-    {
-        if (isset($args['comment_id'])) {
-            $inline_comment = InlineComment::findOrFail($args['comment_id']);
-            if ($inline_comment->created_by === $user->id) {
-                return true;
-            }
-        }
-
-        return Response::deny('UNAUTHORIZED');
-    }
-
-    /**
      * Update an overall comment of a submission
      *
      * @param \App\Models\User $user
@@ -210,25 +216,5 @@ class SubmissionPolicy
         }
 
         return true;
-    }
-
-    /**
-     * Delete an overall comment of a submission
-     *
-     * @param \App\Models\User $user
-     * @param \App\Models\Submission $_
-     * @param array {submission_id: string, comment_id:string}  $args
-     * @return \Illuminate\Auth\Access\Response|bool
-     */
-    public function deleteOverallComment(User $user, Submission $_, array $args)
-    {
-        if (isset($args['comment_id'])) {
-            $overall_comment = OverallComment::findOrFail($args['comment_id']);
-            if ($overall_comment->created_by === $user->id) {
-                return true;
-            }
-        }
-
-        return Response::deny('UNAUTHORIZED');
     }
 }
