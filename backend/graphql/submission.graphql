@@ -88,7 +88,7 @@ extend type Mutation {
     ): Submission!
         @canFind(ability: "updateContent", find: "submission_id")
         @field(
-            resolver: "App\\GraphQL\\Mutations\\UpdateSubmissionContentWithFile@update"
+            resolver: "App\\GraphQL\\Mutations\\SubmissionMutator@updateContentWithFile"
         )
 
     # --- Intent-shaped submission mutations ----------------------------------

@@ -3,10 +3,14 @@ declare(strict_types=1);
 
 namespace App\GraphQL\Mutations;
 
+use App\Enums\SubmissionFileImportStatus;
 use App\Exceptions\ClientException;
 use App\Models\Submission;
 use App\Models\SubmissionContent;
+use App\Models\SubmissionFile;
+use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Pandoc\Facades\Pandoc;
 
 /**
  * Intent-shaped lifecycle/content mutations on a submission.
@@ -83,6 +87,60 @@ final readonly class SubmissionMutator
 
         $submission->status = Submission::INITIALLY_SUBMITTED;
         $submission->save();
+
+        return $submission;
+    }
+
+    /**
+     * Replace the author's work from an uploaded file: store the upload, convert
+     * it to HTML with Pandoc, and save it as a new SubmissionContent version.
+     * Gated by the same `updateContent` ability as the text path.
+     *
+     * @param null $_
+     * @param array{submission_id: string, file_upload: \Illuminate\Http\UploadedFile} $args
+     * @return \App\Models\Submission
+     * @throws \App\Exceptions\ClientException
+     */
+    public function updateContentWithFile(null $_, array $args): Submission
+    {
+        try {
+            $submission = Submission::findOrFail($args['submission_id']);
+        } catch (ModelNotFoundException $e) {
+            throw new ClientException('Not Found', 'updateSubmissionContentWithFile', 'SUBMISSION_NOT_FOUND');
+        }
+
+        $content = new SubmissionContent();
+        $content->submission_id = $submission->id;
+
+        $file = SubmissionFile::create([
+            'submission_id' => $submission->id,
+            'file_upload' => $args['file_upload']->storePublicly('uploads'),
+            'content_id' => $content->id,
+        ]);
+
+        try {
+            $content->data = Pandoc::inputFile(storage_path('app/' . $file->file_upload))
+                ->noStandalone()
+                ->to('html')
+                ->run();
+        } catch (Exception $e) {
+            throw new ClientException('Error', 'updateSubmissionContentWithFile', 'UNABLE_TO_CONVERT_FILE');
+        }
+
+        $file->import_status = SubmissionFileImportStatus::Success;
+        if (! $file->save()) {
+            throw new ClientException('Error', 'updateSubmissionContentWithFile', 'UNABLE_TO_SAVE_FILE');
+        }
+
+        $content->submission_file_id = $file->id;
+        if (! $content->save()) {
+            throw new ClientException('Error', 'updateSubmissionContentWithFile', 'UNABLE_TO_SAVE_CONTENT');
+        }
+
+        $submission->content_id = $content->id;
+        if (! $submission->save()) {
+            throw new ClientException('Error', 'updateSubmissionContentWithFile', 'UNABLE_TO_SAVE_SUBMISSION');
+        }
 
         return $submission;
     }
