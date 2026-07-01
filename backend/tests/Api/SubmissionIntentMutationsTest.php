@@ -247,6 +247,22 @@ class SubmissionIntentMutationsTest extends ApiTestCase
         $this->assertContains((string)$coSubmitter->id, $ids);
     }
 
+    public function testUpdateSubmissionSubmittersDeniesReviewer(): void
+    {
+        [$submission, $reviewer] = $this->submissionWithSubmissionRole(ScopedRole::Reviewer, Submission::UNDER_REVIEW);
+        $this->actingAs($reviewer);
+        $target = User::factory()->create();
+
+        $response = $this->graphQL(
+            'mutation ($id: ID!, $connect: [ID!]) {
+                updateSubmissionSubmitters(input: { id: $id, submitters: { connect: $connect } }) { id }
+            }',
+            ['id' => $submission->id, 'connect' => [$target->id]]
+        );
+
+        $response->assertJsonPath('errors.0.message', 'UNAUTHORIZED');
+    }
+
     public function testUpdateSubmissionReviewCoordinatorsAllowsEditor(): void
     {
         $publication = Publication::factory()->create();
@@ -364,17 +380,23 @@ class SubmissionIntentMutationsTest extends ApiTestCase
     {
         [$submission, $reviewer] = $this->submissionWithSubmissionRole(ScopedRole::Reviewer, Submission::UNDER_REVIEW);
         $this->actingAs($reviewer);
+        // A REAL parent, so no foreign-key error can stand in for the validator:
+        // parent_id present without reply_to_id is an incoherent (XOR) reply and
+        // must be rejected by CommentReplyCoherence itself.
+        $parent = $submission->inlineComments()->create(['content' => 'Parent', 'style_criteria' => []]);
 
-        // parent_id without reply_to_id is not a coherent reply.
         $response = $this->graphQL(
             'mutation ($id: ID!, $parent: ID!) {
                 createInlineComment(input: { submission_id: $id, content: "Bad reply", parent_id: $parent }) { id }
             }',
-            ['id' => $submission->id, 'parent' => 999999]
+            ['id' => $submission->id, 'parent' => $parent->id]
         );
 
-        $this->assertNotEmpty($response->json('errors'));
+        // The validation error — not an incidental DB error — is what rejects it.
+        $response->assertGraphQLValidationError('input.submission_id', 'Invalid reply.');
         $response->assertJsonPath('data.createInlineComment', null);
+        // Only the parent exists; no incoherent reply row was written.
+        $this->assertSame(1, $submission->inlineComments()->count());
     }
 
     public function testCreateInlineCommentRejectsReplyToOutsideThread(): void
@@ -393,7 +415,7 @@ class SubmissionIntentMutationsTest extends ApiTestCase
             ['id' => $submission->id, 'parent' => $parent->id, 'replyTo' => $unrelated->id]
         );
 
-        $this->assertNotEmpty($response->json('errors'));
+        $response->assertGraphQLValidationError('input.submission_id', 'Invalid reply.');
         $response->assertJsonPath('data.createInlineComment', null);
         // No third row was created.
         $this->assertSame(2, $submission->inlineComments()->count());
@@ -416,7 +438,7 @@ class SubmissionIntentMutationsTest extends ApiTestCase
             ['id' => $submission->id, 'parent' => $foreignParent->id, 'replyTo' => $foreignParent->id]
         );
 
-        $this->assertNotEmpty($response->json('errors'));
+        $response->assertGraphQLValidationError('input.submission_id', 'Invalid reply.');
         $response->assertJsonPath('data.createInlineComment', null);
     }
 
@@ -459,7 +481,7 @@ class SubmissionIntentMutationsTest extends ApiTestCase
             ['id' => $submission->id, 'parent' => $parent->id, 'replyTo' => $unrelated->id]
         );
 
-        $this->assertNotEmpty($response->json('errors'));
+        $response->assertGraphQLValidationError('input.submission_id', 'Invalid reply.');
         $response->assertJsonPath('data.createOverallComment', null);
     }
 

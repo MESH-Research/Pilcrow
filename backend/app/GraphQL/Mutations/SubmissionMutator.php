@@ -6,7 +6,6 @@ namespace App\GraphQL\Mutations;
 use App\Exceptions\ClientException;
 use App\Models\Submission;
 use App\Models\SubmissionContent;
-use GraphQL\Error\Error;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 /**
@@ -16,8 +15,10 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
  * each method is one business action that replaces a slice of the deprecated
  * `updateSubmission` god-mutation. Authorization is enforced by the @canFind
  * directive on each field, so by the time a method runs the act is permitted.
+ * Failures surface as {@see \App\Exceptions\ClientException} with a stable code,
+ * consistent with the sibling comment mutations.
  */
-final class SubmissionMutator
+final readonly class SubmissionMutator
 {
     /**
      * Update the author's work — body and/or title — on a submission. The
@@ -29,24 +30,23 @@ final class SubmissionMutator
      * @param null $_
      * @param array{id: string, content?: string, title?: string} $args
      * @return \App\Models\Submission
+     * @throws \App\Exceptions\ClientException
      */
     public function updateContent(null $_, array $args): Submission
     {
-        $id = $args['id'];
-
-        $submission = Submission::find($id);
-
-        if (! $submission) {
-            throw new Error('Submission not found');
+        try {
+            $submission = Submission::findOrFail($args['id']);
+        } catch (ModelNotFoundException $e) {
+            throw new ClientException('Not Found', 'updateSubmissionContent', 'SUBMISSION_NOT_FOUND');
         }
 
         if (array_key_exists('content', $args) && $args['content'] !== null) {
             $content = new SubmissionContent();
             $content->data = $args['content'];
-            $content->submission_id = $id;
+            $content->submission_id = $submission->id;
 
             if (! $content->save()) {
-                throw new Error('Unable to save content');
+                throw new ClientException('Error', 'updateSubmissionContent', 'UNABLE_TO_SAVE_CONTENT');
             }
             $submission->content_id = $content->id;
         }
@@ -56,7 +56,7 @@ final class SubmissionMutator
         }
 
         if (! $submission->save()) {
-            throw new Error('Unable to save submission');
+            throw new ClientException('Error', 'updateSubmissionContent', 'UNABLE_TO_SAVE_SUBMISSION');
         }
 
         return $submission;

@@ -1,6 +1,6 @@
 extend type Query {
     "Return a publication by ID"
-    publication(id: ID @eq): Publication @find @can(ability: "view", find: "id")
+    publication(id: ID @eq): Publication @find @canFind(ability: "view", find: "id")
 
     "Return all publications"
     publications(
@@ -66,11 +66,11 @@ extend type Mutation {
     "Create a new publication"
     createPublication(
         publication: CreatePublicationInput! @spread
-    ): Publication! @create @can(ability: "create")
+    ): Publication! @create @canModel(ability: "create")
 
     updatePublication(
         publication: UpdatePublicationInput! @spread
-    ): Publication @update @can(ability: "update", injectArgs: true)
+    ): Publication @update @canModel(ability: "update", injectArgs: true)
 }
 
 input CreatePublicationInput {

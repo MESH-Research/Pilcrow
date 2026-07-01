@@ -29,7 +29,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
  * @see \App\GraphQL\Validators\CreateInlineCommentValidator
  * @see \App\GraphQL\Validators\CreateOverallCommentValidator
  */
-final class CommentMutator
+final readonly class CommentMutator
 {
     /**
      * Create an inline comment (or reply) on a submission under review.
