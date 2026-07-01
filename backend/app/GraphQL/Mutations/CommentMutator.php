@@ -7,23 +7,24 @@ use App\Exceptions\ClientException;
 use App\Models\InlineComment;
 use App\Models\OverallComment;
 use App\Models\Submission;
+use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 /**
- * The standalone comment-authoring mutations on a submission: creating a comment
- * (or reply) under review, and editing an existing one.
+ * The standalone comment mutations on a submission: creating a comment (or reply)
+ * under review, editing an existing one, and deleting one.
  *
  * Grouped controller-style (resolved via `Class@method`, the house convention)
- * because comment authoring is one domain concern. Authorization is enforced by
+ * because comment writes are one domain concern. Authorization is enforced by
  * the @canFind directive on each field — the submission's `review` ability
  * (held only while reviewable) for the creates, and the comment-scoped
- * {@see \App\Auth\Abilities\CommentAbility::Update} for the edits (the author
- * may revise their own comment while review is open; see
- * {@see \App\Policies\CommentPolicy}). Reply-thread coherence is enforced
- * declaratively by the per-field @validator on the creates; the edits leave the
- * structural ids untouched, so they need no coherence check. Replies fold into
- * the edits for free: a reply is just a comment row carrying a parent_id, so
- * editing it is editing the row by id.
+ * {@see \App\Auth\Abilities\CommentAbility} (`update` / `delete`) for the edits
+ * and deletes (the author may revise or retract their own comment while review
+ * is open; see {@see \App\Policies\CommentPolicy}). Reply-thread coherence is
+ * enforced declaratively by the per-field @validator on the creates; the edits
+ * and deletes leave the structural ids untouched, so they need no coherence
+ * check. Replies fold in for free: a reply is just a comment row carrying a
+ * parent_id, so editing or deleting it is acting on the row by id.
  *
  * @see \App\GraphQL\Validators\CreateInlineCommentValidator
  * @see \App\GraphQL\Validators\CreateOverallCommentValidator
@@ -134,5 +135,55 @@ final class CommentMutator
         );
 
         return $comment->submission;
+    }
+
+    /**
+     * Soft-delete an inline comment (or reply) of a submission.
+     *
+     * @param null $_
+     * @param array{submission_id: string, comment_id: string} $args
+     * @return \App\Models\Submission
+     * @throws \App\Exceptions\ClientException
+     */
+    public function deleteInline(null $_, array $args): Submission
+    {
+        try {
+            $comment = InlineComment::findOrFail($args['comment_id']);
+        } catch (ModelNotFoundException $e) {
+            throw new ClientException('Not Found', 'deleteInlineComment', 'COMMENT_NOT_FOUND');
+        }
+
+        try {
+            $comment->delete();
+
+            return $comment->submission;
+        } catch (Exception $e) {
+            throw new ClientException('Error', 'deleteInlineComment', 'UNABLE_TO_DELETE_COMMENT');
+        }
+    }
+
+    /**
+     * Soft-delete an overall comment (or reply) of a submission.
+     *
+     * @param null $_
+     * @param array{submission_id: string, comment_id: string} $args
+     * @return \App\Models\Submission
+     * @throws \App\Exceptions\ClientException
+     */
+    public function deleteOverall(null $_, array $args): Submission
+    {
+        try {
+            $comment = OverallComment::findOrFail($args['comment_id']);
+        } catch (ModelNotFoundException $e) {
+            throw new ClientException('Not Found', 'deleteOverallComment', 'COMMENT_NOT_FOUND');
+        }
+
+        try {
+            $comment->delete();
+
+            return $comment->submission;
+        } catch (Exception $e) {
+            throw new ClientException('Error', 'deleteOverallComment', 'UNABLE_TO_DELETE_COMMENT');
+        }
     }
 }

@@ -60,7 +60,7 @@ extend type Mutation {
             find: "comment_id"
             model: "App\\Models\\InlineComment"
         )
-        @field(resolver: "App\\GraphQL\\Mutations\\DeleteInlineComment@delete")
+        @field(resolver: "App\\GraphQL\\Mutations\\CommentMutator@deleteInline")
 
     "Delete an overall comment of a submission"
     deleteOverallComment(input: DeleteCommentInput! @spread): Submission!
@@ -69,7 +69,7 @@ extend type Mutation {
             find: "comment_id"
             model: "App\\Models\\OverallComment"
         )
-        @field(resolver: "App\\GraphQL\\Mutations\\DeleteOverallComment@delete")
+        @field(resolver: "App\\GraphQL\\Mutations\\CommentMutator@deleteOverall")
 
     """
     Update the work itself — the submission's body and/or its title. Both are the
