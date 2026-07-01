@@ -38,7 +38,7 @@ extend type Mutation {
             reason: "Use the intent-shaped submission mutations."
         )
         @update
-        @canFind(ability: "legacyUpdate", find: "id")
+        @can(ability: "legacyUpdate", find: "id")
         @argPolicy(
             find: "id"
             apply: [
