@@ -221,7 +221,7 @@ export const UPDATE_SUBMISSION_CONTENT_WITH_FILE = gql`
 
 export const UPDATE_SUBMISSION_TITLE = gql`
   mutation UpdateSubmissionTitle($id: ID!, $title: String!) {
-    updateSubmission(input: { id: $id, title: $title }) {
+    updateSubmissionContent(input: { id: $id, title: $title }) {
       id
       title
     }
@@ -234,7 +234,7 @@ export const UPDATE_SUBMISSION_REVIEWERS = gql`
     $connect: [ID!]
     $disconnect: [ID!]
   ) {
-    updateSubmission(
+    updateSubmissionReviewers(
       input: {
         id: $id
         reviewers: { connect: $connect, disconnect: $disconnect }
@@ -254,7 +254,7 @@ export const UPDATE_SUBMISSION_REVIEW_COORDINATORS = gql`
     $connect: [ID!]
     $disconnect: [ID!]
   ) {
-    updateSubmission(
+    updateSubmissionReviewCoordinators(
       input: {
         id: $id
         review_coordinators: { connect: $connect, disconnect: $disconnect }
@@ -275,7 +275,7 @@ export const UPDATE_SUBMISSION_SUBMITERS = gql`
     $connect: [ID!]
     $disconnect: [ID!]
   ) {
-    updateSubmission(
+    updateSubmissionSubmitters(
       input: {
         id: $id
         submitters: { connect: $connect, disconnect: $disconnect }
@@ -442,11 +442,8 @@ export const DELETE_PUBLICATION_STYLE_CRITERIA = gql`
 
 export const CREATE_OVERALL_COMMENT = gql`
   mutation CreateOverallComment($submission_id: ID!, $content: String!) {
-    updateSubmission(
-      input: {
-        id: $submission_id
-        overall_comments: { create: [{ content: $content }] }
-      }
+    createOverallComment(
+      input: { submission_id: $submission_id, content: $content }
     ) {
       id
       overall_comments(trashed: WITH) {
@@ -469,18 +466,12 @@ export const CREATE_OVERALL_COMMENT_REPLY = gql`
     $reply_to_id: ID!
     $parent_id: ID!
   ) {
-    updateSubmission(
+    createOverallComment(
       input: {
-        id: $submission_id
-        overall_comments: {
-          create: [
-            {
-              content: $content
-              reply_to_id: $reply_to_id
-              parent_id: $parent_id
-            }
-          ]
-        }
+        submission_id: $submission_id
+        content: $content
+        reply_to_id: $reply_to_id
+        parent_id: $parent_id
       }
     ) {
       id
@@ -505,19 +496,13 @@ export const CREATE_INLINE_COMMENT = gql`
     $to: Int
     $style_criteria: [ID!]
   ) {
-    updateSubmission(
+    createInlineComment(
       input: {
-        id: $submission_id
-        inline_comments: {
-          create: [
-            {
-              content: $content
-              style_criteria: $style_criteria
-              from: $from
-              to: $to
-            }
-          ]
-        }
+        submission_id: $submission_id
+        content: $content
+        style_criteria: $style_criteria
+        from: $from
+        to: $to
       }
     ) {
       id
@@ -545,18 +530,12 @@ export const CREATE_INLINE_COMMENT_REPLY = gql`
     $reply_to_id: ID!
     $parent_id: ID!
   ) {
-    updateSubmission(
+    createInlineComment(
       input: {
-        id: $submission_id
-        inline_comments: {
-          create: [
-            {
-              content: $content
-              reply_to_id: $reply_to_id
-              parent_id: $parent_id
-            }
-          ]
-        }
+        submission_id: $submission_id
+        content: $content
+        reply_to_id: $reply_to_id
+        parent_id: $parent_id
       }
     ) {
       id
@@ -583,7 +562,7 @@ export const UPDATE_SUBMISSION_STATUS = gql`
     $status: SubmissionStatus!
     $status_change_comment: String
   ) {
-    updateSubmission(
+    changeSubmissionStatus(
       input: {
         id: $id
         status: $status
@@ -667,10 +646,11 @@ export const UPDATE_OVERALL_COMMENT = gql`
     $comment_id: ID!
     $content: String!
   ) {
-    updateSubmission(
+    updateOverallComment(
       input: {
-        id: $submission_id
-        overall_comments: { update: { id: $comment_id, content: $content } }
+        submission_id: $submission_id
+        comment_id: $comment_id
+        content: $content
       }
     ) {
       id
@@ -697,16 +677,12 @@ export const UPDATE_INLINE_COMMENT = gql`
     $content: String!
     $style_criteria: [ID!]
   ) {
-    updateSubmission(
+    updateInlineComment(
       input: {
-        id: $submission_id
-        inline_comments: {
-          update: {
-            id: $comment_id
-            content: $content
-            style_criteria: $style_criteria
-          }
-        }
+        submission_id: $submission_id
+        comment_id: $comment_id
+        content: $content
+        style_criteria: $style_criteria
       }
     ) {
       id
@@ -736,10 +712,11 @@ export const UPDATE_INLINE_COMMENT_REPLY = gql`
     $comment_id: ID!
     $content: String!
   ) {
-    updateSubmission(
+    updateInlineComment(
       input: {
-        id: $submission_id
-        inline_comments: { update: { id: $comment_id, content: $content } }
+        submission_id: $submission_id
+        comment_id: $comment_id
+        content: $content
       }
     ) {
       id
@@ -792,10 +769,11 @@ export const UPDATE_OVERALL_COMMENT_REPLY = gql`
     $comment_id: ID!
     $content: String!
   ) {
-    updateSubmission(
+    updateOverallComment(
       input: {
-        id: $submission_id
-        overall_comments: { update: { id: $comment_id, content: $content } }
+        submission_id: $submission_id
+        comment_id: $comment_id
+        content: $content
       }
     ) {
       id
