@@ -81,24 +81,9 @@
 <script lang="ts">
 import { graphql } from "src/graphql/generated"
 
-// `...relatedUserFields` resolves from the client-preset fragment registry
-// (colocated in AssignedSubmissionUsers.vue).
-graphql(`
-  fragment commentFields on Comment {
-    id
-    content
-    created_at
-    updated_at
-    deleted_at
-    updated_by {
-      ...relatedUserFields
-    }
-    created_by {
-      ...relatedUserFields
-    }
-  }
-`)
-
+// commentFields / relatedUserFields resolve from the shared fragment
+// registry (src/graphql/fragments.ts). Colocating the comment fragments
+// onto their rendering components is a separate follow-up.
 graphql(`
   mutation CreateOverallComment($submission_id: ID!, $content: String!) {
     createOverallComment(

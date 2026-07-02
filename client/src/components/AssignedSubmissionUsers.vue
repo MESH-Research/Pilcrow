@@ -69,21 +69,8 @@
 <script lang="ts">
 import { graphql } from "src/graphql/generated"
 
-// Colocated here as the natural home for the shared related-user shape;
-// other colocated operations (e.g. commentFields) reference it by name via
-// the client-preset fragment registry.
-graphql(`
-  fragment relatedUserFields on User {
-    id
-    display_label
-    username
-    name
-    email
-    avatar_color
-    staged
-  }
-`)
-
+// These mutations return users that render in a UserList, so they include
+// the UserListItem-owned `userListItem` fragment.
 graphql(`
   mutation UpdateSubmissionReviewers(
     $id: ID!
@@ -98,7 +85,7 @@ graphql(`
     ) {
       id
       reviewers {
-        ...relatedUserFields
+        ...userListItem
       }
     }
   }
@@ -118,7 +105,7 @@ graphql(`
     ) {
       id
       review_coordinators {
-        ...relatedUserFields
+        ...userListItem
       }
     }
   }
@@ -138,7 +125,7 @@ graphql(`
     ) {
       id
       submitters {
-        ...relatedUserFields
+        ...userListItem
       }
     }
   }
@@ -168,7 +155,10 @@ import { useEditor, EditorContent } from "@tiptap/vue-3"
 import StarterKit from "@tiptap/starter-kit"
 import Placeholder from "@tiptap/extension-placeholder"
 import { useQuasar } from "quasar"
-import type { Submission, User } from "src/graphql/generated/graphql"
+import type {
+  Submission,
+  userListItemFragment
+} from "src/graphql/generated/graphql"
 
 const { dialog } = useQuasar()
 
@@ -340,7 +330,7 @@ async function assignUser(selectedUser: FoundUser) {
   }
 }
 
-async function reinviteUser({ user }: { user: User }) {
+async function reinviteUser({ user }: { user: userListItemFragment }) {
   if (!user.email) {
     return
   }
@@ -368,7 +358,7 @@ function dirtyDialog(email: string) {
   })
 }
 
-async function handleUserListClick({ user }: { user: User }) {
+async function handleUserListClick({ user }: { user: userListItemFragment }) {
   if (!props.mutable) return
   try {
     await mutate({ disconnect: [user.id] })
