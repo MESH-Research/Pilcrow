@@ -63,10 +63,37 @@
   </q-dialog>
 </template>
 
+<script lang="ts">
+import { graphql } from "src/graphql/generated"
+
+graphql(`
+  mutation UpdateSubmissionStatus(
+    $id: ID!
+    $status: SubmissionStatus!
+    $status_change_comment: String
+  ) {
+    changeSubmissionStatus(
+      input: {
+        id: $id
+        status: $status
+        status_change_comment: $status_change_comment
+      }
+    ) {
+      id
+      status
+      status_change_comment
+    }
+  }
+`)
+</script>
+
 <script setup lang="ts">
 import { useDialogPluginComponent } from "quasar"
 import { useMutation } from "@vue/apollo-composable"
-import { UPDATE_SUBMISSION_STATUS } from "src/graphql/mutations"
+import {
+  UpdateSubmissionStatusDocument,
+  type SubmissionStatus
+} from "src/graphql/generated/graphql"
 import { computed, ref } from "vue"
 import { useI18n } from "vue-i18n"
 import {
@@ -107,7 +134,7 @@ const state = computed(() => {
 
 const comment = ref(null)
 
-const { mutate } = useMutation(UPDATE_SUBMISSION_STATUS)
+const { mutate } = useMutation(UpdateSubmissionStatusDocument)
 const { newStatusMessage } = useFeedbackMessages({
   attrs: {
     "data-cy": "change_status_notify"
@@ -119,7 +146,7 @@ async function updateStatus() {
   try {
     await mutate({
       id: String(props.submissionId),
-      status: state.value.status,
+      status: state.value.status as SubmissionStatus,
       status_change_comment: comment.value
     }).then(() => {
       if (props.currentStatus == "DRAFT") {

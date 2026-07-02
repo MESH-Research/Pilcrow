@@ -59,8 +59,21 @@
   </q-form>
 </template>
 
+<script lang="ts">
+import { graphql } from "src/graphql/generated"
+
+graphql(`
+  mutation UpdateSubmissionTitle($id: ID!, $title: String!) {
+    updateSubmissionContent(input: { id: $id, title: $title }) {
+      id
+      title
+    }
+  }
+`)
+</script>
+
 <script setup lang="ts">
-import { UPDATE_SUBMISSION_TITLE } from "src/graphql/mutations"
+import { UpdateSubmissionTitleDocument } from "src/graphql/generated/graphql"
 import { useMutation } from "@vue/apollo-composable"
 import { computed, ref, watchEffect } from "vue"
 import { useSubmission } from "src/use/submissionContext"
@@ -113,7 +126,7 @@ function checkThatFormIsInvalid() {
   return false
 }
 
-const { mutate } = useMutation(UPDATE_SUBMISSION_TITLE, {
+const { mutate } = useMutation(UpdateSubmissionTitleDocument, {
   refetchQueries: ["GetSubmission"]
 })
 const editing_title = ref(false)

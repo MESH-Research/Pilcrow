@@ -78,6 +78,259 @@
   </q-form>
 </template>
 
+<script lang="ts">
+import { graphql } from "src/graphql/generated"
+
+// `...relatedUserFields` resolves from the client-preset fragment registry
+// (colocated in AssignedSubmissionUsers.vue).
+graphql(`
+  fragment commentFields on Comment {
+    id
+    content
+    created_at
+    updated_at
+    deleted_at
+    updated_by {
+      ...relatedUserFields
+    }
+    created_by {
+      ...relatedUserFields
+    }
+  }
+`)
+
+graphql(`
+  mutation CreateOverallComment($submission_id: ID!, $content: String!) {
+    createOverallComment(
+      input: { submission_id: $submission_id, content: $content }
+    ) {
+      id
+      overall_comments(trashed: WITH) {
+        ...commentFields
+        replies(trashed: WITH) {
+          ...commentFields
+          parent_id
+          reply_to_id
+        }
+      }
+    }
+  }
+`)
+
+graphql(`
+  mutation CreateOverallCommentReply(
+    $submission_id: ID!
+    $content: String!
+    $reply_to_id: ID!
+    $parent_id: ID!
+  ) {
+    createOverallComment(
+      input: {
+        submission_id: $submission_id
+        content: $content
+        reply_to_id: $reply_to_id
+        parent_id: $parent_id
+      }
+    ) {
+      id
+      overall_comments(trashed: WITH) {
+        ...commentFields
+        replies(trashed: WITH) {
+          ...commentFields
+          parent_id
+          reply_to_id
+        }
+      }
+    }
+  }
+`)
+
+graphql(`
+  mutation CreateInlineComment(
+    $submission_id: ID!
+    $content: String!
+    $from: Int
+    $to: Int
+    $style_criteria: [ID!]
+  ) {
+    createInlineComment(
+      input: {
+        submission_id: $submission_id
+        content: $content
+        style_criteria: $style_criteria
+        from: $from
+        to: $to
+      }
+    ) {
+      id
+      inline_comments(trashed: WITH) {
+        style_criteria {
+          name
+          icon
+        }
+        ...commentFields
+        replies(trashed: WITH) {
+          ...commentFields
+          parent_id
+          reply_to_id
+        }
+      }
+    }
+  }
+`)
+
+graphql(`
+  mutation CreateInlineCommentReply(
+    $submission_id: ID!
+    $content: String!
+    $reply_to_id: ID!
+    $parent_id: ID!
+  ) {
+    createInlineComment(
+      input: {
+        submission_id: $submission_id
+        content: $content
+        reply_to_id: $reply_to_id
+        parent_id: $parent_id
+      }
+    ) {
+      id
+      inline_comments(trashed: WITH) {
+        style_criteria {
+          name
+          icon
+        }
+        ...commentFields
+        replies(trashed: WITH) {
+          ...commentFields
+          parent_id
+          reply_to_id
+        }
+      }
+    }
+  }
+`)
+
+graphql(`
+  mutation UpdateOverallComment(
+    $submission_id: ID!
+    $comment_id: ID!
+    $content: String!
+  ) {
+    updateOverallComment(
+      input: {
+        submission_id: $submission_id
+        comment_id: $comment_id
+        content: $content
+      }
+    ) {
+      id
+      created_by {
+        ...relatedUserFields
+      }
+      overall_comments(trashed: WITH) {
+        ...commentFields
+        replies(trashed: WITH) {
+          reply_to_id
+          ...commentFields
+        }
+      }
+    }
+  }
+`)
+
+graphql(`
+  mutation UpdateInlineComment(
+    $submission_id: ID!
+    $comment_id: ID!
+    $content: String!
+    $style_criteria: [ID!]
+  ) {
+    updateInlineComment(
+      input: {
+        submission_id: $submission_id
+        comment_id: $comment_id
+        content: $content
+        style_criteria: $style_criteria
+      }
+    ) {
+      id
+      created_by {
+        ...relatedUserFields
+      }
+      inline_comments(trashed: WITH) {
+        ...commentFields
+        style_criteria {
+          name
+          icon
+        }
+        replies(trashed: WITH) {
+          reply_to_id
+          ...commentFields
+        }
+      }
+    }
+  }
+`)
+
+graphql(`
+  mutation UpdateInlineCommentReply(
+    $submission_id: ID!
+    $comment_id: ID!
+    $content: String!
+  ) {
+    updateInlineComment(
+      input: {
+        submission_id: $submission_id
+        comment_id: $comment_id
+        content: $content
+      }
+    ) {
+      id
+      created_by {
+        ...relatedUserFields
+      }
+      inline_comments(trashed: WITH) {
+        ...commentFields
+        replies(trashed: WITH) {
+          reply_to_id
+          ...commentFields
+        }
+      }
+    }
+  }
+`)
+
+graphql(`
+  mutation UpdateOverallCommentReply(
+    $submission_id: ID!
+    $comment_id: ID!
+    $content: String!
+  ) {
+    updateOverallComment(
+      input: {
+        submission_id: $submission_id
+        comment_id: $comment_id
+        content: $content
+      }
+    ) {
+      id
+      created_by {
+        ...relatedUserFields
+      }
+      overall_comments(trashed: WITH) {
+        ...commentFields
+        replies(trashed: WITH) {
+          ...commentFields
+          reply_to_id
+          parent_id
+        }
+      }
+    }
+  }
+`)
+</script>
+
 <script setup lang="ts">
 import { ref, computed, type ComputedRef } from "vue"
 import { useEditor, EditorContent } from "@tiptap/vue-3"
@@ -89,18 +342,19 @@ import Placeholder from "@tiptap/extension-placeholder"
 import CommentEditorButton from "../atoms/CommentEditorButton.vue"
 import BypassStyleCriteriaDialogVue from "../dialogs/BypassStyleCriteriaDialog.vue"
 import {
-  CREATE_OVERALL_COMMENT,
-  CREATE_OVERALL_COMMENT_REPLY,
-  CREATE_INLINE_COMMENT_REPLY,
-  CREATE_INLINE_COMMENT,
-  UPDATE_OVERALL_COMMENT,
-  UPDATE_INLINE_COMMENT,
-  UPDATE_INLINE_COMMENT_REPLY,
-  UPDATE_OVERALL_COMMENT_REPLY
-} from "src/graphql/mutations"
+  CreateOverallCommentDocument,
+  CreateOverallCommentReplyDocument,
+  CreateInlineCommentReplyDocument,
+  CreateInlineCommentDocument,
+  UpdateOverallCommentDocument,
+  UpdateInlineCommentDocument,
+  UpdateInlineCommentReplyDocument,
+  UpdateOverallCommentReplyDocument
+} from "src/graphql/generated/graphql"
 import { useI18n } from "vue-i18n"
 import { uniqueId } from "lodash"
 import type { DocumentNode } from "graphql"
+import { useSubmission } from "src/use/submissionContext"
 
 interface CommentData {
   id?: string
@@ -289,20 +543,19 @@ const commentEditorButtons = ref<EditorButton[]>([
     iconName: "link_off"
   }
 ])
-import { useSubmission } from "src/use/submissionContext"
 const submission = useSubmission()
 const mutations: Record<string, DocumentNode> = props.isModifying
   ? {
-      InlineComment: UPDATE_INLINE_COMMENT,
-      InlineCommentReply: UPDATE_INLINE_COMMENT_REPLY,
-      OverallComment: UPDATE_OVERALL_COMMENT,
-      OverallCommentReply: UPDATE_OVERALL_COMMENT_REPLY
+      InlineComment: UpdateInlineCommentDocument,
+      InlineCommentReply: UpdateInlineCommentReplyDocument,
+      OverallComment: UpdateOverallCommentDocument,
+      OverallCommentReply: UpdateOverallCommentReplyDocument
     }
   : {
-      InlineComment: CREATE_INLINE_COMMENT,
-      InlineCommentReply: CREATE_INLINE_COMMENT_REPLY,
-      OverallComment: CREATE_OVERALL_COMMENT,
-      OverallCommentReply: CREATE_OVERALL_COMMENT_REPLY
+      InlineComment: CreateInlineCommentDocument,
+      InlineCommentReply: CreateInlineCommentReplyDocument,
+      OverallComment: CreateOverallCommentDocument,
+      OverallCommentReply: CreateOverallCommentReplyDocument
     }
 const { mutate: createComment } = useMutation(mutations[commentType.value])
 const selectedCriteria = computed(() =>
