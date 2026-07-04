@@ -3,8 +3,9 @@ declare(strict_types=1);
 
 namespace Tests\Api;
 
+use App\Auth\Roles\GlobalRole;
+use App\Auth\Roles\ScopedRole;
 use App\Models\Publication;
-use App\Models\Role;
 use App\Models\Submission;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -104,7 +105,7 @@ class SubmissionTest extends ApiTestCase
         $this->actingAs($publicationAdmin);
 
         $publication = Publication::factory()
-            ->hasAttached($publicationAdmin, ['role_id' => Role::PUBLICATION_ADMINISTRATOR_ROLE_ID])
+            ->hasAttached($publicationAdmin, ['role' => ScopedRole::PublicationAdmin->toSlug()])
             ->create();
 
         $submission = Submission::factory()
@@ -214,6 +215,7 @@ class SubmissionTest extends ApiTestCase
      */
     public function testSubmissionsCanBeQueriedForAUser()
     {
+        $this->beAppAdmin();
         $publication = Publication::factory()->create([
             'name' => 'Test Publication #4',
         ]);
@@ -233,10 +235,12 @@ class SubmissionTest extends ApiTestCase
                     id
                     name
                     submissions {
-                        id
-                        title
-                        pivot {
-                            role_id
+                        data {
+                            role
+                            submission {
+                                id
+                                title
+                            }
                         }
                     }
                 }
@@ -248,11 +252,13 @@ class SubmissionTest extends ApiTestCase
                 'id' => (string)$user->id,
                 'name' => 'Test User #1 With Submission',
                 'submissions' => [
-                    [
-                        'id' => (string)$submission->id,
-                        'title' => 'Test Submission #5 for Test User #1 With Submission',
-                        'pivot' => [
-                            'role_id' => Role::SUBMITTER_ROLE_ID,
+                    'data' => [
+                        [
+                            'role' => 'submitter',
+                            'submission' => [
+                                'id' => (string)$submission->id,
+                                'title' => 'Test Submission #5 for Test User #1 With Submission',
+                            ],
                         ],
                     ],
                 ],
@@ -509,7 +515,7 @@ class SubmissionTest extends ApiTestCase
         $this->actingAs($publicationAdmin);
 
         Publication::factory()
-            ->hasAttached($publicationAdmin, ['role_id' => Role::PUBLICATION_ADMINISTRATOR_ROLE_ID])
+            ->hasAttached($publicationAdmin, ['role' => ScopedRole::PublicationAdmin->toSlug()])
             ->create();
 
         $submission = Submission::factory()
@@ -953,45 +959,52 @@ class SubmissionTest extends ApiTestCase
     {
         return [
             'Empty Title' => [
-                'role' => Role::APPLICATION_ADMINISTRATOR,
+                'role' => GlobalRole::ApplicationAdministrator->title(),
                 'title' => '',
                 'passes' => false,
                 'message' => 'validation',
             ],
             'Title That Is Too Long ' => [
-                'role' => Role::APPLICATION_ADMINISTRATOR,
+                'role' => GlobalRole::ApplicationAdministrator->title(),
                 'title' => str_repeat('1234567890', 520),
                 'passes' => false,
                 'message' => 'validation',
             ],
             'As A Submitter' => [
-                'role' => Role::SUBMITTER,
+                'role' => ScopedRole::Submitter->title(),
                 'title' => 'My Newly Updated Submission Title',
                 'passes' => true,
             ],
             'As A Reviewer' => [
-                'role' => Role::REVIEWER,
+                'role' => ScopedRole::Reviewer->title(),
                 'title' => 'My Newly Updated Submission Title',
                 'passes' => false,
                 'message' => 'UNAUTHORIZED',
             ],
+            // Title is the author's content: editorial no longer edits it. The
+            // deprecated god-mutation's title field now gates on the author/draft
+            // `updateContent` ability, so RC / editor / pub admin are denied (they
+            // are not the submission's author).
             'As A Review Coordinator' => [
-                'role' => Role::REVIEW_COORDINATOR,
+                'role' => ScopedRole::ReviewCoordinator->title(),
                 'title' => 'My Newly Updated Submission Title',
-                'passes' => true,
+                'passes' => false,
+                'message' => 'UNAUTHORIZED',
             ],
             'As An Editor' => [
-                'role' => Role::EDITOR,
+                'role' => ScopedRole::Editor->title(),
                 'title' => 'My Newly Updated Submission Title',
-                'passes' => true,
+                'passes' => false,
+                'message' => 'UNAUTHORIZED',
             ],
             'As A Publication Admin' => [
-                'role' => Role::PUBLICATION_ADMINISTRATOR,
+                'role' => ScopedRole::PublicationAdmin->title(),
                 'title' => 'My Newly Updated Submission Title',
-                'passes' => true,
+                'passes' => false,
+                'message' => 'UNAUTHORIZED',
             ],
             'As An Application Admin' => [
-                'role' => Role::APPLICATION_ADMINISTRATOR,
+                'role' => GlobalRole::ApplicationAdministrator->title(),
                 'title' => 'My Newly Updated Submission Title',
                 'passes' => true,
             ],
@@ -1067,27 +1080,27 @@ class SubmissionTest extends ApiTestCase
     public function testSubmissionTitleUpdateByRole(string $role, string $title, bool $passes, ?string $message = null)
     {
         switch ($role) {
-            case Role::SUBMITTER:
+            case ScopedRole::Submitter->title():
                 $user = $this->beSubmitter();
                 $submission = $user->submissions->first();
                 break;
-            case Role::REVIEWER:
+            case ScopedRole::Reviewer->title():
                 $user = $this->beReviewer();
                 $submission = $user->submissions->first();
                 break;
-            case Role::REVIEW_COORDINATOR:
+            case ScopedRole::ReviewCoordinator->title():
                 $user = $this->beReviewCoordinator();
                 $submission = $user->submissions->first();
                 break;
-            case Role::EDITOR:
+            case ScopedRole::Editor->title():
                 $user = $this->beEditor();
                 $submission = $user->publications->first()->submissions->first();
                 break;
-            case Role::PUBLICATION_ADMINISTRATOR:
+            case ScopedRole::PublicationAdmin->title():
                 $user = $this->bePubAdmin();
                 $submission = $user->publications->first()->submissions->first();
                 break;
-            case Role::APPLICATION_ADMINISTRATOR:
+            case GlobalRole::ApplicationAdministrator->title():
                 $this->beAppAdmin();
                 $submission = Submission::factory()->create();
                 break;
@@ -1135,5 +1148,223 @@ class SubmissionTest extends ApiTestCase
             ],
         ];
         $response->assertJsonPath('data', $expected_data);
+    }
+
+    /**
+     * A publication administrator should see only submissions in publications
+     * where they hold that role, and submissions in unrelated publications must
+     * not cause the whole query to fail.
+     *
+     * @return void
+     */
+    public function testPublicationAdminCanQuerySubmissionsAcrossPublications()
+    {
+        /** @var User $admin */
+        $admin = User::factory()->create();
+        $this->actingAs($admin);
+
+        $ownPublication = Publication::factory()
+            ->hasAttached($admin, [], 'publicationAdmins')
+            ->create();
+        $ownSubmission = Submission::factory()
+            ->for($ownPublication)
+            ->create(['title' => 'Own publication submission']);
+
+        $otherPublication = Publication::factory()->create();
+        Submission::factory()
+            ->for($otherPublication)
+            ->create(['title' => 'Other publication submission']);
+
+        $response = $this->graphQL(
+            'query GetSubmissions {
+                submissions {
+                    data {
+                        id
+                        title
+                    }
+                    paginatorInfo {
+                        total
+                    }
+                }
+            }'
+        );
+
+        $this->assertNull(
+            $response->json('errors'),
+            'Expected no authorization errors but got: ' . json_encode($response->json('errors'))
+        );
+        $response->assertJsonPath('data.submissions.paginatorInfo.total', 1);
+        $response->assertJsonPath('data.submissions.data.0.id', (string)$ownSubmission->id);
+    }
+
+    /**
+     * An application administrator should see every submission, regardless of
+     * publication membership.
+     *
+     * @return void
+     */
+    public function testApplicationAdminSeesAllSubmissions()
+    {
+        $this->beAppAdmin();
+
+        $pubA = Publication::factory()->create();
+        $pubB = Publication::factory()->create();
+        Submission::factory()->for($pubA)->create();
+        Submission::factory()->for($pubB)->create();
+
+        $response = $this->graphQL(
+            'query GetSubmissions {
+                submissions {
+                    data { id }
+                    paginatorInfo { total }
+                }
+            }'
+        );
+
+        $this->assertNull(
+            $response->json('errors'),
+            'Expected no authorization errors but got: ' . json_encode($response->json('errors'))
+        );
+        $response->assertJsonPath('data.submissions.paginatorInfo.total', 2);
+    }
+
+    /**
+     * An editor should see only submissions in publications where they hold
+     * the editor role.
+     *
+     * @return void
+     */
+    public function testEditorSeesSubmissionsOnlyInOwnPublications()
+    {
+        /** @var User $editor */
+        $editor = User::factory()->create();
+        $this->actingAs($editor);
+
+        $ownPublication = Publication::factory()
+            ->hasAttached($editor, [], 'editors')
+            ->create();
+        $ownSubmission = Submission::factory()
+            ->for($ownPublication)
+            ->create(['title' => 'Editor publication submission']);
+
+        $otherPublication = Publication::factory()->create();
+        Submission::factory()
+            ->for($otherPublication)
+            ->create(['title' => 'Unrelated publication submission']);
+
+        $response = $this->graphQL(
+            'query GetSubmissions {
+                submissions {
+                    data { id title }
+                    paginatorInfo { total }
+                }
+            }'
+        );
+
+        $this->assertNull(
+            $response->json('errors'),
+            'Expected no authorization errors but got: ' . json_encode($response->json('errors'))
+        );
+        $response->assertJsonPath('data.submissions.paginatorInfo.total', 1);
+        $response->assertJsonPath('data.submissions.data.0.id', (string)$ownSubmission->id);
+    }
+
+    /**
+     * The submissions query can be filtered by status.
+     *
+     * @return void
+     */
+    public function testSubmissionsCanBeFilteredByStatus()
+    {
+        $this->beAppAdmin();
+        $publication = Publication::factory()->create();
+
+        $accepted = Submission::factory()
+            ->for($publication)
+            ->create(['title' => 'Accepted', 'status' => 6]);
+
+        Submission::factory()
+            ->for($publication)
+            ->create(['title' => 'Draft', 'status' => 0]);
+
+        $response = $this->graphQL(
+            'query ($status: [SubmissionStatus!]) {
+                submissions(status: $status) {
+                    data { id title }
+                    paginatorInfo { total }
+                }
+            }',
+            ['status' => ['ACCEPTED_AS_FINAL']]
+        );
+
+        $response->assertJsonPath('data.submissions.paginatorInfo.total', 1);
+        $response->assertJsonPath('data.submissions.data.0.id', (string)$accepted->id);
+    }
+
+    /**
+     * The submissions query can be filtered by publication.
+     *
+     * @return void
+     */
+    public function testSubmissionsCanBeFilteredByPublication()
+    {
+        $this->beAppAdmin();
+        $publicationA = Publication::factory()->create();
+        $publicationB = Publication::factory()->create();
+
+        $expected = Submission::factory()
+            ->for($publicationA)
+            ->create(['title' => 'In Publication A']);
+
+        Submission::factory()
+            ->for($publicationB)
+            ->create(['title' => 'In Publication B']);
+
+        $response = $this->graphQL(
+            'query ($publication: [ID!]) {
+                submissions(publication: $publication) {
+                    data { id }
+                    paginatorInfo { total }
+                }
+            }',
+            ['publication' => [(string)$publicationA->id]]
+        );
+
+        $response->assertJsonPath('data.submissions.paginatorInfo.total', 1);
+        $response->assertJsonPath('data.submissions.data.0.id', (string)$expected->id);
+    }
+
+    /**
+     * The submissions query can be filtered by the authenticated user's roles.
+     *
+     * @return void
+     */
+    public function testSubmissionsCanBeFilteredByMyRoles()
+    {
+        $admin = $this->beAppAdmin();
+        $publication = Publication::factory()->create();
+
+        $reviewing = Submission::factory()
+            ->for($publication)
+            ->hasAttached($admin, [], 'reviewers')
+            ->create(['title' => 'Reviewing']);
+
+        Submission::factory()
+            ->for($publication)
+            ->hasAttached($admin, [], 'submitters')
+            ->create(['title' => 'Submitting']);
+
+        $response = $this->graphQL(
+            'query ($my_roles: [SubmissionUserRoles!]) {
+                submissions(my_roles: $my_roles) {
+                    data { id }
+                    paginatorInfo { total }
+                }
+            }',
+            ['my_roles' => ['reviewer']]
+        );
+
+        $response->assertJsonPath('data.submissions.paginatorInfo.total', 1);
+        $response->assertJsonPath('data.submissions.data.0.id', (string)$reviewing->id);
     }
 }

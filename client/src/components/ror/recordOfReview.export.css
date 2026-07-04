@@ -1,0 +1,236 @@
+/* Standalone styles for downloaded Record of Review HTML.
+   Quasar variable values are inlined since the export is opened
+   without the app's Sass pipeline. */
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: #ffffff;
+  color: #0A111F;
+  font-family: Atkinson, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+body {
+  padding: 2rem;
+}
+
+a { color: #2F5496; }
+
+h1, h2, h3 { margin: 0; }
+
+.ror {
+  max-width: 820px;
+  margin: 0 auto;
+}
+
+.ror__card {
+  background: linear-gradient(180deg, #fdfcf7 0%, #ffffff 35%);
+  border: 1px solid #CCD3E0;
+  border-radius: 4px;
+  position: relative;
+}
+
+.ror__actions { display: none; }
+
+.ror__document { padding: 0 1.5rem 1.5rem; }
+
+.ror__inner {
+  border: 1px solid #CCD3E0;
+  border-radius: 4px;
+  padding: 2.5rem 2rem;
+  position: relative;
+}
+
+.ror__inner::before, .ror__inner::after {
+  content: '';
+  position: absolute;
+  left: 1rem;
+  right: 1rem;
+  height: 1px;
+  background: #CCD3E0;
+}
+
+.ror__inner::before { top: 0.5rem; }
+.ror__inner::after { bottom: 0.5rem; }
+
+.ror__header { text-align: center; margin-bottom: 2rem; }
+
+.ror__eyebrow {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: #2F5496;
+  margin: 0 0 0.5rem;
+}
+
+.ror__title {
+  font-family: 'Georgia', 'Times New Roman', serif;
+  font-weight: 600;
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.ror__subtitle {
+  font-style: italic;
+  color: #666666;
+  margin: 0;
+}
+
+.ror__rule {
+  margin: 1.25rem auto 0;
+  width: 60%;
+  height: 0;
+  border-top: 1px solid #2F5496;
+  border-bottom: 1px solid #2F5496;
+  padding-top: 4px;
+  position: relative;
+}
+
+.ror__section { margin-bottom: 1.75rem; }
+
+.ror__section-title {
+  font-family: 'Georgia', 'Times New Roman', serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #032C73;
+  border-bottom: 1px solid #CCD3E0;
+  padding-bottom: 0.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.ror__dl {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  column-gap: 1.5rem;
+  row-gap: 0.4rem;
+  margin: 0;
+}
+
+.ror__dl dt {
+  font-weight: 600;
+  color: #666666;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  align-self: center;
+}
+
+.ror__dl dd { margin: 0; color: #0A111F; }
+
+.ror__footer {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 2.5rem;
+  padding-top: 1.25rem;
+  border-top: 2px double #CCD3E0;
+}
+
+.ror__seal {
+  flex: 0 0 auto;
+  position: relative;
+  width: 112px;
+  height: 112px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ror__seal-icon {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  color: #2F5496;
+  opacity: 0.85;
+}
+
+.ror__seal-logo {
+  position: relative;
+  width: 78px;
+  height: 78px;
+}
+
+.ror__footer-meta { flex: 1 1 auto; }
+
+.ror__footer-line {
+  font-style: italic;
+  color: #666666;
+  margin: 0 0 0.25rem;
+}
+
+.ror__footer-link {
+  color: #2F5496;
+  text-decoration: underline;
+  font-style: normal;
+}
+
+.ror__footer-detail {
+  font-size: 0.8rem;
+  color: #666666;
+  margin: 0;
+}
+
+/* Reviewer/coordinator cards */
+
+.rorr-user {
+  width: 220px;
+  background: #fff;
+  border: 1px solid #CCD3E0;
+  border-radius: 4px;
+  display: inline-block;
+  vertical-align: top;
+  margin: 0 0.5rem 0.5rem 0;
+}
+
+.rorr-user__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 1.25rem 1rem;
+}
+
+.rorr-user__avatar { margin-bottom: 0.75rem; }
+
+.rorr-user__name {
+  font-size: 1rem;
+  margin: 0 0 0.25rem;
+  line-height: 1.25;
+  font-weight: 700;
+}
+
+.rorr-user__role {
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #2F5496;
+  font-weight: 600;
+  margin: 0 0 0.75rem;
+}
+
+.rorr-user__dl { margin: 0; font-size: 0.8rem; }
+
+.rorr-user__dl dt {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #666666;
+  margin-top: 0.25rem;
+}
+
+.rorr-user__dl dd { margin: 0; color: #0A111F; }
+
+/* Defensive: hide any stray Quasar Material icons (font won't load offline). */
+.q-icon { display: none; }
+
+/* Layout helpers used in template. */
+.row { display: flex; flex-wrap: wrap; }
+.items-start { align-items: flex-start; }
+.items-stretch { align-items: stretch; }
+.q-gutter-md > * { margin: 0.5rem; }

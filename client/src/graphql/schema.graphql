@@ -21,6 +21,13 @@ type Audit {
   user: User!
 }
 
+"""Intent-shaped inputs, one per dedicated submission mutation."""
+input ChangeSubmissionStatusInput {
+  id: ID!
+  status: SubmissionStatus!
+  status_change_comment: String
+}
+
 interface Comment {
   content: String!
   created_at: DateTimeUtc!
@@ -38,6 +45,20 @@ enum CommentParticipantType {
   OVERALL
 }
 
+"""
+Add an inline comment (or reply). The coherence validator reads parent_id /
+reply_to_id / submission_id off this input to enforce a well-formed thread.
+"""
+input CreateInlineCommentArgs {
+  content: String!
+  from: Int
+  parent_id: ID
+  reply_to_id: ID
+  style_criteria: [ID!]
+  submission_id: ID!
+  to: Int
+}
+
 input CreateInlineCommentInput {
   content: String!
   from: Int
@@ -45,6 +66,14 @@ input CreateInlineCommentInput {
   reply_to_id: ID
   style_criteria: [ID!]
   to: Int
+}
+
+"""Add an overall comment (or reply); coherence validated as for inline."""
+input CreateOverallCommentArgs {
+  content: String!
+  parent_id: ID
+  reply_to_id: ID
+  submission_id: ID!
 }
 
 input CreateOverallCommentInput {
@@ -218,6 +247,19 @@ type Mutation {
   """Accept an invitation to a submission as the assigned role"""
   acceptSubmissionInvite(expires: String!, token: String!, user: AcceptSubmissionInviteInput, uuid: String!): User
 
+  """
+  Change a submission's editorial status, together with its status-change
+  comment (the comment is gated by the same ability — closing the ungated
+  status_change_comment field of the god-mutation).
+  """
+  changeSubmissionStatus(input: ChangeSubmissionStatusInput!): Submission!
+
+  """Add an inline comment (or reply) to a submission under review."""
+  createInlineComment(input: CreateInlineCommentArgs!): Submission!
+
+  """Add an overall comment (or reply) to a submission under review."""
+  createOverallComment(input: CreateOverallCommentArgs!): Submission!
+
   """Create a new publication"""
   createPublication(publication: CreatePublicationInput!): Publication!
 
@@ -293,16 +335,71 @@ type Mutation {
     """
     id: ID
   ): User!
+
+  """
+  Toggle the authenticated user's opt-in for a feature. Opting in adds
+  the key, opting out removes it. The only gate is that the feature key
+  is known (in the catalog); beta access is not checked here — beta
+  governs client advertisement, not server authorization.
+  """
+  setFeatureOptIn(enabled: Boolean!, feature: String!): User!
+
+  """
+  Grant or revoke a user's access to private beta features.
+  Application-administrator only.
+  """
+  setUserBetaAccess(enabled: Boolean!, id: ID!): User!
+
+  """Send a draft submission in for review."""
+  submitSubmission(submission_id: ID!): Submission!
+
+  """
+  Edit an inline comment (or reply). Content for any; a top-level comment may
+  also revise its style criteria and range. Author-only — the same gate as
+  delete. Replies fold in: a reply is an inline-comment row, edited by id.
+  Only the supplied fields change.
+  """
+  updateInlineComment(input: UpdateInlineCommentArgs!): Submission!
+
+  """
+  Edit an overall comment (or reply). Author-only — the same gate as delete.
+  Replies fold in: a reply is an overall-comment row, edited by id.
+  """
+  updateOverallComment(input: UpdateOverallCommentArgs!): Submission!
   updatePublication(publication: UpdatePublicationInput!): Publication
 
-  """Update an existing submission"""
-  updateSubmission(input: UpdateSubmissionInput!): Submission!
+  """
+  Update an existing submission.
+  
+  DEPRECATED: this catch-all god-mutation is being dissolved into intent-shaped
+  mutations (updateSubmissionContent now also edits the title, submitSubmission,
+  changeSubmissionStatus, updateSubmissionSubmitters / Reviewers /
+  ReviewCoordinators, createInlineComment, createOverallComment,
+  updateInlineComment, updateOverallComment). It stays
+  callable while clients migrate; its umbrella now gates on the bridge
+  `legacyUpdate` ability (the prior broad `update`) and each input field is
+  still authorized per-field by @argPolicy. Remove once no client calls it.
+  """
+  updateSubmission(input: UpdateSubmissionInput!): Submission! @deprecated(reason: "Use the intent-shaped submission mutations.")
 
-  """Update the content of a submission"""
+  """
+  Update the work itself — the submission's body and/or its title. Both are the
+  author's content under the one `update` ability (author-only, draft-only), so
+  they share a mutation; supply either or both.
+  """
   updateSubmissionContent(input: UpdateSubmissionContent!): Submission!
 
   """Update the content of a submission with a file upload"""
   updateSubmissionContentWithFile(input: CreateSubmissionFileInput!): Submission!
+
+  """Manage a submission's review coordinators."""
+  updateSubmissionReviewCoordinators(input: UpdateSubmissionReviewCoordinatorsInput!): Submission!
+
+  """Manage a submission's reviewers."""
+  updateSubmissionReviewers(input: UpdateSubmissionReviewersInput!): Submission!
+
+  """Manage a submission's co-submitters."""
+  updateSubmissionSubmitters(input: UpdateSubmissionSubmittersInput!): Submission!
 
   """Update user information"""
   updateUser(user: UpdateUserInput!): User!
@@ -346,7 +443,7 @@ type NotificationData {
 }
 
 """A paginated list of Notification items."""
-type NotificationPaginator {
+type NotificationPaginator implements Paginator {
   """A list of Notification items."""
   data: [Notification!]!
 
@@ -428,6 +525,14 @@ type OverallCommentReply implements Comment {
   updated_by: User!
 }
 
+"""
+Common interface for all paginated result types.
+Allows writing fragments that work across any paginator.
+"""
+interface Paginator {
+  paginatorInfo: PaginatorInfo!
+}
+
 """Information about pagination using a fully featured paginator."""
 type PaginatorInfo {
   """Number of items in the current page."""
@@ -453,15 +558,6 @@ type PaginatorInfo {
 
   """Number of total available items."""
   total: Int!
-}
-
-"""A permission for roles and users"""
-type Permission {
-  created_at: DateTime
-  guard_name: String!
-  id: ID!
-  name: String!
-  updated_at: DateTime
 }
 
 """Profile metadata of a user"""
@@ -502,7 +598,11 @@ input ProviderUserInput {
 
 """A publication that has users, reviews, and submissions"""
 type Publication {
-  created_at: DateTime
+  """
+  The authenticated viewer's scoped abilities on this publication (UI hints; server still enforces).
+  """
+  abilities: PublicationAbilities!
+  created_at: DateTimeUtc
   editors: [User!]!
   effective_role: PublicationRole
   home_page_content: String
@@ -515,11 +615,38 @@ type Publication {
   publication_admins: [User!]!
   style_criterias: [StyleCriteria!]!
   submissions: [Submission]!
-  updated_at: DateTime
+  updated_at: DateTimeUtc
+}
+
+"""
+The authenticated viewer's scoped abilities on a publication. Each flag mirrors a
+PublicationAbility case, resolved through the same engine as the policies.
+"""
+type PublicationAbilities {
+  update: Boolean!
+  view: Boolean!
+}
+
+type PublicationAssignment {
+  created_at: DateTimeUtc!
+  id: ID!
+  publication: Publication!
+  role: PublicationRole!
+  updated_at: DateTimeUtc
+  user: User!
+}
+
+"""A paginated list of PublicationAssignment items."""
+type PublicationAssignmentPaginator implements Paginator {
+  """A list of PublicationAssignment items."""
+  data: [PublicationAssignment!]!
+
+  """Pagination information about the list of items."""
+  paginatorInfo: PaginatorInfo!
 }
 
 """A paginated list of Publication items."""
-type PublicationPaginator {
+type PublicationPaginator implements Paginator {
   """A list of Publication items."""
   data: [Publication!]!
 
@@ -538,21 +665,22 @@ type Query {
   generalSettings: GeneralSettings
   identityProviders: [IdentityProvider]
 
-  """Return a permission by ID"""
-  permission(id: ID): Permission
-
   """Return a publication by ID"""
   publication(id: ID): Publication
 
   """Return all publications"""
   publications(
+    accepting_submissions: Boolean
+
     """Limits number of fetched items."""
     first: Int! = 10
-    is_accepting_submissions: Boolean
-    is_publicly_visible: Boolean
+    my_role: PublicationRole
+    orderBy: [QueryPublicationsOrderByOrderByClause!]
 
     """The offset from which items are returned."""
     page: Int
+    public: Boolean
+    search: String
   ): PublicationPaginator!
 
   """Return pre-defined user roles in the application"""
@@ -561,13 +689,18 @@ type Query {
   """Return a submission by ID"""
   submission(id: ID): Submission
 
-  """Return all submissions"""
+  """
+  Return submissions in publications managed by the current user (application admins see all; publication admins and editors see submissions in publications where they hold that role).
+  """
   submissions(
     """Limits number of fetched items."""
     first: Int! = 100
+    my_roles: [SubmissionUserRoles!]
 
     """The offset from which items are returned."""
     page: Int
+    publication: [ID!]
+    status: [SubmissionStatus!]
   ): SubmissionPaginator!
 
   """Return details about a specific user in the application"""
@@ -581,6 +714,17 @@ type Query {
     """The offset from which items are returned."""
     page: Int
     term: String
+  ): UserPaginator! @deprecated(reason: "Use the `users` query instead, which supports pagination and filtering by search term")
+  users(
+    beta: Boolean
+
+    """Limits number of fetched items."""
+    first: Int! = 10
+    orderBy: [QueryUsersOrderByOrderByClause!]
+
+    """The offset from which items are returned."""
+    page: Int
+    search: String
   ): UserPaginator!
 
   """
@@ -588,6 +732,38 @@ type Query {
   """
   validateNewUser(user: ValidateNewUserInput): Boolean
   versionInfo: VersionInfo
+}
+
+"""Allowed column names for Query.publications.orderBy."""
+enum QueryPublicationsOrderByColumn {
+  CREATED_AT
+  NAME
+}
+
+"""Order by clause for Query.publications.orderBy."""
+input QueryPublicationsOrderByOrderByClause {
+  """The column that is used for ordering."""
+  column: QueryPublicationsOrderByColumn!
+
+  """The direction that is used for ordering."""
+  order: SortOrder!
+}
+
+"""Allowed column names for Query.users.orderBy."""
+enum QueryUsersOrderByColumn {
+  CREATED_AT
+  EMAIL
+  NAME
+  USERNAME
+}
+
+"""Order by clause for Query.users.orderBy."""
+input QueryUsersOrderByOrderByClause {
+  """The column that is used for ordering."""
+  column: QueryUsersOrderByColumn!
+
+  """The direction that is used for ordering."""
+  order: SortOrder!
 }
 
 """Inputs"""
@@ -605,13 +781,13 @@ input ResetPasswordInput {
   token: String!
 }
 
-"""A user role for permissions"""
+"""A user role"""
 type Role {
   created_at: DateTime
-  guard_name: String!
   id: ID!
+
+  """Human-readable role title (e.g. "Application Administrator")."""
   name: String!
-  permissions: [Permission!]
   updated_at: DateTime
 }
 
@@ -643,6 +819,11 @@ type StyleCriteria {
 
 """A Submission"""
 type Submission {
+  """
+  The authenticated viewer's scoped abilities on this submission (UI hints; server still enforces).
+  """
+  abilities: SubmissionAbilities!
+  assignments: [SubmissionAssignment!]!
   audits: [SubmissionAudit]
   commenters(type: CommentParticipantType): [User!]!
   content: SubmissionContent
@@ -664,7 +845,6 @@ type Submission {
     """Allows to filter if trashed elements should be fetched."""
     trashed: Trashed
   ): [OverallComment!]!
-  pivot: SubmissionUser
   publication: Publication!
   review_coordinators: [User!]!
   reviewers: [User!]!
@@ -675,6 +855,57 @@ type Submission {
   title: String
   updated_at: DateTimeUtc
   updated_by: User!
+  users: [User!]!
+}
+
+"""
+The authenticated viewer's scoped abilities on a submission. Each flag mirrors a
+SubmissionAbility case, resolved through the same engine as the policies — so
+conditional grants (e.g. draft-only status changes) are reflected correctly.
+"""
+type SubmissionAbilities {
+  legacy_update: Boolean!
+  review: Boolean!
+  submit: Boolean!
+  update_content: Boolean!
+  update_review_coordinators: Boolean!
+  update_reviewers: Boolean!
+  update_status: Boolean!
+  update_submitters: Boolean!
+  view: Boolean!
+}
+
+"""A user associated with a submission and a role"""
+type SubmissionAssignment {
+  created_at: DateTimeUtc!
+  id: ID!
+  role: SubmissionUserRoles!
+  submission: Submission!
+  updated_at: DateTimeUtc
+  user: User!
+}
+
+"""Order by clause for submission assignments."""
+input SubmissionAssignmentOrderBy {
+  column: SubmissionAssignmentOrderByColumn!
+  order: SortOrder!
+}
+
+"""Sortable columns for submission assignments."""
+enum SubmissionAssignmentOrderByColumn {
+  CREATED_AT
+  STATUS
+  TITLE
+  UPDATED_AT
+}
+
+"""A paginated list of SubmissionAssignment items."""
+type SubmissionAssignmentPaginator implements Paginator {
+  """A list of SubmissionAssignment items."""
+  data: [SubmissionAssignment!]!
+
+  """Pagination information about the list of items."""
+  paginatorInfo: PaginatorInfo!
 }
 
 type SubmissionAudit {
@@ -711,7 +942,7 @@ type SubmissionFile {
 }
 
 """A paginated list of Submission items."""
-type SubmissionPaginator {
+type SubmissionPaginator implements Paginator {
   """A list of Submission items."""
   data: [Submission!]!
 
@@ -734,14 +965,6 @@ enum SubmissionStatus {
   RESUBMITTED
   REVISION_REQUESTED
   UNDER_REVIEW
-}
-
-"""A user associated with a submission and a role"""
-type SubmissionUser {
-  id: ID!
-  role_id: ID!
-  submission_id: ID!
-  user_id: ID!
 }
 
 enum SubmissionUserRoles {
@@ -769,12 +992,32 @@ input UpdateAcademicProfilesInput {
   orcid_id: String
 }
 
+"""
+Edit an inline comment (or reply). Only the supplied fields change — content for
+any row; style criteria and range for a top-level comment.
+"""
+input UpdateInlineCommentArgs {
+  comment_id: ID!
+  content: String
+  from: Int
+  style_criteria: [ID!]
+  submission_id: ID!
+  to: Int
+}
+
 input UpdateInlineCommentInput {
   content: String
   from: Int
   id: ID!
   style_criteria: [ID!]
   to: Int
+}
+
+"""Edit an overall comment (or reply). Only the supplied content changes."""
+input UpdateOverallCommentArgs {
+  comment_id: ID!
+  content: String
+  submission_id: ID!
 }
 
 input UpdateOverallCommentInput {
@@ -839,8 +1082,14 @@ input UpdateStyleCriteriaInput {
 }
 
 input UpdateSubmissionContent {
-  content: String!
+  """The submission body. Optional so the title may be edited on its own."""
+  content: String
   id: ID!
+
+  """
+  The submission title — the author's content, edited alongside or instead of the body.
+  """
+  title: String
 }
 
 input UpdateSubmissionInput {
@@ -853,6 +1102,21 @@ input UpdateSubmissionInput {
   status_change_comment: String
   submitters: UpdateSubmissionUserInput
   title: String
+}
+
+input UpdateSubmissionReviewCoordinatorsInput {
+  id: ID!
+  review_coordinators: UpdateSubmissionUserInput
+}
+
+input UpdateSubmissionReviewersInput {
+  id: ID!
+  reviewers: UpdateSubmissionUserInput
+}
+
+input UpdateSubmissionSubmittersInput {
+  id: ID!
+  submitters: UpdateSubmissionUserInput
 }
 
 input UpdateSubmissionUserInput {
@@ -888,10 +1152,21 @@ scalar Upload
 
 """A user account"""
 type User {
-  created_at: DateTime!
+  """
+  This user's global abilities. Fetched via currentUser this is the viewer's own (UI hints; server still enforces).
+  """
+  abilities: UserAbilities!
+  avatar_color: String! @deprecated(reason: "Temporary placeholder for stable avatar colors; will be removed when user-uploaded avatars are introduced.")
+
+  """Whether the user has access to private beta features (admin-set)."""
+  beta: Boolean!
+  created_at: DateTimeUtc!
   display_label: String
-  email: String!
-  email_verified_at: DateTime
+  email: String
+  email_verified_at: DateTimeUtc
+
+  """Beta feature keys the user has explicitly opted into."""
+  feature_opt_ins: [String!]!
   highest_privileged_role: UserRoles
   id: ID!
   name: String
@@ -904,18 +1179,56 @@ type User {
     read: Boolean
     unread: Boolean
   ): NotificationPaginator!
-  permissions: [Permission!]
-  pivot: SubmissionUser
   profile_metadata: ProfileMetadata
+  publications(
+    """Limits number of fetched items."""
+    first: Int! = 10
+
+    """The offset from which items are returned."""
+    page: Int
+    roles: [PublicationRole!]
+  ): PublicationAssignmentPaginator!
+  raw_submissions: [Submission!] @deprecated(reason: "Use `submissions` (SubmissionAssignment) instead")
   roles: [Role!]!
   staged: Boolean
-  submissions: [Submission]!
-  updated_at: DateTime
+  submissions(
+    """Limits number of fetched items."""
+    first: Int! = 10
+    orderBy: [SubmissionAssignmentOrderBy!]
+
+    """The offset from which items are returned."""
+    page: Int
+    publication: [ID!]
+    roles: [SubmissionUserRoles!]
+    search: String
+    status: [SubmissionStatus!]
+  ): SubmissionAssignmentPaginator!
+  updated_at: DateTimeUtc
   username: String!
 }
 
+"""
+A user's global (application-wide) abilities. Each generated flag mirrors a
+GlobalAbility case, resolved directly against Bouncer — the same engine as the
+policies.
+"""
+type UserAbilities {
+  """
+  Derived: true when the viewer holds ANY `admin_*` ability — i.e. may reach
+  the admin area. Computed server-side as the union of the admin capabilities,
+  so the client gates on one flag and a new `admin_*` ability extends admin
+  access automatically. Not itself a GlobalAbility case.
+  """
+  admin_area: Boolean!
+  admin_user_manage_beta: Boolean!
+  admin_user_update: Boolean!
+  admin_user_view: Boolean!
+  admin_user_view_any: Boolean!
+  publication_create: Boolean!
+}
+
 """A paginated list of User items."""
-type UserPaginator {
+type UserPaginator implements Paginator {
   """A list of User items."""
   data: [User!]!
 

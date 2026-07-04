@@ -49,6 +49,20 @@ class PublicationSeeder extends Seeder
                     ->count(4)
             )
             ->create();
+        Publication::factory()
+            ->hidden()
+            ->count(10)
+            ->has(StyleCriteria::factory()->count(4))
+            ->create();
+        Publication::factory()
+            ->count(10)
+            ->has(StyleCriteria::factory()->count(4))
+            ->create(['is_accepting_submissions' => false]);
+        Publication::factory()
+            ->hidden()
+            ->count(5)
+            ->has(StyleCriteria::factory()->count(4))
+            ->create(['is_accepting_submissions' => false]);
     }
 
     /**

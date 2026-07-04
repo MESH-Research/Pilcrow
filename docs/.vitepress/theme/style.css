@@ -140,3 +140,48 @@
 .DocSearch-Button-Placeholder {
   color: #fff9;
 }
+
+/**
+ * Component: Screenshot
+ *
+ * Visually frames UI captures so readers can tell them apart from
+ * diagrams or decorative images. Use the figure form when a caption
+ * is desired:
+ *   <figure class="screenshot">
+ *     <img src="..." alt="..." />
+ *     <figcaption>Screenshot: ...</figcaption>
+ *   </figure>
+ * -------------------------------------------------------------------------- */
+
+figure.screenshot {
+  display: block;
+  width: fit-content;
+  max-width: 100%;
+  margin: 1rem auto;
+  padding: 8px;
+  background: var(--vp-c-default-soft);
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+figure.screenshot img {
+  display: block;
+  margin: 0 auto;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 3px;
+  background: #fff;
+  max-width: 100%;
+}
+
+figure.screenshot figcaption {
+  margin-top: 6px;
+  font-size: 0.8rem;
+  color: var(--vp-c-text-2);
+  text-align: center;
+  font-style: italic;
+}
+
+figure.screenshot figcaption::before {
+  content: "📷 ";
+}

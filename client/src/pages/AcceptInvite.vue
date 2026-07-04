@@ -163,7 +163,10 @@ const { $v, user, saveUser } = useUserValidation({
 })
 
 onMounted(async () => {
-  const { uuid, expires, token, submission_id } = params
+  const { uuid, expires, token, submission_id } = params as Record<
+    string,
+    string
+  >
 
   try {
     const response = await verify({ uuid, expires, token })

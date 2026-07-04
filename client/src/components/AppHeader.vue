@@ -2,7 +2,7 @@
   <input id="locale-switch" v-model="locale" type="hidden" />
   <q-header class="header" @keypress="toggleLocale">
     <app-banner />
-    <local-dev-banner />
+    <component :is="LocalDevBanner" v-if="LocalDevBanner" />
     <q-toolbar class="header-toolbar">
       <router-link
         to="/"
@@ -42,7 +42,7 @@
             :aria-label="$t('header.account_dropdown_aria')"
             data-cy="headerUserMenu"
           >
-            <q-item clickable to="/account/profile">
+            <q-item clickable :to="{ name: 'account:profile' }">
               <q-item-section avatar>
                 <q-icon name="account_circle" />
               </q-item-section>
@@ -50,7 +50,11 @@
                 {{ $t("profile.page_title") }}
               </q-item-section>
             </q-item>
-            <q-item clickable data-cy="link_my_account" to="/account/settings">
+            <q-item
+              clickable
+              data-cy="link_my_account"
+              :to="{ name: 'account:settings' }"
+            >
               <q-item-section avatar>
                 <q-icon name="o_settings" />
               </q-item-section>
@@ -58,29 +62,26 @@
                 {{ $t("settings.page_title") }}
               </q-item-section>
             </q-item>
+            <q-item
+              v-if="recordOfReviewEnabled"
+              clickable
+              :to="{ name: 'account:record_of_review' }"
+            >
+              <q-item-section avatar>
+                <q-icon name="description" />
+              </q-item-section>
+              <q-item-section>{{
+                $t("record_of_review.title")
+              }}</q-item-section>
+            </q-item>
             <div v-if="isAppAdmin">
               <q-separator />
-              <q-item dense>
-                <q-item-section>
-                  <q-item-label class="text-bold">
-                    {{ $t("header.application_administration") }}
-                  </q-item-label>
-                </q-item-section>
-              </q-item>
-              <q-item to="/admin/users">
+              <q-item :to="{ name: 'admin:dashboard' }">
                 <q-item-section avatar>
-                  <q-icon name="groups" />
+                  <q-icon name="admin_panel_settings" />
                 </q-item-section>
                 <q-item-section>
-                  {{ $t("header.user_list") }}
-                </q-item-section>
-              </q-item>
-              <q-item :to="{ name: 'admin:publication:index' }">
-                <q-item-section avatar>
-                  <q-icon name="collections_bookmark" />
-                </q-item-section>
-                <q-item-section>
-                  {{ $t("header.publications") }}
+                  {{ $t("header.application_administration") }}
                 </q-item-section>
               </q-item>
             </div>
@@ -167,11 +168,15 @@
 import { useMagicKeys } from "@vueuse/core"
 import NotificationPopup from "src/components/molecules/NotificationPopup.vue"
 import { useCurrentUser } from "src/use/user"
-import { watchEffect } from "vue"
+import { useFeatures } from "src/use/features"
+import { defineAsyncComponent, watchEffect } from "vue"
 import { useQuasar } from "quasar"
 import { useI18n } from "vue-i18n"
 import AppBanner from "./AppBanner.vue"
-import LocalDevBanner from "./LocalDevBanner.vue"
+
+const LocalDevBanner = process.env.LANDO_DEV
+  ? defineAsyncComponent(() => import("./LocalDevBanner.vue"))
+  : null
 
 const $q = useQuasar()
 
@@ -182,6 +187,8 @@ interface Props {
 defineProps<Props>()
 
 const { currentUser, isAppAdmin } = useCurrentUser()
+const { isFeatureEnabled } = useFeatures()
+const recordOfReviewEnabled = isFeatureEnabled("record_of_review")
 const { locale } = useI18n({ useScope: "global" })
 const { ctrl, shift, alt, t } = useMagicKeys()
 

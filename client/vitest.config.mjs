@@ -13,7 +13,19 @@ export default defineConfig({
       // Matches all files with extension 'js', 'jsx', 'ts' and 'tsx'
       "src/**/*.vitest.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}",
       "test/vitest/__tests__/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"
-    ]
+    ],
+    coverage: {
+      provider: "v8",
+      reporter: ["text-summary", "cobertura"],
+      reportsDirectory: "./coverage",
+      include: ["src/**/*.{ts,tsx,js,jsx,vue}"],
+      exclude: [
+        "src/**/*.{test,spec}.*",
+        "src/**/*.vitest.*",
+        "src/graphql/operations/**",
+        "src/**/__tests__/**"
+      ]
+    }
   },
   plugins: [
     vue({

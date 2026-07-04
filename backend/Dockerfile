@@ -1,4 +1,4 @@
-ARG COMPOSER_VERSION=2.8.9
+ARG COMPOSER_VERSION=2.10.1
 ARG COMPOSER_PLATFORM=linux/amd64
 ARG PHP_VERSION=8.4.15
 
@@ -78,6 +78,11 @@ COPY php.dev.ini ${PHP_INI_DIR}/conf.d/pilcrow.ini
 # self-signed cert isn't trusted by the system CA store.
 RUN printf '[client]\nssl-verify-server-cert = false\n' > /etc/mysql/conf.d/no-ssl-verify.cnf
 
+# Install pcov for low-overhead coverage collection during tests
+RUN pecl install pcov && docker-php-ext-enable pcov \
+    && mkdir -p /var/www/html/coverage \
+    && chown www-data:www-data /var/www/html/coverage
+
 # Re-run composer install to add dev dependencies
 USER www-data
 RUN --mount=type=cache,target=/var/www/.composer,uid=33,gid=33 \
@@ -89,7 +94,12 @@ ARG DB_HOST=127.0.0.1
 ENV DB_HOST=${DB_HOST}
 RUN ./artisan migrate:fresh --seed
 
-RUN touch .env && ./artisan test
+RUN touch .env && ./artisan test \
+    --coverage-cobertura=coverage/cobertura.xml \
+    --log-junit=coverage/junit.xml
+
+FROM scratch AS coverage
+COPY --from=unit-test /var/www/html/coverage/ /
 
 FROM base AS lint
 

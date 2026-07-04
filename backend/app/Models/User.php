@@ -3,6 +3,10 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Auth\Abilities\GlobalAbility;
+use App\Auth\Roles\GlobalRole;
+use App\Auth\Roles\ScopedRole;
+use App\Builders\UserBuilder;
 use Carbon\Carbon;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -12,17 +16,18 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Laravel\Sanctum\HasApiTokens;
 use Laravel\Scout\Attributes\SearchUsingPrefix;
 use Laravel\Scout\Searchable;
-use Spatie\Permission\Traits\HasRoles;
+use Silber\Bouncer\Database\HasRolesAndAbilities;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
     use HasFactory;
     use Notifiable;
     use HasApiTokens;
-    use HasRoles;
+    use HasRolesAndAbilities;
     use Searchable;
 
     /**
@@ -57,7 +62,20 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $casts = [
         'email_verified_at' => 'datetime',
         'profile_metadata' => 'array',
+        'beta' => 'boolean',
+        'feature_opt_ins' => 'array',
     ];
+
+    /**
+     * Create a new Eloquent query builder for the model.
+     *
+     * @param \Illuminate\Database\Query\Builder $query
+     * @return \App\Builders\UserBuilder
+     */
+    public function newEloquentBuilder($query): UserBuilder
+    {
+        return new UserBuilder($query);
+    }
 
     /**
      * Model booted
@@ -150,13 +168,46 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Get the name of the index associated with the model.
+     * Feature-flag keys the user has opted into, stored as a flat array
+     * of enabled keys. An absent key means not opted in (opting out
+     * removes the key). Presence of the key is the access grant.
      *
-     * @return string
+     * @return array<int, string>
      */
-    public function searchableAs(): string
+    public function getActiveFeatureOptIns(): array
     {
-        return 'users_index';
+        return array_values($this->feature_opt_ins ?? []);
+    }
+
+    /**
+     * Whether a feature key is known — i.e. it appears in the feature
+     * catalog (`config/features.php`). This is the ONLY server-side gate
+     * on opting in: the backend accepts any opt-in for a valid key from
+     * any authenticated user. The `beta` flag does NOT gate this. Beta
+     * features are hidden for advertisement, not for security — the
+     * client decides what to show; the server only rejects junk keys.
+     *
+     * @param string $key
+     * @return bool
+     */
+    public static function featureExists(string $key): bool
+    {
+        return in_array($key, Config::get('features.beta', []), true);
+    }
+
+    /**
+     * Whether a feature is effectively enabled for this user: purely
+     * whether they hold an active opt-in record. The opt-in record IS
+     * the grant. The `beta` flag only decides what the client advertises
+     * in the Labs UI, never what is on. Gated code paths (admin
+     * publications, ROR, ...) call this.
+     *
+     * @param string $key
+     * @return bool
+     */
+    public function hasFeatureEnabled(string $key): bool
+    {
+        return in_array($key, $this->getActiveFeatureOptIns(), true);
     }
 
     /**
@@ -168,7 +219,7 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->belongsToMany(Submission::class)
             ->withTimestamps()
-            ->withPivot(['id', 'user_id', 'role_id', 'submission_id']);
+            ->withPivot(['id', 'user_id', 'role', 'submission_id']);
     }
 
     /**
@@ -180,7 +231,27 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->belongsToMany(Publication::class)
             ->withTimestamps()
-            ->withPivot('role_id');
+            ->withPivot('role');
+    }
+
+    /**
+     * Submission assignments for this user.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function submissionAssignments(): HasMany
+    {
+        return $this->hasMany(SubmissionAssignment::class, 'user_id');
+    }
+
+    /**
+     * Publication assignments for this user.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function publicationAssignments(): HasMany
+    {
+        return $this->hasMany(PublicationAssignment::class, 'user_id');
     }
 
     /**
@@ -194,73 +265,82 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Return the highest privileged role ID for the user in the following order:
-     * 1. Application Administrator
-     * 2. Publication Administrator
-     * 3. Editor
-     * 4. Review Coordinator
-     * 5. Reviewer
-     * 6. Submitter
+     * Whether the user holds the global application-administrator role.
+     *
+     * @return bool
+     */
+    public function isApplicationAdministrator(): bool
+    {
+        return $this->isA(GlobalRole::ApplicationAdministrator->toSlug());
+    }
+
+    /**
+     * Assign a global role to the user (Bouncer assignment by slug).
+     *
+     * @param \App\Auth\Roles\GlobalRole $role
+     */
+    public function assignRole(GlobalRole $role): self
+    {
+        $this->assign($role->toSlug());
+
+        return $this;
+    }
+
+    /**
+     * Return the highest privileged role rank for the user (lower ranks higher:
+     * application_admin=1 … submitter=6). A UI hint, not authorization.
      *
      * @return int|null
      */
     public function getHighestPrivilegedRole(): ?int
     {
-        if ($this->hasRole(Role::APPLICATION_ADMINISTRATOR)) {
-            return (int)Role::APPLICATION_ADMINISTRATOR_ROLE_ID;
-        }
-        if ($this->publications->isNotEmpty()) {
-            return PublicationUser::where('user_id', $this->id)->min('role_id');
-        }
-        if ($this->submissions->isNotEmpty()) {
-            return SubmissionUser::where('user_id', $this->id)->min('role_id');
+        if ($this->isApplicationAdministrator()) {
+            return GlobalRole::ApplicationAdministrator->rank();
         }
 
-        return null;
+        $ranks = [];
+        $slugs = PublicationUser::where('user_id', $this->id)->pluck('role')
+            ->merge(SubmissionAssignment::where('user_id', $this->id)->pluck('role'));
+        foreach ($slugs as $slug) {
+            $role = $slug === null ? null : ScopedRole::tryFrom((string)$slug);
+            if ($role !== null) {
+                $ranks[] = $role->rank();
+            }
+        }
+
+        return $ranks === [] ? null : min($ranks);
     }
 
     /**
-     * Check if user has a role for a publication
+     * This user's GLOBAL (application-wide) abilities as a map of snake_case
+     * ability name => bool, e.g. ['publication_create' => true, ...].
      *
-     * @param array|int $role Role id to check, use * to check for any role.
-     * @param int $publicationId Publication to check for role on
-     * @return bool
-     */
-    public function hasPublicationRole($role, $publicationId)
-    {
-        $publications = $this->publications()->wherePivot('publication_id', $publicationId);
-
-        if ($role === '*') {
-            return $publications->exists();
-        }
-
-        if (is_array($role)) {
-            return $publications->wherePivotIn('role_id', $role)->exists();
-        } else {
-            return $publications->wherePivot('role_id', $role)->exists();
-        }
-    }
-
-    /**
-     * Check if user has given submission role
+     * Resolved through Bouncer ($this->can) — the same engine the policies use —
+     * so these client-facing flags can never drift from real authorization. The
+     * keys are derived from {@see GlobalAbility} cases, so adding an ability case
+     * (plus its schema field) is all it takes to expose it.
      *
-     * @param array|int $role Role id to check
-     * @param int $submissionId Submission to check for role on
-     * @return bool
+     * Fetched via `currentUser` this is the viewer's own capabilities. These are
+     * UI hints only: the server still enforces every mutation with @can.
+     *
+     * @return array<string, bool>
      */
-    public function hasSubmissionRole($role, $submissionId)
+    public function globalAbilities(): array
     {
-        $submissions = $this->submissions()->wherePivot('submission_id', $submissionId);
-
-        if ($role === '*') {
-            return $submissions->exists();
+        $abilities = [];
+        foreach (GlobalAbility::cases() as $ability) {
+            $abilities[Str::snake($ability->name)] = $this->can($ability);
         }
 
-        if (is_array($role)) {
-            return $submissions->wherePivotIn('role_id', $role)->exists();
-        } else {
-            return $submissions->wherePivot('role_id', null, $role)->exists();
-        }
+        // Derived union: admin-area access is "holds any admin_* ability", so the
+        // client gates the admin area on one flag and a new admin_* ability
+        // extends it automatically. Computed from the case flags above, before
+        // the key itself is added so it never folds into its own union.
+        $abilities['admin_area'] = collect($abilities)
+            ->filter(fn(bool $granted, string $key): bool => str_starts_with($key, 'admin_'))
+            ->contains(true);
+
+        return $abilities;
     }
 
     /**
@@ -333,5 +413,40 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getDisplayLabelAttribute(): string
     {
         return $this->attributes['name'] ?: $this->attributes['username'];
+    }
+
+    /**
+     * Deterministic avatar color name derived from the user's email (or id
+     * when no email is set). Mirrors the legacy client-side hash so existing
+     * avatars remain stable while emails are no longer exposed publicly.
+     *
+     * @return string
+     */
+    public function getAvatarColorAttribute(): string
+    {
+        $colors = [
+            'blue',
+            'cyan',
+            'green',
+            'magenta',
+            'orange',
+            'pine',
+            'purple',
+            'red',
+            'yellow',
+        ];
+
+        $seed = $this->attributes['email'] ?? (string)$this->attributes['id'];
+
+        $hash = 0;
+        $len = strlen($seed);
+        for ($i = 0; $i < $len; $i++) {
+            $hash = (($hash << 5) - $hash + ord($seed[$i])) & 0xFFFFFFFF;
+            if ($hash & 0x80000000) {
+                $hash -= 0x100000000;
+            }
+        }
+
+        return $colors[abs($hash) % count($colors)];
     }
 }

@@ -34,6 +34,18 @@ class UserFactory extends Factory
     }
 
     /**
+     * State function granting the user private beta access.
+     *
+     * @return static
+     */
+    public function beta()
+    {
+        return $this->state(function () {
+            return ['beta' => true];
+        });
+    }
+
+    /**
      * State function for forcing email domain to be a real domain.
      *
      * @return static

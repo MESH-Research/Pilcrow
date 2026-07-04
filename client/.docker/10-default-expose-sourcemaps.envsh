@@ -1,0 +1,14 @@
+#!/bin/sh
+# Default EXPOSE_SOURCEMAPS from APP_ENV when caller hasn't set it explicitly.
+# Sourced (not executed) by nginx official entrypoint because of the .envsh
+# extension, so env exports propagate into the subsequent envsubst step.
+if [ -z "${EXPOSE_SOURCEMAPS:-}" ]; then
+    case "${APP_ENV:-}" in
+        local|dev|development)
+            export EXPOSE_SOURCEMAPS=true
+            ;;
+        *)
+            export EXPOSE_SOURCEMAPS=false
+            ;;
+    esac
+fi

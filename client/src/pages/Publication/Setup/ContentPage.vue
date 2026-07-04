@@ -1,7 +1,7 @@
 <template>
   <article class="q-px-md">
-    <h2>Page Content</h2>
-    <p>Customize blocks of text displayed to your publication's users.</p>
+    <h2>{{ $t("publication.setup_pages.content") }}</h2>
+    <p>{{ $t("publication.setup_pages.content_description") }}</p>
     <UpdateContentForm ref="form" :publication="publication" @save="save" />
   </article>
 </template>

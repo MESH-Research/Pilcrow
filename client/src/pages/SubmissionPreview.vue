@@ -32,7 +32,7 @@
 
         <q-page-container>
           <q-banner inline-actions class="bg-positive text-white text-center">
-            You are previewing this submission.
+            {{ $t("submission.preview_notice") }}
           </q-banner>
           <submission-content
             :annotation-enabled="false"

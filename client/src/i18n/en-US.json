@@ -1,7 +1,13 @@
 {
   "needs_attention": "Needs attention",
+  "queryTable": {
+    "search": {
+      "placeholder": "Search"
+    }
+  },
   "user": {
     "self": "No users | User | Users",
+    "all_users": "All Users",
     "email": "Email",
     "name": "Name",
     "username": "Username",
@@ -28,7 +34,31 @@
     "saving": "Saving",
     "saved": "Saved",
     "discard_changes": "Discard Changes",
-    "delete": "Delete"
+    "delete": "Delete",
+    "refresh": "Refresh",
+    "cancel": "Cancel",
+    "create": "Create"
+  },
+  "breadcrumbs": {
+    "admin": {
+      "administration": "Administration",
+      "users": "Users",
+      "user": "User",
+      "publications": "Publications",
+      "submissions": "Submissions",
+      "beta_users": "Beta Users"
+    }
+  },
+  "tables": {
+    "view": {
+      "table": "Table view",
+      "grid": "Grid view",
+      "switch_to_table": "Switch to table view",
+      "switch_to_grid": "Switch to grid view"
+    },
+    "sort": {
+      "label": "Sort"
+    }
   },
   "lists": {
     "move_up": "Move {0} Up",
@@ -146,7 +176,7 @@
     "publications": "Publications",
     "submissions": "Submissions",
     "reviews": "Reviews",
-    "user_list": "All Users",
+    "user_list": "Users",
     "notification_button": "View Notifications",
     "application_administration": "Application Administration",
     "account_dropdown_aria": "User Account Dropdown",
@@ -349,6 +379,62 @@
   "reviews": {
     "page_title": "Reviews"
   },
+  "record_of_review": {
+    "headers": {
+      "id": "Number",
+      "title": "Submission Title",
+      "submitters": "Submitted By",
+      "role": "My Role",
+      "status": "Status",
+      "updated": "Last Updated"
+    },
+    "aside": {
+      "publication": "Publication"
+    },
+    "title": "Record of Review",
+    "title_record": "Record of Review for { title }",
+    "title_combined": "Records of Review",
+    "title_participation": "Your Participation",
+    "title_team": "Review Team",
+    "title_submission": "Submission Information",
+    "title_publication": "Publication Information",
+    "eyebrow": "Record of Review",
+    "subtitle": "This document records participation in the peer review process.",
+    "footer_certified": "Issued by { host } for { publication }.",
+    "tooltip": "Only reviews that have completed will appear here",
+    "label_header_checkbox": "Review Selection",
+    "label_select_review_checkbox": "Select review number {id}, {title}",
+    "document_type": {
+      "heading": "Document Type",
+      "journal_article": "Journal Article"
+    },
+    "completed": {
+      "heading": "Review Completed",
+      "incomplete": "Incomplete"
+    },
+    "identifier": "Review Identifier",
+    "byline": "Select one or more reviews to get a record of review",
+    "no_data": "There are no reviews for you.",
+    "no_filter": {
+      "status": "No status selected. Pick at least one status to see results.",
+      "role": "No role selected. Pick at least one role to see results.",
+      "status_and_role": "No status or role selected. Pick at least one of each to see results."
+    },
+    "no_users": "No users assigned",
+    "download_all": {
+      "label": "Download Selected",
+      "byline": "Download a Record of Review for all selected reviews.",
+      "dialog": {
+        "title": "Download selected records",
+        "format_label": "Format",
+        "format_combined": "Single combined HTML file",
+        "format_zip": "ZIP archive (one HTML file per record)",
+        "confirm": "Download",
+        "cancel": "Cancel"
+      }
+    },
+    "download_one": "Download This Record"
+  },
   "submission_tables": {
     "filter_label": "Filter by Status",
     "columns": {
@@ -356,8 +442,10 @@
       "title": "Submission Title",
       "submitted_by": "Submitted By",
       "submitted_at": "Submitted",
+      "updated_at": "Last Updated",
       "publication": "Publication Name",
       "status": "Status",
+      "role": "My Role",
       "actions": "Actions"
     },
     "type": {
@@ -477,6 +565,8 @@
   },
   "publication": {
     "entity": "Publication | Publications",
+    "editor": "Editor | Editors",
+    "publication_admin": "Publication Administrator | Publication Administrators",
     "configure": "Configure Publication",
     "setup_pages": {
       "breadcrumb_heading": "Setup",
@@ -485,6 +575,7 @@
       "assign": "Assign",
       "criteria": "Style Criteria",
       "content": "Page Content",
+      "content_description": "Customize blocks of text displayed to your publication's users.",
       "problems": {
         "no_admins": "This publication has no users assigned to administer it.",
         "no_criteria": "Set up style criteria for your publication."
@@ -591,6 +682,7 @@
     },
     "admin_header": "Publication Administration",
     "create_button": "Create New Publication",
+    "create_dialog_title": "Create New Publication",
     "view_button_aria": "View Publication Page",
     "view_button": "View Publication"
   },
@@ -636,6 +728,7 @@
     "empty": "No Publications Created"
   },
   "submission": {
+    "preview_notice": "You are previewing this submission.",
     "edit_title": {
       "tooltip": "Edit Title",
       "set_title": "Set Submission Title",
@@ -776,6 +869,18 @@
     "term": "No Submissions | Submission | Submissions",
     "heading": "Submissions",
     "none": "No Submissions Created",
+    "filters": {
+      "aria": "Filter submissions",
+      "select_publication": "Select a publication",
+      "status_header": "Status",
+      "roles_header": "Roles",
+      "publication_header": "Publication",
+      "role_options": {
+        "submitter": "Submitter",
+        "reviewer": "Reviewer",
+        "review_coordinator": "Review Coordinator"
+      }
+    },
     "details_heading": "Submission Details",
     "latest_comments_heading": "Latest Comments",
     "draft_with_no_content": "This submission draft must have content before it can be reviewed.",
@@ -1040,6 +1145,7 @@
     },
     "error_403": "Oops, you don't have permission to view this page.",
     "error_404": {
+      "404": "404",
       "text": "Sorry, nothing here... (404)",
       "back": "Go Back",
       "home": "Go Home"
@@ -1258,5 +1364,171 @@
   "generic": {
     "more_info": "More info"
   },
-  "app_banner_dismiss_tip": "Dismiss for 1 week"
+  "app_banner_dismiss_tip": "Dismiss for 1 week",
+  "admin": {
+    "search": "Search",
+    "filters": {
+      "label": "Filter",
+      "active": "Filter · {count} active",
+      "all": "All",
+      "none": "None",
+      "invert": "Invert"
+    },
+    "dashboard": {
+      "users_description": "Manage user accounts and permissions.",
+      "publications_description": "Manage publications and their settings.",
+      "beta_users_description": "Grant or revoke private beta access for users."
+    },
+    "publication": {
+      "headers": {
+        "name": "Name",
+        "is_publicly_visible": "Visibility",
+        "is_accepting_submissions": "Accepting Submissions",
+        "created_at": "Created"
+      },
+      "btn": {
+        "create": "Create"
+      },
+      "filters": {
+        "aria": "Filter publications",
+        "visibility": "Visibility",
+        "accepting_submissions": "Accepting Submissions",
+        "visibility_options": {
+          "public": "Public",
+          "hidden": "Hidden"
+        },
+        "accepting_options": {
+          "yes": "Yes",
+          "no": "No"
+        }
+      }
+    },
+    "users": {
+      "title": "User Administration",
+      "no_user_assigned": "No user assigned",
+      "email_status": {
+        "verified": "Verified",
+        "unverified": "Unverified"
+      },
+      "headers": {
+        "name": "Name",
+        "username": "Username",
+        "email": "Email",
+        "created_at": "Created"
+      },
+      "details": {
+        "tabs": {
+          "publications": "Publications",
+          "submissions": "Submissions"
+        },
+        "title": "User Details",
+        "username": "Username",
+        "name": "Name",
+        "email": "Email",
+        "role": "Role",
+        "created_at": "Created",
+        "verified_at": "Email Verified",
+        "not_verified": "Not Verified",
+        "isAdmin": "Application Administrator",
+        "isNormal": "Standard User",
+        "roles": {
+          "submitter": "Submitter",
+          "reviewer": "Reviewer",
+          "review_coordinator": "Review Coordinator",
+          "publication_admin": "Publication Administrator",
+          "editor": "Editor"
+        },
+        "submissions": {
+          "headers": {
+            "id": "ID",
+            "status": "Status",
+            "title": "Title",
+            "created_at": "Created",
+            "updated_at": "Updated",
+            "actions": "Actions",
+            "role": "Role"
+          },
+          "btn": {
+            "create": "Create"
+          },
+          "actions": {
+            "view": "View"
+          },
+          "aside": {
+            "publication": "Publication"
+          },
+          "no_data": {
+            "banner_warning": "Head's up: Your filters will not return any results.",
+            "no_status": "(no status selected)",
+            "no_role": "(no role selected)",
+            "reset": "Reset filters"
+          }
+        },
+        "no_publications": "This user is not assigned to any publications.",
+        "no_submissions": "This user is not attached to any submissions.",
+        "publications": {
+          "headers": {
+            "name": "Name",
+            "role": "Role",
+            "actions": "Actions"
+          },
+          "actions": {
+            "view": "View"
+          },
+          "btn": {
+            "create": "Create"
+          }
+        },
+        "beta": "Beta Access",
+        "beta_enabled": "Beta features enabled",
+        "beta_disabled": "Beta features disabled",
+        "beta_error": "Could not update beta access. Please try again.",
+        "feature_opt_ins": "Labs Features",
+        "no_feature_opt_ins": "No labs features enabled"
+      }
+    },
+    "beta_users": {
+      "title": "Beta Users",
+      "intro": "Users with beta access can opt into private beta features from their account. Add or remove access here.",
+      "search_hint": "Search by name, username, or email.",
+      "add_label": "Find a user to grant beta access",
+      "add_btn": "Grant Access",
+      "remove_btn": "Remove",
+      "error": "Could not update beta access. Please try again.",
+      "headers": {
+        "name": "Name",
+        "username": "Username",
+        "email": "Email",
+        "actions": "Actions"
+      }
+    }
+  },
+  "labs": {
+    "page_title": "Labs",
+    "intro": "Get early access to features we're still building. Turn on the ones you'd like to try — you can turn them off again at any time.",
+    "no_access": "There are currently no active labs features available.",
+    "activate": "Activate",
+    "deactivate": "Deactivate",
+    "error": "Could not update this feature. Please try again.",
+    "previews": {
+      "expand_aria": "Expand preview: {caption}",
+      "close": "Close preview"
+    },
+    "record_of_review": {
+      "label": "Record of Review",
+      "description": "Downloadable HTML artifacts documenting a reviewer's participation in the peer review process — your role, the review team, and submission and publication details. Available from your account menu.",
+      "previews": {
+        "record": {
+          "title": "Downloadable Record of Review",
+          "caption": "A self-contained document of each review you've completed — your participation, the review team, and submission and publication details."
+        },
+        "list": {
+          "title": "Browse and select reviews",
+          "caption": "Find your completed reviews in your account and select one or more to download — the page follows your light or dark theme."
+        }
+      },
+      "feedback_lead": "Tried it out? Tell us what works and what's missing.",
+      "feedback": "Share feedback"
+    }
+  }
 }

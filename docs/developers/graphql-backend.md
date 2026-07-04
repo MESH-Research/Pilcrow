@@ -21,7 +21,7 @@ lando artisan lighthouse:print-schema > client/src/graphql/schema.graphql
 ```
 
 ::: tip
-The client also provides `lando yarn graphql:fetch-schema` as a shortcut for this command. During normal development, the schema file is updated automatically by the dev server when backend schema changes are detected — see [Automatic Regeneration](./graphql-client#automatic-regeneration-dev-server).
+During normal development, the schema file is updated automatically by the dev server when backend schema changes are detected — see [Automatic Regeneration](./graphql-client#automatic-regeneration-dev-server). For manual updates, run `lando yarn graphql:codegen` from the client so the committed snapshot is normalized through `schema-ast`.
 :::
 
 ## GraphQL Playground

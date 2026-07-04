@@ -1,4 +1,5 @@
 import { RouteRecordRaw } from "vue-router"
+import { routes as autoRoutes } from "vue-router/auto-routes"
 
 const routes: RouteRecordRaw[] = [
   {
@@ -9,12 +10,9 @@ const routes: RouteRecordRaw[] = [
       { path: "register", component: () => import("pages/RegisterPage.vue") },
       { path: "login", component: () => import("pages/LoginPage.vue") },
       {
-        path: "auth/redirect/orcid",
-        component: () => import("pages/LoginOrcid.vue")
-      },
-      {
-        path: "auth/redirect/google",
-        component: () => import("pages/LoginGoogle.vue")
+        path: "auth/redirect/:providerName(orcid|google)",
+        component: () => import("pages/LoginOauthCallback.vue"),
+        props: true
       },
       { path: "logout", component: () => import("src/pages/LogoutPage.vue") },
       {
@@ -43,20 +41,6 @@ const routes: RouteRecordRaw[] = [
       {
         path: "dashboard/",
         component: () => import("pages/DashboardPage.vue")
-      },
-      {
-        path: "account/",
-        component: () => import("src/layouts/Account/AccountLayout.vue"),
-        children: [
-          {
-            path: "profile",
-            component: () => import("src/pages/Account/ProfilePage.vue")
-          },
-          {
-            path: "settings",
-            component: () => import("src/pages/Account/SettingsPage.vue")
-          }
-        ]
       },
       {
         path: "publication/:id/setup/",
@@ -103,27 +87,9 @@ const routes: RouteRecordRaw[] = [
         path: "feed/",
         component: () => import("src/pages/FeedPage.vue")
       },
-      {
-        path: "/admin/users",
-        component: () => import("pages/Admin/UsersIndex.vue"),
-        meta: {
-          requiresAppAdmin: true
-        }
-      },
-      {
-        name: "user_details",
-        path: "/admin/user/:id",
-        props: true,
-        component: () => import("pages/Admin/UserDetails.vue")
-      },
-      {
-        path: "/admin/publications",
-        name: "admin:publication:index",
-        component: () => import("src/pages/Admin/PublicationIndexPage.vue"),
-        meta: {
-          requiresAppAdmin: true
-        }
-      },
+      // File-based routes under src/routes/ (see quasar.config.ts).
+      // Spread here so they inherit MainLayout + its requiresAuth meta.
+      ...autoRoutes,
       {
         path: "/publications",
         name: "publication:index",

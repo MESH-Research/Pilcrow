@@ -1,0 +1,14 @@
+{
+  "$schema": "https://raw.githubusercontent.com/fallow-rs/fallow/main/config-schema.json",
+  // Referenced via codegen config + quasar.config.ts configOverrideOnBuild
+  "entry": ["src/graphql/schema.graphql"],
+  // axe-core only imported from cypress specs; the eslint parsers are
+  // runtime requirements of @intlify/eslint-plugin-vue-i18n
+  "ignoreDependencies": [
+    "axe-core",
+    "jsonc-eslint-parser",
+    "yaml-eslint-parser"
+  ],
+  // quasar resolves bare src/ paths in sass blocks
+  "ignoreUnresolvedImports": ["**/quasar.variables.sass"]
+}

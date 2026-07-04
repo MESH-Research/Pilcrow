@@ -3,10 +3,16 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Auth\Abilities\PublicationAbility;
+use App\Auth\Roles\ScopedRole;
+use App\Auth\ScopedAbilityResolver;
+use App\Builders\PublicationBuilder;
 use App\Models\Casts\CleanAdminHtml;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class Publication extends BaseModel
 {
@@ -32,6 +38,17 @@ class Publication extends BaseModel
     ];
 
     /**
+     * Create a new Eloquent query builder for the model.
+     *
+     * @param \Illuminate\Database\Query\Builder $query
+     * @return \App\Builders\PublicationBuilder
+     */
+    public function newEloquentBuilder($query): PublicationBuilder
+    {
+        return new PublicationBuilder($query);
+    }
+
+    /**
      * Mutator: Trim name attribute before persisting
      *
      * @param string $value
@@ -43,28 +60,6 @@ class Publication extends BaseModel
     }
 
     /**
-     * Scope only publically visible publications.
-     *
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeIsPubliclyVisible($query)
-    {
-        return $query->where('is_publicly_visible', true);
-    }
-
-    /**
-     * Scope only publications that are accepting submissions
-     *
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeIsAcceptingSubmissions($query)
-    {
-        return $query->where('is_accepting_submissions', true);
-    }
-
-    /**
      * Users that belong to a publication
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
@@ -73,7 +68,7 @@ class Publication extends BaseModel
     {
         return $this->belongsToMany(User::class)
             ->withTimestamps()
-            ->withPivot(['id', 'user_id', 'role_id', 'publication_id']);
+            ->withPivot(['id', 'user_id', 'role', 'publication_id']);
     }
 
     /**
@@ -83,9 +78,9 @@ class Publication extends BaseModel
      */
     public function publicationAdmins(): BelongsToMany
     {
-        return $this->belongsToMany(User::class)
-            ->withTimestamps()
-            ->withPivotValue('role_id', Role::PUBLICATION_ADMINISTRATOR_ROLE_ID);
+        return $this->users()
+            ->withPivotValue('role', ScopedRole::PublicationAdmin->toSlug())
+            ->withPivotValue('role_id', ScopedRole::PublicationAdmin->legacyId());
     }
 
     /**
@@ -95,9 +90,22 @@ class Publication extends BaseModel
      */
     public function editors(): BelongsToMany
     {
-        return $this->belongsToMany(User::class)
-            ->withTimestamps()
-            ->withPivotValue('role_id', Role::EDITOR_ROLE_ID);
+        return $this->users()
+            ->withPivotValue('role', ScopedRole::Editor->toSlug())
+            ->withPivotValue('role_id', ScopedRole::Editor->legacyId());
+    }
+
+    /**
+     * The role-assignment pivot rows for this publication. Exposed as a HasMany
+     * (not just the role-filtered belongsToMany helpers) so the abilities
+     * resolver can eager-load and read assignments in memory, avoiding a
+     * per-entity pivot query on list endpoints.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function publicationAssignments(): HasMany
+    {
+        return $this->hasMany(PublicationAssignment::class, 'publication_id');
     }
 
     /**
@@ -121,38 +129,79 @@ class Publication extends BaseModel
     }
 
     /**
-     * Return the currently logged in users role
+     * Return the currently logged in user's role slug on this publication.
      *
-     * @return int|null
+     * @return string|null
      */
-    public function getMyRole(): ?int
+    public function getMyRole(): ?string
     {
         /** @var \App\Models\User $user */
-        $user = auth()->user();
+        $user = Auth::user();
         if (!$user) {
             return null;
         }
 
-        return $this->users()->wherePivot('user_id', $user->id)->first()->pivot->role_id ?? null;
+        $first = $this->users->first(
+            fn(User $u) => $u->pivot->user_id === $user->id
+        );
+
+        if (!$first) {
+            return null;
+        }
+
+        return $first->pivot->role;
     }
 
     /**
-     * Return the effective role of a user on a submission taking into account parent roles they may have.
+     * Return the effective role slug of a user on this publication taking into
+     * account parent roles they may have.
      *
-     * @return int|null
+     * @deprecated Display-only UI hint, NOT authorization — surfaced as the
+     *   GraphQL `effective_role` field for the client. Slated for replacement by
+     *   per-entity capability flags. For authorization use
+     *   {@see \App\Auth\ScopedAbilityResolver} / `$user->can()`, never this.
+     * @return string|null
      */
-    public function getEffectiveRole(): ?int
+    public function getEffectiveRole(): ?string
     {
         /** @var \App\Models\User $user */
-        $user = auth()->user();
+        $user = Auth::user();
         if (!$user) {
             return null;
         }
 
-        if ($user->hasRole(Role::APPLICATION_ADMINISTRATOR)) {
-            return (int)Role::PUBLICATION_ADMINISTRATOR_ROLE_ID;
+        if ($user->isApplicationAdministrator()) {
+            return ScopedRole::PublicationAdmin->toSlug();
         }
 
         return $this->getMyRole();
+    }
+
+    /**
+     * The authenticated viewer's SCOPED abilities on this publication as a map of
+     * snake_case ability name => bool, e.g. ['view' => true, 'update' => false].
+     *
+     * Resolved through {@see ScopedAbilityResolver} — the same engine the
+     * policies use — so these client-facing flags can never drift from real
+     * authorization, and conditional grants are honored against this entity. The
+     * keys are derived from {@see PublicationAbility} cases. Guests get all-false.
+     *
+     * UI hints only: the server still enforces every mutation with @can.
+     *
+     * @return array<string, bool>
+     */
+    public function abilities(): array
+    {
+        /** @var \App\Models\User|null $user */
+        $user = Auth::user();
+        $resolver = app(ScopedAbilityResolver::class);
+
+        $abilities = [];
+        foreach (PublicationAbility::cases() as $ability) {
+            $abilities[Str::snake($ability->name)] =
+                $user !== null && $resolver->allows($user, $ability, $this);
+        }
+
+        return $abilities;
     }
 }

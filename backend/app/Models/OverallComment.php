@@ -6,6 +6,7 @@ namespace App\Models;
 use App\Events\OverallCommentAdded;
 use App\Events\OverallCommentReplyAdded;
 use App\Http\Traits\CreatedUpdatedBy;
+use App\Models\Contracts\Comment;
 use App\Models\Traits\ReadStatus;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -14,7 +15,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
 
-class OverallComment extends BaseModel
+class OverallComment extends BaseModel implements Comment
 {
     use HasFactory;
     use CreatedUpdatedBy;

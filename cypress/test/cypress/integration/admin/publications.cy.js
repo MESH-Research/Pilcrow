@@ -13,6 +13,8 @@ describe("Admin Publications", () => {
 
   it("creates new publications and navigates to setup page", () => {
     cy.dataCy("create_pub_button").click()
+    cy.dataCy("new_publication_input").should("be.visible")
+    cy.get(".q-dialog__inner").should("have.css", "opacity", "1")
     cy.checkA11y(null, null, a11yLogViolations)
     cy.dataCy("new_publication_input").type("Publication from Cypress{enter}")
     cy.dataCy("create_publication_notify")
@@ -23,8 +25,8 @@ describe("Admin Publications", () => {
 
   it("prevents publication creation when the name is empty", () => {
     cy.dataCy("create_pub_button").click()
+    cy.get(".q-dialog__inner").should("have.css", "opacity", "1")
     cy.dataCy("new_publication_input").type("{enter}")
-    cy.dataCy("publications_list")
     cy.dataCy("name_field_error").should("be.visible")
     cy.dataCy("new_publication_input").type("Draft Publication from Cypress")
     cy.checkA11y(null, null, a11yLogViolations)
@@ -32,6 +34,7 @@ describe("Admin Publications", () => {
 
   it("prevents publication creation when the name exceeds the maximum length", () => {
     cy.dataCy("create_pub_button").click()
+    cy.get(".q-dialog__inner").should("have.css", "opacity", "1")
     const name_257_characters = "".padEnd(257, "01234567890")
     cy.dataCy("new_publication_input").type(name_257_characters, {
       delay: 0

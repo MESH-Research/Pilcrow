@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
+use App\Auth\Roles\GlobalRole;
 use App\Models\Publication;
-use App\Models\Role;
 use App\Models\Submission;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -94,7 +94,7 @@ class UserTest extends TestCase
         $user = User::factory()->create();
 
         if (in_array(1, $role_ids)) {
-            $user->assignRole(Role::APPLICATION_ADMINISTRATOR);
+            $user->assignRole(GlobalRole::ApplicationAdministrator);
         }
         if (in_array(2, $role_ids)) {
             $this->assignPublicationRole($user, 'publicationAdmins');
@@ -154,5 +154,29 @@ class UserTest extends TestCase
         $this->assertNotEmpty($username1);
         $this->assertNotEmpty($username2);
         $this->assertNotEquals($username1, $username2);
+    }
+
+    /**
+     * @return void
+     */
+    public function testAvatarColorMatchesLegacyClientHash(): void
+    {
+        // Legacy client-side hash of "test@meshresearch.net" yields index 6
+        // (purple) within the colors list. Backend must produce the same value
+        // so existing avatars stay stable now that emails are not exposed.
+        $user = User::factory()->create(['email' => 'test@meshresearch.net']);
+        $this->assertSame('purple', $user->avatar_color);
+    }
+
+    /**
+     * @return void
+     */
+    public function testAvatarColorIsOneOfKnownColors(): void
+    {
+        $user = User::factory()->create(['email' => 'colors@example.test']);
+        $this->assertContains($user->avatar_color, [
+            'blue', 'cyan', 'green', 'magenta', 'orange',
+            'pine', 'purple', 'red', 'yellow',
+        ]);
     }
 }

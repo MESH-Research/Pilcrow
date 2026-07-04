@@ -5,6 +5,7 @@ import pluginQuasar from "@quasar/app-vite/eslint"
 import tseslint from "typescript-eslint"
 // the following is optional, if you want prettier too:
 import prettierSkipFormatting from "@vue/eslint-config-prettier"
+import pluginVueI18n from "@intlify/eslint-plugin-vue-i18n"
 import vueParser from "vue-eslint-parser"
 const config = [
   {
@@ -77,6 +78,15 @@ const config = [
     }
   },
   {
+    // Auto-routes pages (vue-router file-based routing convention)
+    // use single-word file/component names tied to URL segments,
+    // e.g. users.vue → /users, [id]/submissions.vue → /:id/submissions.
+    files: ["src/routes/**/*.vue"],
+    rules: {
+      "vue/multi-word-component-names": "off"
+    }
+  },
+  {
     files: [
       "test/vitest/**/*.{js,mjs,cjs,ts,mts,cts}",
       "src*/**/*.vitest.spec.{js,mjs,cjs,ts,mts}"
@@ -120,6 +130,34 @@ const config = [
       globals: {
         ...globals.serviceworker
       }
+    }
+  },
+  {
+    files: ["src*/**/*.{vue,js,mjs,cjs,ts,mts}"],
+    ignores: ["src*/**/*.vitest.spec.{js,mjs,cjs,ts,mts}"],
+    plugins: {
+      "@intlify/vue-i18n": pluginVueI18n
+    },
+    settings: {
+      "vue-i18n": {
+        localeDir: {
+          pattern: "./src/i18n/*.json",
+          localeKey: "file"
+        },
+        messageSyntaxVersion: "^11.0.0"
+      }
+    },
+    rules: {
+      "@intlify/vue-i18n/no-raw-text": [
+        "error",
+        {
+          // ignore strings that are only punctuation/digits/whitespace, or a bare URL
+          ignorePattern: "^(\\s*https?://\\S+\\s*|[\\s\\d!-/:-@[-`{-~]+)$",
+          // decorative glyphs that render as icons, not translatable copy
+          ignoreText: ["📂", "⇧"]
+        }
+      ],
+      "@intlify/vue-i18n/no-missing-keys": "error"
     }
   },
 
