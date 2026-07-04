@@ -16,6 +16,70 @@ cypress:
         service: cypress
         dir: /app/cypress
         cmd: yarn cypress
+playwright:
+  description: Install the Playwright test runner and tooling commands.
+  template:
+    services:
+      playwright:
+        api: 3
+        type: lando
+        # Lando maps the host user to www-data (UID 1000) inside the
+        # container so mounted files are writable. Use the default
+        # meUser (www-data) so build steps can write to node_modules.
+        services:
+          image: "mcr.microsoft.com/playwright:v1.58.2-noble"
+          command: sleep infinity
+          environment:
+            # Browsers ship with the image; don't try to download our own.
+            PLAYWRIGHT_BROWSERS_PATH: "/ms-playwright"
+            PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
+            # Hit the Lando proxy domain; the self-signed cert means the
+            # node APIRequestContext needs TLS verification disabled.
+            PLAYWRIGHT_BASE_URL: "https://pilcrow.lndo.site"
+            NODE_TLS_REJECT_UNAUTHORIZED: "0"
+        build:
+          - cd /app/playwright && yarn
+    tooling:
+      playwright:
+        service: playwright
+        dir: /app/playwright
+        cmd: yarn playwright
+        description: Run the `playwright` CLI inside the container.
+      playwright-test:
+        service: playwright
+        dir: /app/playwright
+        cmd: yarn test
+        description: Run the full Playwright E2E suite.
+      playwright-test-chromium:
+        service: playwright
+        dir: /app/playwright
+        cmd: yarn test:chromium
+        description: Run the Playwright E2E suite against chromium only.
+      playwright-test-firefox:
+        service: playwright
+        dir: /app/playwright
+        cmd: yarn test:firefox
+        description: Run the Playwright E2E suite against firefox only.
+      playwright-test-webkit:
+        service: playwright
+        dir: /app/playwright
+        cmd: yarn test:webkit
+        description: Run the Playwright E2E suite against webkit only.
+      playwright-lint:
+        service: playwright
+        dir: /app/playwright
+        cmd: yarn lint
+        description: Run ESLint on the Playwright suite.
+      playwright-typecheck:
+        service: playwright
+        dir: /app/playwright
+        cmd: yarn typecheck
+        description: Run TypeScript type checking on the Playwright suite.
+      playwright-validate:
+        service: playwright
+        dir: /app/playwright
+        cmd: yarn validate
+        description: Run ESLint + typecheck on the Playwright suite.
 mailhog:
   description: Catch mail output from Pilcrow with mailhog.
   template:

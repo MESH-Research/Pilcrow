@@ -107,5 +107,12 @@ class UserSeeder extends Seeder
             'name' => 'Beta User',
             'password' => Hash::make('betaPassword!@#'),
         ]);
+
+        User::factory()->create([
+            'username' => 'settingsUser',
+            'email' => 'settingsuser@meshresearch.net',
+            'name' => 'Settings Test User',
+            'password' => Hash::make('settingsPassword!@#'),
+        ]);
     }
 }

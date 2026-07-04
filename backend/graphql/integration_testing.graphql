@@ -1,9 +1,43 @@
 extend type Mutation {
     """
-    Reset the database and run seeders.
+    Run migrate:fresh --seed to fully reset the database.
+    Drops any leftover shadow tables from previous test runs.
     Only available in local and testing environments.
     """
     resetDatabase: String!
         @show(env: ["local", "testing"])
-        @field(resolver: "App\\GraphQL\\Mutations\\ResetDatabase")
+        @field(resolver: "App\\GraphQL\\Mutations\\IntegrationTesting\\ResetDatabase")
+
+    """
+    Create shadow copies of all tables for a worker's test token.
+    Must be called before any test requests with this token.
+    The middleware will route all queries to the shadow tables.
+    Only available in local and testing environments.
+    """
+    setupTestToken(token: String!): String!
+        @show(env: ["local", "testing"])
+        @field(resolver: "App\\GraphQL\\Mutations\\IntegrationTesting\\SetupTestToken")
+
+    """
+    Drop shadow tables for a worker's test token.
+    Called after each test to clean up.
+    Only available in local and testing environments.
+    """
+    teardownTestToken(token: String!): String!
+        @show(env: ["local", "testing"])
+        @field(resolver: "App\\GraphQL\\Mutations\\IntegrationTesting\\TeardownTestToken")
+
+    """
+    Create a test submission with the specified status and role assignments.
+    Returns the created submission on the worker's shadow tables.
+    Only available in local and testing environments.
+    """
+    seedSubmission(
+        title: String
+        status: SubmissionStatus
+        publication_id: ID
+        with_content: Boolean
+    ): Submission!
+        @show(env: ["local", "testing"])
+        @field(resolver: "App\\GraphQL\\Mutations\\IntegrationTesting\\SeedSubmission")
 }

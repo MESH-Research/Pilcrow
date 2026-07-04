@@ -23,6 +23,7 @@
       v-model="isExpanded"
       max-width="400px"
       position="top"
+      :breakpoint="isFirefox ? 9999 : 450"
     >
       <div class="notifications-container">
         <q-card
@@ -70,6 +71,7 @@ import NotificationListItem from "src/components/atoms/NotificationListItem.vue"
 import { computed } from "vue"
 import { MARK_ALL_NOTIFICATIONS_READ } from "src/graphql/mutations"
 
+const isFirefox = /firefox/i.test(navigator.userAgent)
 const currentPage = ref(1)
 const popupProxy = ref(null)
 const isExpanded = ref(false)

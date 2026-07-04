@@ -1,0 +1,12 @@
+diff --git a/node_modules/playwright-core/lib/server/recorder/recorderApp.js b/node_modules/playwright-core/lib/server/recorder/recorderApp.js
+index 57a0dcd..ba1b689 100644
+--- a/node_modules/playwright-core/lib/server/recorder/recorderApp.js
++++ b/node_modules/playwright-core/lib/server/recorder/recorderApp.js
+@@ -186,7 +186,6 @@ class RecorderApp {
+     const { context: appContext, page } = await (0, import_launchApp2.launchApp)(recorderPlaywright.chromium, {
+       sdkLanguage,
+       windowSize: { width: 600, height: 600 },
+-      windowPosition: { x: 1020, y: 10 },
+       persistentContextOptions: {
+         noDefaultViewport: true,
+         headless: !!process.env.PWTEST_CLI_HEADLESS || (0, import_debug.isUnderTest)() && !headed,

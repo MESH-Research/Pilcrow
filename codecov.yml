@@ -33,3 +33,9 @@ ignore:
   - "client/src/graphql/operations/**"
   - "docs/**"
   - "helm/**"
+  # E2E test-isolation infrastructure: only reachable in local/testing
+  # environments and exercised by the Playwright suite, which doesn't
+  # collect PHP coverage.
+  - "backend/app/IntegrationTesting/**"
+  - "backend/app/GraphQL/Mutations/IntegrationTesting/**"
+  - "backend/app/Http/Middleware/IntegrationTestingMiddleware.php"

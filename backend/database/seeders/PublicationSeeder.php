@@ -38,10 +38,26 @@ class PublicationSeeder extends Seeder
         }
 
         Publication::factory()
-        ->create([
-            'name' => 'Pilcrow Test Publication Reject Submissions',
-            'is_accepting_submissions' => false,
-        ]);
+            ->create([
+                'name' => 'Pilcrow Test Publication Reject Submissions',
+                'is_accepting_submissions' => false,
+            ]);
+        $setupPublication = Publication::factory()
+            ->hasAttached(User::firstWhere('username', 'publicationAdministrator'), [], 'publicationAdmins')
+            ->hasAttached(User::firstWhere('username', 'publicationEditor'), [], 'editors')
+            ->create([
+                'name' => 'Pilcrow Test Publication Setup',
+                'is_accepting_submissions' => true,
+            ]);
+
+        foreach ($this->namedStyleCriterias() as $criteria) {
+            StyleCriteria::factory()->create([
+                'name' => $criteria['name'],
+                'publication_id' => $setupPublication->id,
+                'description' => $criteria['description'],
+                'icon' => $criteria['icon'],
+            ]);
+        }
         Publication::factory()
             ->count(3)
             ->has(

@@ -33,6 +33,7 @@ RUN curl -Lo /wait https://github.com/ufoscout/docker-compose-wait/releases/down
     && rm /tmp/pandoc.deb
 
 RUN echo "pm.status_path = /status" >> /usr/local/etc/php-fpm.d/zz-docker.conf \
+    && echo "clear_env = no" >> /usr/local/etc/php-fpm.d/zz-docker.conf \
     && cp ${PHP_INI_DIR}/php.ini-production ${PHP_INI_DIR}/php.ini \
     && echo "error_reporting=E_ALL ^ (E_DEPRECATED | E_STRICT)" >> ${PHP_INI_DIR}/conf.d/errors.ini
 
