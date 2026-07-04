@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\GraphQL\Mutations;
 
-use App\Models\Role;
+use App\Auth\Roles\ScopedRole;
 use App\Models\Submission;
 use App\Models\SubmissionInvitation;
 
@@ -23,7 +23,8 @@ final class ReinviteSubmissionUser
         $submission = Submission::where('id', $args['submission_id'])->firstOrFail();
         $invite = SubmissionInvitation::create([
             'submission_id' => $submission->id,
-            'role_id' => Role::REVIEWER_ROLE_ID,
+            'role' => ScopedRole::Reviewer->toSlug(),
+            'role_id' => ScopedRole::Reviewer->legacyId(),
             'email' => $args['email'],
             'message' => $args['message'] ?? null,
         ]);
@@ -45,7 +46,8 @@ final class ReinviteSubmissionUser
         $submission = Submission::where('id', $args['submission_id'])->firstOrFail();
         $invite = SubmissionInvitation::create([
             'submission_id' => $submission->id,
-            'role_id' => Role::REVIEW_COORDINATOR_ROLE_ID,
+            'role' => ScopedRole::ReviewCoordinator->toSlug(),
+            'role_id' => ScopedRole::ReviewCoordinator->legacyId(),
             'email' => $args['email'],
             'message' => $args['message'] ?? null,
         ]);

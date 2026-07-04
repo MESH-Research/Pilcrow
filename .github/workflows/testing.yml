@@ -14,6 +14,9 @@ on:
       - ".release-please-manifest.json"
 permissions:
   packages: write
+  id-token: write
+  contents: read
+  pull-requests: write
 concurrency:
   group: tests-${{ format('{0}-{1}', github.head_ref || github.run_number, github.job) }}
   cancel-in-progress: true
@@ -33,7 +36,7 @@ jobs:
       md: ${{ steps.filter.outputs.md }}
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - uses: dorny/paths-filter@master
         id: filter
         with:
@@ -67,7 +70,7 @@ jobs:
     needs: [changes]
     if: ${{ needs.changes.outputs.client == 'true' }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
           fetch-tags: true
@@ -76,19 +79,106 @@ jobs:
         name: Run Unit Tests
         with:
           target: "web-test-ci"
+      # Codecov runs on origin only (provides overall + trend + patch coverage).
+      - name: Upload coverage to Codecov
+        if: ${{ github.repository == 'MESH-Research/Pilcrow' && !cancelled() }}
+        uses: codecov/codecov-action@v6
+        with:
+          files: ./coverage-web/cobertura-coverage.xml
+          flags: client
+          fail_ci_if_error: false
+          use_oidc: true
+      - name: Upload test results to Codecov
+        if: ${{ github.repository == 'MESH-Research/Pilcrow' && !cancelled() }}
+        uses: codecov/codecov-action@v6
+        with:
+          files: ./coverage-web/junit.xml
+          report_type: test_results
+          flags: client
+          fail_ci_if_error: false
+          use_oidc: true
+      # Surface coverage of the CHANGED lines as a sticky PR comment using only
+      # GITHUB_TOKEN — no external service, no secret. Runs on every PR
+      # (including forks, which lack Codecov); on origin it duplicates Codecov's
+      # patch coverage but keeps the comment path exercised.
+      - name: Patch coverage of change (client)
+        if: ${{ github.event_name == 'pull_request' && !cancelled() }}
+        run: |
+          git fetch --no-tags origin ${{ github.base_ref }}:refs/remotes/origin/${{ github.base_ref }}
+          pipx install diff_cover
+          # Cobertura from the build container records an absolute in-container
+          # <source> path; rewrite it to the checkout's client dir so diff-cover
+          # resolves files to client/… and matches the git diff paths.
+          sed -i -E "s#<source>.*</source>#<source>${GITHUB_WORKSPACE}/client</source>#" \
+            ./coverage-web/cobertura-coverage.xml
+          diff-cover ./coverage-web/cobertura-coverage.xml \
+            --compare-branch=origin/${{ github.base_ref }} \
+            --format markdown:patch-coverage-client.md \
+            --fail-under=0 || true
+          # Trim per-hunk source from the report: keep header, file list, summary.
+          awk '/^## / && seen { exit } /^## Summary/ { seen=1 } { print }' \
+            patch-coverage-client.md > patch-coverage-client.trimmed.md
+      - name: Comment patch coverage (client)
+        if: ${{ github.event_name == 'pull_request' && !cancelled() }}
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: patch-coverage-client
+          path: patch-coverage-client.trimmed.md
+
+  client-fallow-audit:
+    name: "Client / Fallow Audit"
+    runs-on: ubuntu-24.04
+    needs: [changes]
+    if: ${{ needs.changes.outputs.client == 'true' && github.event_name == 'pull_request' }}
+    permissions:
+      contents: read
+      pull-requests: write
+      security-events: write
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: yarn
+          cache-dependency-path: client/yarn.lock
+      # Install deps and generate graphql artifacts so fallow resolves
+      # imports of src/graphql/generated and node_modules packages
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+        working-directory: ./client
+      - name: Generate GraphQL artifacts
+        run: yarn graphql:codegen-local
+        working-directory: ./client
+      # Generates .quasar/tsconfig.json so fallow resolves the `app`/`src`
+      # path aliases instead of flagging them as unlisted dependencies
+      - name: Prepare Quasar
+        run: yarn quasar prepare
+        working-directory: ./client
+      - uses: fallow-rs/fallow@v2
+        with:
+          command: audit
+          root: ./client
+          # sarif upload disabled: audit emits multiple SARIF runs with the
+          # same category, which GitHub code scanning now rejects
+          sarif: false
+          comment: true
+          review-comments: true
+          fail-on-issues: true
 
   build-images:
     name: "Build"
     runs-on: ubuntu-24.04
     outputs:
-      version: ${{ steps.build-image.outputs.version }}
+      version: ${{ steps.extract-version.outputs.version }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
           fetch-tags: true
       - name: Login to Github Packages
-        uses: docker/login-action@v2
+        uses: docker/login-action@v4
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -99,6 +189,12 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           push: true
+      - name: Extract version from tags
+        id: extract-version
+        run: |
+          TAG=$(echo "${{ steps.build-image.outputs.tags }}" | grep -oP ':\K[^\s]+' | head -1)
+          echo "version=$TAG" >> "$GITHUB_OUTPUT"
+          echo "Extracted version: $TAG"
   backend-unit-test:
     name: Backend / Unit Test
     runs-on: ubuntu-24.04
@@ -121,7 +217,7 @@ jobs:
           --health-retries 3
     if: ${{ needs.changes.outputs.api == 'true' }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
           fetch-tags: true
@@ -130,6 +226,52 @@ jobs:
       - uses: mesh-research/github-actions/build-image@v2
         with:
           target: "fpm-test-ci"
+      # Codecov runs on origin only (provides overall + trend + patch coverage).
+      - name: Upload coverage to Codecov
+        if: ${{ github.repository == 'MESH-Research/Pilcrow' && !cancelled() }}
+        uses: codecov/codecov-action@v6
+        with:
+          files: ./coverage-fpm/cobertura.xml
+          flags: backend
+          fail_ci_if_error: false
+          use_oidc: true
+      - name: Upload test results to Codecov
+        if: ${{ github.repository == 'MESH-Research/Pilcrow' && !cancelled() }}
+        uses: codecov/codecov-action@v6
+        with:
+          files: ./coverage-fpm/junit.xml
+          report_type: test_results
+          flags: backend
+          fail_ci_if_error: false
+          use_oidc: true
+      # Surface coverage of the CHANGED lines as a sticky PR comment using only
+      # GITHUB_TOKEN — no external service, no secret. Runs on every PR
+      # (including forks, which lack Codecov); on origin it duplicates Codecov's
+      # patch coverage but keeps the comment path exercised.
+      - name: Patch coverage of change (backend)
+        if: ${{ github.event_name == 'pull_request' && !cancelled() }}
+        run: |
+          git fetch --no-tags origin ${{ github.base_ref }}:refs/remotes/origin/${{ github.base_ref }}
+          pipx install diff_cover
+          # Cobertura from the build container records <source>/var/www/html/app
+          # with filenames relative to app/; rewrite <source> to the checkout's
+          # backend/app dir so diff-cover resolves files to backend/app/… and
+          # matches the git diff paths.
+          sed -i -E "s#<source>.*</source>#<source>${GITHUB_WORKSPACE}/backend/app</source>#" \
+            ./coverage-fpm/cobertura.xml
+          diff-cover ./coverage-fpm/cobertura.xml \
+            --compare-branch=origin/${{ github.base_ref }} \
+            --format markdown:patch-coverage-backend.md \
+            --fail-under=0 || true
+          # Trim per-hunk source from the report: keep header, file list, summary.
+          awk '/^## / && seen { exit } /^## Summary/ { seen=1 } { print }' \
+            patch-coverage-backend.md > patch-coverage-backend.trimmed.md
+      - name: Comment patch coverage (backend)
+        if: ${{ github.event_name == 'pull_request' && !cancelled() }}
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: patch-coverage-backend
+          path: patch-coverage-backend.trimmed.md
   # e2e:
   #   name: "E2E Test"
   #   needs: [build-images]
@@ -151,7 +293,7 @@ jobs:
     if: ${{ needs.changes.outputs.php == 'true' }}
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
           fetch-tags: true
@@ -165,7 +307,7 @@ jobs:
     if: ${{ needs.changes.outputs.js == 'true' }}
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
           fetch-tags: true
@@ -196,8 +338,10 @@ jobs:
     if: ${{ needs.changes.outputs.docs == 'true' }}
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v4
-      - uses: actions/setup-node@v3
+        uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
       - run: |
           cd docs && \
           yarn install && \
@@ -209,8 +353,8 @@ jobs:
     if: ${{ needs.changes.outputs.md == 'true' }}
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+        uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
           node-version: 20
           cache: yarn

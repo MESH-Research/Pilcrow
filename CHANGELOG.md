@@ -3,6 +3,78 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.36.0](https://github.com/MESH-Research/Pilcrow/compare/v0.35.0...v0.36.0) (2026-06-29)
+
+
+### Features
+
+* **auth:** replace Spatie RBAC with Bouncer-backed ABAC ([5f43b4f](https://github.com/MESH-Research/Pilcrow/commit/5f43b4f77386505c6c96488613dd069f0212af71))
+* **auth:** revamp permissions — RBAC → ABAC (Bouncer), retire Spatie ([#2310](https://github.com/MESH-Research/Pilcrow/issues/2310)) ([5f43b4f](https://github.com/MESH-Research/Pilcrow/commit/5f43b4f77386505c6c96488613dd069f0212af71))
+* **backend:** add database/file backups via spatie/laravel-backup ([#2319](https://github.com/MESH-Research/Pilcrow/issues/2319)) ([83b5f4c](https://github.com/MESH-Research/Pilcrow/commit/83b5f4c1b8c3bf493254439c681540046fb383a3))
+* **config:** deployment-supplied filesystem disks seam ([#2323](https://github.com/MESH-Research/Pilcrow/issues/2323)) ([b4c3dcd](https://github.com/MESH-Research/Pilcrow/commit/b4c3dcd71b3c635d57a403de8bdf87041aa104b9))
+
+
+### Bug Fixes
+
+* **client:** correct sticky footer on home page ([#2321](https://github.com/MESH-Research/Pilcrow/issues/2321)) ([c2baaf5](https://github.com/MESH-Research/Pilcrow/commit/c2baaf5cd37b47fd2f900468b73b154a7ccc29f0))
+* **submission:** enforce single review coordinator per submission ([#2324](https://github.com/MESH-Research/Pilcrow/issues/2324)) ([#2328](https://github.com/MESH-Research/Pilcrow/issues/2328)) ([770609c](https://github.com/MESH-Research/Pilcrow/commit/770609cb01a504e150549f0e8c642013e16d2a2c))
+* Use sufficiently contrasting colors for checkboxes in dark mode ([#2322](https://github.com/MESH-Research/Pilcrow/issues/2322)) ([8005ffc](https://github.com/MESH-Research/Pilcrow/commit/8005ffc35a4e347091249a7efeb730e4abcbe253))
+
+## [0.35.0](https://github.com/MESH-Research/Pilcrow/compare/v0.34.0...v0.35.0) (2026-06-16)
+
+
+### Features
+
+* **client:** toggle source maps per-instance via EXPOSE_SOURCEMAPS ([#2290](https://github.com/MESH-Research/Pilcrow/issues/2290)) ([fe2cae4](https://github.com/MESH-Research/Pilcrow/commit/fe2cae42a1a178de839e2fdef490acf279e89768))
+* **graphiql:** seed dev tabs with login mutations per seeded role ([#2296](https://github.com/MESH-Research/Pilcrow/issues/2296)) ([b0155ba](https://github.com/MESH-Research/Pilcrow/commit/b0155bab27d9deceb1b9fed3c782aacbfe61a90e))
+* improvements to admin interfaces for publications and users. ([#2241](https://github.com/MESH-Research/Pilcrow/issues/2241)) ([85636cf](https://github.com/MESH-Research/Pilcrow/commit/85636cf806fb27d32e91202da61d32be93adfe19))
+* Labs (beta features) opt-in system ([#2304](https://github.com/MESH-Research/Pilcrow/issues/2304)) ([11b2950](https://github.com/MESH-Research/Pilcrow/commit/11b29501c4184522d17098a54acb7ffda881992c))
+* Record of Review ([#2268](https://github.com/MESH-Research/Pilcrow/issues/2268)) ([71e6d64](https://github.com/MESH-Research/Pilcrow/commit/71e6d6430f3967e2c4e77e1925f7ff1d7c4c8f5f))
+* **telemetry:** emit aggregate application metrics via Sentry ([#2295](https://github.com/MESH-Research/Pilcrow/issues/2295)) ([ccef9f5](https://github.com/MESH-Research/Pilcrow/commit/ccef9f5604b27d9a86cb3e1a0bf7b6abecd14d43))
+* **telemetry:** scaffold Sentry-protocol error reporting ([#2288](https://github.com/MESH-Research/Pilcrow/issues/2288)) ([dcf7cf5](https://github.com/MESH-Research/Pilcrow/commit/dcf7cf5306918bb5d35d85ce48c439f449f628cd))
+
+
+### Bug Fixes
+
+* **api:** scope root submissions query to managed publications ([#2294](https://github.com/MESH-Research/Pilcrow/issues/2294)) ([50f888e](https://github.com/MESH-Research/Pilcrow/commit/50f888ec78a08dce021b417534780a02520e1f9e))
+* **ci:** resolve VERSION and bundle layout for sourcemap upload ([#2293](https://github.com/MESH-Research/Pilcrow/issues/2293)) ([9914212](https://github.com/MESH-Research/Pilcrow/commit/9914212716cf2097d43456c1ebea15ea40d7a4cc))
+* **client:** keep dev server up on startup lint error ([#2314](https://github.com/MESH-Research/Pilcrow/issues/2314)) ([2f44b2d](https://github.com/MESH-Research/Pilcrow/commit/2f44b2d9711e199289d61ad3e64a7e44b9d5d5be)), closes [#2303](https://github.com/MESH-Research/Pilcrow/issues/2303)
+* Dark mode for record of review ([#2316](https://github.com/MESH-Research/Pilcrow/issues/2316)) ([a9953ea](https://github.com/MESH-Research/Pilcrow/commit/a9953eaa5dabe1920199580f7584798e499a95e9))
+* **logging:** restore LOG_STACK env support for stack channel ([38af48b](https://github.com/MESH-Research/Pilcrow/commit/38af48b6d7d758f378e73f7f0e4cf17ef7a858f9))
+* **nginx:** force revalidation of hashless entry assets ([e1d89c5](https://github.com/MESH-Research/Pilcrow/commit/e1d89c5d8ecff3b2e6054cbe513c50effb081024))
+* **publication:** scope list query to visible publications ([#2297](https://github.com/MESH-Research/Pilcrow/issues/2297)) ([85977a4](https://github.com/MESH-Research/Pilcrow/commit/85977a4217e68388a3eea3b2b17e01f5610b8b26))
+* **telemetry:** wrap GraphQL errors before Sentry capture ([#2298](https://github.com/MESH-Research/Pilcrow/issues/2298)) ([01be75a](https://github.com/MESH-Research/Pilcrow/commit/01be75a96b94d2d499b78bef0f365169a8e20a71))
+
+## [0.34.0](https://github.com/MESH-Research/Pilcrow/compare/v0.33.0...v0.34.0) (2026-05-11)
+
+
+### Features
+
+* **ci:** add schema snapshot drift detection between client and backend ([ba9e9ef](https://github.com/MESH-Research/Pilcrow/commit/ba9e9effd05bc66ac8f84373611ace185faffda4))
+* **client:** add TypeScript infrastructure ([a55719b](https://github.com/MESH-Research/Pilcrow/commit/a55719b7db6a2fb27441619258918a179d2c78b5))
+* **client:** set up GraphQL codegen with TypeScript type generation ([02248c5](https://github.com/MESH-Research/Pilcrow/commit/02248c5ff9b389e4be126914132442283a565caa))
+* **dev:** show local dev folder name when not default ([#2240](https://github.com/MESH-Research/Pilcrow/issues/2240)) ([edcdbbf](https://github.com/MESH-Research/Pilcrow/commit/edcdbbf9e8a2171c8b3ffc39455e95f2cccf8337))
+* Include submission content with comment exports ([#2226](https://github.com/MESH-Research/Pilcrow/issues/2226)) ([ed69845](https://github.com/MESH-Research/Pilcrow/commit/ed69845b98f0af1c5c7ca1cbb8d2574c2c8085c2))
+
+
+### Bug Fixes
+
+* add correct check for dev banner to appear ([#2283](https://github.com/MESH-Research/Pilcrow/issues/2283)) ([49234de](https://github.com/MESH-Research/Pilcrow/commit/49234de0f66590c5024770a1f6895f11d67a3286))
+* **api:** redact User.email for unauthorized viewers ([#2286](https://github.com/MESH-Research/Pilcrow/issues/2286)) ([3f6e330](https://github.com/MESH-Research/Pilcrow/commit/3f6e3304889542a4320800a38b4a54f42ab2ce9c))
+* **backend:** resolve new phpcs lint violations from CakePHP codesniffer v5 ([b4721cd](https://github.com/MESH-Research/Pilcrow/commit/b4721cde37af9758af3fa8ebe8d2d6625ccf2322))
+* bake VERSION into bundle and tree-shake dev banner from prod ([#2285](https://github.com/MESH-Research/Pilcrow/issues/2285)) ([05cfb06](https://github.com/MESH-Research/Pilcrow/commit/05cfb06d578e09a4baaed54fbe221248c8d5a12b))
+* **ci:** change detection, schema drift test, and lando tooling ([#2235](https://github.com/MESH-Research/Pilcrow/issues/2235)) ([40927ec](https://github.com/MESH-Research/Pilcrow/commit/40927ec0c343ffa3dc0284193eabd189699f1f00))
+* **client:** close attribute selector bracket in VerifyEmail test ([b2ba34f](https://github.com/MESH-Research/Pilcrow/commit/b2ba34f6ad0cb0309237097777f8853eb56fd9dc))
+* **client:** replace vite-plugin-checker eslint with vite-plugin-eslint2 ([fea6956](https://github.com/MESH-Research/Pilcrow/commit/fea6956b73caf77018af0f58a950f6b6a57e7f4f))
+* Quasar dev entry path and codegen schema consistency ([#2238](https://github.com/MESH-Research/Pilcrow/issues/2238)) ([255f498](https://github.com/MESH-Research/Pilcrow/commit/255f4985c441b7238e42d9bf304d34f8b9a81c56))
+* remove my.cnf override and add view:clear to build ([#2239](https://github.com/MESH-Research/Pilcrow/issues/2239)) ([aeffec2](https://github.com/MESH-Research/Pilcrow/commit/aeffec2d293b303177052e26cc109c345457e9df))
+* render SPA index for password reset route ([#2274](https://github.com/MESH-Research/Pilcrow/issues/2274)) ([c51b608](https://github.com/MESH-Research/Pilcrow/commit/c51b6086a63ae688000d26b5e451a612329ec177))
+* Replace arbitrary command execution in integration testing ([#2228](https://github.com/MESH-Research/Pilcrow/issues/2228)) ([5418a8d](https://github.com/MESH-Research/Pilcrow/commit/5418a8da8a427813f02ced2546168b7faa15cfdf))
+* resolve markdown lint errors in issue template and docs ([e36ad7a](https://github.com/MESH-Research/Pilcrow/commit/e36ad7a4d429ac5c53f22b33c6d0b4ba9b37bd24))
+* serve app banner config from Laravel runtime not build env ([#2284](https://github.com/MESH-Research/Pilcrow/issues/2284)) ([c232633](https://github.com/MESH-Research/Pilcrow/commit/c232633c401c5ca44e4dc7c61d35fd2197f985f4))
+* serve stable avatar color from backend ([#2287](https://github.com/MESH-Research/Pilcrow/issues/2287)) ([9cce972](https://github.com/MESH-Research/Pilcrow/commit/9cce9725d5c57ff33db26ced192e4346ba43f342))
+* truthiness vs undefined check for LANDO_APP_ROOT ([0609889](https://github.com/MESH-Research/Pilcrow/commit/06098892c4a9e82944b5029f563cce824a720604))
+
 ## [0.33.0](https://github.com/MESH-Research/Pilcrow/compare/v0.32.1...v0.33.0) (2026-03-02)
 
 

@@ -7,28 +7,28 @@ assignees: ''
 
 ---
 
-### Problem/Why
+## Problem/Why
 <!-- Describe what is currently wrong from the user's perspective. -->
 
 
-### Goal/What
+## Goal/What
 <!-- Describe the intended behavior to address and resolve the problem. -->
 
 
-### Solution/How
+## Solution/How
 <!-- Describe in technical terms how to achieve the goal. -->
 
 
-### To Do / Acceptance Criteria
+## To Do / Acceptance Criteria
 
 <!-- Will documentation need to be written or updated? -->
 <!-- Will testing need to be added or updated? -->
 - [ ]
 
-### Review Checklist
+## Review Checklist
 
 - [ ]
 
-### Accessibility Checklist
+## Accessibility Checklist
 
 - [ ]

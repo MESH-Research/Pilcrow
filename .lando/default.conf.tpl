@@ -38,8 +38,19 @@ server {
         try_files /dev/null @backend;
     }
 
+    # SPA navigation (Accept: text/html) goes to Laravel so index.blade.php can
+    # inject runtime globals (__TELEMETRY_CONFIG, __APP_BANNER).
+    # Everything else (JS modules, HMR, asset files) proxies to the vite dev server.
     location / {
+        if ($http_accept ~* "text/html") {
+            rewrite ^ /__spa last;
+        }
         try_files /dev/null @vite;
+    }
+
+    location /__spa {
+        internal;
+        try_files /dev/null @backend;
     }
 
     location /graphql {

@@ -3,15 +3,17 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Notifications;
 
-use App\Models\Role;
+use App\Auth\Roles\ScopedRole;
 use App\Models\Submission;
 use App\Models\SubmissionInvitation;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use Tests\TestFactory;
 
 class InvitationsTest extends TestCase
 {
+    use RefreshDatabase;
     use TestFactory;
 
     /**
@@ -30,7 +32,7 @@ class InvitationsTest extends TestCase
             ->create();
         $invite = SubmissionInvitation::create([
             'submission_id' => $submission->id,
-            'role_id' => Role::REVIEWER_ROLE_ID,
+            'role' => ScopedRole::Reviewer->toSlug(),
             'email' => 'bob1@msu.edu',
         ]);
         $invite->inviteReviewer();
@@ -61,7 +63,7 @@ class InvitationsTest extends TestCase
             ->create();
         $invite = SubmissionInvitation::create([
             'submission_id' => $submission->id,
-            'role_id' => Role::REVIEW_COORDINATOR_ROLE_ID,
+            'role' => ScopedRole::ReviewCoordinator->toSlug(),
             'email' => 'bob2@msu.edu',
         ]);
         $invite->inviteReviewCoordinator();

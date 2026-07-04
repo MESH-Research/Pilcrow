@@ -2,6 +2,7 @@ import { onError } from "@apollo/client/link/error"
 import { Cookies } from "quasar"
 import { setContext } from "@apollo/client/link/context"
 import { Observable } from "@apollo/client/core"
+import { readTelemetryConfig, scrub } from "src/telemetry/config"
 
 const cookieXsrfToken = () => Cookies.get("XSRF-TOKEN")
 
@@ -79,4 +80,48 @@ const expiredTokenLink = onError(({ operation, forward, networkError }) => {
     })
   }
 })
-export { withXsrfLink, expiredTokenLink }
+// Report unhandled GraphQL + network errors to Sentry when telemetry is on.
+// 419 (XSRF expiry) is recovered by expiredTokenLink so we skip it here.
+const telemetryErrorLink = onError(
+  ({ operation, graphQLErrors, networkError }) => {
+    if (!readTelemetryConfig()) return
+
+    const opName = operation?.operationName
+    const tags = { operation: opName ?? "unknown" }
+
+    void import("@sentry/vue").then((Sentry) => {
+      Sentry.withScope((scope) => {
+        scope.setTag("graphql.operation", tags.operation)
+        scope.setExtra("graphql.variables", scrub(operation?.variables))
+        if (graphQLErrors?.length) {
+          for (const err of graphQLErrors) {
+            // GraphQLError arrives as POJO over the wire; wrap so Sentry
+            // gets a real Error with message-based grouping instead of
+            // logging "Object captured as exception".
+            const wrapped =
+              err instanceof Error
+                ? err
+                : new Error(err.message ?? "GraphQL error")
+            Sentry.captureException(wrapped, {
+              contexts: {
+                graphql: {
+                  path: err.path,
+                  locations: err.locations,
+                  extensions: err.extensions
+                }
+              }
+            })
+          }
+        }
+        if (
+          networkError &&
+          !("statusCode" in networkError && networkError.statusCode === 419)
+        ) {
+          Sentry.captureException(networkError)
+        }
+      })
+    })
+  }
+)
+
+export { withXsrfLink, expiredTokenLink, telemetryErrorLink }

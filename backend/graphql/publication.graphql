@@ -1,14 +1,17 @@
 extend type Query {
     "Return a publication by ID"
-    publication(id: ID @eq): Publication @find @can(ability: "view", find: "id")
+    publication(id: ID @eq): Publication @find @canFind(ability: "view", find: "id")
 
     "Return all publications"
     publications(
-        is_publicly_visible: Boolean @scope(name: "IsPubliclyVisible")
-        is_accepting_submissions: Boolean @scope(name: "IsAcceptingSubmissions")
+        search: String @scope
+        public: Boolean @scope(name: "public")
+        accepting_submissions: Boolean @scope(name: "acceptingSubmissions")
+        my_role: PublicationRole @scope(name: "myRole")
+        orderBy: _ @orderBy(columns: ["name", "created_at"])
     ): [Publication!]!
-        @paginate(defaultCount: 10)
-        @can(ability: "view", query: true)
+        @paginate(defaultCount: 10, scopes: ["visible"])
+        @orderBy(column: "name", direction: ASC)
 }
 
 """
@@ -19,8 +22,8 @@ type Publication {
     name: String!
     home_page_content: String
     new_submission_content: String
-    created_at: DateTime
-    updated_at: DateTime
+    created_at: DateTimeUtc
+    updated_at: DateTimeUtc
     submissions: [Submission]! @hasMany
     publication_admins: [User!]! @belongsToMany(relation: "publicationAdmins")
     editors: [User!]! @belongsToMany(relation: "editors")
@@ -29,6 +32,26 @@ type Publication {
     style_criterias: [StyleCriteria!]! @hasMany(relation: "styleCriterias")
     my_role: PublicationRole @method(name: "getMyRole")
     effective_role: PublicationRole @method(name: "getEffectiveRole")
+    "The authenticated viewer's scoped abilities on this publication (UI hints; server still enforces)."
+    abilities: PublicationAbilities!
+        @method(name: "abilities")
+        @with(relation: "publicationAssignments")
+}
+
+"""
+The authenticated viewer's scoped abilities on a publication. Each flag mirrors a
+PublicationAbility case, resolved through the same engine as the policies.
+"""
+type PublicationAbilities
+    @abilityFields(enum: "App\\Auth\\Abilities\\PublicationAbility")
+
+type PublicationAssignment {
+    id: ID!
+    role: PublicationRole! @rename(attribute: "role")
+    user: User! @belongsTo
+    publication: Publication! @belongsTo
+    created_at: DateTimeUtc!
+    updated_at: DateTimeUtc
 }
 
 type StyleCriteria {
@@ -43,11 +66,11 @@ extend type Mutation {
     "Create a new publication"
     createPublication(
         publication: CreatePublicationInput! @spread
-    ): Publication! @create @can(ability: "create")
+    ): Publication! @create @canModel(ability: "create")
 
     updatePublication(
         publication: UpdatePublicationInput! @spread
-    ): Publication @update @can(ability: "update", injectArgs: true)
+    ): Publication @update @canModel(ability: "update", injectArgs: true)
 }
 
 input CreatePublicationInput {
@@ -108,6 +131,6 @@ input UpdateStyleCriteriaInput {
 }
 
 enum PublicationRole {
-    publication_admin @enum(value: 2)
-    editor @enum(value: 3)
+    publication_admin @enum(value: "publication_admin")
+    editor @enum(value: "editor")
 }

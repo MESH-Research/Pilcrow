@@ -19,7 +19,7 @@ class PublicationSeeder extends Seeder
     {
         $this->callOnce(UserSeeder::class);
 
-        Publication::factory()
+        $publication = Publication::factory()
             ->hasAttached(User::firstWhere('username', 'publicationAdministrator'), [], 'publicationAdmins')
             ->hasAttached(User::firstWhere('username', 'publicationEditor'), [], 'editors')
             ->create([
@@ -27,24 +27,101 @@ class PublicationSeeder extends Seeder
                 'name' => 'Pilcrow Test Publication 1',
                 'is_accepting_submissions' => true,
             ]);
+
+        foreach ($this->namedStyleCriterias() as $criteria) {
+            StyleCriteria::factory()->create([
+                'name' => $criteria['name'],
+                'publication_id' => $publication->id,
+                'description' => $criteria['description'],
+                'icon' => $criteria['icon'],
+            ]);
+        }
+
         Publication::factory()
             ->create([
                 'name' => 'Pilcrow Test Publication Reject Submissions',
                 'is_accepting_submissions' => false,
             ]);
-        Publication::factory()
+        $setupPublication = Publication::factory()
             ->hasAttached(User::firstWhere('username', 'publicationAdministrator'), [], 'publicationAdmins')
             ->hasAttached(User::firstWhere('username', 'publicationEditor'), [], 'editors')
             ->create([
                 'name' => 'Pilcrow Test Publication Setup',
                 'is_accepting_submissions' => true,
             ]);
+
+        foreach ($this->namedStyleCriterias() as $criteria) {
+            StyleCriteria::factory()->create([
+                'name' => $criteria['name'],
+                'publication_id' => $setupPublication->id,
+                'description' => $criteria['description'],
+                'icon' => $criteria['icon'],
+            ]);
+        }
         Publication::factory()
-            ->count(50)
+            ->count(3)
             ->has(
                 StyleCriteria::factory()
                     ->count(4)
             )
             ->create();
+        Publication::factory()
+            ->hidden()
+            ->count(10)
+            ->has(StyleCriteria::factory()->count(4))
+            ->create();
+        Publication::factory()
+            ->count(10)
+            ->has(StyleCriteria::factory()->count(4))
+            ->create(['is_accepting_submissions' => false]);
+        Publication::factory()
+            ->hidden()
+            ->count(5)
+            ->has(StyleCriteria::factory()->count(4))
+            ->create(['is_accepting_submissions' => false]);
+    }
+
+    /**
+     * @return array<int, array{name: string, description: string, icon: string}>
+     */
+    private function namedStyleCriterias(): array
+    {
+        return [
+            [
+                'name' => 'Accessibility',
+                'description' => '<ul><li>Can the author replace or explain any technical terms?</li><li>How does ' .
+                                 'the piece consider multiple accessibility needs, such as accessing and interacting ' .
+                                 'with text, audio, video, and other media?</li><li>Are people of all genders, races,' .
+                                 'classes, religions, abilities, sexual orientations and other groups treated ' .
+                                 'equitably in the piece? If so, how?</li></ul>',
+                'icon' => 'accessibility',
+            ],
+            [
+                'name' => 'Relevance',
+                'description' => '<ul><li>Which specific audience(s) or communities does the author acknowledge, ' .
+                                 'consider, and engage with in their work?</li><li>What organizations and individuals' .
+                                 'are engaged in public initiatives associated with the questions or issues addressed' .
+                                 'by the submission?</li><li>Why is this specific issue of interest to this specific ' .
+                                 'at the time of composition or publication?</li></ul>',
+                'icon' => 'close_fullscreen',
+            ],
+            [
+                'name' => 'Coherence',
+                'description' => '<ul><li>Does the author identify claims that support their argument?</li><li>How ' .
+                                 'does the author explain how the claims are related to each other and the larger ' .
+                                 'argument?</li><li>Does the author provide compelling evidence in support of their ' .
+                                 'claims?</li><li>For more creative works, how does the author convey their intended ' .
+                                 'message to readers, listeners, and/or reviewers?</li></ul>',
+                'icon' => 'psychology',
+            ],
+            [
+                'name' => 'Scholarly Dialogue',
+                'description' => '<ul><li>How does the author demonstrate their awareness of existing discussions of ' .
+                                 'their topic?</li><li>How has the author cited the work of others in their project?' .
+                                 '</li><li>How do the author’s citations represent members of the community concerned' .
+                                 ' with the issue at hand?</li></ul>',
+                'icon' => 'question_answer',
+            ],
+        ];
     }
 }

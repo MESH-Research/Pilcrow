@@ -26,10 +26,13 @@
             :class="`${$q.screen.width < 600 ? 'q-pl-lg' : ''}`"
             :vertical="$q.screen.width < 600 ? true : false"
           >
-            <q-btn flat icon="account_circle" to="/account/profile">{{
-              $t(`profile.page_title`)
-            }}</q-btn>
-            <q-btn flat icon="o_settings" to="/account/settings">{{
+            <q-btn
+              flat
+              icon="account_circle"
+              :to="{ name: 'account:profile' }"
+              >{{ $t(`profile.page_title`) }}</q-btn
+            >
+            <q-btn flat icon="o_settings" :to="{ name: 'account:settings' }">{{
               $t(`settings.page_title`)
             }}</q-btn>
             <q-btn flat icon="mdi-logout" to="/logout">{{
@@ -109,13 +112,13 @@
 
 <script setup lang="ts">
 import AvatarImage from "src/components/atoms/AvatarImage.vue"
-import { useCurrentUser } from "src/use/user"
-import { useQuery } from "@vue/apollo-composable"
-import { CURRENT_USER_SUBMISSIONS, GET_SUBMISSIONS } from "src/graphql/queries"
 import SubmissionTable from "src/components/SubmissionTable.vue"
-import { computed } from "vue"
+import { CURRENT_USER_SUBMISSIONS, GET_SUBMISSIONS } from "src/graphql/queries"
 import { compareDatesDesc } from "src/utils/dateSort"
+import { computed } from "vue"
+import { useCurrentUser } from "src/use/user"
 import { useQuasar } from "quasar"
+import { useQuery } from "@vue/apollo-composable"
 
 const $q = useQuasar()
 

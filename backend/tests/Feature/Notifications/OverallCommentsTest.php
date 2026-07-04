@@ -5,11 +5,13 @@ namespace Tests\Feature\Notifications;
 
 use App\Models\OverallComment;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use Tests\TestFactory;
 
 class OverallCommentsTest extends TestCase
 {
+    use RefreshDatabase;
     use TestFactory;
 
     private function createSubmissionWithOverallCommentThread()

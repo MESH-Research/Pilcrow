@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Tests\Api;
 
-use App\Models\Role;
+use App\Auth\Roles\ScopedRole;
 use App\Models\Submission;
 use App\Models\SubmissionInvitation;
 use Carbon\Carbon;
@@ -59,6 +59,230 @@ class SubmissionInvitationTest extends ApiTestCase
             ],
         ];
         $response->assertJsonPath('data', $expected_data);
+    }
+
+    /**
+     * Inviting a review coordinator stages the user, attaches them with the
+     * review_coordinator role, and persists the invitation with the slug (and
+     * its legacy id for rollback safety).
+     *
+     * @return void
+     */
+    public function testReviewCoordinatorCanBeInvited()
+    {
+        $valid_email = 'coordinator@gmail.com';
+        $this->beAppAdmin();
+        $submission = Submission::factory()->create();
+        $response = $this->graphQL(
+            'mutation InviteReviewCoordinator ($submission_id: ID! $email: String! $message: String){
+                inviteReviewCoordinator(input: {
+                  submission_id: $submission_id
+                  email: $email
+                  message: $message
+                }) {
+                  id
+                  review_coordinators {
+                    email
+                    staged
+                  }
+                }
+              }
+            ',
+            [
+                'submission_id' => $submission->id,
+                'email' => $valid_email,
+                'message' => '',
+            ]
+        );
+
+        $response->assertJsonPath('data.inviteReviewCoordinator.review_coordinators', [
+            ['email' => $valid_email, 'staged' => true],
+        ]);
+        $this->assertDatabaseHas('submission_invitations', [
+            'submission_id' => $submission->id,
+            'email' => $valid_email,
+            'role' => ScopedRole::ReviewCoordinator->toSlug(),
+            'role_id' => ScopedRole::ReviewCoordinator->legacyId(),
+        ]);
+    }
+
+    /**
+     * Re-inviting a reviewer resends the invitation without staging a duplicate
+     * user and records the reviewer role slug + legacy id.
+     *
+     * @return void
+     */
+    public function testReviewerCanBeReinvited()
+    {
+        $valid_email = 'reinvited.reviewer@gmail.com';
+        $this->beAppAdmin();
+        $submission = Submission::factory()->create();
+
+        // Reinvite resends to an already-staged reviewer, so invite first.
+        SubmissionInvitation::create([
+            'submission_id' => $submission->id,
+            'role' => ScopedRole::Reviewer->toSlug(),
+            'email' => $valid_email,
+        ])->inviteReviewer();
+
+        $response = $this->graphQL(
+            'mutation ReinviteReviewer ($submission_id: ID! $email: String! $message: String){
+                reinviteReviewer(input: {
+                  submission_id: $submission_id
+                  email: $email
+                  message: $message
+                }) {
+                  id
+                }
+              }
+            ',
+            [
+                'submission_id' => $submission->id,
+                'email' => $valid_email,
+                'message' => '',
+            ]
+        );
+
+        $response->assertJsonPath('data.reinviteReviewer.id', (string)$submission->id);
+        $this->assertDatabaseHas('submission_invitations', [
+            'submission_id' => $submission->id,
+            'email' => $valid_email,
+            'role' => ScopedRole::Reviewer->toSlug(),
+            'role_id' => ScopedRole::Reviewer->legacyId(),
+        ]);
+    }
+
+    /**
+     * Re-inviting a review coordinator resends the invitation and records the
+     * review_coordinator role slug + legacy id.
+     *
+     * @return void
+     */
+    public function testReviewCoordinatorCanBeReinvited()
+    {
+        $valid_email = 'reinvited.coordinator@gmail.com';
+        $this->beAppAdmin();
+        $submission = Submission::factory()->create();
+
+        // Reinvite resends to an already-staged coordinator, so invite first.
+        SubmissionInvitation::create([
+            'submission_id' => $submission->id,
+            'role' => ScopedRole::ReviewCoordinator->toSlug(),
+            'email' => $valid_email,
+        ])->inviteReviewCoordinator();
+
+        $response = $this->graphQL(
+            'mutation ReinviteReviewCoordinator ($submission_id: ID! $email: String! $message: String){
+                reinviteReviewCoordinator(input: {
+                  submission_id: $submission_id
+                  email: $email
+                  message: $message
+                }) {
+                  id
+                }
+              }
+            ',
+            [
+                'submission_id' => $submission->id,
+                'email' => $valid_email,
+                'message' => '',
+            ]
+        );
+
+        $response->assertJsonPath('data.reinviteReviewCoordinator.id', (string)$submission->id);
+        $this->assertDatabaseHas('submission_invitations', [
+            'submission_id' => $submission->id,
+            'email' => $valid_email,
+            'role' => ScopedRole::ReviewCoordinator->toSlug(),
+            'role_id' => ScopedRole::ReviewCoordinator->legacyId(),
+        ]);
+    }
+
+    /**
+     * A submission may have at most one review coordinator. Inviting a second
+     * (different) coordinator through the API is rejected with a typed error and
+     * does not create an invitation, leaving the original coordinator intact.
+     *
+     * @return void
+     */
+    public function testCannotInviteASecondReviewCoordinator()
+    {
+        $this->beAppAdmin();
+        $submission = Submission::factory()->create();
+
+        // First coordinator is staged + attached.
+        SubmissionInvitation::create([
+            'submission_id' => $submission->id,
+            'role' => ScopedRole::ReviewCoordinator->toSlug(),
+            'email' => 'first.coordinator@gmail.com',
+        ])->inviteReviewCoordinator();
+
+        $response = $this->graphQL(
+            'mutation InviteReviewCoordinator ($submission_id: ID! $email: String! $message: String){
+                inviteReviewCoordinator(input: {
+                  submission_id: $submission_id
+                  email: $email
+                  message: $message
+                }) {
+                  id
+                }
+              }
+            ',
+            [
+                'submission_id' => $submission->id,
+                'email' => 'second.coordinator@gmail.com',
+                'message' => '',
+            ]
+        );
+
+        $response->assertJsonPath('errors.0.extensions.code', 'SUBMISSION_ALREADY_HAS_COORDINATOR');
+        // The rejected invite is pre-empted before any row is written.
+        $this->assertDatabaseMissing('submission_invitations', [
+            'email' => 'second.coordinator@gmail.com',
+        ]);
+        $this->assertCount(1, $submission->fresh()->reviewCoordinators);
+    }
+
+    /**
+     * The coordinator-uniqueness guard must not over-block: a reviewer can still
+     * be invited to a submission that already has a (different) coordinator.
+     *
+     * @return void
+     */
+    public function testReviewerCanStillBeInvitedWhenCoordinatorExists()
+    {
+        $this->beAppAdmin();
+        $submission = Submission::factory()->create();
+
+        SubmissionInvitation::create([
+            'submission_id' => $submission->id,
+            'role' => ScopedRole::ReviewCoordinator->toSlug(),
+            'email' => 'the.coordinator@gmail.com',
+        ])->inviteReviewCoordinator();
+
+        $response = $this->graphQL(
+            'mutation InviteReviewer ($submission_id: ID! $email: String! $message: String){
+                inviteReviewer(input: {
+                  submission_id: $submission_id
+                  email: $email
+                  message: $message
+                }) {
+                  id
+                  reviewers { email staged }
+                }
+              }
+            ',
+            [
+                'submission_id' => $submission->id,
+                'email' => 'a.reviewer@gmail.com',
+                'message' => '',
+            ]
+        );
+
+        $response->assertJsonPath('data.inviteReviewer.reviewers', [
+            ['email' => 'a.reviewer@gmail.com', 'staged' => true],
+        ]);
+        $this->assertNull($response->json('errors'));
     }
 
     /**
@@ -146,7 +370,7 @@ class SubmissionInvitationTest extends ApiTestCase
         $submission = Submission::factory()->create();
         $invite = SubmissionInvitation::create([
             'submission_id' => $submission->id,
-            'role_id' => Role::REVIEWER_ROLE_ID,
+            'role' => ScopedRole::Reviewer->toSlug(),
             'email' => 'mesh@msu.edu',
         ]);
         $invite->inviteReviewer();
@@ -249,7 +473,7 @@ class SubmissionInvitationTest extends ApiTestCase
         $submission = Submission::factory()->create();
         $invite = SubmissionInvitation::create([
             'submission_id' => $submission->id,
-            'role_id' => Role::REVIEWER_ROLE_ID,
+            'role' => ScopedRole::Reviewer->toSlug(),
             'email' => 'mesh@msu.edu',
         ]);
         $invite->inviteReviewer();

@@ -1,0 +1,61 @@
+<template>
+  <q-td :props="scope" :dense="scope.dense">
+    <div v-if="user" class="row items-center no-wrap q-gutter-sm">
+      <avatar-image :user="user" size="40px" rounded />
+      <div class="column">
+        <div v-if="user.name">{{ user.name }}</div>
+        <div
+          v-if="user.username && !hideUsername"
+          class="text-caption text-grey-8"
+        >
+          {{ user.username }}
+        </div>
+      </div>
+    </div>
+    <span
+      v-else
+      class="text-grey-8"
+      :aria-label="$t('admin.users.no_user_assigned')"
+      >{{ emptyPlaceholder }}</span
+    >
+  </q-td>
+</template>
+
+<script lang="ts">
+import { graphql } from "src/graphql/generated"
+import type { QTableBodyCellScope, QueryTableColumn } from "../QueryTable.vue"
+
+graphql(`
+  fragment NameAvatarCell on User {
+    name
+    username
+    ...avatarImage
+  }
+`)
+
+export interface NameAvatarColumn extends QueryTableColumn {
+  hideUsername?: boolean
+}
+</script>
+
+<script setup lang="ts">
+import { computed } from "vue"
+import AvatarImage from "src/components/atoms/AvatarImage.vue"
+import type { NameAvatarCellFragment as NameAvatarCellType } from "src/graphql/generated/graphql"
+
+interface Props {
+  scope: QTableBodyCellScope<NameAvatarColumn>
+}
+
+const props = defineProps<Props>()
+
+const user = computed(
+  () => (props.scope.value as NameAvatarCellType | null) ?? null
+)
+
+const hideUsername = computed(() => props.scope.col.hideUsername === true)
+
+// Em-dash placeholder shown when no user is assigned. Kept as a constant so the
+// raw glyph lives in script and is not flagged by @intlify/vue-i18n/no-raw-text.
+const emptyPlaceholder = "—"
+</script>

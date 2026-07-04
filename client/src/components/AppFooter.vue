@@ -11,7 +11,7 @@
           <component :is="versionUrl ? 'a' : 'span'" :href="versionUrl">
             {{ version }}
           </component>
-          <q-tooltip v-if="parsedDate && !parsedDate.invalid">
+          <q-tooltip v-if="parsedDate && parsedDate.isValid">
             {{ parsedDate.toFormat("dd-LLL-yyyy T") }} ({{ versionAge }})
           </q-tooltip>
         </span>
@@ -22,29 +22,21 @@
 
 <script setup lang="ts">
 import { useTimeAgo } from "src/use/timeAgo"
-import { onMounted, ref } from "vue"
+import { computed } from "vue"
 import { DateTime } from "luxon"
 
 const timeAgo = useTimeAgo()
 
-const parsedDate = ref<DateTime | undefined>(undefined)
-const version = ref("")
-const versionAge = ref("")
-const versionUrl = ref("")
-const versionDate = ref("")
+const version = process.env.VERSION ?? ""
+const versionUrl = process.env.VERSION_URL ?? ""
+const versionDate = process.env.VERSION_DATE ?? ""
 
-onMounted(async () => {
-  const response = await fetch("/version.json")
-  const data = await response.json()
-  version.value = data.version || ""
-  versionUrl.value = data.versionUrl || ""
-  versionDate.value = data.versionDate || ""
-  parsedDate.value = versionDate.value
-    ? DateTime.fromISO(versionDate.value)
-    : undefined
-  versionAge.value =
-    parsedDate.value && !parsedDate.value.invalid
-      ? timeAgo.format(parsedDate.value.toJSDate(), "long")
-      : ""
-})
+const parsedDate = computed(() =>
+  versionDate ? DateTime.fromISO(versionDate) : undefined
+)
+const versionAge = computed(() =>
+  parsedDate.value && parsedDate.value.isValid
+    ? timeAgo.format(parsedDate.value.toJSDate(), "long")
+    : ""
+)
 </script>

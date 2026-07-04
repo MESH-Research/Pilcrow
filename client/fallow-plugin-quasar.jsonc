@@ -1,0 +1,30 @@
+{
+  "$schema": "https://raw.githubusercontent.com/fallow-rs/fallow/main/plugin-schema.json",
+  "name": "quasar",
+  "enablers": ["quasar", "@quasar/app-vite", "@quasar/app-webpack"],
+  "configPatterns": [
+    "quasar.config.{ts,js,cjs,mjs}",
+    "quasar.extensions.json",
+    "quasar.testing.json"
+  ],
+  "entryPoints": [
+    "src/App.vue",
+    "src/boot/**/*.{ts,js}",
+    "src/router/**/*.{ts,js}",
+    // unplugin-vue-router file-based routing — referenced by convention, never imported
+    "src/routes/**/*.{vue,ts}",
+    "src/css/**"
+  ],
+  "usedExports": [
+    { "pattern": "src/boot/**/*.{ts,js}", "exports": ["default"] },
+    { "pattern": "src/router/index.{ts,js}", "exports": ["default"] },
+    { "pattern": "src/routes/**/*.vue", "exports": ["default"] }
+  ],
+  "toolingDependencies": [
+    "@quasar/app-vite",
+    "@quasar/cli",
+    "@quasar/extras",
+    "@quasar/quasar-app-extension-testing",
+    "@quasar/quasar-app-extension-testing-unit-vitest"
+  ]
+}

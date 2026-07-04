@@ -6,11 +6,11 @@ import type { Submission } from "src/graphql/generated/graphql"
 
 export function useDarkMode() {
   const $q = useQuasar()
-  const darkModeStatus = ref($q.dark.isActive)
+  const darkModeStatus = ref($q?.dark.isActive)
   watch(
-    () => $q.dark.isActive,
+    () => $q?.dark.isActive,
     () => {
-      darkModeStatus.value = $q.dark.isActive
+      darkModeStatus.value = $q?.dark.isActive
     }
   )
   function toggleDarkMode() {

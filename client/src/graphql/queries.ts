@@ -77,7 +77,7 @@ export const CURRENT_USER_SUBMISSIONS = gql`
       roles {
         name
       }
-      submissions {
+      submissions: raw_submissions {
         id
         title
         status
@@ -184,29 +184,14 @@ export const CURRENT_USER_SUBMISSIONS = gql`
   ${_RELATED_USER_FIELDS}
 `
 
-export const GET_USERS = gql`
-  query GetUsers($page: Int) {
-    userSearch(page: $page) {
-      paginatorInfo {
-        ...paginationFields
-      }
-      data {
-        id
-        name
-        username
-        email
-      }
-    }
-  }
-  ${_PAGINATION_FIELDS}
-`
-
 export const GET_USER = gql`
   query getUser($id: ID) {
     user(id: $id) {
+      id
       username
       email
       name
+      avatar_color
       roles {
         name
       }
@@ -225,6 +210,7 @@ export const SEARCH_USERS = gql`
         username
         name
         email
+        avatar_color
       }
     }
   }
@@ -241,8 +227,8 @@ export const GET_PUBLICATIONS = gql`
     publications(
       page: $page
       first: $first
-      is_publicly_visible: $is_publicly_visible
-      is_accepting_submissions: $is_accepting_submissions
+      public: $is_publicly_visible
+      accepting_submissions: $is_accepting_submissions
     ) {
       paginatorInfo {
         ...paginationFields

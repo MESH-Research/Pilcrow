@@ -10,6 +10,10 @@
 
 import { resolve } from "node:path"
 import { defineConfig } from "#q-app/wrappers"
+import VueRouter from "vue-router/vite"
+import { checker } from "vite-plugin-checker"
+import eslint from "vite-plugin-eslint2"
+import graphqlCodegen from "vite-plugin-graphql-codegen"
 
 export default defineConfig(function (/* ctx */) {
   return {
@@ -28,7 +32,7 @@ export default defineConfig(function (/* ctx */) {
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
     // https://v2.quasar.dev/quasar-cli/boot-files
-    boot: ["i18n", "vue-apollo"],
+    boot: ["telemetry", "i18n", "vue-apollo"],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css
     css: ["app.sass"],
@@ -50,9 +54,10 @@ export default defineConfig(function (/* ctx */) {
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#build
     build: {
+      sourcemap: "hidden",
       typescript: {
         strict: false,
-        vueShim: true,
+        vueShim: true
       },
 
       target: {
@@ -72,6 +77,16 @@ export default defineConfig(function (/* ctx */) {
           }
         }
         viteConf.plugins = viteConf.plugins || []
+        // File-based routing from src/routes/ — distinct from the
+        // legacy manually-configured pages under src/pages/, which
+        // stay registered in src/router/routes.ts. As pages migrate,
+        // they move from pages/ to routes/.
+        viteConf.plugins.push(
+          VueRouter({
+            routesFolder: [{ src: "src/routes" }],
+            dts: "src/typed-router.d.ts"
+          })
+        )
         viteConf.plugins.push({
           name: "watch-backend-schema",
           configureServer(server) {
@@ -79,20 +94,30 @@ export default defineConfig(function (/* ctx */) {
             let debounceTimer: ReturnType<typeof setTimeout> | null = null
             server.watcher.add(backendGraphqlDir)
             server.watcher.on("change", (filePath) => {
-              if (!filePath.startsWith(backendGraphqlDir) || !filePath.endsWith(".graphql")) return
+              if (
+                !filePath.startsWith(backendGraphqlDir) ||
+                !filePath.endsWith(".graphql")
+              )
+                return
               if (debounceTimer) clearTimeout(debounceTimer)
               debounceTimer = setTimeout(async () => {
                 try {
-                  const { generate, loadContext } = await import("@graphql-codegen/cli")
+                  const { generate, loadContext } =
+                    await import("@graphql-codegen/cli")
                   const ctx = await loadContext()
                   await generate({ ...ctx.getConfig(), watch: false })
-                  console.log("[watch-backend-schema] Types regenerated after schema change")
+                  console.log(
+                    "[watch-backend-schema] Types regenerated after schema change"
+                  )
                 } catch (e) {
-                  console.warn("[watch-backend-schema] Codegen failed:", (e as Error).message)
+                  console.warn(
+                    "[watch-backend-schema] Codegen failed:",
+                    (e as Error).message
+                  )
                 }
               }, 500)
             })
-          },
+          }
         })
       },
       vueRouterMode: "history", // available values: 'hash', 'history'
@@ -100,10 +125,8 @@ export default defineConfig(function (/* ctx */) {
         VERSION: process.env.VERSION ?? undefined,
         VERSION_URL: process.env.VERSION_URL ?? undefined,
         VERSION_DATE: process.env.VERSION_DATE ?? undefined,
-        APP_BANNER: process.env.APP_BANNER ?? undefined,
         LANDO_APP_ROOT: process.env.LANDO_APP_ROOT_BIND ?? undefined,
-        APP_BANNER_CLASS: process.env.APP_BANNER_CLASS ?? undefined,
-        APP_BANNER_LINK: process.env.APP_BANNER_LINK ?? undefined
+        LANDO_DEV: !!process.env.LANDO_APP_ROOT_BIND
       },
       // vueRouterBase,
       // vueDevtools,
@@ -127,21 +150,27 @@ export default defineConfig(function (/* ctx */) {
       // ]
       vitePlugins: [
         [
-          "vite-plugin-checker",
+          checker,
           {
-            vueTsc: true,
+            vueTsc: true
           },
           { server: false }
         ],
         [
-          "vite-plugin-eslint2",
+          eslint,
           {
             lintOnStart: true,
             fix: false,
+            // Emit lint errors as warnings during local dev so a committed
+            // lint error surfaces in the overlay/console without aborting
+            // Vite startup (PluginContext.error() throws and kills the dev
+            // server -> 502). Lint is still a hard gate in CI via `yarn lint`,
+            // which runs the ESLint CLI independently of this plugin. See #2303.
+            emitErrorAsWarning: true
           }
         ],
         [
-          "vite-plugin-graphql-codegen",
+          graphqlCodegen,
           {
             runOnStart: true,
             runOnBuild: true,
@@ -149,10 +178,10 @@ export default defineConfig(function (/* ctx */) {
             matchOnDocuments: true,
             matchOnSchemas: false,
             configOverrideOnBuild: {
-              schema: "src/graphql/schema.graphql",
-            },
-          },
-        ],
+              schema: "src/graphql/schema.graphql"
+            }
+          }
+        ]
       ],
       useFilenameHashes: false
     },
@@ -166,7 +195,7 @@ export default defineConfig(function (/* ctx */) {
         clientPort: 443,
         path: "/__hmr"
       },
-      allowedHosts: ["localhost", "pilcrow.lndo.site"]
+      allowedHosts: ["localhost", ".lndo.site"]
     },
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#framework
@@ -217,6 +246,6 @@ export default defineConfig(function (/* ctx */) {
       middlewares: [
         "render" // keep this as last one
       ]
-    },
+    }
   }
 })

@@ -5,18 +5,53 @@ type User {
     id: ID!
     display_label: String
     name: String
-    email: String!
+    email: String @redactIfDenied(ability: "viewEmail")
+    avatar_color: String! @deprecated(reason: "Temporary placeholder for stable avatar colors; will be removed when user-uploaded avatars are introduced.")
     username: String!
-    created_at: DateTime!
-    updated_at: DateTime
-    email_verified_at: DateTime
+    created_at: DateTimeUtc!
+    updated_at: DateTimeUtc
+    email_verified_at: DateTimeUtc
     roles: [Role!]! @belongsToMany
     highest_privileged_role: UserRoles @method(name: "getHighestPrivilegedRole")
-    permissions: [Permission!] @belongsToMany
+    "This user's global abilities. Fetched via currentUser this is the viewer's own (UI hints; server still enforces)."
+    abilities: UserAbilities! @method(name: "globalAbilities")
     profile_metadata: ProfileMetadata
-    submissions: [Submission]! @belongsToMany
-    pivot: SubmissionUser
+    "Whether the user has access to private beta features (admin-set)."
+    beta: Boolean!
+    "Beta feature keys the user has explicitly opted into."
+    feature_opt_ins: [String!]! @method(name: "getActiveFeatureOptIns")
+    raw_submissions: [Submission!]
+        @belongsToMany(relation: "submissions")
+        @deprecated(reason: "Use `submissions` (SubmissionAssignment) instead")
+    submissions(
+        search: String @scope
+        roles: [SubmissionUserRoles!] @scope(name: "roleFilter")
+        status: [SubmissionStatus!] @scope(name: "statusFilter")
+        publication: [ID!] @scope(name: "publicationFilter")
+        orderBy: [SubmissionAssignmentOrderBy!] @scope(name: "orderBySubmission")
+    ): [SubmissionAssignment!]!
+        @hasMany(relation: "submissionAssignments", type: "PAGINATOR", defaultCount: 10)
+    publications(
+        roles: [PublicationRole!] @scope(name: "roleFilter")
+    ): [PublicationAssignment!]!
+        @hasMany(relation: "publicationAssignments", type: "PAGINATOR", defaultCount: 10)
     staged: Boolean
+}
+
+"""
+A user's global (application-wide) abilities. Each generated flag mirrors a
+GlobalAbility case, resolved directly against Bouncer — the same engine as the
+policies.
+"""
+type UserAbilities
+    @abilityFields(enum: "App\\Auth\\Abilities\\GlobalAbility") {
+    """
+    Derived: true when the viewer holds ANY `admin_*` ability — i.e. may reach
+    the admin area. Computed server-side as the union of the admin capabilities,
+    so the client gates on one flag and a new `admin_*` ability extends admin
+    access automatically. Not itself a GlobalAbility case.
+    """
+    admin_area: Boolean!
 }
 
 enum UserRoles {

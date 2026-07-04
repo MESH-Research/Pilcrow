@@ -432,7 +432,7 @@ class PublicationTest extends ApiTestCase
         Publication::factory()->hidden()->count(2)->create();
         $response = $this->graphQL(
             'query GetPublications {
-                publications(is_publicly_visible: true) {
+                publications(public: true) {
                     data {
                         id
                         name
@@ -443,6 +443,90 @@ class PublicationTest extends ApiTestCase
         $json = $response->json('data.publications.data');
 
         $this->assertCount(2, $json);
+    }
+
+    public function testUnassignedUserCannotSeeHiddenPublication()
+    {
+        /** @var User $user */
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        Publication::factory()->count(2)->create();
+        Publication::factory()->hidden()->count(2)->create();
+        $response = $this->graphQL(
+            'query GetPublications {
+                publications {
+                    data {
+                        id
+                    }
+                }
+            }'
+        );
+        $json = $response->json('data.publications.data');
+
+        $this->assertCount(2, $json);
+    }
+
+    public function testAssignedUserCanSeeHiddenPublication()
+    {
+        /** @var User $user */
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        Publication::factory()->hidden()->count(2)->create();
+        Publication::factory()->hidden()
+            ->hasAttached($user, [], 'editors')
+            ->create();
+
+        $response = $this->graphQL(
+            'query GetPublications {
+                publications {
+                    data {
+                        id
+                    }
+                }
+            }'
+        );
+        $json = $response->json('data.publications.data');
+
+        $this->assertCount(1, $json);
+    }
+
+    /**
+     * Regression: the visible() scope must AND with search, not bleed
+     * unrelated public rows past the search filter via SQL precedence.
+     *
+     * @return void
+     */
+    public function testSearchAndVisibilityCombineCorrectly()
+    {
+        /** @var User $user */
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        Publication::factory()->create(['name' => 'Alpha Quarterly']);
+        Publication::factory()->create(['name' => 'Beta Review']);
+        Publication::factory()->hidden()
+            ->hasAttached($user, [], 'editors')
+            ->create(['name' => 'Beta Secret']);
+        Publication::factory()->hidden()->create(['name' => 'Beta Hidden Other']);
+
+        $response = $this->graphQL(
+            'query GetPublications($search: String) {
+                publications(search: $search) {
+                    data {
+                        name
+                    }
+                }
+            }',
+            ['search' => 'Beta']
+        );
+        $names = collect($response->json('data.publications.data'))
+            ->pluck('name')
+            ->all();
+
+        sort($names);
+        $this->assertSame(['Beta Review', 'Beta Secret'], $names);
     }
 
     protected function executePublicationRoleAssignment(string $role, Publication $publication, User $user)

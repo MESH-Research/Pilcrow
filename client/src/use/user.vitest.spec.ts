@@ -20,7 +20,7 @@ vi.mock("quasar", async (importOriginal) => {
 
 describe("useCurrentUser composable", () => {
   const mountComposable = (mocks: [DocumentNode, RequestHandler][]) => {
-    const mockClient = createMockClient({ connectToDevTools: false })
+    const mockClient = createMockClient({ devtools: { enabled: false } })
     mocks.forEach((m) => mockClient.setRequestHandler(...m))
     const { result } = mount(() => useCurrentUser(), {
       provider: () => {
@@ -50,9 +50,12 @@ describe("useCurrentUser composable", () => {
           name: "Hello",
           email: "hello@example.com",
           username: "helloUser",
+          avatar_color: "blue",
           email_verified_at: "2021-08-14 02:26:32",
           highest_privileged_role: UserRoles.application_admin,
-          roles: [{ name: "tester" }]
+          roles: [{ name: "tester" }],
+          beta: false,
+          feature_opt_ins: []
         }
       }
     }
@@ -69,7 +72,7 @@ describe("useCurrentUser composable", () => {
 
 describe("useLogin composable", () => {
   const mountComposable = () => {
-    const mockClient = createMockClient({ connectToDevTools: false })
+    const mockClient = createMockClient({ devtools: { enabled: false } })
     const { result } = mount(() => useLogin(), {
       provider: () => {
         provide(DefaultApolloClient, mockClient)

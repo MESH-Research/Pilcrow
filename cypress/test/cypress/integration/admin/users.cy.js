@@ -23,11 +23,10 @@ describe("Admin Users Index", () => {
   })
 
   it("should assert the page is accessible", () => {
-    // Inject the axe-core libraray
     cy.login({ email: "applicationadministrator@meshresearch.net" })
     cy.visit("/admin/users")
+    cy.contains("h2", /./)
     cy.injectAxe()
-    cy.dataCy("userListBasicItem")
     cy.checkA11y(null, null, a11yLogViolations)
   })
 })

@@ -1,6 +1,6 @@
 #import academic_profiles.graphql
+#import feature.graphql
 #import notification.graphql
-#import permission.graphql
 #import profile_metadata.graphql
 #import publication.graphql
 #import social_media.graphql
@@ -12,24 +12,34 @@
 #import oauth.graphql
 #import integration_testing.graphql
 
+"""
+Common interface for all paginated result types.
+Allows writing fragments that work across any paginator.
+"""
+interface Paginator {
+    paginatorInfo: PaginatorInfo!
+}
+
 type Query {
     "Return information about the currently logged in user"
     currentUser: User @auth
 
     "Return details about a specific user in the application"
-    user(id: ID @eq): User @find
+    user(id: ID @eq): User @find @can(ability: "view", find: "id")
 
     "Return user accounts optionally based on a supplied search term"
-    userSearch(term: String @search): [User!]! @paginate(defaultCount: 10)
+    userSearch(term: String @search): [User!]! @paginate(defaultCount: 10) @guard @deprecated(reason: "Use the `users` query instead, which supports pagination and filtering by search term")
+
+    users(search: String @scope, beta: Boolean @eq, orderBy: _ @orderBy(columns: ["name", "username", "email", "created_at"])): [User!]!
+        @paginate(defaultCount: 10)
+        @orderBy(column: "name", direction: ASC)
+        @can(ability: "viewAny", query: true)
 
     "Validate details of a new user.  Returns true if supplied user fields would be valid."
     validateNewUser(user: ValidateNewUserInput): Boolean @returnTrue
 
     "Return pre-defined user roles in the application"
     role(id: ID @eq): Role @find
-
-    "Return a permission by ID"
-    permission(id: ID @eq): Permission @find
 
     versionInfo: VersionInfo
 }

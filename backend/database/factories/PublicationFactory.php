@@ -27,6 +27,7 @@ class PublicationFactory extends Factory
             'is_publicly_visible' => true,
             'home_page_content' => $this->makeHomePageContent(),
             'new_submission_content' => $this->makeNewSubmissionContent(),
+            'created_at' => $this->faker->dateTimeBetween('-2 years'),
         ];
     }
 

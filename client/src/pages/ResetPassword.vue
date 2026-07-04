@@ -78,7 +78,7 @@ import { useUserValidation } from "src/use/userValidation"
 
 const errorMessagesList = ref([])
 const { params, query } = useRoute()
-const { token } = params
+const { token } = params as Record<string, string>
 const { mutate: request } = useMutation(RESET_PASSWORD, {
   refetchQueries: [{ query: CURRENT_USER }]
 })

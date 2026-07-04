@@ -811,7 +811,9 @@ class SubmissionCommentTest extends ApiTestCase
      */
     public function testUsersCannotDeleteTheInlineCommentsOfOthers(): void
     {
-        $this->beAppAdmin();
+        // A non-author with no role on the submission cannot delete. (An app
+        // administrator now CAN moderate — see testAdminCanModerate* below.)
+        $this->actingAs(User::factory()->create());
         $submission = $this->createSubmissionWithInlineComment();
         $inline_comment = $submission->inlineComments->first();
         $this->graphQL(
@@ -845,7 +847,9 @@ class SubmissionCommentTest extends ApiTestCase
      */
     public function testUsersCannotDeleteTheOverallCommentsOfOthers(): void
     {
-        $this->beAppAdmin();
+        // A non-author with no role on the submission cannot delete. (An app
+        // administrator now CAN moderate — see testAdminCanModerate* below.)
+        $this->actingAs(User::factory()->create());
         $submission = $this->createSubmissionWithOverallComment();
         $overall_comment = $submission->overallComments->first();
         $this->graphQL(
@@ -869,6 +873,57 @@ class SubmissionCommentTest extends ApiTestCase
             ]
         )
             ->assertGraphQLErrorMessage('UNAUTHORIZED');
+    }
+
+    /**
+     * An application administrator may moderate — delete another user's inline
+     * comment — through the resolver's global short-circuit.
+     *
+     * @return void
+     */
+    public function testAdminCanModerateInlineCommentsOfOthers(): void
+    {
+        $this->beAppAdmin();
+        $submission = $this->createSubmissionWithInlineComment();
+        $inline_comment = $submission->inlineComments->first();
+        $this->graphQL(
+            'mutation DeleteInlineComment ($submission_id: ID! $comment_id: ID!) {
+                deleteInlineComment(input: { submission_id: $submission_id, comment_id: $comment_id }) {
+                    id
+                }
+            }',
+            [
+                'submission_id' => $submission->id,
+                'comment_id' => $inline_comment->id,
+            ]
+        )
+            ->assertJsonPath('data.deleteInlineComment.id', (string)$submission->id);
+        $this->assertSoftDeleted($inline_comment);
+    }
+
+    /**
+     * An application administrator may moderate another user's overall comment.
+     *
+     * @return void
+     */
+    public function testAdminCanModerateOverallCommentsOfOthers(): void
+    {
+        $this->beAppAdmin();
+        $submission = $this->createSubmissionWithOverallComment();
+        $overall_comment = $submission->overallComments->first();
+        $this->graphQL(
+            'mutation DeleteOverallComment ($submission_id: ID! $comment_id: ID!) {
+                deleteOverallComment(input: { submission_id: $submission_id, comment_id: $comment_id }) {
+                    id
+                }
+            }',
+            [
+                'submission_id' => $submission->id,
+                'comment_id' => $overall_comment->id,
+            ]
+        )
+            ->assertJsonPath('data.deleteOverallComment.id', (string)$submission->id);
+        $this->assertSoftDeleted($overall_comment);
     }
 
     /**

@@ -3,7 +3,63 @@
     "extends": [
         "config:recommended"
     ],
+    /**
+     * Never open PRs automatically. Renovate still scans and lists available
+     * updates on the dependency dashboard issue, but every update requires
+     * manual approval (tick the box on the dashboard) before a PR is created.
+     * Keeps dependency visibility without the open-PR noise.
+     **/
+    "dependencyDashboardApproval": true,
+    /**
+     * Recreate PR (close+reopen) when target version bumps so PR age reflects
+     * the latest version, not the original branch creation date.
+     **/
+    "recreateWhen": "always",
+    /**
+     * Only rebase when base branch moves, not every Renovate run. Reduces churn.
+     **/
+    "rebaseWhen": "behind-base-branch",
+    /**
+     * Apply minimumReleaseAge before opening PR (not after).
+     **/
+    "internalChecksFilter": "strict",
+    /**
+     * Open Renovate PRs as drafts so they sit out of the default PR list view
+     * and don't visually compete with feature work. Mark ready manually when
+     * picking one up for review.
+     **/
+    "draftPR": true,
+    /**
+     * Tag every Renovate PR for filterable views
+     * (e.g. `is:pr is:open -label:renovate` to hide deps from the list).
+     **/
+    "labels": ["renovate", "dependencies"],
     "packageRules": [
+        /**
+         * Stability windows by update type — wait for releases to settle before
+         * opening a PR. Patch updates land quickly, majors wait longest.
+         **/
+        {
+            "description": "Stability window: patch",
+            "matchUpdateTypes": ["patch"],
+            "minimumReleaseAge": "3 days"
+        },
+        {
+            "description": "Stability window: minor",
+            "matchUpdateTypes": ["minor"],
+            "minimumReleaseAge": "7 days"
+        },
+        /**
+         * Major bumps stay off the PR list entirely until approved on the
+         * dependency dashboard issue. Avoids cluttering the open PR view with
+         * speculative migrations.
+         **/
+        {
+            "description": "Major bumps require dependency dashboard approval",
+            "matchUpdateTypes": ["major"],
+            "minimumReleaseAge": "30 days",
+            "dependencyDashboardApproval": true
+        },
         /**
          * These deps aren't well covered by automated testing and are held back
          * until they get approved in the dependency dashboard.
@@ -30,19 +86,6 @@
             "groupName": "client dev dependencies",
             "matchDepTypes": ["devDependencies"],
             "matchFileNames": ["client/**"]
-        },
-        /**
-         * AUTOMATED MERGING:
-         * Backend and client are well covered in automated testing, so we'll
-         * attempt to automerge patch updates.
-         **/
-        {
-            "matchUpdateTypes": ["patch"],
-            "matchCurrentVersion": "!/^0/",
-            "matchFileNames": ["backend/**", "client/**"],
-            "matchManagers": ["npm","composer"],
-            "automerge": true,
-            "automergeType": "branch"
         },
         /**
          * Group client npm updates
@@ -95,8 +138,46 @@
         {
             "matchManagers": ["github-actions"],
             "commitMessagePrefix": "ci(gha/deps):"
+        },
+        /**
+         * High-impact core framework deps bypass the dashboard approval gate so
+         * they raise PRs directly (no dashboard-watching). Stability windows from
+         * the rules above still apply. Un-drafted and tagged to stand out.
+         * Adjust this package list as the critical surface changes.
+         **/
+        {
+            "description": "High-impact core deps surface as PRs without dashboard approval",
+            "matchPackageNames": [
+                "vue",
+                "vue-router",
+                "quasar",
+                "@quasar/**",
+                "typescript",
+                "laravel/framework",
+                "laravel/sanctum",
+                "php",
+                "nuwave/lighthouse"
+            ],
+            "dependencyDashboardApproval": false,
+            "draftPR": false,
+            "addLabels": ["high-impact"]
         }
     ],
+    /**
+     * Security advisories bypass the dashboard approval gate above. A dep with a
+     * published vulnerability raises a PR immediately (ignores minimumReleaseAge
+     * and dependencyDashboardApproval) so high-impact fixes surface without
+     * watching the dashboard. Un-drafted and tagged so they stand out.
+     **/
+    "vulnerabilityAlerts": {
+        "draftPR": false,
+        "labels": ["security", "dependencies"]
+    },
+    /**
+     * Broaden advisory coverage beyond GitHub's database using the OSV database
+     * (catches more ecosystems / advisories).
+     **/
+    "osvVulnerabilityAlerts": true,
     "assignees": [
         "wreality"
     ],

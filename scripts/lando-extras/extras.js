@@ -100,7 +100,7 @@ async function main() {
     `);
     program
         .name("lando extras")
-        .addHelpCommand(false)
+        .helpCommand(false)
         .option("-y --yes", "Answer yes to overwrite prompts");
 
     program

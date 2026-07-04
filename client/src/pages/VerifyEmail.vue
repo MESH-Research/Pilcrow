@@ -54,7 +54,7 @@ const { mutate: verifyEmail } = useMutation(VERIFY_EMAIL)
 const { params } = useRoute()
 const { errorMessages, graphQLErrorCodes } = useGraphErrors()
 onMounted(async () => {
-  const { token, expires } = params
+  const { token, expires } = params as Record<string, string>
 
   await currentUser
   if (currentUser.value.email_verified_at) {

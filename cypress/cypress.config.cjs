@@ -37,26 +37,21 @@ module.exports = defineConfig({
           return null
         },
         resetDb() {
-          return new Promise((resolve, reject) => {
-            axios({
-              url: `${config.baseUrl}/graphql`,
-              method: "POST",
-              data: {
-                query: "mutation { resetDatabase }"
-              }
-            }).then((response) => {
-              const {
-                data: { data, errors }
-              } = response
-              if (!data) {
-                console.log(response)
-              }
-              if (errors) {
-                console.log(errors)
-                reject()
-              }
-              resolve(data.resetDatabase)
-            })
+          return axios({
+            url: `${config.baseUrl}/graphql`,
+            method: "POST",
+            data: {
+              query: "mutation { resetDatabase }"
+            }
+          }).then((response) => {
+            const {
+              data: { data, errors }
+            } = response
+            if (errors) {
+              console.log(errors)
+              throw new Error(errors[0]?.message ?? "resetDatabase mutation failed")
+            }
+            return data.resetDatabase
           })
         }
       })
