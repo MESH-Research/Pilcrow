@@ -236,6 +236,15 @@ test("app admin: publication creation and validation", async ({
     await page.getByTestId("new_publication_input").press("Enter");
     await expectNotification(page, "positive", "create_publication_notify");
     await expect(page).toHaveURL(/publication\/[0-9]+\/setup\/basic$/);
+    // Wait for the publication query to hydrate the heading/breadcrumb —
+    // axe flags the transient empty <h2> and text-less breadcrumb link
+    // if it runs while the page is still loading.
+    await expect(
+      page.getByRole("heading", {
+        level: 2,
+        name: "Publication from Playwright",
+      }),
+    ).toBeVisible();
     await checkA11y(page);
   });
 

@@ -17,19 +17,19 @@ test("app admin: access control and page accessibility", async ({
   await test.step("admins can access the users list", async () => {
     await loginAs("applicationadministrator@meshresearch.net", "/admin/users");
     await expect(page).not.toHaveURL(/\/error403/);
-    await page.getByTestId("userListBasicItem").first().waitFor();
+    await page.getByRole("row").nth(1).waitFor();
     await checkA11y(page);
   });
 
   await test.step("admin user details page is accessible", async () => {
     await page.goto("/admin/user/2");
-    await page.getByTestId("userDetailsHeading").waitFor();
+    await expect(page.locator(".q-tabs")).toBeVisible();
     await checkA11y(page);
   });
 
   await test.step("non-admin user details page is accessible", async () => {
     await page.goto("/admin/user/1");
-    await page.getByTestId("userDetailsHeading").waitFor();
+    await expect(page.locator(".q-tabs")).toBeVisible();
     await checkA11y(page);
   });
 });

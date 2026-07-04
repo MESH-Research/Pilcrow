@@ -17,7 +17,7 @@ use Illuminate\Database\Seeder;
  * Seeds a submission in ACCEPTED_AS_FINAL status with inline and overall
  * comments for previewing and testing the export system.
  *
- * Submission ID: 113 — "Export Preview Submission"
+ * Submission ID: 116 — "Export Preview Submission"
  *
  * Inline comments:
  *   - Thread by reviewer (user 5) with 3 replies
@@ -31,7 +31,7 @@ use Illuminate\Database\Seeder;
  */
 class ExportPreviewSeeder extends Seeder
 {
-    private const SUBMISSION_ID = 113;
+    private const SUBMISSION_ID = 116;
 
     /**
      * Run the database seed.

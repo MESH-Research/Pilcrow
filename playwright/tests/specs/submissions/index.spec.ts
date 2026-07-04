@@ -124,7 +124,8 @@ test("regular user: export and status actions", async ({
 
   await test.step("ACCEPTED_AS_FINAL has archive option", async () => {
     await page
-      .getByText("Accepted as Final")
+      .getByText("Accepted as Final", { exact: true })
+      .first()
       .locator("xpath=ancestor::tr")
       .getByTestId("submission_actions")
       .click();
@@ -136,7 +137,8 @@ test("regular user: export and status actions", async ({
 
   await test.step("ARCHIVED has delete option", async () => {
     await page
-      .getByText("Archived")
+      .getByText("Archived", { exact: true })
+      .first()
       .locator("xpath=ancestor::tr")
       .getByTestId("submission_actions")
       .click();
@@ -148,7 +150,8 @@ test("regular user: export and status actions", async ({
 
   await test.step("DELETED has no status change option", async () => {
     await page
-      .getByText("Deleted")
+      .getByText("Deleted", { exact: true })
+      .first()
       .locator("xpath=ancestor::tr")
       .getByTestId("submission_actions")
       .click();
