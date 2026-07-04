@@ -90,6 +90,43 @@ class UserPolicyTest extends TestCase
         $this->assertFalse($reviewer->can('viewEmail', $coAuthor));
     }
 
+    public function testViewEmailAllowsReviewCoordinatorForReviewTeamMembers(): void
+    {
+        $publication = Publication::factory()->create();
+        $coordinator = User::factory()->create();
+        $reviewer = User::factory()->create();
+        $fellowCoordinator = User::factory()->create();
+
+        Submission::factory()
+            ->for($publication)
+            ->hasAttached($coordinator, [], 'reviewCoordinators')
+            ->hasAttached($fellowCoordinator, [], 'reviewCoordinators')
+            ->hasAttached($reviewer, [], 'reviewers')
+            ->create();
+
+        $this->assertTrue($coordinator->can('viewEmail', $reviewer));
+        $this->assertTrue($coordinator->can('viewEmail', $fellowCoordinator));
+    }
+
+    public function testViewEmailDeniesReviewCoordinatorForReviewerOfOtherSubmission(): void
+    {
+        $publication = Publication::factory()->create();
+        $coordinator = User::factory()->create();
+        $reviewer = User::factory()->create();
+
+        Submission::factory()
+            ->for($publication)
+            ->hasAttached($coordinator, [], 'reviewCoordinators')
+            ->create();
+
+        Submission::factory()
+            ->for($publication)
+            ->hasAttached($reviewer, [], 'reviewers')
+            ->create();
+
+        $this->assertFalse($coordinator->can('viewEmail', $reviewer));
+    }
+
     public function testViewEmailDeniesReviewCoordinator(): void
     {
         $publication = Publication::factory()->create();
