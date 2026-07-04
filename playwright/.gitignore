@@ -3,3 +3,6 @@ playwright-report/
 blob-report/
 test-results/
 screenshots/
+# Re-include the lockfile past the repo-root `*.lock` ignore — CI needs the
+# pinned playwright version to match patches/playwright-core+*.patch.
+!yarn.lock
