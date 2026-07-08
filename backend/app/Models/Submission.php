@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Auth\Abilities\AbilityExposure;
 use App\Auth\Abilities\PublicationAbility;
 use App\Auth\Abilities\SubmissionAbility;
 use App\Auth\Roles\ScopedRole;
@@ -17,7 +18,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
 use OwenIt\Auditing\Auditable as AuditableTrait;
 use OwenIt\Auditing\Contracts\Auditable;
 
@@ -418,32 +418,41 @@ class Submission extends Model implements Auditable
     }
 
     /**
-     * The authenticated viewer's SCOPED abilities on this submission as a map of
-     * snake_case ability name => bool, e.g. ['view' => true, 'update' => false].
+     * The authenticated viewer's GRANTED scoped abilities on this submission,
+     * as the exposed names of the exposed {@see SubmissionAbility} cases the
+     * viewer holds, e.g. ['view', 'review'].
      *
      * Resolved through {@see ScopedAbilityResolver} — the same engine the
-     * policies use — so these client-facing flags can never drift from real
+     * policies use — so these client-facing values can never drift from real
      * authorization. The resolver evaluates each ability against THIS submission
      * (and inherits the parent publication's admin roles), so conditional grants
-     * such as draft-only status changes are reflected correctly. The keys are
-     * derived from {@see SubmissionAbility} cases. Guests get all-false.
+     * such as draft-only status changes are reflected correctly. Only
+     * {@see \App\Auth\Abilities\Exposed} cases are evaluated (server-only cases
+     * never reach the wire, and their checks are never spent on the UI).
+     * Guests get an empty array.
      *
      * UI hints only: the server still enforces every mutation with @can.
      *
-     * @return array<string, bool>
+     * @return array<int, string>
      */
     public function abilities(): array
     {
         /** @var \App\Models\User|null $user */
         $user = Auth::user();
+        if ($user === null) {
+            return [];
+        }
         $resolver = app(ScopedAbilityResolver::class);
 
-        $abilities = [];
-        foreach (SubmissionAbility::cases() as $ability) {
-            $abilities[Str::snake($ability->name)] =
-                $user !== null && $resolver->allows($user, $ability, $this);
+        $granted = [];
+        foreach (AbilityExposure::exposed(SubmissionAbility::class) as $exposedName => $exposure) {
+            /** @var \App\Auth\Abilities\SubmissionAbility $ability */
+            $ability = $exposure['case'];
+            if ($resolver->allows($user, $ability, $this)) {
+                $granted[] = $exposedName;
+            }
         }
 
-        return $abilities;
+        return $granted;
     }
 }

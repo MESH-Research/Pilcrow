@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Auth\Abilities\AbilityExposure;
 use App\Auth\Abilities\GlobalAbility;
 use App\Auth\Roles\GlobalRole;
 use App\Auth\Roles\ScopedRole;
@@ -16,7 +17,6 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 use Laravel\Sanctum\HasApiTokens;
 use Laravel\Scout\Attributes\SearchUsingPrefix;
 use Laravel\Scout\Searchable;
@@ -312,35 +312,45 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * This user's GLOBAL (application-wide) abilities as a map of snake_case
-     * ability name => bool, e.g. ['publication_create' => true, ...].
+     * This user's GRANTED global (application-wide) abilities, as the wire
+     * names of the exposed {@see GlobalAbility} cases the user holds, e.g.
+     * ['publication_create', 'admin_user_view', 'admin_area'].
      *
      * Resolved through Bouncer ($this->can) — the same engine the policies use —
-     * so these client-facing flags can never drift from real authorization. The
-     * keys are derived from {@see GlobalAbility} cases, so adding an ability case
-     * (plus its schema field) is all it takes to expose it.
+     * so these client-facing values can never drift from real authorization.
+     * Only {@see \App\Auth\Abilities\Exposed} cases are evaluated; an exposed
+     * case is all it takes to reach the wire.
+     *
+     * {@see GlobalAbility::AdminArea} is derived, not asked of Bouncer: it is
+     * granted exactly when any other granted ability is `admin_*`-prefixed, so
+     * the client gates the admin area on one value and a new admin capability
+     * extends admin access automatically.
      *
      * Fetched via `currentUser` this is the viewer's own capabilities. These are
      * UI hints only: the server still enforces every mutation with @can.
      *
-     * @return array<string, bool>
+     * @return array<int, string>
      */
     public function globalAbilities(): array
     {
-        $abilities = [];
-        foreach (GlobalAbility::cases() as $ability) {
-            $abilities[Str::snake($ability->name)] = $this->can($ability);
+        $granted = [];
+        foreach (AbilityExposure::exposed(GlobalAbility::class) as $exposedName => $exposure) {
+            /** @var \App\Auth\Abilities\GlobalAbility $ability */
+            $ability = $exposure['case'];
+            if ($ability === GlobalAbility::AdminArea) {
+                continue;
+            }
+            if ($this->can($ability)) {
+                $granted[] = $exposedName;
+            }
         }
 
-        // Derived union: admin-area access is "holds any admin_* ability", so the
-        // client gates the admin area on one flag and a new admin_* ability
-        // extends it automatically. Computed from the case flags above, before
-        // the key itself is added so it never folds into its own union.
-        $abilities['admin_area'] = collect($abilities)
-            ->filter(fn(bool $granted, string $key): bool => str_starts_with($key, 'admin_'))
-            ->contains(true);
+        // Derived union: admin-area access is "holds any admin_* ability".
+        if (collect($granted)->contains(fn(string $name): bool => str_starts_with($name, 'admin_'))) {
+            $granted[] = AbilityExposure::exposedName(GlobalAbility::AdminArea);
+        }
 
-        return $abilities;
+        return $granted;
     }
 
     /**

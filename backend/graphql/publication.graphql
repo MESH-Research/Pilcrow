@@ -32,18 +32,17 @@ type Publication {
     style_criterias: [StyleCriteria!]! @hasMany(relation: "styleCriterias")
     my_role: PublicationRole @method(name: "getMyRole")
     effective_role: PublicationRole @method(name: "getEffectiveRole")
-    "The authenticated viewer's scoped abilities on this publication (UI hints; server still enforces)."
-    abilities: PublicationAbilities!
+    "The authenticated viewer's granted scoped abilities on this publication (UI hints; server still enforces)."
+    abilities: [PublicationAbility!]!
         @method(name: "abilities")
         @with(relation: "publicationAssignments")
 }
 
 """
-The authenticated viewer's scoped abilities on a publication. Each flag mirrors a
-PublicationAbility case, resolved through the same engine as the policies.
+An ability on a single publication. The viewer's `abilities` array carries the
+granted ones.
 """
-type PublicationAbilities
-    @abilityFields(enum: "App\\Auth\\Abilities\\PublicationAbility")
+enum PublicationAbility @abilityEnum(enum: "App\\Auth\\Abilities\\PublicationAbility")
 
 type PublicationAssignment {
     id: ID!
