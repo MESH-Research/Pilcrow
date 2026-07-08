@@ -69,10 +69,8 @@ import {
 import { computed, ref } from "vue"
 import type { DocumentNode } from "graphql"
 import { useI18nPrefix } from "src/use/i18nPrefix"
-import type {
-  Publication,
-  userListItemFragment
-} from "src/graphql/generated/graphql"
+import { useUnassignUser } from "src/use/userList"
+import type { Publication } from "src/graphql/generated/graphql"
 
 interface Props {
   container: Publication
@@ -148,20 +146,11 @@ async function handleSubmit() {
   }
 }
 
-async function handleUserListClick({ user }: { user: userListItemFragment }) {
-  if (!props.mutable) return
-  try {
-    await mutate({ disconnect: [user.id] })
-    newStatusMessage(
-      "success",
-      pt("unassign.success", {
-        display_name: user.name ? user.name : user.username
-      })
-    )
-  } catch (error) {
-    newStatusMessage("failure", pt("unassign.error"))
-  }
-}
+const handleUserListClick = useUnassignUser({
+  enabled: () => props.mutable,
+  mutate,
+  pt
+})
 </script>
 
 <style></style>

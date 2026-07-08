@@ -151,6 +151,7 @@ import {
 import { computed, ref } from "vue"
 import type { DocumentNode } from "graphql"
 import { useI18nPrefix } from "src/use/i18nPrefix"
+import { useUnassignUser } from "src/use/userList"
 import { useEditor, EditorContent } from "@tiptap/vue-3"
 import StarterKit from "@tiptap/starter-kit"
 import Placeholder from "@tiptap/extension-placeholder"
@@ -358,20 +359,11 @@ function dirtyDialog(email: string) {
   })
 }
 
-async function handleUserListClick({ user }: { user: userListItemFragment }) {
-  if (!props.mutable) return
-  try {
-    await mutate({ disconnect: [user.id] })
-    newStatusMessage(
-      "success",
-      pt("unassign.success", {
-        display_name: user.name ? user.name : user.username
-      })
-    )
-  } catch (error) {
-    newStatusMessage("failure", pt("unassign.error"))
-  }
-}
+const handleUserListClick = useUnassignUser({
+  enabled: () => props.mutable,
+  mutate,
+  pt
+})
 </script>
 
 <style>
