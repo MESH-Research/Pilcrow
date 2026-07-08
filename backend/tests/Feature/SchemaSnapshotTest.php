@@ -21,6 +21,9 @@ class SchemaSnapshotTest extends TestCase
 
     /**
      * Normalize a schema string by parsing and re-printing in sorted order.
+     * The committed snapshot is written by client codegen's schema-ast output
+     * (graphql-js printer); normalizing both sides makes the comparison
+     * independent of printer formatting.
      *
      * @param string $schemaString
      * @return string
@@ -59,7 +62,9 @@ class SchemaSnapshotTest extends TestCase
             $committedSchema,
             $compiledSchema,
             "The committed client schema snapshot is out of sync with the backend schema.\n"
-            . "Run 'yarn graphql:fetch-schema' from the client directory to update it."
+            . "Regenerate it with `lando client-yarn graphql:codegen` — its schema-ast output rewrites\n"
+            . "client/src/graphql/schema.graphql from this worktree's running backend — then review\n"
+            . 'the diff and commit the snapshot alongside the schema change.'
         );
     }
 }

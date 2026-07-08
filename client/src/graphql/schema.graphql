@@ -599,9 +599,9 @@ input ProviderUserInput {
 """A publication that has users, reviews, and submissions"""
 type Publication {
   """
-  The authenticated viewer's scoped abilities on this publication (UI hints; server still enforces).
+  The authenticated viewer's granted scoped abilities on this publication (UI hints; server still enforces).
   """
-  abilities: PublicationAbilities!
+  abilities: [PublicationAbility!]!
   created_at: DateTimeUtc
   editors: [User!]!
   effective_role: PublicationRole
@@ -619,12 +619,15 @@ type Publication {
 }
 
 """
-The authenticated viewer's scoped abilities on a publication. Each flag mirrors a
-PublicationAbility case, resolved through the same engine as the policies.
+An ability on a single publication. The viewer's `abilities` array carries the
+granted ones.
 """
-type PublicationAbilities {
-  update: Boolean!
-  view: Boolean!
+enum PublicationAbility {
+  """Viewer may edit this publication's settings, users, and content."""
+  update
+
+  """Viewer may read this publication."""
+  view
 }
 
 type PublicationAssignment {
@@ -820,9 +823,9 @@ type StyleCriteria {
 """A Submission"""
 type Submission {
   """
-  The authenticated viewer's scoped abilities on this submission (UI hints; server still enforces).
+  The authenticated viewer's granted scoped abilities on this submission (UI hints; server still enforces).
   """
-  abilities: SubmissionAbilities!
+  abilities: [SubmissionAbility!]!
   assignments: [SubmissionAssignment!]!
   audits: [SubmissionAudit]
   commenters(type: CommentParticipantType): [User!]!
@@ -859,20 +862,33 @@ type Submission {
 }
 
 """
-The authenticated viewer's scoped abilities on a submission. Each flag mirrors a
-SubmissionAbility case, resolved through the same engine as the policies — so
-conditional grants (e.g. draft-only status changes) are reflected correctly.
+An ability on a single submission. The viewer's `abilities` array carries the
+granted ones; grants can depend on the submission's current status.
 """
-type SubmissionAbilities {
-  legacy_update: Boolean!
-  review: Boolean!
-  submit: Boolean!
-  update_content: Boolean!
-  update_review_coordinators: Boolean!
-  update_reviewers: Boolean!
-  update_status: Boolean!
-  update_submitters: Boolean!
-  view: Boolean!
+enum SubmissionAbility {
+  """Viewer may access the manuscript and post comments."""
+  review
+
+  """Viewer may send this submission in for review."""
+  submit
+
+  """Viewer may edit the manuscript — body, file, and title."""
+  update_content
+
+  """Viewer may assign or unassign review coordinators."""
+  update_review_coordinators
+
+  """Viewer may assign or unassign reviewers."""
+  update_reviewers
+
+  """Viewer may change this submission's status."""
+  update_status
+
+  """Viewer may add or remove submitters."""
+  update_submitters
+
+  """Viewer may read this submission."""
+  view
 }
 
 """A user associated with a submission and a role"""
@@ -1155,7 +1171,7 @@ type User {
   """
   This user's global abilities. Fetched via currentUser this is the viewer's own (UI hints; server still enforces).
   """
-  abilities: UserAbilities!
+  abilities: [UserAbility!]!
   avatar_color: String! @deprecated(reason: "Temporary placeholder for stable avatar colors; will be removed when user-uploaded avatars are introduced.")
 
   """Whether the user has access to private beta features (admin-set)."""
@@ -1208,23 +1224,27 @@ type User {
 }
 
 """
-A user's global (application-wide) abilities. Each generated flag mirrors a
-GlobalAbility case, resolved directly against Bouncer — the same engine as the
-policies.
+An application-wide ability. The viewer's `abilities` array carries the
+granted ones.
 """
-type UserAbilities {
-  """
-  Derived: true when the viewer holds ANY `admin_*` ability — i.e. may reach
-  the admin area. Computed server-side as the union of the admin capabilities,
-  so the client gates on one flag and a new `admin_*` ability extends admin
-  access automatically. Not itself a GlobalAbility case.
-  """
-  admin_area: Boolean!
-  admin_user_manage_beta: Boolean!
-  admin_user_update: Boolean!
-  admin_user_view: Boolean!
-  admin_user_view_any: Boolean!
-  publication_create: Boolean!
+enum UserAbility {
+  """Viewer may reach the admin area."""
+  admin_area
+
+  """Viewer may manage beta access and feature opt-ins for users."""
+  admin_user_manage_beta
+
+  """Viewer may edit users in the admin area."""
+  admin_user_update
+
+  """Viewer may see an individual user's admin detail page."""
+  admin_user_view
+
+  """Viewer may browse the admin user list."""
+  admin_user_view_any
+
+  """Viewer may create a publication."""
+  publication_create
 }
 
 """A paginated list of User items."""

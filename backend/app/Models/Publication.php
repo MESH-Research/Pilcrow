@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Auth\Abilities\AbilityExposure;
 use App\Auth\Abilities\PublicationAbility;
 use App\Auth\Roles\ScopedRole;
 use App\Auth\ScopedAbilityResolver;
@@ -12,7 +13,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
 
 class Publication extends BaseModel
 {
@@ -178,30 +178,38 @@ class Publication extends BaseModel
     }
 
     /**
-     * The authenticated viewer's SCOPED abilities on this publication as a map of
-     * snake_case ability name => bool, e.g. ['view' => true, 'update' => false].
+     * The authenticated viewer's GRANTED scoped abilities on this publication,
+     * as the exposed names of the exposed {@see PublicationAbility} cases the
+     * viewer holds, e.g. ['view', 'update'].
      *
      * Resolved through {@see ScopedAbilityResolver} — the same engine the
-     * policies use — so these client-facing flags can never drift from real
-     * authorization, and conditional grants are honored against this entity. The
-     * keys are derived from {@see PublicationAbility} cases. Guests get all-false.
+     * policies use — so these client-facing values can never drift from real
+     * authorization, and conditional grants are honored against this entity.
+     * Only {@see \App\Auth\Abilities\Exposed} cases are evaluated. Guests get
+     * an empty array.
      *
      * UI hints only: the server still enforces every mutation with @can.
      *
-     * @return array<string, bool>
+     * @return array<int, string>
      */
     public function abilities(): array
     {
         /** @var \App\Models\User|null $user */
         $user = Auth::user();
+        if ($user === null) {
+            return [];
+        }
         $resolver = app(ScopedAbilityResolver::class);
 
-        $abilities = [];
-        foreach (PublicationAbility::cases() as $ability) {
-            $abilities[Str::snake($ability->name)] =
-                $user !== null && $resolver->allows($user, $ability, $this);
+        $granted = [];
+        foreach (AbilityExposure::exposed(PublicationAbility::class) as $exposedName => $exposure) {
+            /** @var \App\Auth\Abilities\PublicationAbility $ability */
+            $ability = $exposure['case'];
+            if ($resolver->allows($user, $ability, $this)) {
+                $granted[] = $exposedName;
+            }
         }
 
-        return $abilities;
+        return $granted;
     }
 }
