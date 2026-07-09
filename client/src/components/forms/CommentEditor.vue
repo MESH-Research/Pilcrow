@@ -85,29 +85,11 @@ import { graphql } from "src/graphql/generated"
 // registry (src/graphql/fragments.ts). Colocating the comment fragments
 // onto their rendering components is a separate follow-up.
 graphql(`
-  mutation CreateOverallComment($submission_id: ID!, $content: String!) {
-    createOverallComment(
-      input: { submission_id: $submission_id, content: $content }
-    ) {
-      id
-      overall_comments(trashed: WITH) {
-        ...commentFields
-        replies(trashed: WITH) {
-          ...commentFields
-          parent_id
-          reply_to_id
-        }
-      }
-    }
-  }
-`)
-
-graphql(`
-  mutation CreateOverallCommentReply(
+  mutation CreateOverallComment(
     $submission_id: ID!
     $content: String!
-    $reply_to_id: ID!
-    $parent_id: ID!
+    $reply_to_id: ID
+    $parent_id: ID
   ) {
     createOverallComment(
       input: {
@@ -137,6 +119,8 @@ graphql(`
     $from: Int
     $to: Int
     $style_criteria: [ID!]
+    $reply_to_id: ID
+    $parent_id: ID
   ) {
     createInlineComment(
       input: {
@@ -145,36 +129,6 @@ graphql(`
         style_criteria: $style_criteria
         from: $from
         to: $to
-      }
-    ) {
-      id
-      inline_comments(trashed: WITH) {
-        style_criteria {
-          name
-          icon
-        }
-        ...commentFields
-        replies(trashed: WITH) {
-          ...commentFields
-          parent_id
-          reply_to_id
-        }
-      }
-    }
-  }
-`)
-
-graphql(`
-  mutation CreateInlineCommentReply(
-    $submission_id: ID!
-    $content: String!
-    $reply_to_id: ID!
-    $parent_id: ID!
-  ) {
-    createInlineComment(
-      input: {
-        submission_id: $submission_id
-        content: $content
         reply_to_id: $reply_to_id
         parent_id: $parent_id
       }
@@ -217,6 +171,7 @@ graphql(`
         ...commentFields
         replies(trashed: WITH) {
           reply_to_id
+          parent_id
           ...commentFields
         }
       }
@@ -251,64 +206,8 @@ graphql(`
         }
         replies(trashed: WITH) {
           reply_to_id
-          ...commentFields
-        }
-      }
-    }
-  }
-`)
-
-graphql(`
-  mutation UpdateInlineCommentReply(
-    $submission_id: ID!
-    $comment_id: ID!
-    $content: String!
-  ) {
-    updateInlineComment(
-      input: {
-        submission_id: $submission_id
-        comment_id: $comment_id
-        content: $content
-      }
-    ) {
-      id
-      created_by {
-        ...relatedUserFields
-      }
-      inline_comments(trashed: WITH) {
-        ...commentFields
-        replies(trashed: WITH) {
-          reply_to_id
-          ...commentFields
-        }
-      }
-    }
-  }
-`)
-
-graphql(`
-  mutation UpdateOverallCommentReply(
-    $submission_id: ID!
-    $comment_id: ID!
-    $content: String!
-  ) {
-    updateOverallComment(
-      input: {
-        submission_id: $submission_id
-        comment_id: $comment_id
-        content: $content
-      }
-    ) {
-      id
-      created_by {
-        ...relatedUserFields
-      }
-      overall_comments(trashed: WITH) {
-        ...commentFields
-        replies(trashed: WITH) {
-          ...commentFields
-          reply_to_id
           parent_id
+          ...commentFields
         }
       }
     }
@@ -328,13 +227,9 @@ import CommentEditorButton from "../atoms/CommentEditorButton.vue"
 import BypassStyleCriteriaDialogVue from "../dialogs/BypassStyleCriteriaDialog.vue"
 import {
   CreateOverallCommentDocument,
-  CreateOverallCommentReplyDocument,
-  CreateInlineCommentReplyDocument,
   CreateInlineCommentDocument,
   UpdateOverallCommentDocument,
-  UpdateInlineCommentDocument,
-  UpdateInlineCommentReplyDocument,
-  UpdateOverallCommentReplyDocument
+  UpdateInlineCommentDocument
 } from "src/graphql/generated/graphql"
 import { useI18n } from "vue-i18n"
 import { uniqueId } from "lodash"
@@ -529,20 +424,20 @@ const commentEditorButtons = ref<EditorButton[]>([
   }
 ])
 const submission = useSubmission()
+// Replies use the same documents as top-level comments; the reply_to_id /
+// parent_id variables are optional and only sent when replying.
 const mutations: Record<string, DocumentNode> = props.isModifying
   ? {
       InlineComment: UpdateInlineCommentDocument,
-      InlineCommentReply: UpdateInlineCommentReplyDocument,
-      OverallComment: UpdateOverallCommentDocument,
-      OverallCommentReply: UpdateOverallCommentReplyDocument
+      OverallComment: UpdateOverallCommentDocument
     }
   : {
       InlineComment: CreateInlineCommentDocument,
-      InlineCommentReply: CreateInlineCommentReplyDocument,
-      OverallComment: CreateOverallCommentDocument,
-      OverallCommentReply: CreateOverallCommentReplyDocument
+      OverallComment: CreateOverallCommentDocument
     }
-const { mutate: createComment } = useMutation(mutations[commentType.value])
+const { mutate: createComment } = useMutation(
+  mutations[commentType.value.replace(/Reply$/, "")]
+)
 const selectedCriteria = computed(() =>
   styleCriteria.value
     .filter((criteria) => criteria.selected)
