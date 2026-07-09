@@ -9,6 +9,7 @@ use App\Auth\Abilities\GlobalAbility;
 use App\Auth\Abilities\PublicationAbility;
 use App\Auth\Abilities\SubmissionAbility;
 use App\Auth\Roles\ScopedRole;
+use App\Models\InlineComment;
 use App\Models\Publication;
 use App\Models\Submission;
 use App\Models\User;
@@ -45,6 +46,7 @@ class AbilitiesTest extends ApiTestCase
             'UserAbility' => ['UserAbility', GlobalAbility::class],
             'PublicationAbility' => ['PublicationAbility', PublicationAbility::class],
             'SubmissionAbility' => ['SubmissionAbility', SubmissionAbility::class],
+            'CommentAbility' => ['CommentAbility', CommentAbility::class],
         ];
     }
 
@@ -114,7 +116,7 @@ class AbilitiesTest extends ApiTestCase
             }
         }
 
-        foreach ([SubmissionAbility::class, PublicationAbility::class] as $enum) {
+        foreach ([SubmissionAbility::class, PublicationAbility::class, CommentAbility::class] as $enum) {
             foreach (AbilityExposure::exposed($enum) as $exposedName => $exposure) {
                 $ability = $exposure['case'];
                 $this->assertArrayHasKey(
@@ -137,17 +139,13 @@ class AbilitiesTest extends ApiTestCase
      */
     public function testEveryGrantedScopedAbilityIsExposed(): void
     {
-        // Deliberately server-only: the deprecated LegacyUpdate bridge, and all
-        // of CommentAbility — comment types expose no abilities field (yet), so
-        // the whole enum has no wire surface.
+        // Deliberately server-only: the deprecated LegacyUpdate bridge.
         $serverOnly = [SubmissionAbility::LegacyUpdate];
-        $serverOnlyEnums = [CommentAbility::class];
 
         foreach (ScopedRole::cases() as $role) {
             foreach ($role->grants() as $grant) {
                 $ability = $grant->ability;
-                $isServerOnly = in_array($ability, $serverOnly, true)
-                    || in_array($ability::class, $serverOnlyEnums, true);
+                $isServerOnly = in_array($ability, $serverOnly, true);
                 if ($isServerOnly) {
                     continue;
                 }
@@ -404,5 +402,109 @@ class AbilitiesTest extends ApiTestCase
         );
 
         $response->assertJsonPath('data.publication.abilities', []);
+    }
+
+    /**
+     * Comment update/delete is authorship-conditioned AND windowed: the author
+     * (holding a scoped role on the parent submission) sees both granted while
+     * the submission is under review, and loses both once it leaves the
+     * reviewable window — the comment becomes part of the settled record.
+     *
+     * @return void
+     */
+    public function testCommentAbilitiesForAuthorTrackReviewableWindow(): void
+    {
+        $reviewer = User::factory()->create();
+        $this->actingAs($reviewer);
+        $submission = Submission::factory()
+            ->for(Publication::factory()->create())
+            ->hasAttached($reviewer, [], 'reviewers')
+            ->create(['status' => Submission::UNDER_REVIEW]);
+        InlineComment::withoutEvents(fn() => InlineComment::factory()->create([
+            'submission_id' => $submission->id,
+            'created_by' => $reviewer->id,
+        ]));
+
+        $query = 'query getSubmission($id: ID!) {
+            submission(id: $id) {
+                inline_comments { abilities }
+            }
+        }';
+
+        $response = $this->graphQL($query, ['id' => $submission->id]);
+        $this->assertEqualsCanonicalizing(
+            ['update', 'delete'],
+            $response->json('data.submission.inline_comments.0.abilities')
+        );
+
+        $submission->update(['status' => Submission::ACCEPTED_AS_FINAL]);
+
+        $this->graphQL($query, ['id' => $submission->id])
+            ->assertJsonPath('data.submission.inline_comments.0.abilities', []);
+    }
+
+    /**
+     * A role holder who did NOT author the comment gets an empty granted array —
+     * the authorship predicate fails — even though they can view the submission.
+     *
+     * @return void
+     */
+    public function testCommentAbilitiesDeniedToNonAuthor(): void
+    {
+        $reviewer = User::factory()->create();
+        $author = User::factory()->create();
+        $this->actingAs($reviewer);
+        $submission = Submission::factory()
+            ->for(Publication::factory()->create())
+            ->hasAttached($reviewer, [], 'reviewers')
+            ->create(['status' => Submission::UNDER_REVIEW]);
+        InlineComment::withoutEvents(fn() => InlineComment::factory()->create([
+            'submission_id' => $submission->id,
+            'created_by' => $author->id,
+        ]));
+
+        $response = $this->graphQL(
+            'query getSubmission($id: ID!) {
+                submission(id: $id) {
+                    inline_comments { abilities }
+                }
+            }',
+            ['id' => $submission->id]
+        );
+
+        $response->assertJsonPath('data.submission.inline_comments.0.abilities', []);
+    }
+
+    /**
+     * The application administrator role moderates: it holds update/delete on
+     * any comment regardless of authorship, via the resolver's short-circuit.
+     *
+     * @return void
+     */
+    public function testCommentAbilitiesForApplicationAdministrator(): void
+    {
+        $this->beAppAdmin();
+        $author = User::factory()->create();
+        $submission = Submission::factory()
+            ->for(Publication::factory()->create())
+            ->create(['status' => Submission::UNDER_REVIEW]);
+        InlineComment::withoutEvents(fn() => InlineComment::factory()->create([
+            'submission_id' => $submission->id,
+            'created_by' => $author->id,
+        ]));
+
+        $response = $this->graphQL(
+            'query getSubmission($id: ID!) {
+                submission(id: $id) {
+                    inline_comments { abilities }
+                }
+            }',
+            ['id' => $submission->id]
+        );
+
+        $this->assertEqualsCanonicalizing(
+            ['update', 'delete'],
+            $response->json('data.submission.inline_comments.0.abilities')
+        );
     }
 }
