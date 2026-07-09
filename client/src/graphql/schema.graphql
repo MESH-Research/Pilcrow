@@ -29,6 +29,7 @@ input ChangeSubmissionStatusInput {
 }
 
 interface Comment {
+  abilities: [CommentAbility!]!
   content: String!
   created_at: DateTimeUtc!
   created_by: User!
@@ -37,6 +38,20 @@ interface Comment {
   read_at: DateTimeUtc
   updated_at: DateTimeUtc!
   updated_by: User!
+}
+
+"""
+An ability on a single comment. The viewer's `abilities` array carries the
+granted ones; grants depend on authorship and the owning submission's status.
+"""
+enum CommentAbility {
+  """Viewer may delete this comment."""
+  delete
+
+  """
+  Viewer may edit this comment — content and, for a top-level inline comment, style criteria and range.
+  """
+  update
 }
 
 """The type of comments to find participants for"""
@@ -178,6 +193,7 @@ type IdentityProvider {
 
 """An inline comment of a submission"""
 type InlineComment implements Comment {
+  abilities: [CommentAbility!]!
   content: String!
   created_at: DateTimeUtc!
   created_by: User!
@@ -204,6 +220,7 @@ input InlineCommentHasManyInput {
 
 """A reply to an inline comment of a submission"""
 type InlineCommentReply implements Comment {
+  abilities: [CommentAbility!]!
   content: String!
   created_at: DateTimeUtc!
   created_by: User!
@@ -490,6 +507,7 @@ enum OrderByRelationWithColumnAggregateFunction {
 
 """An overall comment of a submission"""
 type OverallComment implements Comment {
+  abilities: [CommentAbility!]!
   content: String!
   created_at: DateTimeUtc!
   created_by: User!
@@ -513,6 +531,7 @@ input OverallCommentHasManyInput {
 
 """A reply to an overall comment of a submission"""
 type OverallCommentReply implements Comment {
+  abilities: [CommentAbility!]!
   content: String!
   created_at: DateTimeUtc!
   created_by: User!
