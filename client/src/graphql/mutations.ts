@@ -46,7 +46,10 @@ graphql(`
 `)
 
 // The roster mutations return users that render in a UserList, so they
-// select the UserListItem-owned `userListItem` fragment.
+// select the UserListItem-owned `userListItem` fragment. They also select
+// display_label: the watched GetSubmission/GetSubmissionReview queries read
+// it on these same roster fields, so a mutation write that omitted it would
+// leave the cache incomplete and force a full refetch.
 graphql(`
   mutation UpdateSubmissionReviewers(
     $id: ID!
@@ -62,6 +65,7 @@ graphql(`
       id
       reviewers {
         ...userListItem
+        display_label
       }
     }
   }
@@ -82,6 +86,7 @@ graphql(`
       id
       review_coordinators {
         ...userListItem
+        display_label
       }
     }
   }
@@ -102,6 +107,7 @@ graphql(`
       id
       submitters {
         ...userListItem
+        display_label
       }
     }
   }
