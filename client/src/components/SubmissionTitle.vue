@@ -113,7 +113,12 @@ function checkThatFormIsInvalid() {
   return false
 }
 
-const { mutate } = useMutation(UpdateSubmissionTitleDocument)
+// The mutation payload updates the cached title, but the audits list on
+// GetSubmission gains a new server-side row this response can't supply —
+// the refetch is what refreshes the audit trail.
+const { mutate } = useMutation(UpdateSubmissionTitleDocument, {
+  refetchQueries: ["GetSubmission"]
+})
 const editing_title = ref(false)
 const submitting_title_edit = ref(false)
 
