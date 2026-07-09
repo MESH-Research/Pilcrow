@@ -59,19 +59,6 @@
   </q-form>
 </template>
 
-<script lang="ts">
-import { graphql } from "src/graphql/generated"
-
-graphql(`
-  mutation UpdateSubmissionTitle($id: ID!, $title: String!) {
-    updateSubmissionContent(input: { id: $id, title: $title }) {
-      id
-      title
-    }
-  }
-`)
-</script>
-
 <script setup lang="ts">
 import { UpdateSubmissionTitleDocument } from "src/graphql/generated/graphql"
 import { useMutation } from "@vue/apollo-composable"

@@ -1,10 +1,247 @@
 import gql from "graphql-tag"
+import { graphql } from "./generated"
 import {
   _COMMENT_FIELDS,
   _CURRENT_USER_FIELDS,
   _PROFILE_METADATA_FIELDS,
   _RELATED_USER_FIELDS
 } from "./fragments"
+
+// ---------------------------------------------------------------------------
+// Typed documents (graphql-codegen client preset)
+//
+// Operations in this section register with codegen; consumers import the
+// generated `*Document` from src/graphql/generated/graphql instead of a
+// `gql` export from this file. Migrate the legacy `gql` exports below into
+// this section as their consumers move to typed documents.
+// ---------------------------------------------------------------------------
+
+graphql(`
+  mutation UpdateSubmissionTitle($id: ID!, $title: String!) {
+    updateSubmissionContent(input: { id: $id, title: $title }) {
+      id
+      title
+    }
+  }
+`)
+
+graphql(`
+  mutation UpdateSubmissionStatus(
+    $id: ID!
+    $status: SubmissionStatus!
+    $status_change_comment: String
+  ) {
+    changeSubmissionStatus(
+      input: {
+        id: $id
+        status: $status
+        status_change_comment: $status_change_comment
+      }
+    ) {
+      id
+      status
+      status_change_comment
+    }
+  }
+`)
+
+// The roster mutations return users that render in a UserList, so they
+// select the UserListItem-owned `userListItem` fragment.
+graphql(`
+  mutation UpdateSubmissionReviewers(
+    $id: ID!
+    $connect: [ID!]
+    $disconnect: [ID!]
+  ) {
+    updateSubmissionReviewers(
+      input: {
+        id: $id
+        reviewers: { connect: $connect, disconnect: $disconnect }
+      }
+    ) {
+      id
+      reviewers {
+        ...userListItem
+      }
+    }
+  }
+`)
+
+graphql(`
+  mutation UpdateSubmissionReviewCoordinators(
+    $id: ID!
+    $connect: [ID!]
+    $disconnect: [ID!]
+  ) {
+    updateSubmissionReviewCoordinators(
+      input: {
+        id: $id
+        review_coordinators: { connect: $connect, disconnect: $disconnect }
+      }
+    ) {
+      id
+      review_coordinators {
+        ...userListItem
+      }
+    }
+  }
+`)
+
+graphql(`
+  mutation UpdateSubmissionSubmitters(
+    $id: ID!
+    $connect: [ID!]
+    $disconnect: [ID!]
+  ) {
+    updateSubmissionSubmitters(
+      input: {
+        id: $id
+        submitters: { connect: $connect, disconnect: $disconnect }
+      }
+    ) {
+      id
+      submitters {
+        ...userListItem
+      }
+    }
+  }
+`)
+
+// Replies use the same documents as top-level comments; the reply_to_id /
+// parent_id variables are optional and only sent when replying.
+graphql(`
+  mutation CreateOverallComment(
+    $submission_id: ID!
+    $content: String!
+    $reply_to_id: ID
+    $parent_id: ID
+  ) {
+    createOverallComment(
+      input: {
+        submission_id: $submission_id
+        content: $content
+        reply_to_id: $reply_to_id
+        parent_id: $parent_id
+      }
+    ) {
+      id
+      overall_comments(trashed: WITH) {
+        ...commentFields
+        replies(trashed: WITH) {
+          ...commentFields
+          parent_id
+          reply_to_id
+        }
+      }
+    }
+  }
+`)
+
+graphql(`
+  mutation CreateInlineComment(
+    $submission_id: ID!
+    $content: String!
+    $from: Int
+    $to: Int
+    $style_criteria: [ID!]
+    $reply_to_id: ID
+    $parent_id: ID
+  ) {
+    createInlineComment(
+      input: {
+        submission_id: $submission_id
+        content: $content
+        style_criteria: $style_criteria
+        from: $from
+        to: $to
+        reply_to_id: $reply_to_id
+        parent_id: $parent_id
+      }
+    ) {
+      id
+      inline_comments(trashed: WITH) {
+        style_criteria {
+          name
+          icon
+        }
+        ...commentFields
+        replies(trashed: WITH) {
+          ...commentFields
+          parent_id
+          reply_to_id
+        }
+      }
+    }
+  }
+`)
+
+graphql(`
+  mutation UpdateOverallComment(
+    $submission_id: ID!
+    $comment_id: ID!
+    $content: String!
+  ) {
+    updateOverallComment(
+      input: {
+        submission_id: $submission_id
+        comment_id: $comment_id
+        content: $content
+      }
+    ) {
+      id
+      created_by {
+        ...relatedUserFields
+      }
+      overall_comments(trashed: WITH) {
+        ...commentFields
+        replies(trashed: WITH) {
+          reply_to_id
+          parent_id
+          ...commentFields
+        }
+      }
+    }
+  }
+`)
+
+graphql(`
+  mutation UpdateInlineComment(
+    $submission_id: ID!
+    $comment_id: ID!
+    $content: String!
+    $style_criteria: [ID!]
+  ) {
+    updateInlineComment(
+      input: {
+        submission_id: $submission_id
+        comment_id: $comment_id
+        content: $content
+        style_criteria: $style_criteria
+      }
+    ) {
+      id
+      created_by {
+        ...relatedUserFields
+      }
+      inline_comments(trashed: WITH) {
+        ...commentFields
+        style_criteria {
+          name
+          icon
+        }
+        replies(trashed: WITH) {
+          reply_to_id
+          parent_id
+          ...commentFields
+        }
+      }
+    }
+  }
+`)
+
+// ---------------------------------------------------------------------------
+// Legacy untyped operations
+// ---------------------------------------------------------------------------
 
 export const LOGIN = gql`
   mutation Login($email: String!, $password: String!) {

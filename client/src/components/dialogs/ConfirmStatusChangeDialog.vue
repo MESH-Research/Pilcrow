@@ -63,30 +63,6 @@
   </q-dialog>
 </template>
 
-<script lang="ts">
-import { graphql } from "src/graphql/generated"
-
-graphql(`
-  mutation UpdateSubmissionStatus(
-    $id: ID!
-    $status: SubmissionStatus!
-    $status_change_comment: String
-  ) {
-    changeSubmissionStatus(
-      input: {
-        id: $id
-        status: $status
-        status_change_comment: $status_change_comment
-      }
-    ) {
-      id
-      status
-      status_change_comment
-    }
-  }
-`)
-</script>
-
 <script setup lang="ts">
 import { useDialogPluginComponent } from "quasar"
 import { useMutation } from "@vue/apollo-composable"
