@@ -89,18 +89,15 @@ import Placeholder from "@tiptap/extension-placeholder"
 import CommentEditorButton from "../atoms/CommentEditorButton.vue"
 import BypassStyleCriteriaDialogVue from "../dialogs/BypassStyleCriteriaDialog.vue"
 import {
-  CREATE_OVERALL_COMMENT,
-  CREATE_OVERALL_COMMENT_REPLY,
-  CREATE_INLINE_COMMENT_REPLY,
-  CREATE_INLINE_COMMENT,
-  UPDATE_OVERALL_COMMENT,
-  UPDATE_INLINE_COMMENT,
-  UPDATE_INLINE_COMMENT_REPLY,
-  UPDATE_OVERALL_COMMENT_REPLY
-} from "src/graphql/mutations"
+  CreateOverallCommentDocument,
+  CreateInlineCommentDocument,
+  UpdateOverallCommentDocument,
+  UpdateInlineCommentDocument
+} from "src/graphql/generated/graphql"
 import { useI18n } from "vue-i18n"
 import { uniqueId } from "lodash"
 import type { DocumentNode } from "graphql"
+import { useSubmission } from "src/use/submissionContext"
 
 interface CommentData {
   id?: string
@@ -289,22 +286,21 @@ const commentEditorButtons = ref<EditorButton[]>([
     iconName: "link_off"
   }
 ])
-import { useSubmission } from "src/use/submissionContext"
 const submission = useSubmission()
+// Replies use the same documents as top-level comments; the reply_to_id /
+// parent_id variables are optional and only sent when replying.
 const mutations: Record<string, DocumentNode> = props.isModifying
   ? {
-      InlineComment: UPDATE_INLINE_COMMENT,
-      InlineCommentReply: UPDATE_INLINE_COMMENT_REPLY,
-      OverallComment: UPDATE_OVERALL_COMMENT,
-      OverallCommentReply: UPDATE_OVERALL_COMMENT_REPLY
+      InlineComment: UpdateInlineCommentDocument,
+      OverallComment: UpdateOverallCommentDocument
     }
   : {
-      InlineComment: CREATE_INLINE_COMMENT,
-      InlineCommentReply: CREATE_INLINE_COMMENT_REPLY,
-      OverallComment: CREATE_OVERALL_COMMENT,
-      OverallCommentReply: CREATE_OVERALL_COMMENT_REPLY
+      InlineComment: CreateInlineCommentDocument,
+      OverallComment: CreateOverallCommentDocument
     }
-const { mutate: createComment } = useMutation(mutations[commentType.value])
+const { mutate: createComment } = useMutation(
+  mutations[commentType.value.replace(/Reply$/, "")]
+)
 const selectedCriteria = computed(() =>
   styleCriteria.value
     .filter((criteria) => criteria.selected)

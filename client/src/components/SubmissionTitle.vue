@@ -60,7 +60,7 @@
 </template>
 
 <script setup lang="ts">
-import { UPDATE_SUBMISSION_TITLE } from "src/graphql/mutations"
+import { UpdateSubmissionTitleDocument } from "src/graphql/generated/graphql"
 import { useMutation } from "@vue/apollo-composable"
 import { computed, ref, watchEffect } from "vue"
 import { useSubmission } from "src/use/submissionContext"
@@ -113,7 +113,10 @@ function checkThatFormIsInvalid() {
   return false
 }
 
-const { mutate } = useMutation(UPDATE_SUBMISSION_TITLE, {
+// The mutation payload updates the cached title, but the audits list on
+// GetSubmission gains a new server-side row this response can't supply —
+// the refetch is what refreshes the audit trail.
+const { mutate } = useMutation(UpdateSubmissionTitleDocument, {
   refetchQueries: ["GetSubmission"]
 })
 const editing_title = ref(false)

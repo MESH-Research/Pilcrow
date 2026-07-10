@@ -1,10 +1,253 @@
 import gql from "graphql-tag"
+import { graphql } from "./generated"
 import {
   _COMMENT_FIELDS,
   _CURRENT_USER_FIELDS,
   _PROFILE_METADATA_FIELDS,
   _RELATED_USER_FIELDS
 } from "./fragments"
+
+// ---------------------------------------------------------------------------
+// Typed documents (graphql-codegen client preset)
+//
+// Operations in this section register with codegen; consumers import the
+// generated `*Document` from src/graphql/generated/graphql instead of a
+// `gql` export from this file. Migrate the legacy `gql` exports below into
+// this section as their consumers move to typed documents.
+// ---------------------------------------------------------------------------
+
+graphql(`
+  mutation UpdateSubmissionTitle($id: ID!, $title: String!) {
+    updateSubmissionContent(input: { id: $id, title: $title }) {
+      id
+      title
+    }
+  }
+`)
+
+graphql(`
+  mutation UpdateSubmissionStatus(
+    $id: ID!
+    $status: SubmissionStatus!
+    $status_change_comment: String
+  ) {
+    changeSubmissionStatus(
+      input: {
+        id: $id
+        status: $status
+        status_change_comment: $status_change_comment
+      }
+    ) {
+      id
+      status
+      status_change_comment
+    }
+  }
+`)
+
+// The roster mutations return users that render in a UserList, so they
+// select the UserListItem-owned `userListItem` fragment. They also select
+// display_label: the watched GetSubmission/GetSubmissionReview queries read
+// it on these same roster fields, so a mutation write that omitted it would
+// leave the cache incomplete and force a full refetch.
+graphql(`
+  mutation UpdateSubmissionReviewers(
+    $id: ID!
+    $connect: [ID!]
+    $disconnect: [ID!]
+  ) {
+    updateSubmissionReviewers(
+      input: {
+        id: $id
+        reviewers: { connect: $connect, disconnect: $disconnect }
+      }
+    ) {
+      id
+      reviewers {
+        ...userListItem
+        display_label
+      }
+    }
+  }
+`)
+
+graphql(`
+  mutation UpdateSubmissionReviewCoordinators(
+    $id: ID!
+    $connect: [ID!]
+    $disconnect: [ID!]
+  ) {
+    updateSubmissionReviewCoordinators(
+      input: {
+        id: $id
+        review_coordinators: { connect: $connect, disconnect: $disconnect }
+      }
+    ) {
+      id
+      review_coordinators {
+        ...userListItem
+        display_label
+      }
+    }
+  }
+`)
+
+graphql(`
+  mutation UpdateSubmissionSubmitters(
+    $id: ID!
+    $connect: [ID!]
+    $disconnect: [ID!]
+  ) {
+    updateSubmissionSubmitters(
+      input: {
+        id: $id
+        submitters: { connect: $connect, disconnect: $disconnect }
+      }
+    ) {
+      id
+      submitters {
+        ...userListItem
+        display_label
+      }
+    }
+  }
+`)
+
+// Replies use the same documents as top-level comments; the reply_to_id /
+// parent_id variables are optional and only sent when replying.
+graphql(`
+  mutation CreateOverallComment(
+    $submission_id: ID!
+    $content: String!
+    $reply_to_id: ID
+    $parent_id: ID
+  ) {
+    createOverallComment(
+      input: {
+        submission_id: $submission_id
+        content: $content
+        reply_to_id: $reply_to_id
+        parent_id: $parent_id
+      }
+    ) {
+      id
+      overall_comments(trashed: WITH) {
+        ...commentFields
+        replies(trashed: WITH) {
+          ...commentFields
+          parent_id
+          reply_to_id
+        }
+      }
+    }
+  }
+`)
+
+graphql(`
+  mutation CreateInlineComment(
+    $submission_id: ID!
+    $content: String!
+    $from: Int
+    $to: Int
+    $style_criteria: [ID!]
+    $reply_to_id: ID
+    $parent_id: ID
+  ) {
+    createInlineComment(
+      input: {
+        submission_id: $submission_id
+        content: $content
+        style_criteria: $style_criteria
+        from: $from
+        to: $to
+        reply_to_id: $reply_to_id
+        parent_id: $parent_id
+      }
+    ) {
+      id
+      inline_comments(trashed: WITH) {
+        style_criteria {
+          name
+          icon
+        }
+        ...commentFields
+        replies(trashed: WITH) {
+          ...commentFields
+          parent_id
+          reply_to_id
+        }
+      }
+    }
+  }
+`)
+
+graphql(`
+  mutation UpdateOverallComment(
+    $submission_id: ID!
+    $comment_id: ID!
+    $content: String!
+  ) {
+    updateOverallComment(
+      input: {
+        submission_id: $submission_id
+        comment_id: $comment_id
+        content: $content
+      }
+    ) {
+      id
+      created_by {
+        ...relatedUserFields
+      }
+      overall_comments(trashed: WITH) {
+        ...commentFields
+        replies(trashed: WITH) {
+          reply_to_id
+          parent_id
+          ...commentFields
+        }
+      }
+    }
+  }
+`)
+
+graphql(`
+  mutation UpdateInlineComment(
+    $submission_id: ID!
+    $comment_id: ID!
+    $content: String!
+    $style_criteria: [ID!]
+  ) {
+    updateInlineComment(
+      input: {
+        submission_id: $submission_id
+        comment_id: $comment_id
+        content: $content
+        style_criteria: $style_criteria
+      }
+    ) {
+      id
+      created_by {
+        ...relatedUserFields
+      }
+      inline_comments(trashed: WITH) {
+        ...commentFields
+        style_criteria {
+          name
+          icon
+        }
+        replies(trashed: WITH) {
+          reply_to_id
+          parent_id
+          ...commentFields
+        }
+      }
+    }
+  }
+`)
+
+// ---------------------------------------------------------------------------
+// Legacy untyped operations
+// ---------------------------------------------------------------------------
 
 export const LOGIN = gql`
   mutation Login($email: String!, $password: String!) {
@@ -219,77 +462,6 @@ export const UPDATE_SUBMISSION_CONTENT_WITH_FILE = gql`
   }
 `
 
-export const UPDATE_SUBMISSION_TITLE = gql`
-  mutation UpdateSubmissionTitle($id: ID!, $title: String!) {
-    updateSubmission(input: { id: $id, title: $title }) {
-      id
-      title
-    }
-  }
-`
-
-export const UPDATE_SUBMISSION_REVIEWERS = gql`
-  mutation UpdateSubmissionReviewers(
-    $id: ID!
-    $connect: [ID!]
-    $disconnect: [ID!]
-  ) {
-    updateSubmission(
-      input: {
-        id: $id
-        reviewers: { connect: $connect, disconnect: $disconnect }
-      }
-    ) {
-      id
-      reviewers {
-        ...relatedUserFields
-      }
-    }
-  }
-  ${_RELATED_USER_FIELDS}
-`
-export const UPDATE_SUBMISSION_REVIEW_COORDINATORS = gql`
-  mutation UpdateSubmissionReviewCoordinators(
-    $id: ID!
-    $connect: [ID!]
-    $disconnect: [ID!]
-  ) {
-    updateSubmission(
-      input: {
-        id: $id
-        review_coordinators: { connect: $connect, disconnect: $disconnect }
-      }
-    ) {
-      id
-      review_coordinators {
-        ...relatedUserFields
-      }
-    }
-  }
-  ${_RELATED_USER_FIELDS}
-`
-
-export const UPDATE_SUBMISSION_SUBMITERS = gql`
-  mutation UpdateSubmissionSubmitters(
-    $id: ID!
-    $connect: [ID!]
-    $disconnect: [ID!]
-  ) {
-    updateSubmission(
-      input: {
-        id: $id
-        submitters: { connect: $connect, disconnect: $disconnect }
-      }
-    ) {
-      id
-      submitters {
-        ...relatedUserFields
-      }
-    }
-  }
-  ${_RELATED_USER_FIELDS}
-`
-
 export const UPDATE_PROFILE_METADATA = gql`
   mutation UpdateProfileMetaData(
     $id: ID!
@@ -440,163 +612,6 @@ export const DELETE_PUBLICATION_STYLE_CRITERIA = gql`
   }
 `
 
-export const CREATE_OVERALL_COMMENT = gql`
-  mutation CreateOverallComment($submission_id: ID!, $content: String!) {
-    updateSubmission(
-      input: {
-        id: $submission_id
-        overall_comments: { create: [{ content: $content }] }
-      }
-    ) {
-      id
-      overall_comments(trashed: WITH) {
-        ...commentFields
-        replies(trashed: WITH) {
-          ...commentFields
-          parent_id
-          reply_to_id
-        }
-      }
-    }
-  }
-  ${_COMMENT_FIELDS}
-`
-
-export const CREATE_OVERALL_COMMENT_REPLY = gql`
-  mutation CreateOverallCommentReply(
-    $submission_id: ID!
-    $content: String!
-    $reply_to_id: ID!
-    $parent_id: ID!
-  ) {
-    updateSubmission(
-      input: {
-        id: $submission_id
-        overall_comments: {
-          create: [
-            {
-              content: $content
-              reply_to_id: $reply_to_id
-              parent_id: $parent_id
-            }
-          ]
-        }
-      }
-    ) {
-      id
-      overall_comments(trashed: WITH) {
-        ...commentFields
-        replies(trashed: WITH) {
-          ...commentFields
-          parent_id
-          reply_to_id
-        }
-      }
-    }
-  }
-  ${_COMMENT_FIELDS}
-`
-
-export const CREATE_INLINE_COMMENT = gql`
-  mutation CreateInlineComment(
-    $submission_id: ID!
-    $content: String!
-    $from: Int
-    $to: Int
-    $style_criteria: [ID!]
-  ) {
-    updateSubmission(
-      input: {
-        id: $submission_id
-        inline_comments: {
-          create: [
-            {
-              content: $content
-              style_criteria: $style_criteria
-              from: $from
-              to: $to
-            }
-          ]
-        }
-      }
-    ) {
-      id
-      inline_comments(trashed: WITH) {
-        style_criteria {
-          name
-          icon
-        }
-        ...commentFields
-        replies(trashed: WITH) {
-          ...commentFields
-          parent_id
-          reply_to_id
-        }
-      }
-    }
-  }
-  ${_COMMENT_FIELDS}
-`
-
-export const CREATE_INLINE_COMMENT_REPLY = gql`
-  mutation CreateInlineCommentReply(
-    $submission_id: ID!
-    $content: String!
-    $reply_to_id: ID!
-    $parent_id: ID!
-  ) {
-    updateSubmission(
-      input: {
-        id: $submission_id
-        inline_comments: {
-          create: [
-            {
-              content: $content
-              reply_to_id: $reply_to_id
-              parent_id: $parent_id
-            }
-          ]
-        }
-      }
-    ) {
-      id
-      inline_comments(trashed: WITH) {
-        style_criteria {
-          name
-          icon
-        }
-        ...commentFields
-        replies(trashed: WITH) {
-          ...commentFields
-          parent_id
-          reply_to_id
-        }
-      }
-    }
-  }
-  ${_COMMENT_FIELDS}
-`
-
-export const UPDATE_SUBMISSION_STATUS = gql`
-  mutation UpdateSubmissionStatus(
-    $id: ID!
-    $status: SubmissionStatus!
-    $status_change_comment: String
-  ) {
-    updateSubmission(
-      input: {
-        id: $id
-        status: $status
-        status_change_comment: $status_change_comment
-      }
-    ) {
-      id
-      status
-      status_change_comment
-    }
-  }
-`
-
 export const INVITE_REVIEWER = gql`
   mutation InviteReviewer($id: ID!, $email: String!, $message: String) {
     inviteReviewer(
@@ -661,104 +676,6 @@ export const REINVITE_REVIEW_COORDINATOR = gql`
   ${_RELATED_USER_FIELDS}
 `
 
-export const UPDATE_OVERALL_COMMENT = gql`
-  mutation UpdateOverallComment(
-    $submission_id: ID!
-    $comment_id: ID!
-    $content: String!
-  ) {
-    updateSubmission(
-      input: {
-        id: $submission_id
-        overall_comments: { update: { id: $comment_id, content: $content } }
-      }
-    ) {
-      id
-      created_by {
-        ...relatedUserFields
-      }
-      overall_comments(trashed: WITH) {
-        ...commentFields
-        replies(trashed: WITH) {
-          reply_to_id
-          ...commentFields
-        }
-      }
-    }
-  }
-  ${_COMMENT_FIELDS}
-  ${_RELATED_USER_FIELDS}
-`
-
-export const UPDATE_INLINE_COMMENT = gql`
-  mutation UpdateInlineComment(
-    $submission_id: ID!
-    $comment_id: ID!
-    $content: String!
-    $style_criteria: [ID!]
-  ) {
-    updateSubmission(
-      input: {
-        id: $submission_id
-        inline_comments: {
-          update: {
-            id: $comment_id
-            content: $content
-            style_criteria: $style_criteria
-          }
-        }
-      }
-    ) {
-      id
-      created_by {
-        ...relatedUserFields
-      }
-      inline_comments(trashed: WITH) {
-        ...commentFields
-        style_criteria {
-          name
-          icon
-        }
-        replies(trashed: WITH) {
-          reply_to_id
-          ...commentFields
-        }
-      }
-    }
-  }
-  ${_COMMENT_FIELDS}
-  ${_RELATED_USER_FIELDS}
-`
-
-export const UPDATE_INLINE_COMMENT_REPLY = gql`
-  mutation UpdateInlineCommentReply(
-    $submission_id: ID!
-    $comment_id: ID!
-    $content: String!
-  ) {
-    updateSubmission(
-      input: {
-        id: $submission_id
-        inline_comments: { update: { id: $comment_id, content: $content } }
-      }
-    ) {
-      id
-      created_by {
-        ...relatedUserFields
-      }
-      inline_comments(trashed: WITH) {
-        ...commentFields
-        replies(trashed: WITH) {
-          reply_to_id
-          ...commentFields
-        }
-      }
-    }
-  }
-  ${_COMMENT_FIELDS}
-  ${_RELATED_USER_FIELDS}
-`
-
 export const DELETE_INLINE_COMMENT = gql`
   mutation DeleteInlineComment($submission_id: ID!, $comment_id: ID!) {
     deleteInlineComment(
@@ -778,36 +695,6 @@ export const DELETE_INLINE_COMMENT = gql`
           reply_to_id
           parent_id
           ...commentFields
-        }
-      }
-    }
-  }
-  ${_COMMENT_FIELDS}
-  ${_RELATED_USER_FIELDS}
-`
-
-export const UPDATE_OVERALL_COMMENT_REPLY = gql`
-  mutation UpdateOverallCommentReply(
-    $submission_id: ID!
-    $comment_id: ID!
-    $content: String!
-  ) {
-    updateSubmission(
-      input: {
-        id: $submission_id
-        overall_comments: { update: { id: $comment_id, content: $content } }
-      }
-    ) {
-      id
-      created_by {
-        ...relatedUserFields
-      }
-      overall_comments(trashed: WITH) {
-        ...commentFields
-        replies(trashed: WITH) {
-          ...commentFields
-          reply_to_id
-          parent_id
         }
       }
     }

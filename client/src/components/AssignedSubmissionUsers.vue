@@ -74,20 +74,26 @@ import UserList from "./molecules/UserList.vue"
 import { useFeedbackMessages } from "src/use/guiElements"
 import { useMutation } from "@vue/apollo-composable"
 import {
-  UPDATE_SUBMISSION_REVIEWERS,
-  UPDATE_SUBMISSION_REVIEW_COORDINATORS,
-  UPDATE_SUBMISSION_SUBMITERS,
   INVITE_REVIEWER,
   INVITE_REVIEW_COORDINATOR
 } from "src/graphql/mutations"
+import {
+  UpdateSubmissionReviewersDocument,
+  UpdateSubmissionReviewCoordinatorsDocument,
+  UpdateSubmissionSubmittersDocument
+} from "src/graphql/generated/graphql"
 import { computed, ref } from "vue"
 import type { DocumentNode } from "graphql"
 import { useI18nPrefix } from "src/use/i18nPrefix"
+import { useUnassignUser } from "src/use/userList"
 import { useEditor, EditorContent } from "@tiptap/vue-3"
 import StarterKit from "@tiptap/starter-kit"
 import Placeholder from "@tiptap/extension-placeholder"
 import { useQuasar } from "quasar"
-import type { Submission, User } from "src/graphql/generated/graphql"
+import type {
+  Submission,
+  userListItemFragment
+} from "src/graphql/generated/graphql"
 
 const { dialog } = useQuasar()
 
@@ -128,16 +134,16 @@ interface SubmissionMutationVars {
 
 const mutations: Record<string, RoleMutations> = {
   reviewers: {
-    update: UPDATE_SUBMISSION_REVIEWERS,
+    update: UpdateSubmissionReviewersDocument,
     invite: INVITE_REVIEWER
   },
   review_coordinators: {
-    update: UPDATE_SUBMISSION_REVIEW_COORDINATORS,
+    update: UpdateSubmissionReviewCoordinatorsDocument,
     invite: INVITE_REVIEW_COORDINATOR
   },
   submitters: {
-    update: UPDATE_SUBMISSION_SUBMITERS,
-    invite: UPDATE_SUBMISSION_SUBMITERS // TODO: Enable submitter invitation
+    update: UpdateSubmissionSubmittersDocument,
+    invite: UpdateSubmissionSubmittersDocument // TODO: Enable submitter invitation
   }
 }
 const setMutationType = computed(() => {
@@ -259,7 +265,7 @@ async function assignUser(selectedUser: FoundUser) {
   }
 }
 
-async function reinviteUser({ user }: { user: User }) {
+async function reinviteUser({ user }: { user: userListItemFragment }) {
   if (!user.email) {
     return
   }
@@ -287,20 +293,11 @@ function dirtyDialog(email: string) {
   })
 }
 
-async function handleUserListClick({ user }: { user: User }) {
-  if (!props.mutable) return
-  try {
-    await mutate({ disconnect: [user.id] })
-    newStatusMessage(
-      "success",
-      pt("unassign.success", {
-        display_name: user.name ? user.name : user.username
-      })
-    )
-  } catch (error) {
-    newStatusMessage("failure", pt("unassign.error"))
-  }
-}
+const handleUserListClick = useUnassignUser({
+  enabled: () => props.mutable,
+  mutate,
+  pt
+})
 </script>
 
 <style>
