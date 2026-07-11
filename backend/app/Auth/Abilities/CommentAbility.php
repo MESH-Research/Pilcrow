@@ -17,12 +17,18 @@ namespace App\Auth\Abilities;
  * Held (conditionally) by every comment-capable role via the Reviewer base
  * grant; the app-administrator role moderates unconditionally through the
  * resolver's short-circuit.
+ *
+ * Cases annotated {@see Exposed} are part of the public GraphQL contract: they
+ * become values of the `CommentAbility` GraphQL enum and appear in the viewer's
+ * granted-abilities array on a comment. Unannotated cases stay server-only.
  */
 enum CommentAbility: string implements ScopedAbility
 {
     /** Edit a comment's content (and, for a top-level inline comment, style criteria / range). */
+    #[Exposed('Viewer may edit this comment — content and, for a top-level inline comment, style criteria and range.')]
     case Update = 'comment.update';
 
     /** Soft-delete a comment. */
+    #[Exposed('Viewer may delete this comment.')]
     case Delete = 'comment.delete';
 }

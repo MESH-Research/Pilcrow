@@ -7,6 +7,7 @@ use App\Events\OverallCommentAdded;
 use App\Events\OverallCommentReplyAdded;
 use App\Http\Traits\CreatedUpdatedBy;
 use App\Models\Contracts\Comment;
+use App\Models\Traits\HasCommentAbilities;
 use App\Models\Traits\ReadStatus;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -21,6 +22,7 @@ class OverallComment extends BaseModel implements Comment
     use CreatedUpdatedBy;
     use SoftDeletes;
     use ReadStatus;
+    use HasCommentAbilities;
 
     /**
      * The attributes that are mass assignable.
