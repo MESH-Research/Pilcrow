@@ -35,7 +35,11 @@ services:
       - cd /app/backend && php artisan view:clear
     build_as_root:
       - bash /app/.lando/install-pandoc.sh
+      - bash /app/.lando/install-poppler.sh
 tooling:
+  poppler:
+    server: appserver
+    cmd: poppler
   pandoc:
     service: appserver
     cmd: pandoc

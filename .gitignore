@@ -41,6 +41,7 @@ data/
 .lando.local.yml
 #Lando build cache
 .lando/cache/
+.lando/apt-cache/
 #Vendor Files
 node_modules/
 backend/vendor/**/*
