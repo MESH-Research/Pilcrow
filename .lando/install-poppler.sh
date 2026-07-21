@@ -17,12 +17,12 @@ cached_deb="${CACHE_DIR}/${deb_file}"
 mkdir -p "$CACHE_DIR"
 
 if [ -f "$cached_deb" ]; then
-  echo "Installing poppler-utils and depdencies from cache..."
+  echo "Installing poppler-utils and dependencies from cache..."
   dpkg -i "$CACHE_DIR"/*.deb
 else
   echo "Downloading poppler-utils and dependencies to cache..."
   apt-get update
   apt-get install -y -d -o Dir::Cache::Archives="$CACHE_DIR" poppler-utils:${build}=${POPPLER_VERSION}
-  echo "Installing poppler-utils and depdencies..."
+  echo "Installing poppler-utils and dependencies..."
   dpkg -i "$CACHE_DIR"/*.deb
 fi
