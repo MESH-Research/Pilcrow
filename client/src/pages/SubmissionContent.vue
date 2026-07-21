@@ -110,6 +110,9 @@
                     <q-item-label caption>{{
                       $t(`submissions.content.support.file_types`)
                     }}</q-item-label>
+                    <q-item-label caption>{{
+                      $t(`submissions.content.support.pdf_disclosure`)
+                    }}</q-item-label>
                   </q-item-section>
                 </q-item>
               </q-list>

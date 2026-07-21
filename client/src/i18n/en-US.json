@@ -1016,7 +1016,8 @@
       "heading": "Submission Content",
       "support": {
         "file_caption": "Accepted file types: ",
-        "file_types": ".csv, .docbook, .docx, .epub, .html, .latex, .md, .odt, .rtf, .txt"
+        "file_types": ".csv, .docbook, .docx, .epub, .html, .latex, .md, .odt, .rtf, .txt",
+        "pdf_disclosure": ".pdf is supported but experimental. It's recommended to use a different supported file type before trying PDF."
       },
       "upload": {
         "label": "Upload",
