@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f5acd73b596e1d3ec3f6a0bce8e39254",
+    "content-hash": "b6c4928624b5102b31b0781cf8df5c37",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -967,6 +967,65 @@
                 }
             ],
             "time": "2025-03-06T22:45:56+00:00"
+        },
+        {
+            "name": "escarter/poppler-wrapper-php",
+            "version": "v1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Escarter/poppler-wrapper-php.git",
+                "reference": "dc5e56f2a9c0a94b62d899cbd8897954bf900b9a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Escarter/poppler-wrapper-php/zipball/dc5e56f2a9c0a94b62d899cbd8897954bf900b9a",
+                "reference": "dc5e56f2a9c0a94b62d899cbd8897954bf900b9a",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.1",
+                "symfony/process": "^5.4|^6.3|^7.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.0",
+                "phpunit/phpunit": "^10.0",
+                "spatie/ray": "^1.10",
+                "vimeo/psalm": "^5.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Escarter\\PopplerPhp\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mbutuh Escarter Brieno",
+                    "email": "mbutuhescarter@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "This is a php wrapper for Poppler Utility tools",
+            "homepage": "https://github.com/escarter/poppler-wrapper-php",
+            "keywords": [
+                "escarter",
+                "poppler-wrapper-php"
+            ],
+            "support": {
+                "issues": "https://github.com/Escarter/poppler-wrapper-php/issues",
+                "source": "https://github.com/Escarter/poppler-wrapper-php/tree/v1.1.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/escarter",
+                    "type": "github"
+                }
+            ],
+            "time": "2025-12-14T21:53:17+00:00"
         },
         {
             "name": "ezyang/htmlpurifier",

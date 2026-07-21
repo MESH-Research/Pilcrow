@@ -10,6 +10,7 @@
     "require": {
         "php": "^8.4",
         "doctrine/dbal": "^3.0",
+        "escarter/poppler-wrapper-php": "^1.1",
         "ezyang/htmlpurifier": "4.19.0 as 4.16.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/framework": "^12.0",
