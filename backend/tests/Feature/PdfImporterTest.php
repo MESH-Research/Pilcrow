@@ -28,14 +28,14 @@ class PdfImporterTest extends TestCase
      * Test different documents against PDF detection code
      *
      * @param string $filename
-     * @param bool $expected_result
+     * @param bool $expectedResult
      * @return void
      */
     #[DataProvider('documentProvider')]
-    public function testDocFileIsNotDetectedAsPdf(string $filename, bool $expected_result): void
+    public function testDocFileIsNotDetectedAsPdf(string $filename, bool $expectedResult): void
     {
         $stubPath = __DIR__ . '/../stubs/' . $filename;
         $isPdf = PdfImporter::isPdfFile($stubPath, $filename);
-        $this->assertEquals($isPdf, $expected_result);
+        $this->assertEquals($isPdf, $expectedResult);
     }
 }
