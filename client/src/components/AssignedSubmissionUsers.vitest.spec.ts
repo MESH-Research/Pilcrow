@@ -3,11 +3,9 @@ import { mount } from "@vue/test-utils"
 import { installApolloClient } from "app/test/vitest/utils"
 import { Notify } from "quasar"
 import {
-  UPDATE_SUBMISSION_REVIEWERS,
-  UPDATE_SUBMISSION_REVIEW_COORDINATORS,
-  UPDATE_SUBMISSION_SUBMITERS
-} from "src/graphql/mutations"
-import {
+  UpdateSubmissionReviewersDocument,
+  UpdateSubmissionReviewCoordinatorsDocument,
+  UpdateSubmissionSubmittersDocument,
   SubmissionUserRoles,
   type Submission,
   type User
@@ -33,12 +31,18 @@ describe("AssignedSubmissionUsers", () => {
   const coordinatorsMutation = vi.fn()
   const submittersMutation = vi.fn()
 
-  mockClient.setRequestHandler(UPDATE_SUBMISSION_REVIEWERS, reviewersMutation)
   mockClient.setRequestHandler(
-    UPDATE_SUBMISSION_REVIEW_COORDINATORS,
+    UpdateSubmissionReviewersDocument,
+    reviewersMutation
+  )
+  mockClient.setRequestHandler(
+    UpdateSubmissionReviewCoordinatorsDocument,
     coordinatorsMutation
   )
-  mockClient.setRequestHandler(UPDATE_SUBMISSION_SUBMITERS, submittersMutation)
+  mockClient.setRequestHandler(
+    UpdateSubmissionSubmittersDocument,
+    submittersMutation
+  )
 
   beforeEach(() => {
     vi.resetAllMocks()

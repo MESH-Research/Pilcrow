@@ -3,25 +3,28 @@ declare(strict_types=1);
 
 namespace Tests\Api;
 
+use App\Auth\Abilities\AbilityExposure;
+use App\Auth\Abilities\CommentAbility;
 use App\Auth\Abilities\GlobalAbility;
 use App\Auth\Abilities\PublicationAbility;
 use App\Auth\Abilities\SubmissionAbility;
+use App\Auth\Roles\ScopedRole;
+use App\Models\InlineComment;
 use App\Models\Publication;
 use App\Models\Submission;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Str;
 use Nuwave\Lighthouse\Testing\MakesGraphQLRequests;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Silber\Bouncer\BouncerFacade;
 use Tests\ApiTestCase;
 
 /**
- * The client-facing `abilities` fields surface the same decisions the policies
- * enforce, so the UI can gate navigation/controls without re-implementing the
- * role matrix. They are resolved through Bouncer (global) and
- * {@see \App\Auth\ScopedAbilityResolver} (scoped), the same engines the policies
- * use, so they cannot drift from real authorization.
+ * The client-facing `abilities` arrays carry the GRANTED subset of the exposed
+ * ability vocabulary, so the UI can gate navigation/controls without
+ * re-implementing the role matrix. They are resolved through Bouncer (global)
+ * and {@see \App\Auth\ScopedAbilityResolver} (scoped), the same engines the
+ * policies use, so they cannot drift from real authorization.
  */
 class AbilitiesTest extends ApiTestCase
 {
@@ -29,77 +32,137 @@ class AbilitiesTest extends ApiTestCase
     use RefreshDatabase;
 
     /**
-     * The ability GraphQL types are generated from the enums by the AbilityFields
-     * directive, so a new ability case appears in the schema with no SDL edit.
-     * This locks each type's field set to exactly the snake_case enum cases — if
-     * the directive breaks or an enum and its type drift, it fails here rather
-     * than silently dropping a flag the client relies on.
+     * The GraphQL ability enums are generated from the PHP enums' Exposed cases
+     * by the @abilityEnum directive, so a new exposed case appears in the schema
+     * with no SDL edit. This locks each GraphQL enum's value set to exactly the
+     * exposed names — if the directive breaks, an enum and its GraphQL
+     * counterpart drift, or an unexposed case leaks, it fails here.
      *
-     * @return array<string, array{0: string, 1: class-string, 2: array<int, string>}>
+     * @return array<string, array{0: string, 1: class-string}>
      */
-    public static function abilityTypeProvider(): array
+    public static function abilityEnumProvider(): array
     {
         return [
-            // UserAbilities also carries the manually-declared `admin_area` union
-            // flag alongside the generated case fields.
-            'UserAbilities' => ['UserAbilities', GlobalAbility::class, ['admin_area']],
-            'PublicationAbilities' => ['PublicationAbilities', PublicationAbility::class, []],
-            'SubmissionAbilities' => ['SubmissionAbilities', SubmissionAbility::class, []],
+            'UserAbility' => ['UserAbility', GlobalAbility::class],
+            'PublicationAbility' => ['PublicationAbility', PublicationAbility::class],
+            'SubmissionAbility' => ['SubmissionAbility', SubmissionAbility::class],
+            'CommentAbility' => ['CommentAbility', CommentAbility::class],
         ];
     }
 
     /**
      * @param string $typeName
      * @param class-string $enum
-     * @param array<int, string> $extraFields manually-declared fields that coexist
-     *   with the generated case fields
      * @return void
      */
-    #[DataProvider('abilityTypeProvider')]
-    public function testAbilityTypeFieldsAreGeneratedFromTheEnum(string $typeName, string $enum, array $extraFields): void
+    #[DataProvider('abilityEnumProvider')]
+    public function testAbilityEnumValuesAreGeneratedFromExposedCases(string $typeName, string $enum): void
     {
         $response = $this->graphQL(
             'query introspectType($name: String!) {
                 __type(name: $name) {
-                    fields {
+                    kind
+                    enumValues {
                         name
-                        type {
-                            kind
-                            ofType {
-                                name
-                            }
-                        }
+                        description
                     }
                 }
             }',
             ['name' => $typeName]
         );
 
-        $fields = $response->json('data.__type.fields');
-        $fieldNames = array_column($fields, 'name');
-        sort($fieldNames);
+        $this->assertSame('ENUM', $response->json('data.__type.kind'));
 
-        $expected = array_map(
-            static fn($case) => Str::snake($case->name),
-            $enum::cases()
+        $values = collect($response->json('data.__type.enumValues'))
+            ->keyBy('name');
+
+        $exposed = AbilityExposure::exposed($enum);
+        $this->assertSame(array_keys($exposed), $values->keys()->all());
+
+        // The required Exposed description reaches introspection.
+        foreach ($exposed as $exposedName => $exposure) {
+            $this->assertSame($exposure['description'], $values[$exposedName]['description']);
+        }
+    }
+
+    /**
+     * The deprecated LegacyUpdate bridge is server-only: never exposed, never in
+     * the schema vocabulary, never emitted by the resolver.
+     *
+     * @return void
+     */
+    public function testLegacyUpdateStaysServerOnly(): void
+    {
+        $this->assertArrayNotHasKey(
+            AbilityExposure::exposedName(SubmissionAbility::LegacyUpdate),
+            AbilityExposure::exposed(SubmissionAbility::class)
         );
-        $expected = array_merge($expected, $extraFields);
-        sort($expected);
+    }
 
-        $this->assertSame($expected, $fieldNames);
+    /**
+     * Conformance: every EXPOSED scoped ability is granted (conditionally or
+     * not) by at least one role in the matrix — an exposed value no role can
+     * ever hold is dead vocabulary, usually a case added to the enum but
+     * forgotten in the matrix.
+     *
+     * @return void
+     */
+    public function testEveryExposedScopedAbilityIsGrantedSomewhere(): void
+    {
+        $grantedAbilities = [];
+        foreach (ScopedRole::cases() as $role) {
+            foreach ($role->grants() as $grant) {
+                $grantedAbilities[$grant->ability::class . '::' . $grant->ability->name] = true;
+            }
+        }
 
-        // Every generated field is a non-null Boolean.
-        foreach ($fields as $field) {
-            $this->assertSame('NON_NULL', $field['type']['kind']);
-            $this->assertSame('Boolean', $field['type']['ofType']['name']);
+        foreach ([SubmissionAbility::class, PublicationAbility::class, CommentAbility::class] as $enum) {
+            foreach (AbilityExposure::exposed($enum) as $exposedName => $exposure) {
+                $ability = $exposure['case'];
+                $this->assertArrayHasKey(
+                    $ability::class . '::' . $ability->name,
+                    $grantedAbilities,
+                    "Exposed {$ability->name} ({$exposedName}) is granted by no role."
+                );
+            }
+        }
+    }
+
+    /**
+     * Conformance (inverse): every scoped ability GRANTED by the role matrix
+     * is #[Exposed] — a granted-but-unexposed ability authorizes server-side
+     * but never reaches the wire, so the UI silently never offers the action.
+     * Deliberately server-only cases must be allowlisted here, making the
+     * exception explicit instead of a forgotten attribute.
+     *
+     * @return void
+     */
+    public function testEveryGrantedScopedAbilityIsExposed(): void
+    {
+        // Deliberately server-only: the deprecated LegacyUpdate bridge.
+        $serverOnly = [SubmissionAbility::LegacyUpdate];
+
+        foreach (ScopedRole::cases() as $role) {
+            foreach ($role->grants() as $grant) {
+                $ability = $grant->ability;
+                $isServerOnly = in_array($ability, $serverOnly, true);
+                if ($isServerOnly) {
+                    continue;
+                }
+                $this->assertArrayHasKey(
+                    AbilityExposure::exposedName($ability),
+                    AbilityExposure::exposed($ability::class),
+                    $ability::class . "::{$ability->name} is granted by role {$role->name} but not #[Exposed] — "
+                    . 'add the attribute, or allowlist it above as deliberately server-only.'
+                );
+            }
         }
     }
 
     /**
      * An application administrator holds every global ability via Bouncer's
-     * everything() wildcard, exposed on currentUser.abilities. The admin-area
-     * capabilities surface as `admin_*` flags (generated from the `Admin`-prefixed
-     * enum cases); the client treats holding any of them as admin-area access.
+     * everything() wildcard, exposed on currentUser.abilities as the granted
+     * array — including the derived admin_area union value.
      *
      * @return void
      */
@@ -110,30 +173,25 @@ class AbilitiesTest extends ApiTestCase
         $response = $this->graphQL(
             'query {
                 currentUser {
-                    abilities {
-                        publication_create
-                        admin_user_view_any
-                        admin_user_update
-                        admin_user_manage_beta
-                        admin_area
-                    }
+                    abilities
                 }
             }'
         );
 
-        $response->assertJsonPath('data.currentUser.abilities', [
-            'publication_create' => true,
-            'admin_user_view_any' => true,
-            'admin_user_update' => true,
-            'admin_user_manage_beta' => true,
-            'admin_area' => true,
-        ]);
+        $abilities = $response->json('data.currentUser.abilities');
+
+        // Every exposed global ability, wildcard-granted — plus the derived union.
+        $this->assertEqualsCanonicalizing(
+            array_keys(AbilityExposure::exposed(GlobalAbility::class)),
+            $abilities
+        );
+        $this->assertContains('admin_area', $abilities);
     }
 
     /**
      * A plain user holds no global abilities (the matrix grants them only to the
-     * application administrator role at present), so it surfaces no `admin_*`
-     * flag and the client withholds admin-area access.
+     * application administrator role at present): the granted array is empty, so
+     * the client withholds admin-area access.
      *
      * @return void
      */
@@ -145,28 +203,21 @@ class AbilitiesTest extends ApiTestCase
         $response = $this->graphQL(
             'query {
                 currentUser {
-                    abilities {
-                        publication_create
-                        admin_user_view_any
-                        admin_area
-                    }
+                    abilities
                 }
             }'
         );
 
-        $response->assertJsonPath('data.currentUser.abilities', [
-            'publication_create' => false,
-            'admin_user_view_any' => false,
-            'admin_area' => false,
-        ]);
+        $response->assertJsonPath('data.currentUser.abilities', []);
     }
 
     /**
      * admin_area is the UNION of the admin_* abilities, not a single "is admin"
-     * flag: a user granted just one admin capability (here user.view-any, with no
-     * publication.create) still gets admin-area access. This is the extension
-     * point — a future limited-admin role needs no client change to appear in the
-     * admin area, yet is correctly withheld from non-admin abilities.
+     * grant: a user granted just one admin capability (here user.view-any, with
+     * no publication.create) still gets the derived admin_area value. This is
+     * the extension point — a future limited-admin role needs no client change
+     * to appear in the admin area, yet is correctly withheld from non-admin
+     * abilities.
      *
      * @return void
      */
@@ -180,27 +231,20 @@ class AbilitiesTest extends ApiTestCase
         $response = $this->graphQL(
             'query {
                 currentUser {
-                    abilities {
-                        publication_create
-                        admin_user_view_any
-                        admin_user_update
-                        admin_area
-                    }
+                    abilities
                 }
             }'
         );
 
-        $response->assertJsonPath('data.currentUser.abilities', [
-            'publication_create' => false,
-            'admin_user_view_any' => true,
-            'admin_user_update' => false,
-            'admin_area' => true,
-        ]);
+        $this->assertEqualsCanonicalizing(
+            ['admin_user_view_any', 'admin_area'],
+            $response->json('data.currentUser.abilities')
+        );
     }
 
     /**
      * A publication administrator can view and update their publication; the
-     * flags reflect the scoped resolver verdict for that entity.
+     * granted array reflects the scoped resolver verdict for that entity.
      *
      * @return void
      */
@@ -215,24 +259,23 @@ class AbilitiesTest extends ApiTestCase
         $response = $this->graphQL(
             'query getPublication($id: ID) {
                 publication(id: $id) {
-                    abilities {
-                        view
-                        update
-                    }
+                    abilities
                 }
             }',
             ['id' => $publication->id]
         );
 
-        $response->assertJsonPath('data.publication.abilities', [
-            'view' => true,
-            'update' => true,
-        ]);
+        $this->assertEqualsCanonicalizing(
+            ['view', 'update'],
+            $response->json('data.publication.abilities')
+        );
     }
 
     /**
-     * A submitter can update their own draft submission and change its status,
-     * but cannot manage reviewers — the scoped flags mirror the matrix.
+     * A submitter owns their draft: content edit, submit, view, and the
+     * draft-bridge status change are granted; reviewer management is not, and a
+     * draft is not reviewable so `review` is absent. The granted array mirrors
+     * the matrix.
      *
      * @return void
      */
@@ -248,33 +291,29 @@ class AbilitiesTest extends ApiTestCase
         $response = $this->graphQL(
             'query getSubmission($id: ID!) {
                 submission(id: $id) {
-                    abilities {
-                        view
-                        update_content
-                        submit
-                        review
-                        update_status
-                        update_reviewers
-                    }
+                    abilities
                 }
             }',
             ['id' => $submission->id]
         );
 
-        $response->assertJsonPath('data.submission.abilities.view', true);
+        $abilities = $response->json('data.submission.abilities');
+
+        $this->assertContains('view', $abilities);
         // Author owns the work while DRAFT — content edit and submit are on.
-        $response->assertJsonPath('data.submission.abilities.update_content', true);
-        $response->assertJsonPath('data.submission.abilities.submit', true);
-        // A draft is not reviewable, so the comment-gate `review` is off.
-        $response->assertJsonPath('data.submission.abilities.review', false);
-        $response->assertJsonPath('data.submission.abilities.update_status', true);
-        $response->assertJsonPath('data.submission.abilities.update_reviewers', false);
+        $this->assertContains('update_content', $abilities);
+        $this->assertContains('submit', $abilities);
+        $this->assertContains('update_status', $abilities);
+        $this->assertContains('update_submitters', $abilities);
+        // A draft is not reviewable, so the comment-gate `review` is absent.
+        $this->assertNotContains('review', $abilities);
+        $this->assertNotContains('update_reviewers', $abilities);
     }
 
     /**
      * `review` — the reviewer's gate to the manuscript and comments — is a
      * CONDITIONAL grant held only while the submission is reviewable
-     * (UNDER_REVIEW). It is the reviewer's single footprint: no `update`.
+     * (UNDER_REVIEW). It is the reviewer's single footprint: no content edit.
      *
      * @return void
      */
@@ -290,39 +329,35 @@ class AbilitiesTest extends ApiTestCase
         $response = $this->graphQL(
             'query getSubmission($id: ID!) {
                 submission(id: $id) {
-                    abilities {
-                        review
-                        update_content
-                    }
+                    abilities
                 }
             }',
             ['id' => $submission->id]
         );
 
-        $response->assertJsonPath('data.submission.abilities.review', true);
-        $response->assertJsonPath('data.submission.abilities.update_content', false);
+        $abilities = $response->json('data.submission.abilities');
+        $this->assertContains('review', $abilities);
+        $this->assertNotContains('update_content', $abilities);
 
         $submission->update(['status' => Submission::REVISION_REQUESTED]);
 
         $response = $this->graphQL(
             'query getSubmission($id: ID!) {
                 submission(id: $id) {
-                    abilities {
-                        review
-                    }
+                    abilities
                 }
             }',
             ['id' => $submission->id]
         );
 
-        $response->assertJsonPath('data.submission.abilities.review', false);
+        $this->assertNotContains('review', $response->json('data.submission.abilities'));
     }
 
     /**
      * The submitter's draft-only status ability is a CONDITIONAL grant: once the
-     * submission leaves draft, update_status flips to false. This is the key win
-     * over a role-based flag — the resolver evaluates the predicate against the
-     * entity, and the client-facing flag tracks it.
+     * submission leaves draft, update_status drops out of the granted array.
+     * This is the key win over a role-based flag — the resolver evaluates the
+     * predicate against the entity, and the client-facing array tracks it.
      *
      * @return void
      */
@@ -338,14 +373,138 @@ class AbilitiesTest extends ApiTestCase
         $response = $this->graphQL(
             'query getSubmission($id: ID!) {
                 submission(id: $id) {
-                    abilities {
-                        update_status
-                    }
+                    abilities
                 }
             }',
             ['id' => $submission->id]
         );
 
-        $response->assertJsonPath('data.submission.abilities.update_status', false);
+        $this->assertNotContains('update_status', $response->json('data.submission.abilities'));
+    }
+
+    /**
+     * Guests get an empty granted array — the resolver never consults the
+     * engines without a viewer.
+     *
+     * @return void
+     */
+    public function testGuestGetsEmptyAbilities(): void
+    {
+        $publication = Publication::factory()->create(['is_publicly_visible' => true]);
+
+        $response = $this->graphQL(
+            'query getPublication($id: ID) {
+                publication(id: $id) {
+                    abilities
+                }
+            }',
+            ['id' => $publication->id]
+        );
+
+        $response->assertJsonPath('data.publication.abilities', []);
+    }
+
+    /**
+     * Comment update/delete is authorship-conditioned AND windowed: the author
+     * (holding a scoped role on the parent submission) sees both granted while
+     * the submission is under review, and loses both once it leaves the
+     * reviewable window — the comment becomes part of the settled record.
+     *
+     * @return void
+     */
+    public function testCommentAbilitiesForAuthorTrackReviewableWindow(): void
+    {
+        $reviewer = User::factory()->create();
+        $this->actingAs($reviewer);
+        $submission = Submission::factory()
+            ->for(Publication::factory()->create())
+            ->hasAttached($reviewer, [], 'reviewers')
+            ->create(['status' => Submission::UNDER_REVIEW]);
+        InlineComment::withoutEvents(fn() => InlineComment::factory()->create([
+            'submission_id' => $submission->id,
+            'created_by' => $reviewer->id,
+        ]));
+
+        $query = 'query getSubmission($id: ID!) {
+            submission(id: $id) {
+                inline_comments { abilities }
+            }
+        }';
+
+        $response = $this->graphQL($query, ['id' => $submission->id]);
+        $this->assertEqualsCanonicalizing(
+            ['update', 'delete'],
+            $response->json('data.submission.inline_comments.0.abilities')
+        );
+
+        $submission->update(['status' => Submission::ACCEPTED_AS_FINAL]);
+
+        $this->graphQL($query, ['id' => $submission->id])
+            ->assertJsonPath('data.submission.inline_comments.0.abilities', []);
+    }
+
+    /**
+     * A role holder who did NOT author the comment gets an empty granted array —
+     * the authorship predicate fails — even though they can view the submission.
+     *
+     * @return void
+     */
+    public function testCommentAbilitiesDeniedToNonAuthor(): void
+    {
+        $reviewer = User::factory()->create();
+        $author = User::factory()->create();
+        $this->actingAs($reviewer);
+        $submission = Submission::factory()
+            ->for(Publication::factory()->create())
+            ->hasAttached($reviewer, [], 'reviewers')
+            ->create(['status' => Submission::UNDER_REVIEW]);
+        InlineComment::withoutEvents(fn() => InlineComment::factory()->create([
+            'submission_id' => $submission->id,
+            'created_by' => $author->id,
+        ]));
+
+        $response = $this->graphQL(
+            'query getSubmission($id: ID!) {
+                submission(id: $id) {
+                    inline_comments { abilities }
+                }
+            }',
+            ['id' => $submission->id]
+        );
+
+        $response->assertJsonPath('data.submission.inline_comments.0.abilities', []);
+    }
+
+    /**
+     * The application administrator role moderates: it holds update/delete on
+     * any comment regardless of authorship, via the resolver's short-circuit.
+     *
+     * @return void
+     */
+    public function testCommentAbilitiesForApplicationAdministrator(): void
+    {
+        $this->beAppAdmin();
+        $author = User::factory()->create();
+        $submission = Submission::factory()
+            ->for(Publication::factory()->create())
+            ->create(['status' => Submission::UNDER_REVIEW]);
+        InlineComment::withoutEvents(fn() => InlineComment::factory()->create([
+            'submission_id' => $submission->id,
+            'created_by' => $author->id,
+        ]));
+
+        $response = $this->graphQL(
+            'query getSubmission($id: ID!) {
+                submission(id: $id) {
+                    inline_comments { abilities }
+                }
+            }',
+            ['id' => $submission->id]
+        );
+
+        $this->assertEqualsCanonicalizing(
+            ['update', 'delete'],
+            $response->json('data.submission.inline_comments.0.abilities')
+        );
     }
 }

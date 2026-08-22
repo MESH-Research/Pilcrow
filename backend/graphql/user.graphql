@@ -14,7 +14,7 @@ type User {
     roles: [Role!]! @belongsToMany
     highest_privileged_role: UserRoles @method(name: "getHighestPrivilegedRole")
     "This user's global abilities. Fetched via currentUser this is the viewer's own (UI hints; server still enforces)."
-    abilities: UserAbilities! @method(name: "globalAbilities")
+    abilities: [UserAbility!]! @method(name: "globalAbilities")
     profile_metadata: ProfileMetadata
     "Whether the user has access to private beta features (admin-set)."
     beta: Boolean!
@@ -39,20 +39,10 @@ type User {
 }
 
 """
-A user's global (application-wide) abilities. Each generated flag mirrors a
-GlobalAbility case, resolved directly against Bouncer — the same engine as the
-policies.
+An application-wide ability. The viewer's `abilities` array carries the
+granted ones.
 """
-type UserAbilities
-    @abilityFields(enum: "App\\Auth\\Abilities\\GlobalAbility") {
-    """
-    Derived: true when the viewer holds ANY `admin_*` ability — i.e. may reach
-    the admin area. Computed server-side as the union of the admin capabilities,
-    so the client gates on one flag and a new `admin_*` ability extends admin
-    access automatically. Not itself a GlobalAbility case.
-    """
-    admin_area: Boolean!
-}
+enum UserAbility @abilityEnum(enum: "App\\Auth\\Abilities\\GlobalAbility")
 
 enum UserRoles {
     submitter @enum(value: 6)

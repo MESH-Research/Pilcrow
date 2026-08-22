@@ -274,8 +274,8 @@ type Submission {
     effective_role: SubmissionUserRoles
         @with(relation: "submissionAssignments")
         @method(name: "getEffectiveRole")
-    "The authenticated viewer's scoped abilities on this submission (UI hints; server still enforces)."
-    abilities: SubmissionAbilities!
+    "The authenticated viewer's granted scoped abilities on this submission (UI hints; server still enforces)."
+    abilities: [SubmissionAbility!]!
         @method(name: "abilities")
         @with(relation: "submissionAssignments")
         @with(relation: "publication.publicationAssignments")
@@ -283,12 +283,10 @@ type Submission {
 }
 
 """
-The authenticated viewer's scoped abilities on a submission. Each flag mirrors a
-SubmissionAbility case, resolved through the same engine as the policies — so
-conditional grants (e.g. draft-only status changes) are reflected correctly.
+An ability on a single submission. The viewer's `abilities` array carries the
+granted ones; grants can depend on the submission's current status.
 """
-type SubmissionAbilities
-    @abilityFields(enum: "App\\Auth\\Abilities\\SubmissionAbility")
+enum SubmissionAbility @abilityEnum(enum: "App\\Auth\\Abilities\\SubmissionAbility")
 
 """
 A user associated with a submission and a role

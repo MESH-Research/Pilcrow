@@ -29,6 +29,10 @@ type InlineComment implements Comment {
     read_at: DateTimeUtc @rename(attribute: "readAt")
     from: Int
     to: Int
+    abilities: [CommentAbility!]!
+        @method(name: "abilities")
+        @with(relation: "submission.submissionAssignments")
+        @with(relation: "submission.publication.publicationAssignments")
 }
 
 """
@@ -54,6 +58,10 @@ type InlineCommentReply implements Comment {
     parent_id: ID!
     reply_to_id: ID!
     read_at: DateTimeUtc @rename(attribute: "readAt")
+    abilities: [CommentAbility!]!
+        @method(name: "abilities")
+        @with(relation: "submission.submissionAssignments")
+        @with(relation: "submission.publication.publicationAssignments")
 }
 
 """
@@ -71,6 +79,10 @@ type OverallComment implements Comment {
         createdBy: [ID!] @scope(name: "byAuthorIds")
     ): [OverallCommentReply!] @hasMany @softDeletes
     read_at: DateTimeUtc @rename(attribute: "readAt")
+    abilities: [CommentAbility!]!
+        @method(name: "abilities")
+        @with(relation: "submission.submissionAssignments")
+        @with(relation: "submission.publication.publicationAssignments")
 }
 
 """
@@ -87,6 +99,10 @@ type OverallCommentReply implements Comment {
     parent_id: ID!
     reply_to_id: ID!
     read_at: DateTimeUtc @rename(attribute: "readAt")
+    abilities: [CommentAbility!]!
+        @method(name: "abilities")
+        @with(relation: "submission.submissionAssignments")
+        @with(relation: "submission.publication.publicationAssignments")
 }
 
 extend input UpdateSubmissionInput {
@@ -155,7 +171,14 @@ interface Comment {
     updated_at: DateTimeUtc!
     deleted_at: DateTimeUtc
     read_at: DateTimeUtc @rename(attribute: "readAt")
+    abilities: [CommentAbility!]!
 }
+
+"""
+An ability on a single comment. The viewer's `abilities` array carries the
+granted ones; grants depend on authorship and the owning submission's status.
+"""
+enum CommentAbility @abilityEnum(enum: "App\\Auth\\Abilities\\CommentAbility")
 
 extend type Mutation @guard {
     markInlineCommentsRead(

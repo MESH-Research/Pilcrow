@@ -46,9 +46,27 @@
   </q-item>
 </template>
 
+<script lang="ts">
+import { graphql } from "src/graphql/generated"
+
+// The user shape this row renders. Consumers that pass users into a
+// UserList include `...userListItem` in their query/mutation. Composes the
+// AvatarImage-owned fragment for the avatar.
+graphql(`
+  fragment userListItem on User {
+    id
+    name
+    username
+    email
+    staged
+    ...avatarImage
+  }
+`)
+</script>
+
 <script setup lang="ts">
 import AvatarImage from "./AvatarImage.vue"
-import type { User } from "src/graphql/generated/graphql"
+import type { userListItemFragment } from "src/graphql/generated/graphql"
 
 export interface UserAction {
   ariaLabel: string
@@ -59,7 +77,7 @@ export interface UserAction {
 }
 
 interface Props {
-  user?: User
+  user?: userListItemFragment
   actions?: UserAction[]
 }
 
@@ -68,8 +86,8 @@ withDefaults(defineProps<Props>(), {
   actions: () => []
 })
 interface Emits {
-  actionClick: [payload: { user: User; action: string }]
-  reinvite: [payload: { user: User }]
+  actionClick: [payload: { user: userListItemFragment; action: string }]
+  reinvite: [payload: { user: userListItemFragment }]
 }
 defineEmits<Emits>()
 </script>
