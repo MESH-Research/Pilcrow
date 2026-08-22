@@ -39,7 +39,7 @@ class PdfImporter
      * @param string $temporary_path
      * @return bool
      */
-    private static function hasPdfMimeType($temporary_path)
+    private static function hasPdfMimeType($temporary_path): bool
     {
         if (function_exists('finfo_open')) {
             $finfo = finfo_open(FILEINFO_MIME_TYPE);
@@ -60,7 +60,7 @@ class PdfImporter
      * @param string $temporary_path
      * @return bool
      */
-    private static function hasPdfHexSignature(string $temporary_path)
+    private static function hasPdfHexSignature(string $temporary_path): bool
     {
         $fp = fopen($temporary_path, 'rb');
         if ($fp) {
