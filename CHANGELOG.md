@@ -3,6 +3,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.37.0](https://github.com/MESH-Research/Pilcrow/compare/v0.36.0...v0.37.0) (2026-07-11)
+
+
+### Features
+
+* **api:** expose comment abilities as granted enum arrays ([#2337](https://github.com/MESH-Research/Pilcrow/issues/2337)) ([d3ab9d0](https://github.com/MESH-Research/Pilcrow/commit/d3ab9d00b472f34768403a737bc961007ad66de6))
+
 ## [0.36.0](https://github.com/MESH-Research/Pilcrow/compare/v0.35.0...v0.36.0) (2026-06-29)
 
 
