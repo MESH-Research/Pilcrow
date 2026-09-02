@@ -6668,9 +6668,9 @@ quansync@^0.2.11:
   integrity sha512-AifT7QEbW9Nri4tAwR5M/uzpBuqfZf+zwaEM/QkzEjj7NBuFD2rBuy0K3dE+8wltbezDV7JMA0WfnCPYRSYbXA==
 
 quasar@^2.6.0:
-  version "2.20.1"
-  resolved "https://registry.yarnpkg.com/quasar/-/quasar-2.20.1.tgz#0077407518e8596c99e24f049fac64b31303033b"
-  integrity sha512-C+uFyt9/D2B2Dad/c9tGSlyWLMsrz+ROJLm3FKFdY9i+vc1Mk2q/+JyHBmQnuvQCEpUrdiXqcWQbpmZhuvo60A==
+  version "2.29.0"
+  resolved "https://registry.yarnpkg.com/quasar/-/quasar-2.29.0.tgz#d65b9a8e947537a02f501d2e766b869344c4f4f5"
+  integrity sha512-iOFLbaswnZSIEnvJKee4NssqQNkrjSGRv20OgO34JaaNXK/CLTAZr0Om1AEy4rYxryJHdVLhd6s3vPIvqpQLhw==
 
 queue-microtask@^1.2.2:
   version "1.2.3"
