@@ -27,7 +27,7 @@
     "@quasar/extras": "^1.15.8",
     "@quasar/quasar-ui-qiconpicker": "^2.0.6",
     "@sentry/vue": "^10.25.0",
-    "@tiptap/core": "^2.0.3",
+    "@tiptap/core": "^3.0.0",
     "@tiptap/extension-blockquote": "^2.0.3",
     "@tiptap/extension-bold": "^2.0.3",
     "@tiptap/extension-bullet-list": "^2.0.3",
