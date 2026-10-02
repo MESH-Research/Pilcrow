@@ -1794,16 +1794,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v12.61.1",
+            "version": "v12.69.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "e8472ca9774452fe50841d9bdced060679f4d58d"
+                "reference": "335429f28612e3a7810db0c8508b2cddbcc0fda0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/e8472ca9774452fe50841d9bdced060679f4d58d",
-                "reference": "e8472ca9774452fe50841d9bdced060679f4d58d",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/335429f28612e3a7810db0c8508b2cddbcc0fda0",
+                "reference": "335429f28612e3a7810db0c8508b2cddbcc0fda0",
                 "shasum": ""
             },
             "require": {
@@ -2012,7 +2012,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2026-06-04T14:22:52+00:00"
+            "time": "2026-09-01T13:24:30+00:00"
         },
         {
             "name": "laravel/prompts",
@@ -2417,16 +2417,16 @@
         },
         {
             "name": "league/commonmark",
-            "version": "2.8.2",
+            "version": "2.10.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/commonmark.git",
-                "reference": "59fb075d2101740c337c7216e3f32b36c204218b"
+                "reference": "6efbd9c472b91db0a3350fcd601c8332c2382e1f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/commonmark/zipball/59fb075d2101740c337c7216e3f32b36c204218b",
-                "reference": "59fb075d2101740c337c7216e3f32b36c204218b",
+                "url": "https://api.github.com/repos/thephpleague/commonmark/zipball/6efbd9c472b91db0a3350fcd601c8332c2382e1f",
+                "reference": "6efbd9c472b91db0a3350fcd601c8332c2382e1f",
                 "shasum": ""
             },
             "require": {
@@ -2448,8 +2448,8 @@
                 "github/gfm": "0.29.0",
                 "michelf/php-markdown": "^1.4 || ^2.0",
                 "nyholm/psr7": "^1.5",
-                "phpstan/phpstan": "^1.8.2",
-                "phpunit/phpunit": "^9.5.21 || ^10.5.9 || ^11.0.0",
+                "phpstan/phpstan": "^2.0.0",
+                "phpunit/phpunit": "^9.5.21 || ^10.5.9 || ^11.0.0 || ^12.0.0 || ^13.0.0",
                 "scrutinizer/ocular": "^1.8.1",
                 "symfony/finder": "^5.3 | ^6.0 | ^7.0 || ^8.0",
                 "symfony/process": "^5.4 | ^6.0 | ^7.0 || ^8.0",
@@ -2463,7 +2463,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "2.9-dev"
+                    "dev-main": "2.11-dev"
                 }
             },
             "autoload": {
@@ -2520,7 +2520,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-03-19T13:16:38+00:00"
+            "time": "2026-09-21T13:07:34+00:00"
         },
         {
             "name": "league/config",
@@ -2606,16 +2606,16 @@
         },
         {
             "name": "league/flysystem",
-            "version": "3.33.0",
+            "version": "3.36.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/flysystem.git",
-                "reference": "570b8871e0ce693764434b29154c54b434905350"
+                "reference": "f7fb152932f30072d573510cbd4dd657d6475b25"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/570b8871e0ce693764434b29154c54b434905350",
-                "reference": "570b8871e0ce693764434b29154c54b434905350",
+                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/f7fb152932f30072d573510cbd4dd657d6475b25",
+                "reference": "f7fb152932f30072d573510cbd4dd657d6475b25",
                 "shasum": ""
             },
             "require": {
@@ -2683,9 +2683,9 @@
             ],
             "support": {
                 "issues": "https://github.com/thephpleague/flysystem/issues",
-                "source": "https://github.com/thephpleague/flysystem/tree/3.33.0"
+                "source": "https://github.com/thephpleague/flysystem/tree/3.36.0"
             },
-            "time": "2026-03-25T07:59:30+00:00"
+            "time": "2026-09-02T08:00:27+00:00"
         },
         {
             "name": "league/flysystem-aws-s3-v3",
