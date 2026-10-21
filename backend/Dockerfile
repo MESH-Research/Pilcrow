@@ -1,9 +1,14 @@
 ARG COMPOSER_VERSION=2.10.1
 ARG COMPOSER_PLATFORM=linux/amd64
-ARG PHP_VERSION=8.4.15
+ARG PHP_VERSION=8.4.27
+# Temporary: self-built from docker-library/php@f6048b5 (8.4/trixie/fpm) for
+# CVE-2026-109618/109619 ahead of the Docker Hub release. Revert to "php" at
+# the next routine PHP bump (and drop PHP_IMAGE_DIGEST).
+ARG PHP_IMAGE=ghcr.io/mesh-research/php
+ARG PHP_IMAGE_DIGEST=sha256:c414acad81f26b733e01d12c1e446d8493162b576349392f5f873607b336a3bd
 
 FROM --platform=${COMPOSER_PLATFORM} composer:${COMPOSER_VERSION} AS composer
-FROM php:${PHP_VERSION}-fpm AS base
+FROM ${PHP_IMAGE}:${PHP_VERSION}-fpm@${PHP_IMAGE_DIGEST} AS base
 
 ARG TARGETARCH
 
