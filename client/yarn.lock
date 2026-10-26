@@ -536,45 +536,45 @@
     "@eslint/core" "^1.2.1"
     levn "^0.4.1"
 
-"@fallow-cli/darwin-arm64@2.102.0":
-  version "2.102.0"
-  resolved "https://registry.yarnpkg.com/@fallow-cli/darwin-arm64/-/darwin-arm64-2.102.0.tgz#2c1b45d908a241ef8317a0e683873d07764168e4"
-  integrity sha512-B8wzfzJgoX6h5Gv2xQ9ZidO5Jb8/PWdssAxYbWs1pb5oJHZ6S5PLwXuUdINmNSIaRGQwTk4DC9/tIMFHFvd9uw==
+"@fallow-cli/darwin-arm64@3.36.0":
+  version "3.36.0"
+  resolved "https://registry.yarnpkg.com/@fallow-cli/darwin-arm64/-/darwin-arm64-3.36.0.tgz#4987f4ba901cd231ff625e6e6b73bd64b894f1b5"
+  integrity sha512-ekkNR+XUhYa6/Lbkzqf0p8TUFjR2ybLk7E5bnNUD1X2hGB/sFXnGxFUhkVbFBwV5IOqpekynEvabxSs7w7w04w==
 
-"@fallow-cli/darwin-x64@2.102.0":
-  version "2.102.0"
-  resolved "https://registry.yarnpkg.com/@fallow-cli/darwin-x64/-/darwin-x64-2.102.0.tgz#a9c595a1bfdf954c067212c4cbe41b300b5cb7c5"
-  integrity sha512-aLbTWWzQnleKdi56obAPXMJm7YA3qAnkIX9T3eocRHiagYqp8nsf4cslM0rZKvu2WwK34NaBm8x886gl4cl+zg==
+"@fallow-cli/darwin-x64@3.36.0":
+  version "3.36.0"
+  resolved "https://registry.yarnpkg.com/@fallow-cli/darwin-x64/-/darwin-x64-3.36.0.tgz#84101e2a6780c98158de2a52f68a00bb8459dace"
+  integrity sha512-V5TFOxV9A4RsuDqQMFmu0v3HcGIltc7asEJCzV9a0adN3y4gVH0ow9rShEr7PyMURq2hFSQOjrHRJ5n6uh0BOQ==
 
-"@fallow-cli/linux-arm64-gnu@2.102.0":
-  version "2.102.0"
-  resolved "https://registry.yarnpkg.com/@fallow-cli/linux-arm64-gnu/-/linux-arm64-gnu-2.102.0.tgz#fc74f3902fbc01334413e0e07e8a3a40746d4700"
-  integrity sha512-8nYeOSLSewqcKH/KUcKZaCq5QII5VTRX62l60B6UM1iKe/0jcmlQ2mOtx4rkHpeq3LL5emvT/ph4NNgGmWKSBg==
+"@fallow-cli/linux-arm64-gnu@3.36.0":
+  version "3.36.0"
+  resolved "https://registry.yarnpkg.com/@fallow-cli/linux-arm64-gnu/-/linux-arm64-gnu-3.36.0.tgz#9fa66f7b7463e0dde34b39ee45702af3bc38d60d"
+  integrity sha512-u/0vHzw0Sv36/S4fjPZ/ODXc5JntMLcn7OyU89W5B3G8hY6B04D1HO32IW4PCxsN/DtURGoag1dj617ch0mtnQ==
 
-"@fallow-cli/linux-arm64-musl@2.102.0":
-  version "2.102.0"
-  resolved "https://registry.yarnpkg.com/@fallow-cli/linux-arm64-musl/-/linux-arm64-musl-2.102.0.tgz#d81534e5b0d92271a7b1b3106eac3dbb7fa26223"
-  integrity sha512-2Zi33PXzZxD7HU5sPVwyElZGP7zyEdGo4hK0ewy6gMYgQ9BDfLnFhgaSSOzN1J4paIhYtBmVsLmqakyDKy22Jw==
+"@fallow-cli/linux-arm64-musl@3.36.0":
+  version "3.36.0"
+  resolved "https://registry.yarnpkg.com/@fallow-cli/linux-arm64-musl/-/linux-arm64-musl-3.36.0.tgz#c885c5f9a7b2ecedf13f7983dedb182c2723cfb7"
+  integrity sha512-mQpo8wUoc0wk/3TDOmoRbtPPlaLD0I9vcSgeDx3zbTMwO5XDLTEoekR+iPGAUU6nC6wiV6RHBoWAXSuMmTiyKA==
 
-"@fallow-cli/linux-x64-gnu@2.102.0":
-  version "2.102.0"
-  resolved "https://registry.yarnpkg.com/@fallow-cli/linux-x64-gnu/-/linux-x64-gnu-2.102.0.tgz#2806b94268358433b0bc27225e272c0f97a22925"
-  integrity sha512-7Hys4X6hKuR/lqUaGXwezRzDrwXwu9KfahUy85WTuiG1to+ZbzDCqdbZ04LtnI8kK8ufrPDcq+ZXdyt5ksOJHA==
+"@fallow-cli/linux-x64-gnu@3.36.0":
+  version "3.36.0"
+  resolved "https://registry.yarnpkg.com/@fallow-cli/linux-x64-gnu/-/linux-x64-gnu-3.36.0.tgz#0013d99d5561caf9181cfe8cfc8b5e9d6b114301"
+  integrity sha512-wT47AXN4lYx0JYzHT3ItgGh0tOIECj/Yz6U0Ce0AyPRaVmVHAxDp/FYbozCNS3g7ZxUd9DLl5WjIp1BC2Mb6+Q==
 
-"@fallow-cli/linux-x64-musl@2.102.0":
-  version "2.102.0"
-  resolved "https://registry.yarnpkg.com/@fallow-cli/linux-x64-musl/-/linux-x64-musl-2.102.0.tgz#818e9dd98ea92bf4d3c48bd0e3dab4d0e06e3ace"
-  integrity sha512-RuDY1jOEPgJOuHBgEpHVl6J7Xf2QLFklnNy6zO1nw8R1fLgWUAAKlFirn1Y93pb9bXzqpn5Gre3YlhgIZ3+LBA==
+"@fallow-cli/linux-x64-musl@3.36.0":
+  version "3.36.0"
+  resolved "https://registry.yarnpkg.com/@fallow-cli/linux-x64-musl/-/linux-x64-musl-3.36.0.tgz#b1472ccbce37d1fa2637b9c1d8c0bcace5fd339f"
+  integrity sha512-SXwNiJ7zabpyJ2dCMHLcNukpNlSPBhxvZbS9HoIEhGJLp1wdHHZjSTEjKAoW2pJEniDheZ6TTUwDPb2AnnJYeA==
 
-"@fallow-cli/win32-arm64-msvc@2.102.0":
-  version "2.102.0"
-  resolved "https://registry.yarnpkg.com/@fallow-cli/win32-arm64-msvc/-/win32-arm64-msvc-2.102.0.tgz#0592374cd1e666baf0c43711f1d2e2ffd26efb19"
-  integrity sha512-wsvHjLzWFvsYmCqnQLm1doSEHb9Z038+sFp1RzMcffPUBC5tqS3vCr8J8nolcLlPk7o3QWHQMXAqb1xSJe+doA==
+"@fallow-cli/win32-arm64-msvc@3.36.0":
+  version "3.36.0"
+  resolved "https://registry.yarnpkg.com/@fallow-cli/win32-arm64-msvc/-/win32-arm64-msvc-3.36.0.tgz#ee75a63ff005e99f253c0ac79b53f5105376340c"
+  integrity sha512-IY+yqek3X7y3j+pS0Vp3s3MOJqDi6DRpmNaHYKeiUQUYVLijAnjAeSA0J+mVhHH8Rf6hP54qr2Z5hNDF1ohzkA==
 
-"@fallow-cli/win32-x64-msvc@2.102.0":
-  version "2.102.0"
-  resolved "https://registry.yarnpkg.com/@fallow-cli/win32-x64-msvc/-/win32-x64-msvc-2.102.0.tgz#1e46174a369a2b05e16967f9574eb7e6ba9f9684"
-  integrity sha512-rH1hd0PD0mm6pCxh1pw5jubpJsvV6f5rjixMoD5AZLzWa6NPJBpPPuzruLGtH/9CYy8B0y7zPrGGTKRO2PCGzg==
+"@fallow-cli/win32-x64-msvc@3.36.0":
+  version "3.36.0"
+  resolved "https://registry.yarnpkg.com/@fallow-cli/win32-x64-msvc/-/win32-x64-msvc-3.36.0.tgz#3e6fb1c8b0068ec294c25d412c2d22b1858fa3b5"
+  integrity sha512-jT1ikT8+rOhmZcrq+yMIo/ngeAhEuKEtZhFs2/xkHQgchh5/M5HDvD3rHXI01pSkqLtZovSfjU0BLmtsYrXcsg==
 
 "@fastify/busboy@^3.1.1":
   version "3.2.0"
@@ -2462,6 +2462,106 @@
   dependencies:
     "@typescript-eslint/types" "8.62.0"
     eslint-visitor-keys "^5.0.0"
+
+"@typescript/typescript-aix-ppc64@7.0.2":
+  version "7.0.2"
+  resolved "https://registry.yarnpkg.com/@typescript/typescript-aix-ppc64/-/typescript-aix-ppc64-7.0.2.tgz#cdc7ce81d60f1e09034960ddfb1fb880d7a776b6"
+  integrity sha512-MTKKkWB7p/0E9xi1d1tHtZ5PiLkGEMIq88pK2CubZjOsLtYTLqhgIgi6zepFa+9GHZ6h05NMCkQxGKiPXMxXtQ==
+
+"@typescript/typescript-darwin-arm64@7.0.2":
+  version "7.0.2"
+  resolved "https://registry.yarnpkg.com/@typescript/typescript-darwin-arm64/-/typescript-darwin-arm64-7.0.2.tgz#a55fdfcfa58df58d27db2237cde6a5c1e35a7235"
+  integrity sha512-gowzar9MwS/aRWp6f3a4KUqzRjAZjOsmGNCM6LcTgXum+dBfgsBVMN+AgvOCCbguXyick6LJhpBszxMebJ8syA==
+
+"@typescript/typescript-darwin-x64@7.0.2":
+  version "7.0.2"
+  resolved "https://registry.yarnpkg.com/@typescript/typescript-darwin-x64/-/typescript-darwin-x64-7.0.2.tgz#38d1c9172800a91d707bec64d2a370a016634db4"
+  integrity sha512-SZ9xZInqApNlNGc9s0W1VSsktYSOe9cFqNOIqmN1Gs8SmkjKZYFt017G4VwPxASInODuAdbTW7sXiFUf893RgA==
+
+"@typescript/typescript-freebsd-arm64@7.0.2":
+  version "7.0.2"
+  resolved "https://registry.yarnpkg.com/@typescript/typescript-freebsd-arm64/-/typescript-freebsd-arm64-7.0.2.tgz#f1ff8810030b35d2b5be0db6a2dc650460ea94fa"
+  integrity sha512-W5NH4y/J0plIIS5b2xvTEkU7JFxyqdMAOgf+Ilhl0vHQXKO5dZoxd+C/jEtq56c4F3wk71RB4BMRQ2XdI+bwYQ==
+
+"@typescript/typescript-freebsd-x64@7.0.2":
+  version "7.0.2"
+  resolved "https://registry.yarnpkg.com/@typescript/typescript-freebsd-x64/-/typescript-freebsd-x64-7.0.2.tgz#3d86b03f353c5b1ba95162eb6ce35533bfc294bd"
+  integrity sha512-UMGDx5sTpzNw3WiPebH7l90IWfJggEd+egHt/q6p7/Cm3zqoV7VxkGXt+3DxPIw8CcmvAB0j3sVVfbhX+M4Tpw==
+
+"@typescript/typescript-linux-arm64@7.0.2":
+  version "7.0.2"
+  resolved "https://registry.yarnpkg.com/@typescript/typescript-linux-arm64/-/typescript-linux-arm64-7.0.2.tgz#d9334d96d6dac6ff85da9c865588948de939e91f"
+  integrity sha512-Qh4eU4/y3yDjnfjjyPYihMj5/ODIlmt+Bzu17OI+fiSRDW57QmU5SiN63exPRNJPKUzcc1INa1NXdrJ+MqHjUQ==
+
+"@typescript/typescript-linux-arm@7.0.2":
+  version "7.0.2"
+  resolved "https://registry.yarnpkg.com/@typescript/typescript-linux-arm/-/typescript-linux-arm-7.0.2.tgz#ad94b41e1aee2a4dcc6a298c7b67c43345fde32e"
+  integrity sha512-gffT3xPz9sR7j/YJExkyPntrI0P2EP9XbOyWzth2/Gs0RstK+90RBcO0ncXoXy/beYll1SXw846Nf2zdnEz0QQ==
+
+"@typescript/typescript-linux-loong64@7.0.2":
+  version "7.0.2"
+  resolved "https://registry.yarnpkg.com/@typescript/typescript-linux-loong64/-/typescript-linux-loong64-7.0.2.tgz#2965aee4fc873360139d893daafe6397a29138ad"
+  integrity sha512-uEHck9i8hoAzXPiYRib1O7miOnz23SxIeVl6F4LXox+qov1K35jHcEW6VHKvZI+pyvl7fZEP4MCU5LYvIq1GuQ==
+
+"@typescript/typescript-linux-mips64el@7.0.2":
+  version "7.0.2"
+  resolved "https://registry.yarnpkg.com/@typescript/typescript-linux-mips64el/-/typescript-linux-mips64el-7.0.2.tgz#1a887a311bed3a833f80bfd4a9ed37c271936cf0"
+  integrity sha512-R4KvAMnE43W5Qeqb0Ly56O3mWMWIAgsMyz36DCaycd5nbg/9kzm0liw3JocfRqyJY0KPmzFjbswozXyW0DnIYA==
+
+"@typescript/typescript-linux-ppc64@7.0.2":
+  version "7.0.2"
+  resolved "https://registry.yarnpkg.com/@typescript/typescript-linux-ppc64/-/typescript-linux-ppc64-7.0.2.tgz#8b63c9b2f445b393eb4e43ec21da225dade3577d"
+  integrity sha512-DORx5b3sd/4S7eayxm4FQv+A7CrkUIGRaHiwI8oiHTAI1fAPWhF4J0vAlkC8biAlHSVVwxMQ3tjZ2/DVbnQiiA==
+
+"@typescript/typescript-linux-riscv64@7.0.2":
+  version "7.0.2"
+  resolved "https://registry.yarnpkg.com/@typescript/typescript-linux-riscv64/-/typescript-linux-riscv64-7.0.2.tgz#b6e8a35c289b3ea97a92a41d461aaeed0d3b36e1"
+  integrity sha512-wf0jqEDOjrPRnKwYRyyJDRo11KMbvMFrU+q4zqKyChODBzvlkbhNQfKvLxQCcwTpdDaXSHZTVuh0JoCrKCUMHQ==
+
+"@typescript/typescript-linux-s390x@7.0.2":
+  version "7.0.2"
+  resolved "https://registry.yarnpkg.com/@typescript/typescript-linux-s390x/-/typescript-linux-s390x-7.0.2.tgz#2ef96693be4861f6d17965427e5b009cbbed1a3e"
+  integrity sha512-IkwJc3L7yhytWd/ewjyxNDfOmswCm9GWMJT/ue/dU4aZNbwZeYAetq42VyLmsmSjvoX7z74X6ZaYCtzAr0EuGw==
+
+"@typescript/typescript-linux-x64@7.0.2":
+  version "7.0.2"
+  resolved "https://registry.yarnpkg.com/@typescript/typescript-linux-x64/-/typescript-linux-x64-7.0.2.tgz#73269cb0baba50aea0ca060445a6b88e583f1ce2"
+  integrity sha512-EYdf2cNg7rgCWJnxCdJ+F3V39O8ihb37eHAu1LK8oAFizgTQbPOK7zHHXbPt8rX24COqODXeI3sIf0fCXG7H/A==
+
+"@typescript/typescript-netbsd-arm64@7.0.2":
+  version "7.0.2"
+  resolved "https://registry.yarnpkg.com/@typescript/typescript-netbsd-arm64/-/typescript-netbsd-arm64-7.0.2.tgz#3a3649f97fafa210b4e6e3798c15e06605c8a901"
+  integrity sha512-+polYF4MF04aPpO5FTkHran9yUQDSXqy5GiSDKpsll5jy3l3+g9QLhpf39T+ePtefhXLOGrLl0QIjkQP6VnelA==
+
+"@typescript/typescript-netbsd-x64@7.0.2":
+  version "7.0.2"
+  resolved "https://registry.yarnpkg.com/@typescript/typescript-netbsd-x64/-/typescript-netbsd-x64-7.0.2.tgz#47ec59491a40c470d2807dc4d2b825528fd979ab"
+  integrity sha512-8YIT0EHM/3dq10ZOVF/A7pc/YSMtbcecct4rWtexrnSCHOPcpC2KTLXfTCR6vDpnSiY12heNb1GiN/wu+T/FyA==
+
+"@typescript/typescript-openbsd-arm64@7.0.2":
+  version "7.0.2"
+  resolved "https://registry.yarnpkg.com/@typescript/typescript-openbsd-arm64/-/typescript-openbsd-arm64-7.0.2.tgz#796be8da0bd989d8a3fb96f2801e38a8365b4baf"
+  integrity sha512-APT8+ClYnuYm1u9+kgGXoMj2VzWzcymwh2gNSQVySHfkRDGOTVkoWLjCmOQSaO+PoqQ57B0flRp9SA+7GnnkzQ==
+
+"@typescript/typescript-openbsd-x64@7.0.2":
+  version "7.0.2"
+  resolved "https://registry.yarnpkg.com/@typescript/typescript-openbsd-x64/-/typescript-openbsd-x64-7.0.2.tgz#d37fe2a729eb942c076c454ee7f1815faf7d560f"
+  integrity sha512-yX7s+Q0Dln0Dt9tEzZsAjXXR/+ytBM7AlglaqyeMPxQszJ1JhlJdZ6jLA+IzldHtflX81em7lDao1xXu+aRRkg==
+
+"@typescript/typescript-sunos-x64@7.0.2":
+  version "7.0.2"
+  resolved "https://registry.yarnpkg.com/@typescript/typescript-sunos-x64/-/typescript-sunos-x64-7.0.2.tgz#aba8d3464c3565a7044789baba96916bd4ab2c88"
+  integrity sha512-dLJDGaLZ1D4HPQn62u1n8mBDkJREwMsAkCdkwd4Ieqw+x3TUyTsqY0YiBCtE6H6OzzgGk3iuZ3vFWRS+E8/d1g==
+
+"@typescript/typescript-win32-arm64@7.0.2":
+  version "7.0.2"
+  resolved "https://registry.yarnpkg.com/@typescript/typescript-win32-arm64/-/typescript-win32-arm64-7.0.2.tgz#b9de50a17196383f62620b5f9d0a2f34ad3b60d7"
+  integrity sha512-Gyl1Vy6OsWesLzmq+EP0Fb7b4Nid5232AvcA2SFcdYreldpNtYFFofPjnt62y9hQy7VTaZp65ICJjuAQRaVcIQ==
+
+"@typescript/typescript-win32-x64@7.0.2":
+  version "7.0.2"
+  resolved "https://registry.yarnpkg.com/@typescript/typescript-win32-x64/-/typescript-win32-x64-7.0.2.tgz#cf3b7b0d6ce5635daca4c8e01c189cdcde47ec3c"
+  integrity sha512-0BQ3HkAHHlKLSp1qRvf3SUhGpGsDuhB/jgFw75guyqbxJqEaS0Cw/VFO8i2nHglJUzQCRtMMR/IBAKE3ETMC4g==
 
 "@vitejs/plugin-vue@^6.0.5", "@vitejs/plugin-vue@^6.0.6":
   version "6.0.7"
@@ -4495,21 +4595,29 @@ extsprintf@^1.2.0:
   resolved "https://registry.npmjs.org/extsprintf/-/extsprintf-1.4.1.tgz"
   integrity sha512-Wrk35e8ydCKDj/ArClo1VrPVmN8zph5V4AtHwIuHhvMXsKf73UT3BOD+azBIW+3wOJ4FhEH7zyaJCFvChjYvMA==
 
-fallow@^2.89.0:
-  version "2.102.0"
-  resolved "https://registry.yarnpkg.com/fallow/-/fallow-2.102.0.tgz#ed4607217e6b4303b8b20c6a303546565bd90ab0"
-  integrity sha512-bkOT58kPVCB12d2apQjIKBw/qSdsGRPQFrN5ff9Yl5WzXRqlDTbT/MVdMXld4sJD5JQW1ftw2bTxJWCINggh6g==
+fallow-type-aware@3.36.0:
+  version "3.36.0"
+  resolved "https://registry.yarnpkg.com/fallow-type-aware/-/fallow-type-aware-3.36.0.tgz#d21e699f9314c34c5ce65bd5d37ef97687397f9c"
+  integrity sha512-SYLCZM6r6o2EeE3UJ0ShQKs2M+PUemVRIJA6Geq/rchXlHpWaCwymHk9tHEDjRsdaK/EI3FauyhYhmcGUnY7Zg==
+  dependencies:
+    typescript "7.0.2"
+
+fallow@^3.0.0:
+  version "3.36.0"
+  resolved "https://registry.yarnpkg.com/fallow/-/fallow-3.36.0.tgz#2b551f2152059de70a5a836fa4cbb89657df1537"
+  integrity sha512-oqMmHAoZlbgVAdOHFgw771TTG5xs1r+TO+Fy/Qx4Rez11ShzgUbzhtOMm8T1HCMKs2W00kV2+IKi8UzQ028Mvw==
   dependencies:
     detect-libc "2.1.2"
   optionalDependencies:
-    "@fallow-cli/darwin-arm64" "2.102.0"
-    "@fallow-cli/darwin-x64" "2.102.0"
-    "@fallow-cli/linux-arm64-gnu" "2.102.0"
-    "@fallow-cli/linux-arm64-musl" "2.102.0"
-    "@fallow-cli/linux-x64-gnu" "2.102.0"
-    "@fallow-cli/linux-x64-musl" "2.102.0"
-    "@fallow-cli/win32-arm64-msvc" "2.102.0"
-    "@fallow-cli/win32-x64-msvc" "2.102.0"
+    "@fallow-cli/darwin-arm64" "3.36.0"
+    "@fallow-cli/darwin-x64" "3.36.0"
+    "@fallow-cli/linux-arm64-gnu" "3.36.0"
+    "@fallow-cli/linux-arm64-musl" "3.36.0"
+    "@fallow-cli/linux-x64-gnu" "3.36.0"
+    "@fallow-cli/linux-x64-musl" "3.36.0"
+    "@fallow-cli/win32-arm64-msvc" "3.36.0"
+    "@fallow-cli/win32-x64-msvc" "3.36.0"
+    fallow-type-aware "3.36.0"
 
 fast-deep-equal@^3.1.1, fast-deep-equal@^3.1.3:
   version "3.1.3"
@@ -7730,6 +7838,32 @@ typescript-eslint@^8.54.0:
     "@typescript-eslint/parser" "8.62.0"
     "@typescript-eslint/typescript-estree" "8.62.0"
     "@typescript-eslint/utils" "8.62.0"
+
+typescript@7.0.2:
+  version "7.0.2"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-7.0.2.tgz#9ec773d7954a8c182c17cc5bbd575aa28bc51582"
+  integrity sha512-8FYau96o3NKOhbjKi/qNvG/W5jhzxkbdm5sj9AbZ/5T5sWqn3hJgLfGx27sRKZWTvyzCP8dLRBTf5tBTSRVUNA==
+  optionalDependencies:
+    "@typescript/typescript-aix-ppc64" "7.0.2"
+    "@typescript/typescript-darwin-arm64" "7.0.2"
+    "@typescript/typescript-darwin-x64" "7.0.2"
+    "@typescript/typescript-freebsd-arm64" "7.0.2"
+    "@typescript/typescript-freebsd-x64" "7.0.2"
+    "@typescript/typescript-linux-arm" "7.0.2"
+    "@typescript/typescript-linux-arm64" "7.0.2"
+    "@typescript/typescript-linux-loong64" "7.0.2"
+    "@typescript/typescript-linux-mips64el" "7.0.2"
+    "@typescript/typescript-linux-ppc64" "7.0.2"
+    "@typescript/typescript-linux-riscv64" "7.0.2"
+    "@typescript/typescript-linux-s390x" "7.0.2"
+    "@typescript/typescript-linux-x64" "7.0.2"
+    "@typescript/typescript-netbsd-arm64" "7.0.2"
+    "@typescript/typescript-netbsd-x64" "7.0.2"
+    "@typescript/typescript-openbsd-arm64" "7.0.2"
+    "@typescript/typescript-openbsd-x64" "7.0.2"
+    "@typescript/typescript-sunos-x64" "7.0.2"
+    "@typescript/typescript-win32-arm64" "7.0.2"
+    "@typescript/typescript-win32-x64" "7.0.2"
 
 typescript@~5.9.0:
   version "5.9.3"
