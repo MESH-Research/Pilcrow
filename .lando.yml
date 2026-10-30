@@ -29,6 +29,11 @@ services:
     command: cd /app/client && yarn dev
     scanner: false
   appserver:
+    # Temporary PHP 8.4.27 image for CVE-2026-109618/109619, see .lando/php/Dockerfile
+    overrides:
+      build:
+        context: ./.lando/php
+      image: pilcrow/lando-php:8.4.27-fpm
     build:
       - cd /app/backend && composer install
       - bash /app/.lando/no_env_setup.sh
