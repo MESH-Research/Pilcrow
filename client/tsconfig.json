@@ -1,4 +1,4 @@
 {
   "extends": "./.quasar/tsconfig.json",
-  "exclude": ["test/cypress"]
+  "exclude": []
 }
