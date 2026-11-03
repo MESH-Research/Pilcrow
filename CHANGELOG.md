@@ -3,6 +3,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.37.1](https://github.com/MESH-Research/Pilcrow/compare/v0.37.0...v0.37.1) (2026-10-21)
+
+
+### Bug Fixes
+
+* **backend:** bump PHP to 8.4.27 for CVE-2026-109618/109619 ([#2351](https://github.com/MESH-Research/Pilcrow/issues/2351)) ([4491271](https://github.com/MESH-Research/Pilcrow/commit/44912712fceb32ac7ce5a3e55701f1875069bc2b))
+
 ## [0.37.0](https://github.com/MESH-Research/Pilcrow/compare/v0.36.0...v0.37.0) (2026-07-11)
 
 
