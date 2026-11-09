@@ -7,7 +7,7 @@
 </h1>
 <div align="center">
 
-[![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/mesh-research/pilcrow/CI.yml?logo=github&style=for-the-badge)](https://github.com/MESH-Research/Pilcrow/actions/workflows/CI.yml)
+[![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/mesh-research/pilcrow/testing.yml?branch=master&event=push&logo=github&style=for-the-badge)](https://github.com/MESH-Research/Pilcrow/actions/workflows/testing.yml?query=branch%3Amaster)
 ![GitHub release (with filter)](https://img.shields.io/github/v/release/mesh-research/pilcrow?style=for-the-badge)
 ![Rennovate Status](https://img.shields.io/badge/renovate-enabled-green?style=for-the-badge)
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
