@@ -11,9 +11,9 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * Holds when the entity is a submission that is reviewable — i.e. UNDER_REVIEW.
  * Backs the reviewer's conditional grant on submission.review, which is the
- * single gate for accessing the manuscript and posting comments. The former
- * `App\Rules\SubmissionIsReviewable` validation rule for comment creation is
- * folded into this predicate so "when may one comment" lives in one place.
+ * single gate for accessing the manuscript and posting comments: the
+ * comment-create mutations authorize on `review`, so "when may one comment"
+ * lives in this one predicate rather than in a separate validation rule.
  */
 final class SubmissionIsReviewable implements Predicate
 {

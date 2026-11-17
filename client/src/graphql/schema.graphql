@@ -246,8 +246,8 @@ type Mutation {
 
   """
   Change a submission's editorial status, together with its status-change
-  comment (the comment is gated by the same ability — closing the ungated
-  status_change_comment field of the god-mutation).
+  comment. The comment is only ever set alongside a status change, under the
+  same ability.
   """
   changeSubmissionStatus(input: ChangeSubmissionStatusInput!): Submission!
 
