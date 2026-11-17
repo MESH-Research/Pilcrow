@@ -47,21 +47,6 @@ enum SubmissionAbility: string implements ScopedAbility
     #[Exposed('Viewer may change this submission\'s status.')]
     case UpdateStatus = 'submission.update-status';
 
-    /**
-     * The umbrella gate of the DEPRECATED `updateSubmission` god-mutation. This
-     * preserves the prior broad `Update` grant (every submission role, any
-     * status) so the god-mutation stays callable while clients migrate to the
-     * intent-shaped mutations. Nothing else should gate on it. Removed together
-     * with `updateSubmission` once the migration is complete.
-     *
-     * Deliberately NOT exposed: the deprecated bridge is server-only and never
-     * part of the public contract.
-     *
-     * @deprecated Transitional. Use {@see self::UpdateContent},
-     *   {@see self::Submit}, {@see self::UpdateStatus}, {@see self::Review}, etc.
-     */
-    case LegacyUpdate = 'submission.legacy-update';
-
     #[Exposed('Viewer may add or remove submitters.')]
     case UpdateSubmitters = 'submission.update-submitters';
 

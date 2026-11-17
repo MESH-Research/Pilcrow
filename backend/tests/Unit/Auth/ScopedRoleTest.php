@@ -63,8 +63,6 @@ class ScopedRoleTest extends TestCase
         // and no status control.
         $this->assertFalse(ScopedRole::Reviewer->allows(SubmissionAbility::UpdateContent, $this->draft(), $user));
         $this->assertFalse(ScopedRole::Reviewer->allows(SubmissionAbility::UpdateStatus, $this->submitted(), $user));
-        // Bridge: the deprecated god-mutation umbrella stays open for every role.
-        $this->assertTrue(ScopedRole::Reviewer->allows(SubmissionAbility::LegacyUpdate, $this->submitted(), $user));
     }
 
     public function testSubmitterOwnsContentAndSubmitWhileDraftOnly(): void

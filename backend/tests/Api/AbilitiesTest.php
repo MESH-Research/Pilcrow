@@ -86,20 +86,6 @@ class AbilitiesTest extends ApiTestCase
     }
 
     /**
-     * The deprecated LegacyUpdate bridge is server-only: never exposed, never in
-     * the schema vocabulary, never emitted by the resolver.
-     *
-     * @return void
-     */
-    public function testLegacyUpdateStaysServerOnly(): void
-    {
-        $this->assertArrayNotHasKey(
-            AbilityExposure::exposedName(SubmissionAbility::LegacyUpdate),
-            AbilityExposure::exposed(SubmissionAbility::class)
-        );
-    }
-
-    /**
      * Conformance: every EXPOSED scoped ability is granted (conditionally or
      * not) by at least one role in the matrix — an exposed value no role can
      * ever hold is dead vocabulary, usually a case added to the enum but
@@ -139,8 +125,9 @@ class AbilitiesTest extends ApiTestCase
      */
     public function testEveryGrantedScopedAbilityIsExposed(): void
     {
-        // Deliberately server-only: the deprecated LegacyUpdate bridge.
-        $serverOnly = [SubmissionAbility::LegacyUpdate];
+        // Deliberately server-only cases (none today).
+        /** @var array<int, \App\Auth\Abilities\ScopedAbility> $serverOnly */
+        $serverOnly = [];
 
         foreach (ScopedRole::cases() as $role) {
             foreach ($role->grants() as $grant) {
