@@ -13,6 +13,8 @@
     "yaml-eslint-parser",
     "src"
   ],
+  // push:cdn defines a shell function `f` and shells out to the system s3cmd
+  "ignoreBinaries": ["f", "s3cmd"],
   // quasar resolves bare src/ paths in sass blocks
   "ignoreUnresolvedImports": ["**/quasar.variables.sass"]
 }
