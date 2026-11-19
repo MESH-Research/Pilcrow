@@ -105,63 +105,6 @@ type OverallCommentReply implements Comment {
         @with(relation: "submission.publication.publicationAssignments")
 }
 
-extend input UpdateSubmissionInput {
-    inline_comments: InlineCommentHasManyInput
-        @rename(attribute: "inlineComments")
-    overall_comments: OverallCommentHasManyInput
-        @rename(attribute: "overallComments")
-}
-
-input InlineCommentHasManyInput {
-    create: [CreateInlineCommentInput!]
-        @rules(
-            apply: [
-                "App\\Rules\\SubmissionIsReviewable"
-                "App\\Rules\\InlineCommentIdValidity"
-            ]
-        )
-    update: [UpdateInlineCommentInput!]
-}
-
-input CreateInlineCommentInput {
-    content: String!
-    style_criteria: [ID!] @transformStyleCriteriaIds
-    from: Int
-    to: Int
-    parent_id: ID
-    reply_to_id: ID
-}
-
-input UpdateInlineCommentInput {
-    id: ID!
-    content: String
-    style_criteria: [ID!] @transformStyleCriteriaIds
-    from: Int
-    to: Int
-}
-
-input OverallCommentHasManyInput {
-    create: [CreateOverallCommentInput!]
-        @rules(
-            apply: [
-                "App\\Rules\\SubmissionIsReviewable"
-                "App\\Rules\\OverallCommentIdValidity"
-            ]
-        )
-    update: [UpdateOverallCommentInput!]
-}
-
-input CreateOverallCommentInput {
-    content: String!
-    parent_id: ID
-    reply_to_id: ID
-}
-
-input UpdateOverallCommentInput {
-    id: ID!
-    content: String
-}
-
 interface Comment {
     id: ID!
     content: String!

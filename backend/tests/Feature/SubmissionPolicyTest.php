@@ -5,8 +5,6 @@ namespace Tests\Feature;
 
 use App\Auth\Roles\GlobalRole;
 use App\Auth\Roles\ScopedRole;
-use App\Models\InlineComment;
-use App\Models\OverallComment;
 use App\Models\Publication;
 use App\Models\Submission;
 use App\Models\User;
@@ -238,18 +236,6 @@ class SubmissionPolicyTest extends TestCase
         $this->assertFalse(User::factory()->create()->can('updateContent', $draft));
     }
 
-    // ---- legacyUpdate (transitional god-mutation umbrella; broad) ------------
-
-    public function testLegacyUpdateAllowsAnySubmissionRoleAndDeniesUnaffiliated(): void
-    {
-        $submission = $this->makeSubmission();
-        $reviewer = User::factory()->create();
-        $this->attachToSubmission($reviewer, $submission, ScopedRole::Reviewer->toSlug());
-        $this->assertTrue($reviewer->can('legacyUpdate', $submission));
-
-        $this->assertFalse(User::factory()->create()->can('legacyUpdate', $this->makeSubmission()));
-    }
-
     // ---- review (manuscript access + comment, while reviewable) --------------
 
     public function testReviewAllowsAnySubmissionRoleOnlyWhileReviewable(): void
@@ -298,46 +284,6 @@ class SubmissionPolicyTest extends TestCase
         }
     }
 
-    // ---- inline comment ownership -------------------------------------------
-
-    public function testUpdateInlineCommentsAllowsOwnerAndDeniesOther(): void
-    {
-        $submission = $this->makeSubmission();
-        $owner = User::factory()->create();
-        $comment = InlineComment::factory()->create([
-            'submission_id' => $submission->id,
-            'created_by' => $owner->id,
-        ]);
-        $args = ['inlineComments' => ['update' => [['id' => $comment->id]]]];
-
-        $this->assertTrue($owner->can('updateInlineComments', [$submission, $args]));
-        $this->assertFalse(User::factory()->create()->can('updateInlineComments', [$submission, $args]));
-    }
-
-    public function testUpdateInlineCommentsAllowsWhenNoUpdatePayload(): void
-    {
-        $submission = $this->makeSubmission();
-
-        $this->assertTrue(User::factory()->create()->can('updateInlineComments', [$submission, []]));
-    }
-
-    // Single-comment edit/delete moved off this policy onto CommentPolicy (a
-    // comment-scoped ability); see CommentPolicyTest. The plural methods above
-    // remain only for the deprecated god-mutation's nested @argPolicy.
-
-    // ---- overall comment ownership ------------------------------------------
-
-    public function testUpdateOverallCommentsAllowsOwnerAndDeniesOther(): void
-    {
-        $submission = $this->makeSubmission();
-        $owner = User::factory()->create();
-        $comment = OverallComment::factory()->create([
-            'submission_id' => $submission->id,
-            'created_by' => $owner->id,
-        ]);
-        $args = ['overallComments' => ['update' => [['id' => $comment->id]]]];
-
-        $this->assertTrue($owner->can('updateOverallComments', [$submission, $args]));
-        $this->assertFalse(User::factory()->create()->can('updateOverallComments', [$submission, $args]));
-    }
+    // Single-comment edit/delete live on CommentPolicy (a comment-scoped
+    // ability); see CommentPolicyTest.
 }

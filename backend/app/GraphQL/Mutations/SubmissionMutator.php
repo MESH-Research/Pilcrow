@@ -16,8 +16,7 @@ use Pandoc\Facades\Pandoc;
  * Intent-shaped lifecycle/content mutations on a submission.
  *
  * Grouped controller-style (resolved via `Class@method`, the house convention):
- * each method is one business action that replaces a slice of the deprecated
- * `updateSubmission` god-mutation. Authorization is enforced by the @canFind
+ * each method is one business action. Authorization is enforced by the @canFind
  * directive on each field, so by the time a method runs the act is permitted.
  * Failures surface as {@see \App\Exceptions\ClientException} with a stable code,
  * consistent with the sibling comment mutations.

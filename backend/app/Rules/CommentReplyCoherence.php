@@ -7,9 +7,8 @@ use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 
 /**
- * Reply-thread coherence for the standalone comment-create mutations, the flat
- * `createInlineComment` / `createOverallComment` analogue of the nested
- * App\Rules\*CommentIdValidity rules the deprecated god-mutation applies.
+ * Reply-thread coherence for the comment-create mutations
+ * (`createInlineComment` / `createOverallComment`).
  *
  * A comment is either top-level (names neither a parent nor a reply target) or a
  * reply that names both: a parent and the comment it replies to. The reply

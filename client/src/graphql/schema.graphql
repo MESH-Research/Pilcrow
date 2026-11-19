@@ -74,27 +74,12 @@ input CreateInlineCommentArgs {
   to: Int
 }
 
-input CreateInlineCommentInput {
-  content: String!
-  from: Int
-  parent_id: ID
-  reply_to_id: ID
-  style_criteria: [ID!]
-  to: Int
-}
-
 """Add an overall comment (or reply); coherence validated as for inline."""
 input CreateOverallCommentArgs {
   content: String!
   parent_id: ID
   reply_to_id: ID
   submission_id: ID!
-}
-
-input CreateOverallCommentInput {
-  content: String!
-  parent_id: ID
-  reply_to_id: ID
 }
 
 input CreatePublicationInput {
@@ -213,11 +198,6 @@ type InlineComment implements Comment {
   updated_by: User!
 }
 
-input InlineCommentHasManyInput {
-  create: [CreateInlineCommentInput!]
-  update: [UpdateInlineCommentInput!]
-}
-
 """A reply to an inline comment of a submission"""
 type InlineCommentReply implements Comment {
   abilities: [CommentAbility!]!
@@ -266,8 +246,8 @@ type Mutation {
 
   """
   Change a submission's editorial status, together with its status-change
-  comment (the comment is gated by the same ability — closing the ungated
-  status_change_comment field of the god-mutation).
+  comment. The comment is only ever set alongside a status change, under the
+  same ability.
   """
   changeSubmissionStatus(input: ChangeSubmissionStatusInput!): Submission!
 
@@ -384,20 +364,6 @@ type Mutation {
   """
   updateOverallComment(input: UpdateOverallCommentArgs!): Submission!
   updatePublication(publication: UpdatePublicationInput!): Publication
-
-  """
-  Update an existing submission.
-  
-  DEPRECATED: this catch-all god-mutation is being dissolved into intent-shaped
-  mutations (updateSubmissionContent now also edits the title, submitSubmission,
-  changeSubmissionStatus, updateSubmissionSubmitters / Reviewers /
-  ReviewCoordinators, createInlineComment, createOverallComment,
-  updateInlineComment, updateOverallComment). It stays
-  callable while clients migrate; its umbrella now gates on the bridge
-  `legacyUpdate` ability (the prior broad `update`) and each input field is
-  still authorized per-field by @argPolicy. Remove once no client calls it.
-  """
-  updateSubmission(input: UpdateSubmissionInput!): Submission! @deprecated(reason: "Use the intent-shaped submission mutations.")
 
   """
   Update the work itself — the submission's body and/or its title. Both are the
@@ -522,11 +488,6 @@ type OverallComment implements Comment {
   ): [OverallCommentReply!]
   updated_at: DateTimeUtc!
   updated_by: User!
-}
-
-input OverallCommentHasManyInput {
-  create: [CreateOverallCommentInput!]
-  update: [UpdateOverallCommentInput!]
 }
 
 """A reply to an overall comment of a submission"""
@@ -1040,24 +1001,11 @@ input UpdateInlineCommentArgs {
   to: Int
 }
 
-input UpdateInlineCommentInput {
-  content: String
-  from: Int
-  id: ID!
-  style_criteria: [ID!]
-  to: Int
-}
-
 """Edit an overall comment (or reply). Only the supplied content changes."""
 input UpdateOverallCommentArgs {
   comment_id: ID!
   content: String
   submission_id: ID!
-}
-
-input UpdateOverallCommentInput {
-  content: String
-  id: ID!
 }
 
 """Input type for adding profile metadata for a user"""
@@ -1124,18 +1072,6 @@ input UpdateSubmissionContent {
   """
   The submission title — the author's content, edited alongside or instead of the body.
   """
-  title: String
-}
-
-input UpdateSubmissionInput {
-  id: ID!
-  inline_comments: InlineCommentHasManyInput
-  overall_comments: OverallCommentHasManyInput
-  review_coordinators: UpdateSubmissionUserInput
-  reviewers: UpdateSubmissionUserInput
-  status: SubmissionStatus
-  status_change_comment: String
-  submitters: UpdateSubmissionUserInput
   title: String
 }
 

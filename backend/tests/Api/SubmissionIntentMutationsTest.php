@@ -8,14 +8,13 @@ use App\Models\Publication;
 use App\Models\Submission;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\ApiTestCase;
 use Tests\TestFactory;
 
 /**
  * Feature coverage for the intent-shaped submission mutations, each authorized
- * by a single plain @can against the corrected ability matrix. The deprecated
- * `updateSubmission` god-mutation keeps its own coverage in {@see SubmissionTest}
- * / {@see SubmissionCommentTest}.
+ * by a single plain @can against the corrected ability matrix.
  */
 class SubmissionIntentMutationsTest extends ApiTestCase
 {
@@ -663,5 +662,433 @@ class SubmissionIntentMutationsTest extends ApiTestCase
 
         $response->assertJsonPath('errors.0.message', 'UNAUTHORIZED');
         $this->assertSame('Original', $comment->fresh()->content);
+    }
+
+    // ---- Role matrices ------------------------------------------------------
+    // Cross-role coverage for the editorial mutations: global admin, the
+    // publication chain (incl. an admin of a DIFFERENT publication), and the
+    // submission roles.
+
+    /**
+     * Build a submission and act as a user holding $actor on it.
+     *
+     * $actor is one of: app_admin, publication_admin, foreign_publication_admin,
+     * editor, review_coordinator, reviewer, submitter.
+     *
+     * @param string $actor
+     * @param int $status
+     * @return array{0: \App\Models\Submission, 1: \App\Models\User}
+     */
+    private function actAs(string $actor, int $status = Submission::UNDER_REVIEW): array
+    {
+        $publication = Publication::factory()->create();
+        $submission = Submission::factory()->for($publication)->create(['status' => $status]);
+
+        switch ($actor) {
+            case 'app_admin':
+                $user = $this->beAppAdmin();
+                break;
+            case 'publication_admin':
+            case 'editor':
+                $user = User::factory()->create();
+                $role = $actor === 'editor' ? ScopedRole::Editor : ScopedRole::PublicationAdmin;
+                $user->publications()->attach($publication->id, ['role' => $role->toSlug()]);
+                break;
+            case 'foreign_publication_admin':
+                $user = User::factory()->create();
+                $user->publications()->attach(
+                    Publication::factory()->create()->id,
+                    ['role' => ScopedRole::PublicationAdmin->toSlug()]
+                );
+                break;
+            default:
+                $role = [
+                    'review_coordinator' => ScopedRole::ReviewCoordinator,
+                    'reviewer' => ScopedRole::Reviewer,
+                    'submitter' => ScopedRole::Submitter,
+                ][$actor];
+                $user = User::factory()->create();
+                $submission->users()->attach($user->id, ['role' => $role->toSlug()]);
+        }
+        $this->actingAs($user);
+
+        return [$submission, $user];
+    }
+
+    /**
+     * @return array<string, array{0: string, 1: int, 2: bool}>
+     */
+    public static function changeStatusActorProvider(): array
+    {
+        return [
+            'app admin' => ['app_admin', Submission::UNDER_REVIEW, true],
+            'publication admin' => ['publication_admin', Submission::UNDER_REVIEW, true],
+            'editor' => ['editor', Submission::UNDER_REVIEW, true],
+            'review coordinator' => ['review_coordinator', Submission::UNDER_REVIEW, true],
+            'admin of another publication' => ['foreign_publication_admin', Submission::UNDER_REVIEW, false],
+            'reviewer' => ['reviewer', Submission::UNDER_REVIEW, false],
+            // The submitter's draft-only UpdateStatus grant is how the client
+            // currently sends a draft in (changeSubmissionStatus → INITIALLY_SUBMITTED).
+            'submitter on a draft' => ['submitter', Submission::DRAFT, true],
+            'submitter after draft' => ['submitter', Submission::INITIALLY_SUBMITTED, false],
+        ];
+    }
+
+    #[DataProvider('changeStatusActorProvider')]
+    public function testChangeSubmissionStatusByActor(string $actor, int $status, bool $allowed): void
+    {
+        [$submission] = $this->actAs($actor, $status);
+
+        $response = $this->graphQL(
+            'mutation ($id: ID!, $status: SubmissionStatus!) {
+                changeSubmissionStatus(input: { id: $id, status: $status }) { id status }
+            }',
+            ['id' => $submission->id, 'status' => 'INITIALLY_SUBMITTED']
+        );
+
+        if ($allowed) {
+            $response->assertJsonPath('data.changeSubmissionStatus.status', 'INITIALLY_SUBMITTED');
+            $this->assertSame(Submission::INITIALLY_SUBMITTED, $submission->fresh()->status);
+        } else {
+            $response->assertJsonPath('errors.0.message', 'UNAUTHORIZED');
+            $this->assertSame($status, $submission->fresh()->status);
+        }
+    }
+
+    /**
+     * @return array<string, array{0: string}>
+     */
+    public static function submissionStatusProvider(): array
+    {
+        $statuses = [
+            'INITIALLY_SUBMITTED', 'RESUBMISSION_REQUESTED', 'RESUBMITTED', 'AWAITING_REVIEW',
+            'REJECTED', 'ACCEPTED_AS_FINAL', 'EXPIRED', 'UNDER_REVIEW', 'AWAITING_DECISION',
+            'REVISION_REQUESTED', 'ARCHIVED', 'DELETED',
+        ];
+
+        return array_combine($statuses, array_map(fn(string $s) => [$s], $statuses));
+    }
+
+    #[DataProvider('submissionStatusProvider')]
+    public function testChangeSubmissionStatusAcceptsEveryStatus(string $status): void
+    {
+        [$submission] = $this->actAs('editor', Submission::UNDER_REVIEW);
+
+        $response = $this->graphQL(
+            'mutation ($id: ID!, $status: SubmissionStatus!) {
+                changeSubmissionStatus(input: { id: $id, status: $status }) { id status }
+            }',
+            ['id' => $submission->id, 'status' => $status]
+        );
+
+        $response->assertJsonPath('data.changeSubmissionStatus.status', $status);
+    }
+
+    public function testChangeSubmissionStatusSetsUpdatedBy(): void
+    {
+        [$submission, $editor] = $this->actAs('editor', Submission::UNDER_REVIEW);
+
+        $response = $this->graphQL(
+            'mutation ($id: ID!) {
+                changeSubmissionStatus(input: { id: $id, status: AWAITING_DECISION }) {
+                    created_by { id }
+                    updated_by { id }
+                }
+            }',
+            ['id' => $submission->id]
+        );
+
+        $response->assertJsonPath('data.changeSubmissionStatus.created_by.id', (string)$submission->created_by);
+        $response->assertJsonPath('data.changeSubmissionStatus.updated_by.id', (string)$editor->id);
+    }
+
+    public function testUpdateSubmissionContentSetsUpdatedBy(): void
+    {
+        [$submission, $submitter] = $this->actAs('submitter', Submission::DRAFT);
+
+        $response = $this->graphQL(
+            'mutation ($id: ID!) {
+                updateSubmissionContent(input: { id: $id, title: "Renamed" }) {
+                    updated_by { id }
+                }
+            }',
+            ['id' => $submission->id]
+        );
+
+        $response->assertJsonPath('data.updateSubmissionContent.updated_by.id', (string)$submitter->id);
+    }
+
+    /**
+     * Roster mutations: [mutation, input field] by role.
+     *
+     * @return array<string, array{0: string, 1: string, 2: string, 3: bool}>
+     */
+    public static function rosterActorProvider(): array
+    {
+        $rosters = [
+            'submitters' => ['updateSubmissionSubmitters', 'submitters'],
+            'reviewers' => ['updateSubmissionReviewers', 'reviewers'],
+            'review coordinators' => ['updateSubmissionReviewCoordinators', 'review_coordinators'],
+        ];
+        $matrix = [
+            'app admin' => ['app_admin', ['submitters' => true, 'reviewers' => true, 'review coordinators' => true]],
+            'publication admin' => [
+                'publication_admin',
+                ['submitters' => true, 'reviewers' => true, 'review coordinators' => true],
+            ],
+            'admin of another publication' => [
+                'foreign_publication_admin',
+                ['submitters' => false, 'reviewers' => false, 'review coordinators' => false],
+            ],
+            'review coordinator' => [
+                'review_coordinator',
+                ['submitters' => true, 'reviewers' => true, 'review coordinators' => false],
+            ],
+            'reviewer' => ['reviewer', ['submitters' => false, 'reviewers' => false, 'review coordinators' => false]],
+        ];
+
+        $cases = [];
+        foreach ($matrix as $actorLabel => [$actor, $allowed]) {
+            foreach ($rosters as $rosterLabel => [$mutation, $field]) {
+                $cases["$actorLabel / $rosterLabel"] = [$actor, $mutation, $field, $allowed[$rosterLabel]];
+            }
+        }
+
+        return $cases;
+    }
+
+    #[DataProvider('rosterActorProvider')]
+    public function testRosterMutationsByActor(string $actor, string $mutation, string $field, bool $allowed): void
+    {
+        [$submission] = $this->actAs($actor);
+        $target = User::factory()->create();
+
+        $response = $this->graphQL(
+            'mutation ($id: ID!, $connect: [ID!]) {
+                ' . $mutation . '(input: { id: $id, ' . $field . ': { connect: $connect } }) {
+                    id
+                    ' . $field . ' { id }
+                }
+            }',
+            ['id' => $submission->id, 'connect' => [$target->id]]
+        );
+
+        if ($allowed) {
+            $ids = array_column($response->json("data.$mutation.$field"), 'id');
+            $this->assertContains((string)$target->id, $ids);
+        } else {
+            $response->assertJsonPath('errors.0.message', 'UNAUTHORIZED');
+        }
+    }
+
+    /**
+     * Title is the author's content: only the submitter (on a draft) or the
+     * app admin may edit it; editorial roles may not.
+     *
+     * @return array<string, array{0: string, 1: bool}>
+     */
+    public static function titleActorProvider(): array
+    {
+        return [
+            'app admin' => ['app_admin', true],
+            'submitter' => ['submitter', true],
+            'review coordinator' => ['review_coordinator', false],
+            'editor' => ['editor', false],
+            'publication admin' => ['publication_admin', false],
+        ];
+    }
+
+    #[DataProvider('titleActorProvider')]
+    public function testUpdateSubmissionContentTitleByActor(string $actor, bool $allowed): void
+    {
+        [$submission] = $this->actAs($actor, Submission::DRAFT);
+
+        $response = $this->graphQL(
+            'mutation ($id: ID!, $title: String!) {
+                updateSubmissionContent(input: { id: $id, title: $title }) { id title }
+            }',
+            ['id' => $submission->id, 'title' => 'A revised title']
+        );
+
+        if ($allowed) {
+            $response->assertJsonPath('data.updateSubmissionContent.title', 'A revised title');
+        } else {
+            $response->assertJsonPath('errors.0.message', 'UNAUTHORIZED');
+        }
+    }
+
+    /**
+     * @return array<string, array{0: string}>
+     */
+    public static function invalidTitleProvider(): array
+    {
+        return [
+            'empty' => [''],
+            'too long' => [str_repeat('1234567890', 52) . 'x'],
+        ];
+    }
+
+    #[DataProvider('invalidTitleProvider')]
+    public function testUpdateSubmissionContentRejectsInvalidTitle(string $title): void
+    {
+        [$submission] = $this->actAs('submitter', Submission::DRAFT);
+        $original = $submission->title;
+
+        // Nullable variable: the request middleware turns "" into null, so an
+        // empty title arrives as a missing one and must still fail validation.
+        $response = $this->graphQL(
+            'mutation ($id: ID!, $title: String) {
+                updateSubmissionContent(input: { id: $id, title: $title }) { id title }
+            }',
+            ['id' => $submission->id, 'title' => $title]
+        );
+
+        $this->assertStringContainsStringIgnoringCase('validation', $response->json('errors.0.message'));
+        $this->assertSame($original, $submission->fresh()->title);
+    }
+
+    // ---- Comment payload round-trips and reply-shape validation -------------
+
+    public function testCreateInlineCommentRoundTripsStyleCriteriaAndRange(): void
+    {
+        [$submission] = $this->actAs('reviewer');
+        $criteria1 = $this->createStyleCriteria($submission->publication->id);
+        $criteria2 = $this->createStyleCriteria($submission->publication->id);
+
+        $response = $this->graphQL(
+            'mutation ($id: ID!, $criteria: [ID!]) {
+                createInlineComment(input: {
+                    submission_id: $id
+                    content: "Test Content"
+                    style_criteria: $criteria
+                    from: 100
+                    to: 110
+                    parent_id: null
+                    reply_to_id: null
+                }) {
+                    inline_comments { content style_criteria { name icon } read_at from to }
+                }
+            }',
+            ['id' => $submission->id, 'criteria' => [$criteria1->id, $criteria2->id]]
+        );
+
+        $response->assertJsonPath('data.createInlineComment.inline_comments', [[
+            'content' => 'Test Content',
+            'style_criteria' => [
+                ['name' => $criteria1->name, 'icon' => $criteria1->icon],
+                ['name' => $criteria2->name, 'icon' => $criteria2->icon],
+            ],
+            'read_at' => null,
+            'from' => 100,
+            'to' => 110,
+        ]]);
+    }
+
+    public function testUpdateInlineCommentEditsStyleCriteriaAndRange(): void
+    {
+        [$submission] = $this->actAs('reviewer');
+        $comment = $submission->inlineComments()->create([
+            'content' => 'Original',
+            'style_criteria' => [],
+            'from' => 1,
+            'to' => 5,
+        ]);
+        $criteria1 = $this->createStyleCriteria($submission->publication->id);
+        $criteria2 = $this->createStyleCriteria($submission->publication->id);
+
+        $response = $this->graphQL(
+            'mutation ($id: ID!, $comment: ID!, $criteria: [ID!]) {
+                updateInlineComment(input: {
+                    submission_id: $id
+                    comment_id: $comment
+                    content: "Test Content"
+                    style_criteria: $criteria
+                    from: 120
+                    to: 130
+                }) {
+                    inline_comments { id content style_criteria { name icon } from to }
+                }
+            }',
+            ['id' => $submission->id, 'comment' => $comment->id, 'criteria' => [$criteria1->id, $criteria2->id]]
+        );
+
+        $response->assertJsonPath('data.updateInlineComment.inline_comments', [[
+            'id' => (string)$comment->id,
+            'content' => 'Test Content',
+            'style_criteria' => [
+                ['name' => $criteria1->name, 'icon' => $criteria1->icon],
+                ['name' => $criteria2->name, 'icon' => $criteria2->icon],
+            ],
+            'from' => 120,
+            'to' => 130,
+        ]]);
+    }
+
+    /**
+     * Reply shapes. A top-level comment names neither id; a reply names both.
+     * `true` marks an id that should point at the parent; `null` is explicit null.
+     *
+     * @return array<string, array{0: bool, 1: array<string, bool|null>}>
+     */
+    public static function replyShapeProvider(): array
+    {
+        return [
+            'both set' => [true, ['parent_id' => true, 'reply_to_id' => true]],
+            'parent only' => [false, ['parent_id' => true]],
+            'parent null, reply_to missing' => [true, ['parent_id' => null]],
+            'parent null, reply_to set' => [false, ['parent_id' => null, 'reply_to_id' => true]],
+            'parent set, reply_to null' => [false, ['parent_id' => true, 'reply_to_id' => null]],
+            'parent missing, reply_to null' => [true, ['reply_to_id' => null]],
+            'reply_to only' => [false, ['reply_to_id' => true]],
+        ];
+    }
+
+    #[DataProvider('replyShapeProvider')]
+    public function testCreateInlineCommentReplyShape(bool $valid, array $ids): void
+    {
+        $this->assertReplyShape('createInlineComment', 'inlineComments', $valid, $ids);
+    }
+
+    #[DataProvider('replyShapeProvider')]
+    public function testCreateOverallCommentReplyShape(bool $valid, array $ids): void
+    {
+        $this->assertReplyShape('createOverallComment', 'overallComments', $valid, $ids);
+    }
+
+    /**
+     * @param string $mutation
+     * @param string $relation
+     * @param bool $valid
+     * @param array<string, bool|null> $ids
+     * @return void
+     */
+    private function assertReplyShape(string $mutation, string $relation, bool $valid, array $ids): void
+    {
+        [$submission] = $this->actAs('reviewer');
+        $parentAttrs = ['content' => 'Parent'];
+        if ($relation === 'inlineComments') {
+            $parentAttrs['style_criteria'] = [];
+        }
+        $parent = $submission->{$relation}()->create($parentAttrs);
+
+        $fields = '';
+        foreach ($ids as $key => $value) {
+            $fields .= $key . ': ' . ($value === null ? 'null' : $parent->id) . "\n";
+        }
+
+        $response = $this->graphQL(
+            'mutation ($id: ID!) {
+                ' . $mutation . '(input: { submission_id: $id, content: "Reply" ' . $fields . ' }) { id }
+            }',
+            ['id' => $submission->id]
+        );
+
+        if ($valid) {
+            $response->assertJsonPath("data.$mutation.id", (string)$submission->id);
+            $this->assertSame(2, $submission->{$relation . 'WithReplies'}()->count());
+        } else {
+            $response->assertGraphQLValidationError('input.submission_id', 'Invalid reply.');
+            $this->assertSame(1, $submission->{$relation . 'WithReplies'}()->count());
+        }
     }
 }
