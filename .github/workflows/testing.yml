@@ -148,7 +148,7 @@ jobs:
       - name: Prepare Quasar
         run: yarn quasar prepare
         working-directory: ./client
-      - uses: fallow-rs/fallow@v2
+      - uses: fallow-rs/fallow@2d55db7a9f0e3501c8be43f64400c47be365e668 # v3.44.0
         with:
           command: audit
           root: ./client
