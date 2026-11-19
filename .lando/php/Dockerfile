@@ -1,14 +1,14 @@
-# Temporary: devwithlando/php:8.4-fpm-7 rebuilt on PHP 8.4.27 for
-# CVE-2026-109618/109619 until Lando publishes a patched image.
+# Temporary: devwithlando/php:8.4-fpm-7 rebuilt on PHP 8.4.28 for
+# the November 2026 PHP security release until Lando publishes a patched image.
 # Source: @lando/php 1.11.2 images/8.4-fpm/Dockerfile, only FROM changed.
 # Built locally by each dev for their own arch (amd64/arm64) via .lando.yml.
 # Remove this directory and the appserver override once devwithlando/php
-# ships PHP >= 8.4.27.
+# ships PHP >= 8.4.28.
 
 FROM mysql:8.0 AS mysql-client-80
 FROM mysql:8.4 AS mysql-client-84
 
-FROM php:8.4.27-fpm-trixie
+FROM php:8.4.28-fpm-trixie
 
 ARG TARGETARCH
 
