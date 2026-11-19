@@ -8,7 +8,7 @@
 FROM mysql:8.0 AS mysql-client-80
 FROM mysql:8.4 AS mysql-client-84
 
-FROM php:8.4.28-fpm-trixie
+FROM php:8.5.12-fpm-trixie
 
 ARG TARGETARCH
 
