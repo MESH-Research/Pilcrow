@@ -153,19 +153,43 @@ class SubmissionIntentMutationsTest extends ApiTestCase
         $response->assertJsonPath('data.submitSubmission.updated_by.id', (string)$submitter->id);
     }
 
+    public function testSubmitSubmissionRecordsCommentInAuditTrail(): void
+    {
+        // The activity history reads status-change comments from the audit
+        // trail; auditing is off for console runs unless enabled.
+        config(['audit.console' => true]);
+        [$submission, $submitter] = $this->submissionWithSubmissionRole(ScopedRole::Submitter, Submission::DRAFT);
+        $this->actingAs($submitter);
+
+        $this->graphQL(
+            'mutation ($id: ID!) { submitSubmission(submission_id: $id, status_change_comment: "Ready") { id } }',
+            ['id' => $submission->id]
+        );
+
+        $audit = $submission->audits()->latest('id')->firstOrFail();
+        $this->assertSame(Submission::INITIALLY_SUBMITTED, $audit->new_values['status']);
+        $this->assertSame('Ready', $audit->new_values['status_change_comment']);
+    }
+
     public function testSubmitSubmissionWithoutCommentClearsEarlierComment(): void
     {
+        config(['audit.console' => true]);
         [$submission, $submitter] = $this->submissionWithSubmissionRole(ScopedRole::Submitter, Submission::DRAFT);
         $submission->status_change_comment = 'Stale note';
         $submission->saveQuietly();
         $this->actingAs($submitter);
 
-        $response = $this->graphQL(
-            'mutation ($id: ID!) { submitSubmission(submission_id: $id) { id status_change_comment } }',
+        $this->graphQL(
+            'mutation ($id: ID!) { submitSubmission(submission_id: $id) { id } }',
             ['id' => $submission->id]
         );
 
-        $response->assertJsonPath('data.submitSubmission.status_change_comment', null);
+        // Stored column is cleared, so the notification carries no stale note…
+        $this->assertNull($submission->fresh()->status_change_comment);
+        // …and the audit row records the clearing, so the history shows none.
+        $audit = $submission->audits()->latest('id')->firstOrFail();
+        $this->assertSame('Stale note', $audit->old_values['status_change_comment']);
+        $this->assertNull($audit->new_values['status_change_comment']);
     }
 
     public function testSubmitSubmissionDeniesSubmitterAfterDraft(): void
