@@ -231,7 +231,7 @@ class SubmissionPolicyTest extends TestCase
         $reviewer = User::factory()->create();
         $this->attachToSubmission($reviewer, $draft, ScopedRole::Reviewer->toSlug());
 
-        // The manuscript-edit hole closed: a reviewer holds no `update`.
+        // Only the author edits the manuscript: a reviewer holds no `updateContent`.
         $this->assertFalse($reviewer->can('updateContent', $draft));
         $this->assertFalse(User::factory()->create()->can('updateContent', $draft));
     }

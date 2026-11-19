@@ -16,7 +16,7 @@ use Tests\TestFactory;
 
 /**
  * Feature coverage for the intent-shaped submission mutations, each authorized
- * by a single plain @can against the corrected ability matrix.
+ * by a single plain @can against the scoped ability matrix.
  */
 class SubmissionIntentMutationsTest extends ApiTestCase
 {

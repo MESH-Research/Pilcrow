@@ -55,12 +55,11 @@ class ScopedRoleTest extends TestCase
     public function testReviewerReviewsWhileReviewableButHoldsNoContentUpdate(): void
     {
         $user = new User();
-        // Transitional: the reviewer keeps View; reviews only while reviewable.
+        // The reviewer holds View, and Review only while reviewable.
         $this->assertTrue(ScopedRole::Reviewer->allows(SubmissionAbility::View, $this->submitted(), $user));
         $this->assertTrue(ScopedRole::Reviewer->allows(SubmissionAbility::Review, $this->reviewable(), $user));
         $this->assertFalse(ScopedRole::Reviewer->allows(SubmissionAbility::Review, $this->submitted(), $user));
-        // The manuscript-edit hole is closed: a reviewer holds no content Update,
-        // and no status control.
+        // A reviewer holds no content edit and no status control.
         $this->assertFalse(ScopedRole::Reviewer->allows(SubmissionAbility::UpdateContent, $this->draft(), $user));
         $this->assertFalse(ScopedRole::Reviewer->allows(SubmissionAbility::UpdateStatus, $this->submitted(), $user));
     }

@@ -122,7 +122,7 @@ class SubmissionPolicy
     /**
      * Access the manuscript and post comments — held by reviewers (and up the
      * chain) only while the submission is reviewable. Gates the comment-create
-     * mutations; folds in the former SubmissionIsReviewable validation rule.
+     * mutations, so a comment can only be posted while review is open.
      *
      * @param \App\Models\User $user
      * @param \App\Models\Submission $submission

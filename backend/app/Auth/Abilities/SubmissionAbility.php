@@ -23,8 +23,7 @@ enum SubmissionAbility: string implements ScopedAbility
     /**
      * Edit the work itself — body, file, and title, as one capability — held by a
      * submitter only while the submission is DRAFT (authors own content). The
-     * manuscript-content mutations (and the title) gate on this. Folds in the
-     * former UpdateTitle (title is content).
+     * manuscript-content mutations, including the title edit, gate on this.
      */
     #[Exposed('Viewer may edit the manuscript — body, file, and title.')]
     case UpdateContent = 'submission.update-content';
@@ -37,9 +36,9 @@ enum SubmissionAbility: string implements ScopedAbility
     case Review = 'submission.review';
 
     /**
-     * Send a DRAFT in for review — the submitter's one forward action, distinct
-     * from the editorial UpdateStatus state machine. Held by a submitter only
-     * while DRAFT.
+     * Send a DRAFT in for review — the submitter's one forward action, separate
+     * from the editorial status workflow ({@see self::UpdateStatus}). Held by a
+     * submitter only while DRAFT.
      */
     #[Exposed('Viewer may send this submission in for review.')]
     case Submit = 'submission.submit';
