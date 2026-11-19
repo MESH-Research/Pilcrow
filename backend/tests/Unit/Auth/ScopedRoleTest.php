@@ -85,8 +85,8 @@ class ScopedRoleTest extends TestCase
     public function testSubmitterHoldsNoStatusControl(): void
     {
         $user = new User();
-        // Status is editorial: a submitter sends a draft in via Submit, so holds
-        // no UpdateStatus — not even on a draft.
+        // A submitter holds no UpdateStatus in any state; its forward action
+        // is Submit.
         $this->assertFalse(ScopedRole::Submitter->allows(SubmissionAbility::UpdateStatus, $this->draft(), $user));
         $this->assertFalse(ScopedRole::Submitter->allows(SubmissionAbility::UpdateStatus, $this->submitted(), $user));
     }

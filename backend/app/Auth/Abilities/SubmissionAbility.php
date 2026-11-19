@@ -45,9 +45,8 @@ enum SubmissionAbility: string implements ScopedAbility
     case Submit = 'submission.submit';
 
     /**
-     * Drive the editorial status state machine. Held unconditionally by review
-     * coordinators and the roles above them; never by a submitter, whose one
-     * forward action is {@see self::Submit}.
+     * Move a submission through the editorial status workflow, in any state.
+     * Held by review coordinators and the roles above them.
      */
     #[Exposed('Viewer may change this submission\'s status.')]
     case UpdateStatus = 'submission.update-status';

@@ -78,9 +78,8 @@ class SubmissionPolicy
     /**
      * Update submission status.
      *
-     * Status control is editorial: admins and review coordinators (and the roles
-     * above them) may change the status unconditionally. Submitters hold none —
-     * they send a draft in through the separate `submit` ability.
+     * Admins and review coordinators (and the roles above them) may change the
+     * status in any state.
      *
      * @param \App\Models\User $user
      * @param \App\Models\Submission $submission

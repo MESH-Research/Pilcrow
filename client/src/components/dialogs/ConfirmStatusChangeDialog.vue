@@ -111,8 +111,8 @@ const state = computed(() => {
 
 const comment = ref(null)
 
-// Sending a draft in is the author's own action (submitSubmission); every
-// other status move is editorial (changeSubmissionStatus).
+// submit_for_review is the author's action and has its own mutation; every
+// other action is an editorial status change.
 const { mutate: submit } = useMutation(SubmitSubmissionDocument)
 const { mutate: changeStatus } = useMutation(UpdateSubmissionStatusDocument)
 

@@ -164,9 +164,7 @@ enum ScopedRole: string
      * re-seated {@see SubmissionAbility::UpdateContent} (author/draft body + file +
      * title, folding in the old UpdateTitle — closes the manuscript-edit hole) are
      * in place. A few refinements remain as standalone follow-ups (drop Reviewer
-     * `View`, split `UpdateSubmitters` into draft↔not-draft). Status control
-     * ({@see SubmissionAbility::UpdateStatus}) is editorial-only: the submitter
-     * sends a draft in through `Submit`, never the status state machine.
+     * `View`, split `UpdateSubmitters` into draft↔not-draft).
      *
      * @return array<int, \App\Auth\Abilities\ScopedAbility|array{0: \App\Auth\Abilities\ScopedAbility, 1: class-string<\App\Auth\Grants\Predicate>}>
      */

@@ -171,7 +171,7 @@ class SubmissionPolicyTest extends TestCase
         $this->assertTrue($coordinator->can('updateStatus', $submission));
     }
 
-    public function testUpdateStatusDeniesSubmitterEvenWhileDraft(): void
+    public function testUpdateStatusDeniesSubmitter(): void
     {
         $draft = $this->makeSubmission(Submission::DRAFT);
         $submitterDraft = User::factory()->create();

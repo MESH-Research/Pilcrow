@@ -818,8 +818,8 @@ class SubmissionIntentMutationsTest extends ApiTestCase
             'review coordinator' => ['review_coordinator', Submission::UNDER_REVIEW, true],
             'admin of another publication' => ['foreign_publication_admin', Submission::UNDER_REVIEW, false],
             'reviewer' => ['reviewer', Submission::UNDER_REVIEW, false],
-            // Status is editorial: a submitter sends a draft in via
-            // submitSubmission, never changeSubmissionStatus — even on a draft.
+            // Status changes are editorial; a submitter holds no updateStatus
+            // in any state (drafts go in via submitSubmission).
             'submitter on a draft' => ['submitter', Submission::DRAFT, false],
             'submitter after draft' => ['submitter', Submission::INITIALLY_SUBMITTED, false],
         ];

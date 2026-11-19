@@ -291,7 +291,7 @@ class AbilitiesTest extends ApiTestCase
         $this->assertContains('update_content', $abilities);
         $this->assertContains('submit', $abilities);
         $this->assertContains('update_submitters', $abilities);
-        // Status is editorial: the author submits, never drives status.
+        // Status changes are editorial; the author's forward action is `submit`.
         $this->assertNotContains('update_status', $abilities);
         // A draft is not reviewable, so the comment-gate `review` is absent.
         $this->assertNotContains('review', $abilities);
