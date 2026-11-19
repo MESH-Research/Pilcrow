@@ -171,12 +171,12 @@ class SubmissionPolicyTest extends TestCase
         $this->assertTrue($coordinator->can('updateStatus', $submission));
     }
 
-    public function testUpdateStatusAllowsSubmitterOnlyWhileDraft(): void
+    public function testUpdateStatusDeniesSubmitter(): void
     {
         $draft = $this->makeSubmission(Submission::DRAFT);
         $submitterDraft = User::factory()->create();
         $this->attachToSubmission($submitterDraft, $draft, ScopedRole::Submitter->toSlug());
-        $this->assertTrue($submitterDraft->can('updateStatus', $draft));
+        $this->assertFalse($submitterDraft->can('updateStatus', $draft));
 
         $submitted = $this->makeSubmission(Submission::INITIALLY_SUBMITTED);
         $submitterSubmitted = User::factory()->create();
@@ -231,7 +231,7 @@ class SubmissionPolicyTest extends TestCase
         $reviewer = User::factory()->create();
         $this->attachToSubmission($reviewer, $draft, ScopedRole::Reviewer->toSlug());
 
-        // The manuscript-edit hole closed: a reviewer holds no `update`.
+        // Only the author edits the manuscript: a reviewer holds no `updateContent`.
         $this->assertFalse($reviewer->can('updateContent', $draft));
         $this->assertFalse(User::factory()->create()->can('updateContent', $draft));
     }

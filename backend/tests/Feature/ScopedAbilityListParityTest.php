@@ -61,10 +61,10 @@ class ScopedAbilityListParityTest extends TestCase
 
     public function testConditionalAbilityIsNotListFilterable(): void
     {
-        // submission.update-status is a DRAFT-only (conditional) grant for the
+        // submission.submit is a DRAFT-only (conditional) grant for the
         // submitter; a predicate has no SQL form, so Tier 1 refuses it loudly.
         $this->expectException(LogicException::class);
-        ScopedRole::rolesGranting(SubmissionAbility::UpdateStatus);
+        ScopedRole::rolesGranting(SubmissionAbility::Submit);
     }
 
     public function testSubmissionVisibleListMatchesResolver(): void

@@ -55,12 +55,11 @@ class ScopedRoleTest extends TestCase
     public function testReviewerReviewsWhileReviewableButHoldsNoContentUpdate(): void
     {
         $user = new User();
-        // Transitional: the reviewer keeps View; reviews only while reviewable.
+        // The reviewer holds View, and Review only while reviewable.
         $this->assertTrue(ScopedRole::Reviewer->allows(SubmissionAbility::View, $this->submitted(), $user));
         $this->assertTrue(ScopedRole::Reviewer->allows(SubmissionAbility::Review, $this->reviewable(), $user));
         $this->assertFalse(ScopedRole::Reviewer->allows(SubmissionAbility::Review, $this->submitted(), $user));
-        // The manuscript-edit hole is closed: a reviewer holds no content Update,
-        // and no status control.
+        // A reviewer holds no content edit and no status control.
         $this->assertFalse(ScopedRole::Reviewer->allows(SubmissionAbility::UpdateContent, $this->draft(), $user));
         $this->assertFalse(ScopedRole::Reviewer->allows(SubmissionAbility::UpdateStatus, $this->submitted(), $user));
     }
@@ -82,11 +81,12 @@ class ScopedRoleTest extends TestCase
         $this->assertTrue(ScopedRole::ReviewCoordinator->allows(SubmissionAbility::UpdateStatus, $this->draft(), $user));
     }
 
-    public function testSubmitterStatusIsDraftOnly(): void
+    public function testSubmitterHoldsNoStatusControl(): void
     {
         $user = new User();
-        // Conditional grant: status only while DRAFT.
-        $this->assertTrue(ScopedRole::Submitter->allows(SubmissionAbility::UpdateStatus, $this->draft(), $user));
+        // A submitter holds no UpdateStatus in any state; its forward action
+        // is Submit.
+        $this->assertFalse(ScopedRole::Submitter->allows(SubmissionAbility::UpdateStatus, $this->draft(), $user));
         $this->assertFalse(ScopedRole::Submitter->allows(SubmissionAbility::UpdateStatus, $this->submitted(), $user));
     }
 
