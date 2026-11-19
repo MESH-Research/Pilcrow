@@ -66,8 +66,14 @@ extend type Mutation {
     # (Title is the author's content too, so it rides updateSubmissionContent —
     # one `update` ability, one mutation for the work — rather than its own.)
 
-    "Send a draft submission in for review."
-    submitSubmission(submission_id: ID!): Submission!
+    """
+    Send a draft submission in for review, optionally with a status-change
+    comment for the people associated with it.
+    """
+    submitSubmission(
+        submission_id: ID!
+        status_change_comment: String @trim
+    ): Submission!
         @canFind(ability: "submit", find: "submission_id")
         @field(resolver: "App\\GraphQL\\Mutations\\SubmissionMutator@submit")
 

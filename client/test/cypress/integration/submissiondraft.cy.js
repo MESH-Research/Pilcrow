@@ -58,9 +58,9 @@ describe("Submission Draft Page", () => {
     cy.login({ email: "regularuser@meshresearch.net" })
     cy.visit("submission/111/draft")
     cy.dataCy("submit_for_review_btn").click()
-    cy.interceptGQLOperation("UpdateSubmissionStatus")
+    cy.interceptGQLOperation("SubmitSubmission")
     cy.dataCy("dirtyYesChangeStatus").click()
-    cy.wait("@UpdateSubmissionStatus")
+    cy.wait("@SubmitSubmission")
     cy.dataCy("visit_submission_btn").click()
 
     cy.login({ email: "publicationeditor@meshresearch.net" })

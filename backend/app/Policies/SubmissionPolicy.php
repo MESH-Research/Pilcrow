@@ -78,10 +78,9 @@ class SubmissionPolicy
     /**
      * Update submission status.
      *
-     * Admins and review coordinators may change the status unconditionally;
-     * submitters may only do so while the submission is still a DRAFT. That
-     * draft-only condition is a conditional grant in ScopedRole, evaluated
-     * by the resolver — so this method is a uniform ability check.
+     * Status control is editorial: admins and review coordinators (and the roles
+     * above them) may change the status unconditionally. Submitters hold none —
+     * they send a draft in through the separate `submit` ability.
      *
      * @param \App\Models\User $user
      * @param \App\Models\Submission $submission

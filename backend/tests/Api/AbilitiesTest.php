@@ -290,8 +290,9 @@ class AbilitiesTest extends ApiTestCase
         // Author owns the work while DRAFT — content edit and submit are on.
         $this->assertContains('update_content', $abilities);
         $this->assertContains('submit', $abilities);
-        $this->assertContains('update_status', $abilities);
         $this->assertContains('update_submitters', $abilities);
+        // Status is editorial: the author submits, never drives status.
+        $this->assertNotContains('update_status', $abilities);
         // A draft is not reviewable, so the comment-gate `review` is absent.
         $this->assertNotContains('review', $abilities);
         $this->assertNotContains('update_reviewers', $abilities);
@@ -341,14 +342,14 @@ class AbilitiesTest extends ApiTestCase
     }
 
     /**
-     * The submitter's draft-only status ability is a CONDITIONAL grant: once the
-     * submission leaves draft, update_status drops out of the granted array.
+     * The submitter's draft-only submit ability is a CONDITIONAL grant: once the
+     * submission leaves draft, submit drops out of the granted array.
      * This is the key win over a role-based flag — the resolver evaluates the
      * predicate against the entity, and the client-facing array tracks it.
      *
      * @return void
      */
-    public function testSubmissionUpdateStatusFlipsWhenLeavingDraft(): void
+    public function testSubmissionSubmitFlipsWhenLeavingDraft(): void
     {
         $submitter = User::factory()->create();
         $this->actingAs($submitter);
@@ -366,7 +367,7 @@ class AbilitiesTest extends ApiTestCase
             ['id' => $submission->id]
         );
 
-        $this->assertNotContains('update_status', $response->json('data.submission.abilities'));
+        $this->assertNotContains('submit', $response->json('data.submission.abilities'));
     }
 
     /**

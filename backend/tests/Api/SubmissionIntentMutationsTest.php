@@ -4,10 +4,12 @@ declare(strict_types=1);
 namespace Tests\Api;
 
 use App\Auth\Roles\ScopedRole;
+use App\Events\SubmissionStatusUpdated;
 use App\Models\Publication;
 use App\Models\Submission;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Event;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\ApiTestCase;
 use Tests\TestFactory;
@@ -127,6 +129,95 @@ class SubmissionIntentMutationsTest extends ApiTestCase
 
         $response->assertJsonPath('data.submitSubmission.status', 'INITIALLY_SUBMITTED');
         $this->assertSame(Submission::INITIALLY_SUBMITTED, $submission->fresh()->status);
+    }
+
+    public function testSubmitSubmissionSetsStatusChangeComment(): void
+    {
+        [$submission, $submitter] = $this->submissionWithSubmissionRole(ScopedRole::Submitter, Submission::DRAFT);
+        $this->actingAs($submitter);
+
+        $response = $this->graphQL(
+            'mutation ($id: ID!, $comment: String) {
+                submitSubmission(submission_id: $id, status_change_comment: $comment) {
+                    id
+                    status
+                    status_change_comment
+                    updated_by { id }
+                }
+            }',
+            ['id' => $submission->id, 'comment' => '  Ready for a look.  ']
+        );
+
+        $response->assertJsonPath('data.submitSubmission.status', 'INITIALLY_SUBMITTED');
+        $response->assertJsonPath('data.submitSubmission.status_change_comment', 'Ready for a look.');
+        $response->assertJsonPath('data.submitSubmission.updated_by.id', (string)$submitter->id);
+    }
+
+    public function testSubmitSubmissionWithoutCommentClearsEarlierComment(): void
+    {
+        [$submission, $submitter] = $this->submissionWithSubmissionRole(ScopedRole::Submitter, Submission::DRAFT);
+        $submission->status_change_comment = 'Stale note';
+        $submission->saveQuietly();
+        $this->actingAs($submitter);
+
+        $response = $this->graphQL(
+            'mutation ($id: ID!) { submitSubmission(submission_id: $id) { id status_change_comment } }',
+            ['id' => $submission->id]
+        );
+
+        $response->assertJsonPath('data.submitSubmission.status_change_comment', null);
+    }
+
+    public function testSubmitSubmissionDeniesSubmitterAfterDraft(): void
+    {
+        [$submission, $submitter] = $this->submissionWithSubmissionRole(
+            ScopedRole::Submitter,
+            Submission::INITIALLY_SUBMITTED
+        );
+        $this->actingAs($submitter);
+
+        $response = $this->graphQL(
+            'mutation ($id: ID!) { submitSubmission(submission_id: $id) { id status } }',
+            ['id' => $submission->id]
+        );
+
+        $response->assertJsonPath('errors.0.message', 'UNAUTHORIZED');
+    }
+
+    public function testSubmitSubmissionDispatchesStatusUpdatedEvent(): void
+    {
+        Event::fake([SubmissionStatusUpdated::class]);
+        [$submission, $submitter] = $this->submissionWithSubmissionRole(ScopedRole::Submitter, Submission::DRAFT);
+        $this->actingAs($submitter);
+
+        $this->graphQL(
+            'mutation ($id: ID!) { submitSubmission(submission_id: $id) { id } }',
+            ['id' => $submission->id]
+        );
+
+        Event::assertDispatched(
+            SubmissionStatusUpdated::class,
+            fn(SubmissionStatusUpdated $event) => $event->submission->is($submission)
+        );
+    }
+
+    public function testSubmitSubmissionDeniesReviewCoordinatorOnDraft(): void
+    {
+        // Sending a draft in is the author's action; editorial status control
+        // (UpdateStatus) does not imply Submit.
+        [$submission, $coordinator] = $this->submissionWithSubmissionRole(
+            ScopedRole::ReviewCoordinator,
+            Submission::DRAFT
+        );
+        $this->actingAs($coordinator);
+
+        $response = $this->graphQL(
+            'mutation ($id: ID!) { submitSubmission(submission_id: $id) { id status } }',
+            ['id' => $submission->id]
+        );
+
+        $response->assertJsonPath('errors.0.message', 'UNAUTHORIZED');
+        $this->assertSame(Submission::DRAFT, $submission->fresh()->status);
     }
 
     public function testSubmitSubmissionDeniesReviewer(): void
@@ -727,9 +818,9 @@ class SubmissionIntentMutationsTest extends ApiTestCase
             'review coordinator' => ['review_coordinator', Submission::UNDER_REVIEW, true],
             'admin of another publication' => ['foreign_publication_admin', Submission::UNDER_REVIEW, false],
             'reviewer' => ['reviewer', Submission::UNDER_REVIEW, false],
-            // The submitter's draft-only UpdateStatus grant is how the client
-            // currently sends a draft in (changeSubmissionStatus → INITIALLY_SUBMITTED).
-            'submitter on a draft' => ['submitter', Submission::DRAFT, true],
+            // Status is editorial: a submitter sends a draft in via
+            // submitSubmission, never changeSubmissionStatus — even on a draft.
+            'submitter on a draft' => ['submitter', Submission::DRAFT, false],
             'submitter after draft' => ['submitter', Submission::INITIALLY_SUBMITTED, false],
         ];
     }

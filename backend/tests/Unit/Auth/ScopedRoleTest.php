@@ -82,11 +82,12 @@ class ScopedRoleTest extends TestCase
         $this->assertTrue(ScopedRole::ReviewCoordinator->allows(SubmissionAbility::UpdateStatus, $this->draft(), $user));
     }
 
-    public function testSubmitterStatusIsDraftOnly(): void
+    public function testSubmitterHoldsNoStatusControl(): void
     {
         $user = new User();
-        // Conditional grant: status only while DRAFT.
-        $this->assertTrue(ScopedRole::Submitter->allows(SubmissionAbility::UpdateStatus, $this->draft(), $user));
+        // Status is editorial: a submitter sends a draft in via Submit, so holds
+        // no UpdateStatus — not even on a draft.
+        $this->assertFalse(ScopedRole::Submitter->allows(SubmissionAbility::UpdateStatus, $this->draft(), $user));
         $this->assertFalse(ScopedRole::Submitter->allows(SubmissionAbility::UpdateStatus, $this->submitted(), $user));
     }
 

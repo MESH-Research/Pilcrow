@@ -69,10 +69,12 @@ final readonly class SubmissionMutator
      * Send a draft submission in for review.
      *
      * The submitter holds `submit` only while DRAFT, so by the time we run the
-     * submission is a draft the acting user may submit.
+     * submission is a draft the acting user may submit. The optional comment is
+     * set alongside the status, as changeSubmissionStatus does, so it reaches the
+     * status-change notification; omitting it clears any earlier comment.
      *
      * @param null $_
-     * @param array{submission_id: string} $args
+     * @param array{submission_id: string, status_change_comment?: string|null} $args
      * @return \App\Models\Submission
      * @throws \App\Exceptions\ClientException
      */
@@ -85,6 +87,7 @@ final readonly class SubmissionMutator
         }
 
         $submission->status = Submission::INITIALLY_SUBMITTED;
+        $submission->status_change_comment = $args['status_change_comment'] ?? null;
         $submission->save();
 
         return $submission;
