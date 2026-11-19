@@ -72,6 +72,12 @@ server {
       return 200 'no-content';
     }
 
+    # php-fpm's pm.status_path is internal (php-fpm-healthcheck talks
+    # FastCGI to FPM directly); never forward it from the public server.
+    location = /status {
+      return 404;
+    }
+
     location = /favicon.ico { access_log off; log_not_found off; }
     location = /robots.txt  { access_log off; log_not_found off; }
 

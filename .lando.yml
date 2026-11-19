@@ -29,6 +29,11 @@ services:
     command: cd /app/client && yarn dev
     scanner: false
   appserver:
+    # Temporary PHP 8.4.28 image (November 2026 PHP security release), see .lando/php/Dockerfile
+    overrides:
+      build:
+        context: ./.lando/php
+      image: pilcrow/lando-php:8.4.28-fpm
     build:
       - cd /app/backend && composer install
       - bash /app/.lando/no_env_setup.sh
