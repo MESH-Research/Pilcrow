@@ -26,6 +26,19 @@ graphql(`
 `)
 
 graphql(`
+  mutation SubmitSubmission($id: ID!, $status_change_comment: String) {
+    submitSubmission(
+      submission_id: $id
+      status_change_comment: $status_change_comment
+    ) {
+      id
+      status
+      status_change_comment
+    }
+  }
+`)
+
+graphql(`
   mutation UpdateSubmissionStatus(
     $id: ID!
     $status: SubmissionStatus!

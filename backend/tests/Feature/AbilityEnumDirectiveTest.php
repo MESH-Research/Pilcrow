@@ -68,12 +68,6 @@ class AbilityEnumDirectiveTest extends TestCase
         foreach ($exposed as $exposedName => $exposure) {
             $this->assertSame($exposure['description'], $values[$exposedName]);
         }
-
-        // The deprecated server-only bridge never reaches the schema.
-        $this->assertArrayNotHasKey(
-            AbilityExposure::exposedName(SubmissionAbility::LegacyUpdate),
-            $values
-        );
     }
 
     /**

@@ -5,8 +5,6 @@ namespace App\Policies;
 
 use App\Auth\Abilities\SubmissionAbility;
 use App\Auth\ScopedAbilityResolver;
-use App\Models\InlineComment;
-use App\Models\OverallComment;
 use App\Models\Publication;
 use App\Models\Submission;
 use App\Models\User;
@@ -80,10 +78,8 @@ class SubmissionPolicy
     /**
      * Update submission status.
      *
-     * Admins and review coordinators may change the status unconditionally;
-     * submitters may only do so while the submission is still a DRAFT. That
-     * draft-only condition is a conditional grant in ScopedRole, evaluated
-     * by the resolver — so this method is a uniform ability check.
+     * Admins and review coordinators (and the roles above them) may change the
+     * status in any state.
      *
      * @param \App\Models\User $user
      * @param \App\Models\Submission $submission
@@ -126,7 +122,7 @@ class SubmissionPolicy
     /**
      * Access the manuscript and post comments — held by reviewers (and up the
      * chain) only while the submission is reviewable. Gates the comment-create
-     * mutations; folds in the former SubmissionIsReviewable validation rule.
+     * mutations, so a comment can only be posted while review is open.
      *
      * @param \App\Models\User $user
      * @param \App\Models\Submission $submission
@@ -151,70 +147,5 @@ class SubmissionPolicy
         return $this->scoped->allows($user, SubmissionAbility::Submit, $submission)
             ? true
             : Response::deny('UNAUTHORIZED');
-    }
-
-    /**
-     * Umbrella gate of the DEPRECATED `updateSubmission` god-mutation. Preserves
-     * the prior broad `update` semantics (any submission role) so the
-     * god-mutation stays callable while clients migrate to the intent-shaped
-     * mutations; its per-field @argPolicy entries enforce the real, corrected
-     * abilities. Removed with the god-mutation.
-     *
-     * @deprecated Transitional. New code gates on the specific intent ability.
-     * @param \App\Models\User $user
-     * @param \App\Models\Submission $submission
-     * @return \Illuminate\Auth\Access\Response|bool
-     */
-    public function legacyUpdate(User $user, Submission $submission)
-    {
-        return $this->scoped->allows($user, SubmissionAbility::LegacyUpdate, $submission)
-            ? true
-            : Response::deny('UNAUTHORIZED');
-    }
-
-    /**
-     * Update an inline comment of a submission
-     *
-     * @param \App\Models\User $user
-     * @param \App\Models\Submission $_
-     * @param array $args
-     * @return \Illuminate\Auth\Access\Response|bool
-     */
-    public function updateInlineComments(User $user, Submission $_, $args)
-    {
-        if (isset($args['inlineComments']['update'])) {
-            $comment_id = $args['inlineComments']['update'][0]['id'];
-            $inline_comment = InlineComment::where('id', $comment_id)->firstOrFail();
-            if ($inline_comment->created_by === $user->id) {
-                return true;
-            }
-
-            return Response::deny('UNAUTHORIZED');
-        }
-
-        return true;
-    }
-
-    /**
-     * Update an overall comment of a submission
-     *
-     * @param \App\Models\User $user
-     * @param \App\Models\Submission $_
-     * @param array $args
-     * @return \Illuminate\Auth\Access\Response|bool
-     */
-    public function updateOverallComments(User $user, Submission $_, $args)
-    {
-        if (isset($args['overallComments']['update'])) {
-            $comment_id = $args['overallComments']['update'][0]['id'];
-            $overall_comment = OverallComment::where('id', $comment_id)->firstOrFail();
-            if ($overall_comment->created_by === $user->id) {
-                return true;
-            }
-
-            return Response::deny('UNAUTHORIZED');
-        }
-
-        return true;
     }
 }

@@ -86,20 +86,6 @@ class AbilitiesTest extends ApiTestCase
     }
 
     /**
-     * The deprecated LegacyUpdate bridge is server-only: never exposed, never in
-     * the schema vocabulary, never emitted by the resolver.
-     *
-     * @return void
-     */
-    public function testLegacyUpdateStaysServerOnly(): void
-    {
-        $this->assertArrayNotHasKey(
-            AbilityExposure::exposedName(SubmissionAbility::LegacyUpdate),
-            AbilityExposure::exposed(SubmissionAbility::class)
-        );
-    }
-
-    /**
      * Conformance: every EXPOSED scoped ability is granted (conditionally or
      * not) by at least one role in the matrix — an exposed value no role can
      * ever hold is dead vocabulary, usually a case added to the enum but
@@ -139,8 +125,9 @@ class AbilitiesTest extends ApiTestCase
      */
     public function testEveryGrantedScopedAbilityIsExposed(): void
     {
-        // Deliberately server-only: the deprecated LegacyUpdate bridge.
-        $serverOnly = [SubmissionAbility::LegacyUpdate];
+        // Deliberately server-only cases (none today).
+        /** @var array<int, \App\Auth\Abilities\ScopedAbility> $serverOnly */
+        $serverOnly = [];
 
         foreach (ScopedRole::cases() as $role) {
             foreach ($role->grants() as $grant) {
@@ -303,8 +290,9 @@ class AbilitiesTest extends ApiTestCase
         // Author owns the work while DRAFT — content edit and submit are on.
         $this->assertContains('update_content', $abilities);
         $this->assertContains('submit', $abilities);
-        $this->assertContains('update_status', $abilities);
         $this->assertContains('update_submitters', $abilities);
+        // Status changes are editorial; the author's forward action is `submit`.
+        $this->assertNotContains('update_status', $abilities);
         // A draft is not reviewable, so the comment-gate `review` is absent.
         $this->assertNotContains('review', $abilities);
         $this->assertNotContains('update_reviewers', $abilities);
@@ -354,14 +342,14 @@ class AbilitiesTest extends ApiTestCase
     }
 
     /**
-     * The submitter's draft-only status ability is a CONDITIONAL grant: once the
-     * submission leaves draft, update_status drops out of the granted array.
+     * The submitter's draft-only submit ability is a CONDITIONAL grant: once the
+     * submission leaves draft, submit drops out of the granted array.
      * This is the key win over a role-based flag — the resolver evaluates the
      * predicate against the entity, and the client-facing array tracks it.
      *
      * @return void
      */
-    public function testSubmissionUpdateStatusFlipsWhenLeavingDraft(): void
+    public function testSubmissionSubmitFlipsWhenLeavingDraft(): void
     {
         $submitter = User::factory()->create();
         $this->actingAs($submitter);
@@ -379,7 +367,7 @@ class AbilitiesTest extends ApiTestCase
             ['id' => $submission->id]
         );
 
-        $this->assertNotContains('update_status', $response->json('data.submission.abilities'));
+        $this->assertNotContains('submit', $response->json('data.submission.abilities'));
     }
 
     /**

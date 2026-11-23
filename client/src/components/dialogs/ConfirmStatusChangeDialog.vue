@@ -67,6 +67,7 @@
 import { useDialogPluginComponent } from "quasar"
 import { useMutation } from "@vue/apollo-composable"
 import {
+  SubmitSubmissionDocument,
   UpdateSubmissionStatusDocument,
   type SubmissionStatus
 } from "src/graphql/generated/graphql"
@@ -110,7 +111,22 @@ const state = computed(() => {
 
 const comment = ref(null)
 
-const { mutate } = useMutation(UpdateSubmissionStatusDocument)
+// submit_for_review is the author's action and has its own mutation; every
+// other action is an editorial status change.
+const { mutate: submit } = useMutation(SubmitSubmissionDocument)
+const { mutate: changeStatus } = useMutation(UpdateSubmissionStatusDocument)
+
+function sendStatusChange() {
+  const id = String(props.submissionId)
+  if (props.action === "submit_for_review") {
+    return submit({ id, status_change_comment: comment.value })
+  }
+  return changeStatus({
+    id,
+    status: state.value.status as SubmissionStatus,
+    status_change_comment: comment.value
+  })
+}
 const { newStatusMessage } = useFeedbackMessages({
   attrs: {
     "data-cy": "change_status_notify"
@@ -120,11 +136,7 @@ const { push } = useRouter()
 
 async function updateStatus() {
   try {
-    await mutate({
-      id: String(props.submissionId),
-      status: state.value.status as SubmissionStatus,
-      status_change_comment: comment.value
-    }).then(() => {
+    await sendStatusChange().then(() => {
       if (props.currentStatus == "DRAFT") {
         push({ path: `/submission/${props.submissionId}/view/` })
       }

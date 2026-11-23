@@ -16,8 +16,7 @@ use Pandoc\Facades\Pandoc;
  * Intent-shaped lifecycle/content mutations on a submission.
  *
  * Grouped controller-style (resolved via `Class@method`, the house convention):
- * each method is one business action that replaces a slice of the deprecated
- * `updateSubmission` god-mutation. Authorization is enforced by the @canFind
+ * each method is one business action. Authorization is enforced by the @canFind
  * directive on each field, so by the time a method runs the act is permitted.
  * Failures surface as {@see \App\Exceptions\ClientException} with a stable code,
  * consistent with the sibling comment mutations.
@@ -70,10 +69,12 @@ final readonly class SubmissionMutator
      * Send a draft submission in for review.
      *
      * The submitter holds `submit` only while DRAFT, so by the time we run the
-     * submission is a draft the acting user may submit.
+     * submission is a draft the acting user may submit. The optional comment is
+     * stored with the new status and sent in the status-change notification;
+     * omitting it clears any previous comment.
      *
      * @param null $_
-     * @param array{submission_id: string} $args
+     * @param array{submission_id: string, status_change_comment?: string|null} $args
      * @return \App\Models\Submission
      * @throws \App\Exceptions\ClientException
      */
@@ -86,6 +87,7 @@ final readonly class SubmissionMutator
         }
 
         $submission->status = Submission::INITIALLY_SUBMITTED;
+        $submission->status_change_comment = $args['status_change_comment'] ?? null;
         $submission->save();
 
         return $submission;

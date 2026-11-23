@@ -21,38 +21,6 @@ extend type Mutation {
         input: CreateSubmissionDraftInput! @spread
     ): Submission! @create @canModel(ability: "create", injectArgs: true)
 
-    """
-    Update an existing submission.
-
-    DEPRECATED: this catch-all god-mutation is being dissolved into intent-shaped
-    mutations (updateSubmissionContent now also edits the title, submitSubmission,
-    changeSubmissionStatus, updateSubmissionSubmitters / Reviewers /
-    ReviewCoordinators, createInlineComment, createOverallComment,
-    updateInlineComment, updateOverallComment). It stays
-    callable while clients migrate; its umbrella now gates on the bridge
-    `legacyUpdate` ability (the prior broad `update`) and each input field is
-    still authorized per-field by @argPolicy. Remove once no client calls it.
-    """
-    updateSubmission(input: UpdateSubmissionInput! @spread): Submission!
-        @deprecated(
-            reason: "Use the intent-shaped submission mutations."
-        )
-        @update
-        @can(ability: "legacyUpdate", find: "id")
-        @argPolicy(
-            find: "id"
-            apply: [
-                "submitters:updateSubmitters"
-                "reviewers:updateReviewers"
-                "reviewCoordinators:updateReviewCoordinators"
-                "status:updateStatus"
-                "title:updateContent"
-                "inlineComments:updateInlineComments"
-                "overallComments:updateOverallComments"
-            ]
-            injectArgs: true
-        )
-
     "Delete an inline comment of a submission"
     deleteInlineComment(input: DeleteCommentInput! @spread): Submission!
         @canFind(
@@ -92,21 +60,27 @@ extend type Mutation {
         )
 
     # --- Intent-shaped submission mutations ----------------------------------
-    # Each replaces one slice of the deprecated `updateSubmission` god-mutation
-    # with a single business action and one plain @canFind stating its true ability.
+    # Each is a single business action with one plain @canFind stating its true
+    # ability.
     #
     # (Title is the author's content too, so it rides updateSubmissionContent —
     # one `update` ability, one mutation for the work — rather than its own.)
 
-    "Send a draft submission in for review."
-    submitSubmission(submission_id: ID!): Submission!
+    """
+    Send a draft submission in for review, optionally with a status-change
+    comment for the people associated with it.
+    """
+    submitSubmission(
+        submission_id: ID!
+        status_change_comment: String @trim
+    ): Submission!
         @canFind(ability: "submit", find: "submission_id")
         @field(resolver: "App\\GraphQL\\Mutations\\SubmissionMutator@submit")
 
     """
     Change a submission's editorial status, together with its status-change
-    comment (the comment is gated by the same ability — closing the ungated
-    status_change_comment field of the god-mutation).
+    comment. The comment is only ever set alongside a status change, under the
+    same ability.
     """
     changeSubmissionStatus(
         input: ChangeSubmissionStatusInput! @spread
@@ -393,17 +367,6 @@ input AcceptSubmissionInviteInput
     name: String
     username: String!
     password: String!
-}
-
-input UpdateSubmissionInput @validator {
-    id: ID!
-    title: String @trim
-    status: SubmissionStatus
-    status_change_comment: String @trim
-    reviewers: UpdateSubmissionUserInput
-    review_coordinators: UpdateSubmissionUserInput
-        @rename(attribute: "reviewCoordinators")
-    submitters: UpdateSubmissionUserInput
 }
 
 input UpdateSubmissionContent @validator {
