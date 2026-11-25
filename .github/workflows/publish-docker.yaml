@@ -15,7 +15,7 @@ concurrency:
 jobs:
   # Gate: only publish when the produced artifact actually changes — i.e. when a
   # real image input changed. This keeps a 1:1 between "new image/tag" and "real
-  # change", so config-only commits (renovate.json, docs, helm, root manifests)
+  # change", so config-only commits (renovate.json, docs, root manifests)
   # don't mint a new tag or trigger a redeploy.
   #
   # Tags ALWAYS build: a `v*` release bakes VERSION into the images

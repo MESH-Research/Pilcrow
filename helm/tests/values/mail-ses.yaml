@@ -1,9 +1,0 @@
-pilcrow:
-  mail:
-    driver: ses
-    ses:
-      accessKeyId: "test"
-      secretAccessKey:
-        secret:
-          name: "existing-ses-secret"
-          key: "that-one"

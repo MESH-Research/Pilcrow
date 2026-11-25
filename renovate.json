@@ -68,8 +68,7 @@
             "description": "Docker deps are held back currently to requiee dep daahboard approval",
             "matchManagers": [
                 "docker-compose",
-                "github-actions",
-                "helmv3"
+                "github-actions"
             ],
             "dependencyDashboardApproval": true
         },
@@ -115,14 +114,6 @@
             "matchFileNames": ["client/**", "backend/**"],
             "extends": [":semanticCommitScope(docker/deps)"],
             "matchManagers": ["dockerfile"]
-        },
-        /**
-         * Group Helm Dependencies
-         **/
-        {
-            "groupName": "helm dependencies",
-            "extends": [":semanticCommitScope(helm/deps)"],
-            "matchFileNames": ["helm/**"],
         },
         /**
          * Group Docs Dependencies
