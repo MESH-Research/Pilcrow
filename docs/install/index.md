@@ -1,6 +1,6 @@
 # Installation
 
-Pilcrow is packaged as a pair of Docker containers and is intended to be deployed using Docker Compose or Kubernetes
+Pilcrow is packaged as a pair of Docker containers and is intended to be deployed using Docker Compose
 
 ## Prerequisites
 - Modern Docker version: v23.0+

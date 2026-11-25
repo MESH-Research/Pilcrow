@@ -2,7 +2,6 @@ name: Testing
 on:
   pull_request:
     paths-ignore:
-      - "helm/**"
       - ".release-please-manifest.json"
   merge_group:
   push:
@@ -10,7 +9,6 @@ on:
       - master
       - renovate/*
     paths-ignore:
-      - "helm/**"
       - ".release-please-manifest.json"
 permissions:
   packages: write

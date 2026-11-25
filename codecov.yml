@@ -32,4 +32,3 @@ ignore:
   - "**/test/**"
   - "client/src/graphql/operations/**"
   - "docs/**"
-  - "helm/**"

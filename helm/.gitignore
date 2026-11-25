@@ -1,4 +1,0 @@
-output.yaml
-!Chart.lock
-test-values.yaml
-.debug/*
