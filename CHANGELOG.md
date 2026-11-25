@@ -3,6 +3,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.38.0](https://github.com/MESH-Research/Pilcrow/compare/v0.37.2...v0.38.0) (2026-11-25)
+
+
+### Features
+
+* **helm:** :pushpin: Update chart to appVersion 0.37.2 ([3105d71](https://github.com/MESH-Research/Pilcrow/commit/3105d7100a4ea88cbf88a83327df02b76996cf76))
+
+
+### Bug Fixes
+
+* **client:** update nginx to 1.31.10 for November 2026 advisories ([#2367](https://github.com/MESH-Research/Pilcrow/issues/2367)) ([04f6ed7](https://github.com/MESH-Research/Pilcrow/commit/04f6ed74954bcd6b8b1c93237aa59b754bfb9dae))
+
 ## [0.37.2](https://github.com/MESH-Research/Pilcrow/compare/v0.37.1...v0.37.2) (2026-11-19)
 
 
